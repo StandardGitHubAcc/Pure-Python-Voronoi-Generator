@@ -5,7 +5,7 @@
 
 import numpy as np
 import matplotlib.pyplot as plt
-import math
+#import math
 
 points = [(50, 50), (25, 25), (75, 75)]
 data = []
@@ -15,7 +15,7 @@ data = []
 def distance(x1, y1, x2, y2):
 	return (((x1 - x2) ** 2) + ((y1 - y2) ** 2)) ** 0.5
 
-def bubbleSort(arr):
+def bubbleSort(arr): #Not used but a good template
      
     n = len(arr)
  
@@ -30,19 +30,11 @@ def bubbleSort(arr):
             if arr[j] > arr[j + 1]:
                 arr[j], arr[j + 1] = arr[j + 1], arr[j]
 
-def customSort(target, array):
+def distanceTargetSort(target, array):
 	n = len(array)
 	
 	for i in range(n):
 		for j in range(0, n - i - 1):
-			#pointA1 = array[j]["pointA"]
-			#pointB1 = array[j]["pointB"]
-			#pointA2 = array[j + 1]["pointA"]
-			#pointB2 = array[j + 1]["pointB"]
-
-			#distance1 = distance(target[0], target[1], pointB1[0], pointB1[1])
-			#distance2 = distance(target[0], target[1], pointB2[0], pointB2[1])
-
 			point1 = array[j]["midpoint"]
 			point2 = array[j + 1]["midpoint"]
 
@@ -69,12 +61,12 @@ def intersectSolver(line1, line2):
 		print(f"intersect of y = {slope1}(x - {midPt1[0]}) + {midPt1[1]} and y = {slope2}(x - {midPt2[0]}) + {midPt2[1]} is ({x}, {y})")
 		
 		if (x > line1["boundA"][0] and x < line1["boundB"][0] and y < line1["boundA"][1] and y > line1["boundB"][1]) and (x > line2["boundA"][0] and x < line2["boundB"][0] and y < line2["boundA"][1] and y > line2["boundB"][1]):
-			return (x, y)
+			return x, y
 		else:
 			print(f'intersection is out of bounds ({line1["boundA"][0]}, {line1["boundA"][1]}) ({line1["boundB"][0]}, {line1["boundB"][1]}) or ({line2["boundA"][0]}, {line2["boundA"][1]}) ({line2["boundB"][0]}, {line2["boundB"][1]})')
 			return (None, None)
 	else:
-		print(f"there is no interesection of y = {slope1}(x - {midPt1[0]}) + {midPt1[1]} and y = {slope2}(x - {midPt2[0]}) + {midPt2[1]} or they are the same")
+		print(f"there is no interesection of y = {slope1}(x - {midPt1[0]}) + {midPt1[1]} and y = {slope2}(x - {midPt2[0]}) + {midPt2[1]} or they are the same equation")
 		return (None, None)
 
 
@@ -97,11 +89,16 @@ plt.figure(figsize=(7, 7))
 plt.ylim(0, 200)
 plt.xlim(0, 200)
 
-# 
 plt.title("pixel_plot")
 
 #points = [[50, 50], [25, 25], [75, 75]]
 
+n = len(points)
+	
+for i in range(n):
+	for j in range(0, n - i - 1):
+		if points[j][1] > points[j + 1][1]:
+			points[j], points[j + 1] = points[j + 1], points[j]
 
 for pt in points:
 	plt.plot(pt[0], pt[1], "ro")
@@ -112,30 +109,46 @@ for pt in points:
 	points2 = points.copy()
 	points2.remove(pt)
 
-	xy = np.array(points2).T
+	#xy = np.array(points2).T
 
-	d = ( (xy[0] - pt[0]) ** 2 + (xy[1] - pt[1]) ** 2) ** 0.5
+	#d = ( (xy[0] - pt[0]) ** 2 + (xy[1] - pt[1]) ** 2) ** 0.5
 
-	closest_idx = np.argmin(d)
-	closest = points2[closest_idx]
+	#closest_idx = np.argmin(d)
+	#closest = points2[closest_idx]
 
 	#print(pt, closest)
 
-	a = pt[0]
-	b = pt[1]
-	c = closest[0]
-	d = closest[1]
+	#a = pt[0]
+	#b = pt[1]
+	#c = closest[0]
+	#d = closest[1]
+
+	n = len(points2)
+	
+	for i in range(n):
+		for j in range(0, n - i - 1):
+			point1 = points2[j]
+			point2 = points2[j + 1]
+
+			distance1 = distance(pt[0], pt[1], point1[0], point1[1])
+			distance2 = distance(pt[0], pt[1], point2[0], point2[1])
+
+			if distance1 > distance2:
+				points2[j], points2[j + 1] = points2[j + 1], points2[j]
+
 
 	def solver(a, b, c, d):
 		if c < a and d < b:
-			e = a
-			f = b
+			#e = a
+			#f = b
 
-			a = c
-			b = d
+			#a = c
+			#b = d
 
-			c = e
-			d = f
+			#c = e
+			#d = f
+
+			(a, b), (c, d) = (c, d), (a, b)
 
 		m = (b - d) / (a - c)
 		#y = (-1 / m) * (x - a) + b
@@ -148,26 +161,26 @@ for pt in points:
 		#y = (-1 / m) * (x - mPtX) + mPtY
 
 		try:
-			data.index({"pointA":[a, b], "pointB":[c, d], "slope":-1/m, "midpoint":[mPtX, mPtY], "boundA":[0, 200], "boundB":[200, 0]})
+			data.index({"pointA":[a, b], "pointB":[c, d], "slope":-1/m, "midpoint":[mPtX, mPtY], "boundA":[0, (-1/m) * (-1 * mPtX) + mPtY], "boundB":[mPtX - (mPtY/ (-1/m)), 0]})
+			
 			#return None
 		except Exception:
-			data.append({"pointA":[a, b], "pointB":[c, d], "slope":-1/m, "midpoint":[mPtX, mPtY], "boundA":[0, 200], "boundB":[200, 0]})
+			data.append({"pointA":[a, b], "pointB":[c, d], "slope":-1/m, "midpoint":[mPtX, mPtY], "boundA":[0, (-1/m) * (-1 * mPtX) + mPtY], "boundB":[mPtX - (mPtY/ (-1/m)), 0]})
+			print(f"({mPtX - (mPtY/ (-1/m) )}, 0), ({mPtX}, {mPtY})")
 			#print((a, b), (c, d), (x, y), (-1 / m), (mPtX, mPtY))
 			#return y
 
 		#return y
 		#return ( -(d ** 2) - (c ** 2) + (2 * c * x) + (b ** 2) + (a ** 2) - (2 * a * x) ) / ( (-2 * d) + (2 * b) )
 
-	#x1 = a + 20
-	#x2 = a - 20
-	solver(a, b, c, d)
-	#y1 = solver(a, b, c, d, x1) #This set with y1 and y2 is only necesssary to graph the lines but is not the same as what is in data
-	#y2 = solver(a, b, c, d, x2)	#If the solver is set up to return None and y and depending on if the line already exists, it will always return 1 None and 1 y if it is run twice on the same line, so it will not give 2 points to graph
+	#solver(a, b, c, d)
 
-	#if y1 != None and y2 != None:
-	#	plt.plot([x1, x2], [y1, y2], "-go")
+	#for otherPoint in points2:
+	#	solver(pt[0], pt[1], otherPoint[0], otherPoint[1])
 
+	solver(pt[0], pt[1], points2[0][0], points2[0][1])
 
+#print(data.__len__())
 cell = []
 
 # Go through the points and find the intersection points in order to form edges
@@ -175,13 +188,14 @@ for currentPoint in points:
 	#points2 = points.copy()
 	data2 = data.copy()
 	
-	customSort(currentPoint, data2)
+	distanceTargetSort(currentPoint, data2)
 
 	n = data2.__len__()
+	#print(n)
 
 	for i in range(0, n - 1):
-
-		(x, y) = intersectSolver(data2[i], data2[i + 1])
+		#print(i)
+		x, y = intersectSolver(data2[i], data2[i + 1])
 
 		if x != None:
 			if x > data2[i]["midpoint"][0] and x < data2[i + 1]["midpoint"][0]: # x is between the midpoints of the two points, mid1 < x < mid2, greater than the first and less than the second
@@ -211,19 +225,19 @@ for currentPoint in points:
 
 # Plot the data
 for info in data:
-	#pointA = info["pointA"]
-	#pointB = info["pointB"]
-	midPt = info["midpoint"]
+	#midPt = info["midpoint"]
 	
-	y1 = equationToPoint(info, 0)
-	y2 = equationToPoint(info, 200)
+	#y1 = equationToPoint(info, info["boundA"][0])
+	#y2 = equationToPoint(info, info["boundB"][0])
 
-	plt.plot([0, 200], [y1, y2], "-go")
+	#plt.plot([info["boundA"][0], info["boundB"][0]], [y1, y2], "-go")
+	#print(info["boundA"][0])
+	#print(f'{info["boundA"][0], info["boundA"][1]} {info["boundB"][0], info["boundB"][1]}')
+	plt.plot([info["boundA"][0], info["boundB"][0]], [info["boundA"][1], info["boundB"][1]], "-go")
 
-	plt.plot(midPt[0], midPt[1], "yo")
-
-	#plt.plot(pointA[0], pointA[1], "ro")
+	plt.plot(info["midpoint"][0], info["midpoint"][1], "yo")
 
 
 plt.show()
+
 
