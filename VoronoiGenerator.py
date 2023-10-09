@@ -166,13 +166,13 @@ for pt in points:
 
 		#y = (-1 / m) * (x - mPtX) + mPtY
 
-		try:
-			data.index({"pointA":[a, b], "pointB":[c, d], "slope":-1/m, "midpoint":[mPtX, mPtY], "boundA":[0, (-1/m) * (-1 * mPtX) + mPtY], "boundB":[mPtX - (mPtY/ (-1/m)), 0]})
+		#try:
+		#	data.index({"pointA":[a, b], "pointB":[c, d], "slope":-1/m, "midpoint":[mPtX, mPtY], "boundA":[0, (-1/m) * (-1 * mPtX) + mPtY], "boundB":[mPtX - (mPtY/ (-1/m)), 0]})
 			
 			#return None
-		except Exception:
-			data.append({"pointA":[a, b], "pointB":[c, d], "slope":-1/m, "midpoint":[mPtX, mPtY], "boundA":[0, (-1/m) * (-1 * mPtX) + mPtY], "boundB":[mPtX - (mPtY/ (-1/m)), 0]})
-			print(f"({mPtX - (mPtY/ (-1/m) )}, 0), ({mPtX}, {mPtY})")
+		#except Exception:
+		#	data.append({"pointA":[a, b], "pointB":[c, d], "slope":-1/m, "midpoint":[mPtX, mPtY], "boundA":[0, (-1/m) * (-1 * mPtX) + mPtY], "boundB":[mPtX - (mPtY/ (-1/m)), 0]})
+		#	print(f"({mPtX - (mPtY/ (-1/m) )}, 0), ({mPtX}, {mPtY})")
 		
 			#print((a, b), (c, d), (x, y), (-1 / m), (mPtX, mPtY))
 			#return y
@@ -235,42 +235,65 @@ print(cell)
 # Go through the points and find the intersection points in order to form edges
 for currentPoint in points:
 	#points2 = points.copy()
-	data2 = data.copy()
+	#data2 = data.copy()
 	
-	distanceTargetSort(currentPoint, data2)
+	#distanceTargetSort(currentPoint, data2)
 
-	n = data2.__len__()
+	#n = data2.__len__()
 	#print(n)
 
-	for i in range(0, n - 1):
-		#print(i)
-		x, y = intersectSolver(data2[i], data2[i + 1])
+#	for i in range(0, n - 1):
+#		#print(i)
+#		x, y = intersectSolver(data2[i], data2[i + 1])
+#
+#		if x != None:
+#			if x > data2[i]["midpoint"][0] and x < data2[i + 1]["midpoint"][0]: # x is between the midpoints of the two points, mid1 < x < mid2, greater than the first and less than the second
+#				data2[i]["boundB"][0] = x
+#				data2[i]["boundB"][1] = y
+#							
+#				data2[i]["boundA"][0] = x
+#				data2[i]["boundA"][1] = y
+#			elif x < data2[i]["midpoint"][0] and x > data2[i + 1]["midpoint"][0]: # mid2 < x < mid1
+#				data2[i]["boundA"][0] = x
+#				data2[i]["boundA"][1] = y
+#							
+#				data2[i]["boundB"][0] = x
+#				data2[i]["boundB"][1] = y
+#			elif x < data2[i]["midpoint"][0] and x < data2[i + 1]["midpoint"][0]: # x < mid1 & mid2
+#				data2[i]["boundA"][0] = x
+#				data2[i]["boundA"][1] = y
+#							
+#				data2[i]["boundA"][0] = x
+#				data2[i]["boundA"][1] = y
+#			elif x > data2[i]["midpoint"][0] and x > data2[i + 1]["midpoint"][0]: # x > mid1 & mid2
+#				data2[i]["boundB"][0] = x
+#				data2[i]["boundB"][1] = y
+#							
+#				data2[i]["boundB"][0] = x
+#				data2[i]["boundB"][1] = y
 
-		if x != None:
-			if x > data2[i]["midpoint"][0] and x < data2[i + 1]["midpoint"][0]: # x is between the midpoints of the two points, mid1 < x < mid2, greater than the first and less than the second
-				data2[i]["boundB"][0] = x
-				data2[i]["boundB"][1] = y
-							
-				data2[i]["boundA"][0] = x
-				data2[i]["boundA"][1] = y
-			elif x < data2[i]["midpoint"][0] and x > data2[i + 1]["midpoint"][0]: # mid2 < x < mid1
-				data2[i]["boundA"][0] = x
-				data2[i]["boundA"][1] = y
-							
-				data2[i]["boundB"][0] = x
-				data2[i]["boundB"][1] = y
-			elif x < data2[i]["midpoint"][0] and x < data2[i + 1]["midpoint"][0]: # x < mid1 & mid2
-				data2[i]["boundA"][0] = x
-				data2[i]["boundA"][1] = y
-							
-				data2[i]["boundA"][0] = x
-				data2[i]["boundA"][1] = y
-			elif x > data2[i]["midpoint"][0] and x > data2[i + 1]["midpoint"][0]: # x > mid1 & mid2
-				data2[i]["boundB"][0] = x
-				data2[i]["boundB"][1] = y
-							
-				data2[i]["boundB"][0] = x
-				data2[i]["boundB"][1] = y
+	cell2 = cell.copy()
+	
+	kys = cell2.keys()
+	
+	def sort(target, array):
+		n = len(array)
+	
+		for i in range(n):
+			for j in range(0, n - i - 1):
+				point1 = array[j]["midpoint"]
+				point2 = array[j + 1]["midpoint"]
+
+				distance1 = distance(target[0], target[1], point1[0], point1[1])
+				distance2 = distance(target[0], target[1], point2[0], point2[1])
+
+				if distance1 > distance2:
+					array[j], array[j + 1] = array[j + 1], array[j]
+
+	for key in kys:
+		#need to sort the set of otherPoints based on the distance to the point, but first need to decide if I want otherPoint to be a dictionary or a list because a list of dictionary items is kind of the worst of both worlds
+		#update: a dictionary would probably be better since a dictionary can be iterated though as easily as a list using the .keys() and can check if an item exists without causing an error
+		cell2[key]
 
 # Plot the data
 for info in data:
@@ -290,6 +313,7 @@ for pt in points:
 	plt.plot(pt[0], pt[1], "ro")
 
 plt.show()
+
 
 
 
