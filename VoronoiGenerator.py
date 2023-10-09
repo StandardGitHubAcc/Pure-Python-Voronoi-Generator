@@ -9,8 +9,8 @@ import matplotlib.pyplot as plt
 
 points = [(50, 50), (25, 25), (75, 75)]
 data = []
-
-
+#cell = []
+cell = {}
 
 def distance(x1, y1, x2, y2):
 	return (((x1 - x2) ** 2) + ((y1 - y2) ** 2)) ** 0.5
@@ -100,8 +100,14 @@ for i in range(n):
 		if points[j][1] > points[j + 1][1]:
 			points[j], points[j + 1] = points[j + 1], points[j]
 
-for pt in points:
-	plt.plot(pt[0], pt[1], "ro")
+#for i in range(n):
+#	cell.append( { f"{str(points[i]).replace(', ', '_')}" : {"otherPoint":[], "slope":None, "midpoint":[None, None], "boundA":[0, 200], "boundB":[200, 0]} } )
+
+for i in range(n):
+	#cell.update({ f"{str(points[i]).replace(', ', '_')}" : {"otherPoint":[], "slope":None, "midpoint":[None, None], "boundA":[0, 200], "boundB":[200, 0]} })
+	cell.update({ f"{str(points[i]).replace(', ', '_')}" : {"otherPoint":[{ "(None_None)" : {"slope":None, "midpoint":[None, None], "boundA":[0, 200], "boundB":[200, 0]} }] } })
+
+print(cell)
 
 # Go through the points and find all the edges with the nearest point (will need to change this later as most cells have edges with more than just their nearest neighbor)
 for pt in points:
@@ -167,21 +173,64 @@ for pt in points:
 		except Exception:
 			data.append({"pointA":[a, b], "pointB":[c, d], "slope":-1/m, "midpoint":[mPtX, mPtY], "boundA":[0, (-1/m) * (-1 * mPtX) + mPtY], "boundB":[mPtX - (mPtY/ (-1/m)), 0]})
 			print(f"({mPtX - (mPtY/ (-1/m) )}, 0), ({mPtX}, {mPtY})")
+		
 			#print((a, b), (c, d), (x, y), (-1 / m), (mPtX, mPtY))
 			#return y
 
 		#return y
 		#return ( -(d ** 2) - (c ** 2) + (2 * c * x) + (b ** 2) + (a ** 2) - (2 * a * x) ) / ( (-2 * d) + (2 * b) )
 
+		#try:
+			#loc = cell.index(f"({a}_{b})")
+			#cell[loc]["otherPoint"].append([c, d])
+			#cell[loc]["slope"] = -1/m
+			#cell[loc]["midpoint"] = [mPtX, mPtY]
+			#cell[loc]["boundA"] = [0, (-1/m) * (-1 * mPtX) + mPtY]
+			#cell[loc]["boundB"] = [mPtX - (mPtY/ (-1/m)), 0]
+
+		#except Exception as e:
+			#cell.append({f"({a}_{b})":{"otherPoint":[[c, d]], "slope":None, "midpoint":[None, None], "boundA":[0, 200], "boundB":[200, 0]} })
+			#print(e)
+		#print("a")
+		#print(cell[f"({a}_{b})"])
+		#print(list(cell[f"({a}_{b})"]["otherPoint"][0].keys())[0])
+		#if the entry already exists, don't change it (do nothing) (?)
+		if "(None_None)" == list(cell[f"({a}_{b})"]["otherPoint"][0].keys())[0]:
+			print("b")
+			cell.update({ f"({a}_{b})" : {"otherPoint":[{ f"({c}_{d})" : {"slope":-1/m, "midpoint":[mPtX, mPtY], "boundA":[0, (-1/m) * (-1 * mPtX) + mPtY], "boundB":[mPtX - (mPtY/ (-1/m)), 0]} }] } })
+			#del cell[f"({a}_{b})"]["otherPoint"][0]
+		elif not f"({a}_{b})" in cell:
+			#cell[f"({a}_{b})"] = {}
+			print("c")
+			cell.update({ f"({a}_{b})" : {"otherPoint":[{ f"({c}_{d})" : {"slope":-1/m, "midpoint":[mPtX, mPtY], "boundA":[0, (-1/m) * (-1 * mPtX) + mPtY], "boundB":[mPtX - (mPtY/ (-1/m)), 0]} }] } })
+		elif f"({a}_{b})" in cell:
+			print("d")
+			try:
+				cell[f"({a}_{b})"]["otherPoint"].index({ f"({c}_{d})" : {"slope":-1/m, "midpoint":[mPtX, mPtY], "boundA":[0, (-1/m) * (-1 * mPtX) + mPtY], "boundB":[mPtX - (mPtY/ (-1/m)), 0]} })
+			except Exception:
+				print("e")
+				cell[f"({a}_{b})"]["otherPoint"].append({ f"({c}_{d})" : {"slope":-1/m, "midpoint":[mPtX, mPtY], "boundA":[0, (-1/m) * (-1 * mPtX) + mPtY], "boundB":[mPtX - (mPtY/ (-1/m)), 0]} } )
+		
+		#if f"({a}_{b})" in cell:
+			#if the entry already already exists
+			#cell[f"({a}_{b})"][f"({c}_{d})"]
+		#elif "(None_None)" in cell[f"({a}_{b})"]:
+			#if nothing has been entered into the location
+
+		#else:
+			#if the entry does not exist but stuff as already been entered
+
+
 	#solver(a, b, c, d)
 
-	#for otherPoint in points2:
-	#	solver(pt[0], pt[1], otherPoint[0], otherPoint[1])
+	for otherPoint in points2:
+		solver(pt[0], pt[1], otherPoint[0], otherPoint[1])
 
-	solver(pt[0], pt[1], points2[0][0], points2[0][1])
+	#solver(pt[0], pt[1], points2[0][0], points2[0][1])
 
 #print(data.__len__())
-cell = []
+
+print(cell)
 
 # Go through the points and find the intersection points in order to form edges
 for currentPoint in points:
@@ -237,7 +286,10 @@ for info in data:
 
 	plt.plot(info["midpoint"][0], info["midpoint"][1], "yo")
 
+for pt in points:
+	plt.plot(pt[0], pt[1], "ro")
 
 plt.show()
+
 
 
