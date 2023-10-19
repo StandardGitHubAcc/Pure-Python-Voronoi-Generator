@@ -249,38 +249,41 @@ for currentPoint in points:
 						#print("success")
 						if intX > line1["midpoint"][0]:
 							line1["boundB"] = [intX, intY]
-							cell[arrayPoint]["otherPoint"][key1]["boundB"] = [intX, intY]
-						#elif intX < point1["midpoint"][0]:
+							#cell[arrayPoint]["otherPoint"][key1]["boundB"] = [intX, intY]
+							#cell[key1]["otherPoint"][arrayPoint]["boundB"] = [intX, intY]
 						else:
 							line1["boundA"] = [intX, intY]
-							cell[arrayPoint]["otherPoint"][key1]["boundA"] = [intX, intY]
+							#cell[arrayPoint]["otherPoint"][key1]["boundA"] = [intX, intY]
+							#cell[key1]["otherPoint"][arrayPoint]["boundA"] = [intX, intY]
 
 						if intX > line2["midpoint"][0]:
 							line2["boundB"] = [intX, intY]
-							cell[arrayPoint]["otherPoint"][key2]["boundB"] = [intX, intY]
-						#elif intX < point2["midpoint"][0]:
+							#cell[arrayPoint]["otherPoint"][key2]["boundB"] = [intX, intY]
+							#cell[key2]["otherPoint"][arrayPoint]["boundB"] = [intX, intY]
 						else:
 							line2["boundA"] = [intX, intY]
-							cell[arrayPoint]["otherPoint"][key2]["boundA"] = [intX, intY]
+							#cell[arrayPoint]["otherPoint"][key2]["boundA"] = [intX, intY]
+							#cell[key2]["otherPoint"][arrayPoint]["boundA"] = [intX, intY]
 
 						if intX > line3["midpoint"][0]:
 							line3["boundB"] = [intX, intY]
-							cell[key1]["otherPoint"][key2]["boundB"] = [intX, intY]
-						#elif intX < point3["midpoint"][0]:
+							#cell[key1]["otherPoint"][key2]["boundB"] = [intX, intY]
+							#cell[key2]["otherPoint"][key1]["boundB"] = [intX, intY]
 						else:
 							line3["boundA"] = [intX, intY]
-							cell[key1]["otherPoint"][key2]["boundA"] = [intX, intY]
+							#cell[key1]["otherPoint"][key2]["boundA"] = [intX, intY]
+							#cell[key2]["otherPoint"][key1]["boundA"] = [intX, intY]
 
+						print(currentPoint)
 						print(key1)
 						print(key2)
-						print(line3["point"])
 						print()
 
 						intersection3Points.update({ f"({intX}_{intY})" : {
 "intPosition":[intX, intY], 
-"line1":{"point":line1["point"], "slope":line1["slope"], "midpoint":line1["midpoint"], "boundA":line1["boundA"], "boundB":line1["boundB"]},
-"line2":{"point":line2["point"], "slope":line2["slope"], "midpoint":line2["midpoint"], "boundA":line2["boundA"], "boundB":line2["boundB"]},
-"line3":{"point":line3["point"], "slope":line3["slope"], "midpoint":line3["midpoint"], "boundA":line3["boundA"], "boundB":line3["boundB"]}
+"line1":{"points":[currentPoint, line1["point"]], "slope":line1["slope"], "midpoint":line1["midpoint"], "boundA":line1["boundA"], "boundB":line1["boundB"]},
+"line2":{"points":[currentPoint, line2["point"]], "slope":line2["slope"], "midpoint":line2["midpoint"], "boundA":line2["boundA"], "boundB":line2["boundB"]},
+"line3":{"points":[line1["point"], line2["point"]], "slope":line3["slope"], "midpoint":line3["midpoint"], "boundA":line3["boundA"], "boundB":line3["boundB"]}
 						}})
 
 	#n = kys.__len__()
@@ -336,7 +339,7 @@ print()
 #print(intersection3Points)
 #print(cell["(98_70)"]["otherPoint"])
 #print(cell.__len__())
-for site in cell:
+for site in cell: #If I want to make it so that it displays all of the perp lines, go to the area for finding the intersection of 3 lines and comment out all of the references to cell
 	plt.plot(cell[site]["point"][0], cell[site]["point"][1], "ro")
 
 	for line in cell[site]["otherPoint"]:
@@ -350,7 +353,11 @@ intersect3Keys = intersection3Points.keys()
 
 for key in intersect3Keys:
 	#plt.plot(intersection3Points[key]["intPosition"][0], intersection3Points[key]["intPosition"][1], "bo")
-	print(f'intersection point {intersection3Points[key]["intPosition"]} between {intersection3Points[key]["line1"]["point"]} {intersection3Points[key]["line2"]["point"]} {intersection3Points[key]["line3"]["point"]}')
+	print(f'intersection point {intersection3Points[key]["intPosition"]} between {intersection3Points[key]["line1"]["points"][0]} {intersection3Points[key]["line2"]["points"][1]} {intersection3Points[key]["line3"]["points"][0]}')
+	plt.plot([intersection3Points[key]["line1"]["boundA"][0], intersection3Points[key]["line1"]["boundB"][0]], [intersection3Points[key]["line1"]["boundA"][1], intersection3Points[key]["line1"]["boundB"][1]], "-bo")
+	plt.plot([intersection3Points[key]["line2"]["boundA"][0], intersection3Points[key]["line2"]["boundB"][0]], [intersection3Points[key]["line2"]["boundA"][1], intersection3Points[key]["line2"]["boundB"][1]], "-bo")
+	plt.plot([intersection3Points[key]["line3"]["boundA"][0], intersection3Points[key]["line3"]["boundB"][0]], [intersection3Points[key]["line3"]["boundA"][1], intersection3Points[key]["line3"]["boundB"][1]], "-bo")
 
 plt.show()
+
 
