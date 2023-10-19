@@ -3,7 +3,7 @@
 #https://stackoverflow.com/questions/66238749/how-to-find-the-closest-coordinate-from-a-list-of-points
 #https://www.geeksforgeeks.org/sorting-algorithms-in-python/
 
-import numpy as np
+#import numpy as np
 import matplotlib.pyplot as plt
 #import math
 
@@ -76,10 +76,10 @@ def intersectSolver(line1, line2):
 			return x, y
 		else:
 			#print(f'intersection is out of bounds ({line1["boundA"][0]}, {line1["boundA"][1]}) ({line1["boundB"][0]}, {line1["boundB"][1]}) or ({line2["boundA"][0]}, {line2["boundA"][1]}) ({line2["boundB"][0]}, {line2["boundB"][1]})')
-			return (None, None)
+			return None, None
 	else:
 		#print(f"there is no interesection of y = {slope1}(x - {midPt1[0]}) + {midPt1[1]} and y = {slope2}(x - {midPt2[0]}) + {midPt2[1]} or they are the same equation")
-		return (None, None)
+		return None, None
 
 
 def equationToPoint(equation, x):
@@ -183,10 +183,7 @@ for i in range(0, length):
 				if not f"({c}_{d})" in cell[f"({a}_{b})"]["otherPoint"]:
 					#print(f"({a}_{b}) does not contain ({c}_{d})")
 					cell[f"({a}_{b})"]["otherPoint"].update({ f"({c}_{d})" : {"point":[c, d], "slope":-1/m, "midpoint":[mPtX, mPtY], "boundA":boundA, "boundB":boundB} } )
-			#print(cell[f"({a}_{b})"]["otherPoint"])
-			#print()
 
-	#n2 = points2.__len__()
 	for j in range(0, n):
 		solver(pt[0], pt[1], points2[j][0], points2[j][1])
 
@@ -202,8 +199,6 @@ for currentPoint in points:
 
 	cell2 = cell.copy()
 	arrayPoint = str(currentPoint).replace(", ", "_")
-
-	#kys = cell2.keys()
 	
 	def sort(target, array):
 		n = len(array)
@@ -226,98 +221,136 @@ for currentPoint in points:
 	#	The above issue could be solved by including finding intersections with the boundaries after finding all the other intersections and only requiring 2 lines
 	#		(the line and the boundary) to interesect in this case
 
-	#for key in kys:
-
-		#print(list(map(int, key.replace("_", ", ").removesuffix(")").removeprefix("(").split(", "))))
-	#	sort(list(map(int, key.replace("_", ", ").removesuffix(")").removeprefix("(").split(", "))), cell2[key]["otherPoint"])
-		#print(cell2)
-
-	#print(cell2[arrayPoint])
-
 	sort(cell2[arrayPoint]["point"], cell2[arrayPoint]["otherPoint"])
-
+	#print(cell2[arrayPoint]["otherPoint"].__len__())
 	kys = list(cell2[arrayPoint]["otherPoint"].keys())
 
 	for key1 in kys:
 		for key2 in kys:
 			if key1 != key2:
-				point1 = cell2[arrayPoint]["otherPoint"][key1]
-				point2 = cell2[arrayPoint]["otherPoint"][key2]
-				intX, intY = intersectSolver(point1, point2)
+				line1 = cell2[arrayPoint]["otherPoint"][key1]
+				line2 = cell2[arrayPoint]["otherPoint"][key2]
+				intX, intY = intersectSolver(line1, line2)
 				if intX != None:
-					print(f"point1: {point1['point']} point2: {point2['point']} intersect: ({intX, intY})")
-					plt.plot(intX, intY, "bo")
+					#intY = "%.8f" % intY
+					#if not f"({intX}_{intY})" in intersection3Points:
+					#print(f"site: {currentPoint} point1: {line1['point']} point2: {line2['point']} intersect: {intX, intY}")
+					#plt.plot(intX, intY, "bo")
+
+					line3 = cell2[key1]["otherPoint"][key2]
+					#print(line3["point"])
+					yTest = equationToPoint(line3, intX)
+					yTest = float("%.8f" % yTest)
+					intY = float("%.8f" % intY)
+					#print(intY)
+					#print(yTest)
+					
+					if yTest == intY:
+						#print("success")
+						if intX > line1["midpoint"][0]:
+							line1["boundB"] = [intX, intY]
+							cell[arrayPoint]["otherPoint"][key1]["boundB"] = [intX, intY]
+						#elif intX < point1["midpoint"][0]:
+						else:
+							line1["boundA"] = [intX, intY]
+							cell[arrayPoint]["otherPoint"][key1]["boundA"] = [intX, intY]
+
+						if intX > line2["midpoint"][0]:
+							line2["boundB"] = [intX, intY]
+							cell[arrayPoint]["otherPoint"][key2]["boundB"] = [intX, intY]
+						#elif intX < point2["midpoint"][0]:
+						else:
+							line2["boundA"] = [intX, intY]
+							cell[arrayPoint]["otherPoint"][key2]["boundA"] = [intX, intY]
+
+						if intX > line3["midpoint"][0]:
+							line3["boundB"] = [intX, intY]
+							cell[key1]["otherPoint"][key2]["boundB"] = [intX, intY]
+						#elif intX < point3["midpoint"][0]:
+						else:
+							line3["boundA"] = [intX, intY]
+							cell[key1]["otherPoint"][key2]["boundA"] = [intX, intY]
+
+						print(key1)
+						print(key2)
+						print(line3["point"])
+						print()
+
+						intersection3Points.update({ f"({intX}_{intY})" : {
+"intPosition":[intX, intY], 
+"line1":{"point":line1["point"], "slope":line1["slope"], "midpoint":line1["midpoint"], "boundA":line1["boundA"], "boundB":line1["boundB"]},
+"line2":{"point":line2["point"], "slope":line2["slope"], "midpoint":line2["midpoint"], "boundA":line2["boundA"], "boundB":line2["boundB"]},
+"line3":{"point":line3["point"], "slope":line3["slope"], "midpoint":line3["midpoint"], "boundA":line3["boundA"], "boundB":line3["boundB"]}
+						}})
 
 	#n = kys.__len__()
 	#print("a")
-	for key1 in kys:
-		point1 = cell2[arrayPoint]["otherPoint"][key1]
-		#print(" b")
-		for key2 in kys:
-			#print("  c")
-			if key2 != key1:
-				#print("   d")
-				point2 = cell2[arrayPoint]["otherPoint"][key2]
-
-				intX, intY = intersectSolver(point1, point2)
-
-				if intX != None:
-					#print("     e")
-					for key3 in kys:
-						#print("      f")
-						if key3 != key1 and key3 != key2:
-							#print("       g")
-							point3 = cell2[arrayPoint]["otherPoint"][key3]
-							
-							y = equationToPoint(point3, intX)
-
-							if y == intY:
-								#print("        h")
-								if intX > point1["midpoint"][0]:
-									point1["boundB"] = [intX, intY]
-								#elif intX < point1["midpoint"][0]:
-								else:
-									point1["boundA"] = [intX, intY]
-
-								if intX > point2["midpoint"][0]:
-									point2["boundB"] = [intX, intY]
-								#elif intX < point2["midpoint"][0]:
-								else:
-									point2["boundA"] = [intX, intY]
-
-								if intX > point3["midpoint"][0]:
-									point3["boundB"] = [intX, intY]
-								#elif intX < point3["midpoint"][0]:
-								else:
-									point3["boundA"] = [intX, intY]
-
-								intersection3Points.update({
-"intPosition":[intX, intY], 
-"line1":{"point":point1["point"], "slope":point1["slope"], "midpoint":point1["midpoint"], "boundA":point1["boundA"], "boundB":point1["boundB"]},
-"line2":{"point":point2["point"], "slope":point2["slope"], "midpoint":point2["midpoint"], "boundA":point2["boundA"], "boundB":point2["boundB"]},
-"line3":{"point":point3["point"], "slope":point3["slope"], "midpoint":point3["midpoint"], "boundA":point3["boundA"], "boundB":point3["boundB"]}
-})
-
-print(intersection3Points)
-print(cell["(98_70)"]["otherPoint"])
-
-print(cell.__len__())
+# 	for key1 in kys:
+# 		point1 = cell2[arrayPoint]["otherPoint"][key1]
+# 		#print(" b")
+# 		for key2 in kys:
+# 			#print("  c")
+# 			if key2 != key1:
+# 				#print("   d")
+# 				point2 = cell2[arrayPoint]["otherPoint"][key2]
+# 
+# 				intX, intY = intersectSolver(point1, point2)
+# 
+# 				if intX != None:
+# 					#print("     e")
+# 					for key3 in kys:
+# 						#print("      f")
+# 						if key3 != key1 and key3 != key2:
+# 							#print("       g")
+# 							point3 = cell2[arrayPoint]["otherPoint"][key3]
+# 							
+# 							y = equationToPoint(point3, intX)
+# 
+# 							if y == intY:
+# 								#print("        h")
+# 								if intX > point1["midpoint"][0]:
+# 									point1["boundB"] = [intX, intY]
+# 								#elif intX < point1["midpoint"][0]:
+# 								else:
+# 									point1["boundA"] = [intX, intY]
+# 
+# 								if intX > point2["midpoint"][0]:
+# 									point2["boundB"] = [intX, intY]
+# 								#elif intX < point2["midpoint"][0]:
+# 								else:
+# 									point2["boundA"] = [intX, intY]
+# 
+# 								if intX > point3["midpoint"][0]:
+# 									point3["boundB"] = [intX, intY]
+# 								#elif intX < point3["midpoint"][0]:
+# 								else:
+# 									point3["boundA"] = [intX, intY]
+# 
+# 								intersection3Points.update({
+# "intPosition":[intX, intY], 
+# "line1":{"point":point1["point"], "slope":point1["slope"], "midpoint":point1["midpoint"], "boundA":point1["boundA"], "boundB":point1["boundB"]},
+# "line2":{"point":point2["point"], "slope":point2["slope"], "midpoint":point2["midpoint"], "boundA":point2["boundA"], "boundB":point2["boundB"]},
+# "line3":{"point":point3["point"], "slope":point3["slope"], "midpoint":point3["midpoint"], "boundA":point3["boundA"], "boundB":point3["boundB"]}
+# })
+print()
+#print(intersection3Points)
+#print(cell["(98_70)"]["otherPoint"])
+#print(cell.__len__())
 for site in cell:
 	plt.plot(cell[site]["point"][0], cell[site]["point"][1], "ro")
 
 	for line in cell[site]["otherPoint"]:
-		
+		#print(cell[site]["point"], line, cell[site]["otherPoint"][line]["boundA"], cell[site]["otherPoint"][line]["boundB"])
+		print(f'site: {cell[site]["point"]} line: {line} midpoint: {cell[site]["otherPoint"][line]["midpoint"]} boundA: {cell[site]["otherPoint"][line]["boundA"]} boundB: {cell[site]["otherPoint"][line]["boundB"]}')
 		plt.plot(cell[site]["otherPoint"][line]["midpoint"][0], cell[site]["otherPoint"][line]["midpoint"][1], "yo")
 
 		plt.plot([cell[site]["otherPoint"][line]["boundA"][0], cell[site]["otherPoint"][line]["boundB"][0]], [cell[site]["otherPoint"][line]["boundA"][1], cell[site]["otherPoint"][line]["boundB"][1]], "-go")
 
-#for pt in points:
-#	plt.plot(pt[0], pt[1], "ro")
+intersect3Keys = intersection3Points.keys()
+
+for key in intersect3Keys:
+	#plt.plot(intersection3Points[key]["intPosition"][0], intersection3Points[key]["intPosition"][1], "bo")
+	print(f'intersection point {intersection3Points[key]["intPosition"]} between {intersection3Points[key]["line1"]["point"]} {intersection3Points[key]["line2"]["point"]} {intersection3Points[key]["line3"]["point"]}')
 
 plt.show()
-
-
-
-
-
 
