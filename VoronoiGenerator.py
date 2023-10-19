@@ -7,8 +7,10 @@ import numpy as np
 import matplotlib.pyplot as plt
 #import math
 
-#points = [(50, 50), (25, 25), (75, 75), (98, 70)]
-points = [(50, 50), (25, 25), (75, 75)]
+defaultBounds = [[0, 200], [200, 0]]
+
+points = [(50, 50), (25, 25), (75, 75), (98, 70)]
+#points = [(50, 50), (25, 25), (75, 75)]
 data = []
 #cell = []
 cell = {}
@@ -56,36 +58,65 @@ def intersectSolver(line1, line2):
 
 	if slope1 != slope2:
 
-		#x = ( (slope1 * midPt1[0]) - (slope2 * midPt2[0]) ) + ( midPt1[1] - midPt2[1] )
-		x = (midPt1[0] * slope1) - (midPt2[0] * slope2) - midPt1[1] + midPt2[1]
-		y = slope1 * (x - midPt1[0]) + midPt1[1]
-	
-		print(f"intersect of y = {slope1}(x - {midPt1[0]}) + {midPt1[1]} and y = {slope2}(x - {midPt2[0]}) + {midPt2[1]} is ({x}, {y})")
+		#x = (midPt1[0] * slope1) - (midPt2[0] * slope2) - midPt1[1] + midPt2[1]
+		#y = slope1 * (x - midPt1[0]) + midPt1[1]
+
+		#x = ( (slope1 * midPt1[0]) - (slope2 * midPt2[0]) + midPt1[1] - midPt2[1]) / (slope1 - slope2)
+		#y = slope1 * (x - midPt1[0]) + midPt1[1]
+
+		yInt1 = (slope1 * -1 * midPt1[0]) + midPt1[1]
+		yInt2 = (slope2 * -1 * midPt2[0]) + midPt2[1]
+
+		x = (yInt2 - yInt1) / (slope1 - slope2)
+		y = (slope1 * x) + yInt1
+
+		#print(f"intersect of y = {slope1}(x - {midPt1[0]}) + {midPt1[1]} and y = {slope2}(x - {midPt2[0]}) + {midPt2[1]} is ({x}, {y})")
 		
 		if (x > line1["boundA"][0] and x < line1["boundB"][0] and y < line1["boundA"][1] and y > line1["boundB"][1]) and (x > line2["boundA"][0] and x < line2["boundB"][0] and y < line2["boundA"][1] and y > line2["boundB"][1]):
 			return x, y
 		else:
-			print(f'intersection is out of bounds ({line1["boundA"][0]}, {line1["boundA"][1]}) ({line1["boundB"][0]}, {line1["boundB"][1]}) or ({line2["boundA"][0]}, {line2["boundA"][1]}) ({line2["boundB"][0]}, {line2["boundB"][1]})')
+			#print(f'intersection is out of bounds ({line1["boundA"][0]}, {line1["boundA"][1]}) ({line1["boundB"][0]}, {line1["boundB"][1]}) or ({line2["boundA"][0]}, {line2["boundA"][1]}) ({line2["boundB"][0]}, {line2["boundB"][1]})')
 			return (None, None)
 	else:
-		print(f"there is no interesection of y = {slope1}(x - {midPt1[0]}) + {midPt1[1]} and y = {slope2}(x - {midPt2[0]}) + {midPt2[1]} or they are the same equation")
+		#print(f"there is no interesection of y = {slope1}(x - {midPt1[0]}) + {midPt1[1]} and y = {slope2}(x - {midPt2[0]}) + {midPt2[1]} or they are the same equation")
 		return (None, None)
 
 
 def equationToPoint(equation, x):
 	return equation["slope"] * (x - equation["midpoint"][0]) + equation["midpoint"][1]
+	
+def setDefaultBounds(slope, mPtX, mPtY, givenBounds):#, lineBounds):
+	leftBound = givenBounds[0][0]
+	topBound = givenBounds[0][1]
+	rightBound = givenBounds[1][0]
+	bottomBound = givenBounds[1][1]
 
+	pointA = (0, 0)#lineBounds[0]
+	pointB = (0, 0)#lineBounds[1]
 
-# Driver code
- 
-# Example to test the above code
-#arr = [ 2, 1, 10, 23 ]
- 
-#bubbleSort(arr)
- 
-#print("Sorted array is:")
-#for i in range(len(arr)):
-#    print("%d" % arr[i])
+	yA = slope * (leftBound - mPtX) + mPtY
+	
+	if yA > topBound:
+		xA = mPtX + (topBound - mPtY)/slope
+		pointA = (xA, topBound)
+	elif yA < bottomBound:
+		xA = mPtX + (bottomBound - mPtY)/slope
+		pointA = (xA, bottomBound)
+	else:
+		pointA = (leftBound, yA)
+
+	yB = slope * (rightBound - mPtX) + mPtY
+	
+	if yB > topBound:
+		xB = mPtX + (topBound - mPtY)/slope
+		pointB = (xB, topBound)
+	elif yB < bottomBound:
+		xB = mPtX + (bottomBound - mPtY)/slope
+		pointB = (xB, bottomBound)
+	else:
+		pointB = (rightBound, yB)
+
+	return pointA, pointB
 
 plt.figure(figsize=(7, 7))
 plt.ylim(0, 200)
@@ -102,34 +133,17 @@ for i in range(n):
 		if points[j][1] > points[j + 1][1]:
 			points[j], points[j + 1] = points[j + 1], points[j]
 
-#for i in range(n):
-#	cell.append( { f"{str(points[i]).replace(', ', '_')}" : {"otherPoint":[], "slope":None, "midpoint":[None, None], "boundA":[0, 200], "boundB":[200, 0]} } )
-
 for i in range(n):
-	#cell.update({ f"{str(points[i]).replace(', ', '_')}" : {"otherPoint":[], "slope":None, "midpoint":[None, None], "boundA":[0, 200], "boundB":[200, 0]} })
 	cell.update({ f"{str(points[i]).replace(', ', '_')}" : {"point":points[i], "otherPoint":{ "(None_None)" : {"point":[None, None], "slope":None, "midpoint":[None, None], "boundA":[0, 200], "boundB":[200, 0]} } } })
 
-#print(cell)
-
 # Go through the points and find all the edges with the nearest point (will need to change this later as most cells have edges with more than just their nearest neighbor)
-for pt in points:
-
+length = points.__len__()
+for i in range(0, length):
+	pt = points[i]
 	points2 = points.copy()
 	points2.remove(pt)
 
-	#xy = np.array(points2).T
-
-	#d = ( (xy[0] - pt[0]) ** 2 + (xy[1] - pt[1]) ** 2) ** 0.5
-
-	#closest_idx = np.argmin(d)
-	#closest = points2[closest_idx]
-
-	#print(pt, closest)
-
-	#a = pt[0]
-	#b = pt[1]
-	#c = closest[0]
-	#d = closest[1]
+	#print(pt)
 
 	n = len(points2)
 	
@@ -146,97 +160,37 @@ for pt in points:
 
 
 	def solver(a, b, c, d):
-		if c < a and d < b:
-			#e = a
-			#f = b
-
-			#a = c
-			#b = d
-
-			#c = e
-			#d = f
-
-			(a, b), (c, d) = (c, d), (a, b)
+		#if c < a and d < b:
+		#	(a, b), (c, d) = (c, d), (a, b)
 
 		m = (b - d) / (a - c)
-		#y = (-1 / m) * (x - a) + b
 
 		mPtX = (a + c) / 2
 		mPtY = (b + d) / 2
-
-		#plt.plot(mPtX, mPtY, "yo")
-
-		#y = (-1 / m) * (x - mPtX) + mPtY
-
-		#try:
-		#	data.index({"pointA":[a, b], "pointB":[c, d], "slope":-1/m, "midpoint":[mPtX, mPtY], "boundA":[0, (-1/m) * (-1 * mPtX) + mPtY], "boundB":[mPtX - (mPtY/ (-1/m)), 0]})
-			
-			#return None
-		#except Exception:
-		#	data.append({"pointA":[a, b], "pointB":[c, d], "slope":-1/m, "midpoint":[mPtX, mPtY], "boundA":[0, (-1/m) * (-1 * mPtX) + mPtY], "boundB":[mPtX - (mPtY/ (-1/m)), 0]})
-		#	print(f"({mPtX - (mPtY/ (-1/m) )}, 0), ({mPtX}, {mPtY})")
 		
-			#print((a, b), (c, d), (x, y), (-1 / m), (mPtX, mPtY))
-			#return y
+		if f"({a}_{b})" != f"({c}_{d})":
 
-		#return y
-		#return ( -(d ** 2) - (c ** 2) + (2 * c * x) + (b ** 2) + (a ** 2) - (2 * a * x) ) / ( (-2 * d) + (2 * b) )
+			boundA, boundB = setDefaultBounds(-1/m, mPtX, mPtY, defaultBounds)
 
-		#try:
-			#loc = cell.index(f"({a}_{b})")
-			#cell[loc]["otherPoint"].append([c, d])
-			#cell[loc]["slope"] = -1/m
-			#cell[loc]["midpoint"] = [mPtX, mPtY]
-			#cell[loc]["boundA"] = [0, (-1/m) * (-1 * mPtX) + mPtY]
-			#cell[loc]["boundB"] = [mPtX - (mPtY/ (-1/m)), 0]
+			if "(None_None)" == list(cell[f"({a}_{b})"]["otherPoint"].keys())[0]:
+				cell.update({ f"({a}_{b})" : {"point":[a, b], "otherPoint":{ f"({c}_{d})" : {"point":[c, d], "slope":-1/m, "midpoint":[mPtX, mPtY], "boundA":boundA, "boundB":boundB} } } })
+				#print(f"({a}_{b}) contains a (None_None)")
+			elif not f"({a}_{b})" in cell:
+				cell.update({ f"({a}_{b})" : {"point":[a, b], "otherPoint":{ f"({c}_{d})" : {"point":[c, d], "slope":-1/m, "midpoint":[mPtX, mPtY], "boundA":boundA, "boundB":boundB} } } })
+				#print(f"cell does not contain ({a}_{b})")
+			elif f"({a}_{b})" in cell:
+				#print(f"cell contains ({a}_{b})")
+				if not f"({c}_{d})" in cell[f"({a}_{b})"]["otherPoint"]:
+					#print(f"({a}_{b}) does not contain ({c}_{d})")
+					cell[f"({a}_{b})"]["otherPoint"].update({ f"({c}_{d})" : {"point":[c, d], "slope":-1/m, "midpoint":[mPtX, mPtY], "boundA":boundA, "boundB":boundB} } )
+			#print(cell[f"({a}_{b})"]["otherPoint"])
+			#print()
 
-		#except Exception as e:
-			#cell.append({f"({a}_{b})":{"otherPoint":[[c, d]], "slope":None, "midpoint":[None, None], "boundA":[0, 200], "boundB":[200, 0]} })
-			#print(e)
-		#print("a")
-		#print(cell[f"({a}_{b})"])
-		#print(list(cell[f"({a}_{b})"]["otherPoint"][0].keys())[0])
-		#if the entry already exists, don't change it (do nothing) (?)
+	#n2 = points2.__len__()
+	for j in range(0, n):
+		solver(pt[0], pt[1], points2[j][0], points2[j][1])
 
-		if "(None_None)" == list(cell[f"({a}_{b})"]["otherPoint"].keys())[0]:
-			#print("a")
-			cell.update({ f"({a}_{b})" : {"point":[a, b], "otherPoint":{ f"({c}_{d})" : {"point":[c, d], "slope":-1/m, "midpoint":[mPtX, mPtY], "boundA":[0, (-1/m) * (-1 * mPtX) + mPtY], "boundB":[mPtX - (mPtY/ (-1/m)), 0]} } } })
-			#del cell[f"({a}_{b})"]["otherPoint"][0]
-		elif not f"({a}_{b})" in cell:
-			#cell[f"({a}_{b})"] = {}
-			#print("b")
-			cell.update({ f"({a}_{b})" : {"point":[a, b], "otherPoint":{ f"({c}_{d})" : {"point":[c, d], "slope":-1/m, "midpoint":[mPtX, mPtY], "boundA":[0, (-1/m) * (-1 * mPtX) + mPtY], "boundB":[mPtX - (mPtY/ (-1/m)), 0]} } } })
-		elif f"({a}_{b})" in cell:
-			if not f"({c}_{d})" in cell[f"({a}_{b})"]["otherPoint"]:
-				#print("c")
-				cell[f"({a}_{b})"]["otherPoint"].update({ f"({c}_{d})" : {"point":[c, d], "slope":-1/m, "midpoint":[mPtX, mPtY], "boundA":[0, (-1/m) * (-1 * mPtX) + mPtY], "boundB":[mPtX - (mPtY/ (-1/m)), 0]} } )
-			#print("d")
-			
-		#print(cell[f"({a}_{b})"]["otherPoint"])
-		#print(f"({a}_{b}) ({c}_{d})")
-		
-		#if f"({a}_{b})" in cell:
-			#if the entry already already exists
-			#cell[f"({a}_{b})"][f"({c}_{d})"]
-		#elif "(None_None)" in cell[f"({a}_{b})"]:
-			#if nothing has been entered into the location
-
-		#else:
-			#if the entry does not exist but stuff as already been entered
-
-
-	#solver(a, b, c, d)
-
-	for otherPoint in points2:
-		solver(pt[0], pt[1], otherPoint[0], otherPoint[1])
-
-	#solver(pt[0], pt[1], points2[0][0], points2[0][1])
-
-#print(data.__len__())
-
-#print(cell["(98_70)"]["otherPoint"])
-#print(cell["(25_25)"]["otherPoint"])
-print(cell)
+#print(cell)
 
 # Go through the points and find the intersection points in order to form edges
 #-------------------------------------------------------------------------------------------------Current issues: 
@@ -245,43 +199,6 @@ print(cell)
 #3) no triple intersection points are being found whne there should be 1
 
 for currentPoint in points:
-	#points2 = points.copy()
-	#data2 = data.copy()
-	
-	#distanceTargetSort(currentPoint, data2)
-
-	#n = data2.__len__()
-	#print(n)
-
-#	for i in range(0, n - 1):
-#		#print(i)
-#		x, y = intersectSolver(data2[i], data2[i + 1])
-#
-#		if x != None:
-#			if x > data2[i]["midpoint"][0] and x < data2[i + 1]["midpoint"][0]: # x is between the midpoints of the two points, mid1 < x < mid2, greater than the first and less than the second
-#				data2[i]["boundB"][0] = x
-#				data2[i]["boundB"][1] = y
-#							
-#				data2[i]["boundA"][0] = x
-#				data2[i]["boundA"][1] = y
-#			elif x < data2[i]["midpoint"][0] and x > data2[i + 1]["midpoint"][0]: # mid2 < x < mid1
-#				data2[i]["boundA"][0] = x
-#				data2[i]["boundA"][1] = y
-#							
-#				data2[i]["boundB"][0] = x
-#				data2[i]["boundB"][1] = y
-#			elif x < data2[i]["midpoint"][0] and x < data2[i + 1]["midpoint"][0]: # x < mid1 & mid2
-#				data2[i]["boundA"][0] = x
-#				data2[i]["boundA"][1] = y
-#							
-#				data2[i]["boundA"][0] = x
-#				data2[i]["boundA"][1] = y
-#			elif x > data2[i]["midpoint"][0] and x > data2[i + 1]["midpoint"][0]: # x > mid1 & mid2
-#				data2[i]["boundB"][0] = x
-#				data2[i]["boundB"][1] = y
-#							
-#				data2[i]["boundB"][0] = x
-#				data2[i]["boundB"][1] = y
 
 	cell2 = cell.copy()
 	arrayPoint = str(currentPoint).replace(", ", "_")
@@ -321,31 +238,41 @@ for currentPoint in points:
 
 	kys = list(cell2[arrayPoint]["otherPoint"].keys())
 
+	for key1 in kys:
+		for key2 in kys:
+			if key1 != key2:
+				point1 = cell2[arrayPoint]["otherPoint"][key1]
+				point2 = cell2[arrayPoint]["otherPoint"][key2]
+				intX, intY = intersectSolver(point1, point2)
+				if intX != None:
+					print(f"point1: {point1['point']} point2: {point2['point']} intersect: ({intX, intY})")
+					plt.plot(intX, intY, "bo")
+
 	#n = kys.__len__()
-	print("a")
+	#print("a")
 	for key1 in kys:
 		point1 = cell2[arrayPoint]["otherPoint"][key1]
-		print(" b")
+		#print(" b")
 		for key2 in kys:
-			print("  c")
+			#print("  c")
 			if key2 != key1:
-				print("   d")
+				#print("   d")
 				point2 = cell2[arrayPoint]["otherPoint"][key2]
 
 				intX, intY = intersectSolver(point1, point2)
 
 				if intX != None:
-					print("     e")
+					#print("     e")
 					for key3 in kys:
-						print("      f")
+						#print("      f")
 						if key3 != key1 and key3 != key2:
-							print("       g")
+							#print("       g")
 							point3 = cell2[arrayPoint]["otherPoint"][key3]
 							
 							y = equationToPoint(point3, intX)
 
 							if y == intY:
-								print("        h")
+								#print("        h")
 								if intX > point1["midpoint"][0]:
 									point1["boundB"] = [intX, intY]
 								#elif intX < point1["midpoint"][0]:
@@ -372,20 +299,8 @@ for currentPoint in points:
 })
 
 print(intersection3Points)
+print(cell["(98_70)"]["otherPoint"])
 
-# Plot the data
-#for info in data:
-	#midPt = info["midpoint"]
-	
-	#y1 = equationToPoint(info, info["boundA"][0])
-	#y2 = equationToPoint(info, info["boundB"][0])
-
-	#plt.plot([info["boundA"][0], info["boundB"][0]], [y1, y2], "-go")
-	#print(info["boundA"][0])
-	#print(f'{info["boundA"][0], info["boundA"][1]} {info["boundB"][0], info["boundB"][1]}')
-#	plt.plot([info["boundA"][0], info["boundB"][0]], [info["boundA"][1], info["boundB"][1]], "-go")
-
-#	plt.plot(info["midpoint"][0], info["midpoint"][1], "yo")
 print(cell.__len__())
 for site in cell:
 	plt.plot(cell[site]["point"][0], cell[site]["point"][1], "ro")
@@ -400,6 +315,7 @@ for site in cell:
 #	plt.plot(pt[0], pt[1], "ro")
 
 plt.show()
+
 
 
 
