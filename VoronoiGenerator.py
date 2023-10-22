@@ -2,7 +2,7 @@
 #https://www.geeksforgeeks.org/create-2d-pixel-plot-in-python/
 #https://stackoverflow.com/questions/66238749/how-to-find-the-closest-coordinate-from-a-list-of-points
 #https://www.geeksforgeeks.org/sorting-algorithms-in-python/
-#WORKS (with the current set of points, can break if another point is added)
+#WORKS
 #import numpy as np
 import random
 import matplotlib.pyplot as plt
@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 
 defaultBounds = [[0, 200], [200, 0]]
 
-points = [(50, 50), (25, 25), (75, 75), (98, 70)]
+points = [(50, 50), (25, 25), (75, 75), (98, 70), (30, 180)]
 #		bottomleft, topleft, bottomright, topright
 corners = [[0, 0], [0, 200], [200, 0], [200, 200]] #[ [defaultBounds[0][0], defaultBounds[1][1]], [defaultBounds[0][0], defaultBounds[0][1]], [defaultBounds[1][0], defaultBounds[1][1]], [defaultBounds[0][1], defaultBounds[1][0]] ]
 #points = [(50, 50), (25, 25), (75, 75)]
@@ -352,14 +352,18 @@ for site in cell:
 	cellKeys = list(cell[site]["otherPoint"].keys())
 	for key in cellKeys:
 		for entry in intersection3Points:
-			intX1, intY1 = intersectSolver(cell[site]["otherPoint"][key], intersection3Points[entry]["line1"])
-			intX2, intY2 = intersectSolver(cell[site]["otherPoint"][key], intersection3Points[entry]["line2"])
-			intX3, intY3 = intersectSolver(cell[site]["otherPoint"][key], intersection3Points[entry]["line3"])
-			#print(site, cell[site]["otherPoint"][key]["midpoint"][0])
+			try:
+				intX1, intY1 = intersectSolver(cell[site]["otherPoint"][key], intersection3Points[entry]["line1"])
+				intX2, intY2 = intersectSolver(cell[site]["otherPoint"][key], intersection3Points[entry]["line2"])
+				intX3, intY3 = intersectSolver(cell[site]["otherPoint"][key], intersection3Points[entry]["line3"])
+				#print(site, cell[site]["otherPoint"][key]["midpoint"][0])
 
-			if intX1 != None or intX2 != None or intX3 != None:
-				del cell[site]["otherPoint"][key]
-				#print("deleting")
+				if intX1 != None or intX2 != None or intX3 != None:
+					print(f'deleting {cell[site]["otherPoint"][key]}')
+					del cell[site]["otherPoint"][key]
+			except Exception:
+				pass
+				
 
 # Need to 
 # 1. determine if the boundry of a line is on the overall boundry
@@ -702,3 +706,4 @@ for site in cell: #If I want to make it so that it displays all of the perp line
 
 	
 plt.show()
+
