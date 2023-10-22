@@ -2,7 +2,7 @@
 #https://www.geeksforgeeks.org/create-2d-pixel-plot-in-python/
 #https://stackoverflow.com/questions/66238749/how-to-find-the-closest-coordinate-from-a-list-of-points
 #https://www.geeksforgeeks.org/sorting-algorithms-in-python/
-
+#WORKS (with the current set of points, can break if another point is added)
 #import numpy as np
 import random
 import matplotlib.pyplot as plt
@@ -122,24 +122,20 @@ def setDefaultBounds(slope, mPtX, mPtY, givenBounds):#, lineBounds):
 
 	return pointA, pointB
 
-def boundryCheck(line, givenBounds):
-	#leftY = float("%.8f" % equationToPoint(line, givenBounds[0][0]))
-	#topY = float("%.8f" % equationToPoint(line, givenBounds[0][1]))
-	#rightY = float("%.8f" % equationToPoint(line, givenBounds[1][0]))
-	#bottomY = float("%.8f" % equationToPoint(line, givenBounds[1][1]))
-
-	boundA = line["boundA"]
-	boundB = line["boundB"]
-
-	#locationA = ""
-	#locationB = ""
-
+def pointDistanceTargetSort(target, array): 
+		n = len(array)
 	
+		for i in range(n):
+			for j in range(0, n - i - 1):
+				point1 = array[j]
+				point2 = array[j + 1]
 
-	if boundA[0] == givenBounds[0][0] or boundA[1] == givenBounds[0][1] or boundA == givenBounds[1][1]:
-		return True
-	elif boundB[0] == givenBounds[1][0] or boundB[1] == givenBounds[0][1] or boundB == givenBounds[1][1]:
-		return True
+				distance1 = distance(target[0], target[1], point1[0], point1[1])
+				distance2 = distance(target[0], target[1], point2[0], point2[1])
+
+				if distance1 > distance2:
+					array[j], array[j + 1] = array[j + 1], array[j]
+
 #points = [[50, 50], [25, 25], [75, 75]]
 
 n = len(points)
@@ -381,16 +377,16 @@ for site in cell:
 for site in cell:
 	leftX = defaultBounds[0][0]
 	rightX = defaultBounds[1][0]
-	bottomY = defaultBounds[0][1]
-	topY = defaultBounds[1][1]
+	bottomY = defaultBounds[1][1]
+	topY = defaultBounds[0][1]
 
-	def basicDistanceTargetSort(target, array): #there is another place where this is done, so I should make this a global function and just reference it when I need to do this
+	def distBoundryTargetSort(target, array):
 		n = len(array)
 	
 		for i in range(n):
 			for j in range(0, n - i - 1):
-				point1 = array[j]
-				point2 = array[j + 1]
+				point1 = array[j]["boundB"]
+				point2 = array[j + 1]["boundA"]
 
 				distance1 = distance(target[0], target[1], point1[0], point1[1])
 				distance2 = distance(target[0], target[1], point2[0], point2[1])
@@ -415,7 +411,7 @@ for site in cell:
 			if ( boundAX == leftX and (boundBY == topY or boundBY == bottomY) ) or ( boundBX == rightX and (boundAY == topY or boundAY == bottomY) ): #if the site is in a corner
 				#print("corner")
 				corner = corners.copy()
-				basicDistanceTargetSort(keyToPoints(site), corner)
+				pointDistanceTargetSort(keyToPoints(site), corner)
 				#finalCell.update( { site: {"pointForm":keyToPoints(site), "vertices":[cell[site]["otherPoint"][ky]["boundA"], corner[0], cell[site]["otherPoint"][ky]["boundB"] ]} })
 				finalCell.update( { site: {"pointForm":keyToPoints(site), "vertices":[[cell[site]["otherPoint"][ky]["boundA"], corner[0]], [corner[0], cell[site]["otherPoint"][ky]["boundB"]], [cell[site]["otherPoint"][ky]["boundB"], cell[site]["otherPoint"][ky]["boundA"]] ]} })
 			else: #if the site is not in a corner  #would be the same as elif ( boundAX == leftX and boundBX == rightX ) or ( boundAY == bottomY and boundBY == topY ) or (boundAY == topY and boundBY == bottomY):
@@ -443,35 +439,43 @@ for site in cell:
 							finalCell.update({ site: {"pointForm":keyToPoints(site), "vertices":[[cell[site]["otherPoint"][ky]["boundA"], corners[3]], [corners[3], corners[4]], [corners[4], cell[site]["otherPoint"][ky]["boundB"]], [cell[site]["otherPoint"][ky]["boundB"], cell[site]["otherPoint"][ky]["boundA"]] ]} })
 		case 2:
 			boundryPairs = [] 
-
+			sharedPoint = (0, 0)
+			#print()
 			kys = list(cell[site]["otherPoint"].keys())
 
 			line1 = cell[site]["otherPoint"][kys[0]]
 			line2 = cell[site]["otherPoint"][kys[1]]
 
-			L1boundAX = cell[site]["otherPoint"][line1]["boundA"][0]
-			L1boundAY = cell[site]["otherPoint"][line1]["boundA"][1]
-			L1boundBX = cell[site]["otherPoint"][line1]["boundB"][0]
-			L1boundBY = cell[site]["otherPoint"][line1]["boundB"][1]
+			L1boundAX = line1["boundA"][0]
+			L1boundAY = line1["boundA"][1]
+			L1boundBX = line1["boundB"][0]
+			L1boundBY = line1["boundB"][1]
 
-			L2boundAX = cell[site]["otherPoint"][line2]["boundA"][0]
-			L2boundAY = cell[site]["otherPoint"][line2]["boundA"][1]
-			L2boundBX = cell[site]["otherPoint"][line2]["boundB"][0]
-			L2boundBY = cell[site]["otherPoint"][line2]["boundB"][1]
+			L2boundAX = line2["boundA"][0]
+			L2boundAY = line2["boundA"][1]
+			L2boundBX = line2["boundB"][0]
+			L2boundBY = line2["boundB"][1]
 
 			L1BoundPt = (0, 0)
 			L2BoundPt = (0, 0)
 
 			avX = (line1["point"][0] + line2["point"][0])/(2)
 			avY = (line1["point"][1] + line2["point"][1])/(2)
+
+			
 			#P1Type = "None"
 			#P2Type = "None"
 
+			#print((L1boundAX, L1boundAY), (L1boundBX, L1boundBY))
+			#print((L2boundAX, L2boundAY), (L2boundBX, L2boundBY))
+
 			if L1boundAX == leftX or L1boundAY == topY or L1boundAY == bottomY:
 				L1BoundPt = (L1boundAX, L1boundAY)
+				sharedPoint = (L1boundBX, L1boundBY)
 				#P1Type = "A"
 			elif L1boundBX == rightX or L1boundBY == topY or L1boundBY == bottomY:
 				L1BoundPt = (L1boundBX, L1boundBY)
+				sharedPoint = (L1boundAX, L1boundAY)
 				#P1Type = "B"
 
 			if L2boundAX == leftX or L2boundAY == topY or L2boundAY == bottomY:
@@ -482,87 +486,63 @@ for site in cell:
 				#P2Type = "B"
 
 			if L1BoundPt[0] == L2BoundPt[0] and L1BoundPt[1] != L2BoundPt[1]:
-				boundryPairs.append([L1BoundPt, L2BoundPt])
+				boundryPairs.extend([L1BoundPt, L2BoundPt])
 			else:
-				if (L1BoundPt[0] == leftX and L2BoundPt[1] == topY) or (L2BoundPt[0] == leftX and L1BoundPt[1] == topY): #top left
-					boundryPairs.append([ [L1BoundPt, corners[1]], [corners[1], L2BoundPt] ])
-				elif (L1BoundPt[0] == leftX and L2BoundPt[1] == bottomY) or (L2BoundPt[0] == leftX and L1BoundPt[1] == bottomY): #bottom left
-					boundryPairs.append([ [L1BoundPt, corners[0]], [corners[0], L2BoundPt] ])
-				elif (L1BoundPt[0] == rightX and L2BoundPt[1] == topY) or (L2BoundPt[0] == rightX and L1BoundPt[1] == topY): #top right
-					boundryPairs.append([ [L1BoundPt, corners[3]], [corners[3], L2BoundPt] ])
-				elif (L1BoundPt[0] == rightX and L2BoundPt[1] == bottomY) or (L2BoundPt[0] == rightX and L1BoundPt[1] == bottomY): #bottom right
-					boundryPairs.append([ [L1BoundPt, corners[2]], [corners[2], L2BoundPt] ])
-				elif (L1BoundPt[0] == leftX and L2BoundPt[0] == rightX) or (L2BoundPt[0] == leftX and L1BoundPt[0] == rightX): # stretch left right
-					if cell[site]["point"][1] < avY: # the site is on the bottom
-						if L1BoundPt[0] < L2BoundPt[0]:
-							boundryPairs.append([ [L1BoundPt, corners[0]], [corners[0], corners[2]], [corners[2], L2BoundPt] ])
+				if L1BoundPt[0] > L2BoundPt[0]:
+					L1BoundPt, L2BoundPt = L2BoundPt, L1BoundPt
+
+				if L1BoundPt[0] == leftX and L2BoundPt[1] == topY: #top left
+					boundryPairs.extend([ [L1BoundPt, corners[1]], [corners[1], L2BoundPt] ])
+					#print("top left")
+				elif L1BoundPt[0] == leftX and L2BoundPt[1] == bottomY: #bottom left
+					boundryPairs.extend([ [L1BoundPt, corners[0]], [corners[0], L2BoundPt] ])
+					#print("bottom left")
+					#print(L1BoundPt, L2BoundPt[1], corners[0], bottomY)
+				elif L1BoundPt[0] == rightX and L2BoundPt[1] == topY: #top right
+					boundryPairs.extend([ [L1BoundPt, corners[3]], [corners[3], L2BoundPt] ])
+					#print("top right")
+				elif L1BoundPt[0] == rightX and L2BoundPt[1] == bottomY: #bottom right
+					boundryPairs.extend([ [L1BoundPt, corners[2]], [corners[2], L2BoundPt] ])
+					#print("bottom right")
+				elif L1BoundPt[0] == leftX and L2BoundPt[0] == rightX:
+					if cell[site]["point"][1] < avY: # if the site is on the bottom
+						boundryPairs.extend([ [L1BoundPt, corners[0]], [corners[0], corners[2]], [corners[2], L2BoundPt] ])
+						#print("bottom")
+					else:
+						boundryPairs.extend([ [L1BoundPt, corners[1]], [corners[1], corners[3]], [corners[3], L2BoundPt] ])
+						#print("top")
+				elif (L1BoundPt[1] == topY and L2BoundPt[1] == bottomY) or (L1BoundPt[1] == bottomY and L2BoundPt[1] == topY):
+					if cell[site]["point"][0] < avX: #if the site is on the left
+						d1 = distance(L1BoundPt[0], L1BoundPt[1], corners[0][0], corners[0][1])
+						d2 = distance(L1BoundPt[0], L1BoundPt[1], corners[1][0], corners[1][1])
+						#print("left")
+						if d1 < d2:
+							boundryPairs.extend([ [L1BoundPt, corners[0]], [corners[0], corners[1]], [corners[1], L2BoundPt] ])
 						else:
-							boundryPairs.append([ [L2BoundPt, corners[0]], [corners[0], corners[2]], [corners[2], L1BoundPt] ])
-					else: # the site is on the top
-						if L1BoundPt[0] < L2BoundPt[0]:
-							boundryPairs.append([ [L2BoundPt, corners[1]], [corners[1], corners[3]], [corners[3], L1BoundPt] ])
-						else:
-							boundryPairs.append([ [L2BoundPt, corners[1]], [corners[1], corners[3]], [corners[3], L1BoundPt] ])
-				elif (L1BoundPt[1] == topY and L2BoundPt[1] == bottomY) or (L2BoundPt[1] == topY and L1BoundPt[1] == bottomY): # stretch top bottom
-					if cell[site]["point"][0] < avX: # the site is on the left side
+							boundryPairs.extend([ [L1BoundPt, corners[1]], [corners[1], corners[0]], [corners[0], L2BoundPt] ])
 						
-						if L1BoundPt[0] < L2BoundPt[0]:
-							d1 = distance(L1BoundPt[0], L1BoundPt[1], corners[0][0], corners[0][1])
-							d2 = distance(L1BoundPt[0], L1BoundPt[1], corners[1][0], corners[1][1])
-							boundryPairs.append([ [L1BoundPt, corners[0]], [corners[0], corners[2]], [corners[2], L2BoundPt] ])
+					else:
+						d1 = distance(L1BoundPt[0], L1BoundPt[1], corners[2][0], corners[2][1])
+						d2 = distance(L1BoundPt[0], L1BoundPt[1], corners[3][0], corners[3][1])
+						#print("right")
+						if d1 < d2:
+							boundryPairs.extend([ [L1BoundPt, corners[2]], [corners[2], corners[3]], [corners[3], L2BoundPt] ])
 						else:
-							boundryPairs.append([ [L2BoundPt, corners[0]], [corners[0], corners[2]], [corners[2], L1BoundPt] ])
-					else: # the site is on the right side
+							boundryPairs.extend([ [L1BoundPt, corners[3]], [corners[3], corners[2]], [corners[2], L2BoundPt] ])
 
-			for line in cell[site]["otherPoint"]: #this works for cases such as site (50, 50) since it has a pair of points on the boundry on two different boundries, 
-												  #	but does not work for cases such as site (75, 75) and (98, 70) where there is one point on one boundry and another point another another boundry
-												  # cases such as (75, 75) and (98, 70) can be like corner points, but I am not sure how to tell if this is the case
-				boundAX = cell[site]["otherPoint"][line]["boundA"][0]
-				boundAY = cell[site]["otherPoint"][line]["boundA"][1]
-				boundBX = cell[site]["otherPoint"][line]["boundB"][0]
-				boundBY = cell[site]["otherPoint"][line]["boundB"][1]
-
-				if boundAX == leftX or boundAY == topY or boundAY == bottomY:
-					for line2 in cell[site]["otherPoint"]:
-						if line2 != line1:
-							boundAX2 = cell[site]["otherPoint"][line2]["boundA"][0]
-							boundAY2 = cell[site]["otherPoint"][line2]["boundA"][1]
-							boundBX2 = cell[site]["otherPoint"][line2]["boundB"][0]
-							boundBY2 = cell[site]["otherPoint"][line2]["boundB"][1]	
-							if (boundAX == boundAX2 and boundAY != boundAY2) or (boundAY == boundAY2 and boundAX != boundAX2):
-								if not [cell[site]["otherPoint"][line]["boundA"], cell[site]["otherPoint"][line2]["boundA"]] in boundryPairs and not [cell[site]["otherPoint"][line2]["boundA"], cell[site]["otherPoint"][line]["boundA"]] in boundryPairs:
-									boundryPairs.append([cell[site]["otherPoint"][line]["boundA"], cell[site]["otherPoint"][line2]["boundA"]])
-							else:
-#								if boundAX == leftX and boundBY2 == topY:
-#									pass
-#								elif boundAX == leftX and boundBY2 == bottomY:
-#									pass
-#								elif boundAY == topY and boundBX2 == rightX:
-#									pass
-#								elif boundAY == bottomY and boundBX2 == rightX:
-#									pass
-#								elif boundAY == topY and boundB
-								pass				
-				if boundBX == rightX or boundBY == topY or boundBY == bottomY:
-					for line2 in cell[site]["otherPoint"]:
-						if line2 != line1:
-							#boundAX2 = cell[site]["otherPoint"][line2]["boundA"][0]
-							#boundAY2 = cell[site]["otherPoint"][line2]["boundA"][1]
-							boundBX2 = cell[site]["otherPoint"][line2]["boundB"][0]
-							boundBY2 = cell[site]["otherPoint"][line2]["boundB"][1]	
-							if (boundBX == boundBX2 and boundBY != boundBY2) or (boundBY == boundBY2 and boundBX != boundBX2):
-								if not [cell[site]["otherPoint"][line]["boundB"], cell[site]["otherPoint"][line2]["boundB"]] in boundryPairs and not [cell[site]["otherPoint"][line2]["boundB"], cell[site]["otherPoint"][line]["boundB"]] in boundryPairs:
-									boundryPairs.append([cell[site]["otherPoint"][line]["boundB"], cell[site]["otherPoint"][line2]["boundB"]])
-
-				print()
-				print(site, boundryPairs)
-		
+				
+				#print(site, boundryPairs)
+				#print(f'{cell[site]["point"]} {avX, avY}')
+			prevFirst = boundryPairs[0][0]
+			prevLast = boundryPairs[-1][1]
+			boundryPairs.insert(0, [sharedPoint, prevFirst])
+			boundryPairs.insert(-1, [prevLast, sharedPoint])
+			#print(boundryPairs)
+			finalCell.update({ site: {"pointForm":keyToPoints(site), "vertices":boundryPairs} })
 		case _: #default
 			boundryPairs = [] 
 
 			for line in cell[site]["otherPoint"]: #this works for cases such as site (50, 50) since it has a pair of points on the boundry on two different boundries, 
-												  #	but does not work for cases such as site (75, 75) and (98, 70) where there is one point on one boundry and another point another another boundry
-												  # cases such as (75, 75) and (98, 70) can be like corner points, but I am not sure how to tell if this is the case
 				boundAX = cell[site]["otherPoint"][line]["boundA"][0]
 				boundAY = cell[site]["otherPoint"][line]["boundA"][1]
 				boundBX = cell[site]["otherPoint"][line]["boundB"][0]
@@ -590,11 +570,72 @@ for site in cell:
 								if not [cell[site]["otherPoint"][line]["boundB"], cell[site]["otherPoint"][line2]["boundB"]] in boundryPairs and not [cell[site]["otherPoint"][line2]["boundB"], cell[site]["otherPoint"][line]["boundB"]] in boundryPairs:
 									boundryPairs.append([cell[site]["otherPoint"][line]["boundB"], cell[site]["otherPoint"][line2]["boundB"]])
 
-				print()
-				print(site, boundryPairs)
-				
-			
+				#print()
+				#print(site, boundryPairs)
 
+			#n = boundryPairs.__len__() + cell.__len__()
+#			cell2 = cell.copy()
+#			vertices = []
+#			for line in cell[site]["otherPoints"]:
+#				vertices.append([cell[site]["otherPoints"][line]["boundA"], cell[site]["otherPoints"][line]["boundB"]])
+#				for pair in boundryPairs:
+#					if boundryPairs[pair][0] == cell[site]["otherPoints"][line]["boundB"] or boundryPairs[pair][1] == cell[site]["otherPoints"][line]["boundA"]:
+#						vertices.append()
+			
+			#vertices = boundryPairs.copy()
+			vertices = []
+			#for i in range(0, boundryPairs.__len__()-1):
+				#print(i, boundryPairs[i], boundryPairs[i+1])
+			#	vertices.append([boundryPairs[i], boundryPairs[i + 1]])
+
+			for line in cell[site]["otherPoint"]:
+				vertices.append([cell[site]["otherPoint"][line]["boundA"], cell[site]["otherPoint"][line]["boundB"]])
+
+			for bound in boundryPairs:
+				vertices.append(bound)
+			#print()
+			#print(vertices)
+			#flat_list = []
+			#for sublist in vertices:
+			#	for item in sublist:
+			#		flat_list.append(item)
+			#print(flat_list)
+			finalCell.update({ site: {"pointForm":keyToPoints(site), "vertices":vertices} })
+
+for site in finalCell:
+	verts = finalCell[site]["vertices"].copy()		
+	vertsOrder = []
+
+	n = len(verts)
+ 
+    # For loop to traverse through all 
+    # element in an array
+	for i in range(n):
+		for j in range(0, n - i - 1):
+             
+            # Range of the array is from 0 to n-i-1
+            # Swap the elements if the element found 
+            #is greater than the adjacent element
+			if verts[j][0][0] > verts[j + 1][0][0]:
+				verts[j], verts[j + 1] = verts[j + 1], verts[j]
+
+	for i in range(n-1):
+		for j in range(n):
+			if verts[i][1] == verts[j][0]:
+				verts[i + 1], verts[j] = verts[j], verts[i + 1]
+				
+	#print(verts)
+
+	finalCell[site]["vertices"] = verts
+
+	#if site == "(50_50)":
+	#	print(finalCell[site]["vertices"])
+
+#	for p1 in verts:
+#		suc = False
+#		for p2 in verts:
+#			if p1[1][0] == p2[0][0] and p1[1][1] == p2[0][0]:
+#				pass
 
 	
 
@@ -603,6 +644,36 @@ plt.ylim(defaultBounds[1][1], defaultBounds[1][0])
 plt.xlim(defaultBounds[0][0], defaultBounds[0][1])
 
 plt.title("pixel_plot")
+
+for entry in finalCell:
+	#fullCell = finalCell[entry]
+	clr1 = random.random()
+	clr2 = random.random()
+	clr3 = random.random()
+	allVertsX = []
+	allVertsY = []
+	#print(finalCell[entry]["vertices"])
+
+	for edge in finalCell[entry]["vertices"]:
+		#print(edge)
+		#vert = finalCell[entry]["vertices"]
+		#print(edge)
+		#plt.plot([edge[0][0], edge[1][0]], [edge[0][1], edge[1][1]], color=(clr1, clr2, clr3))
+		plt.plot([edge[0][0], edge[1][0]], [edge[0][1], edge[1][1]], color=(clr1, clr2, clr3), linewidth=4)
+		allVertsX.append(edge[0][0])
+		allVertsY.append(edge[0][1])
+		#if not edge[0][0] in allVertsX and not edge[0][1] in allVertsY:
+		#	allVertsX.append(edge[0][0])
+		#	allVertsY.append(edge[0][1])
+			
+	#print()
+	#print(allVertsX)
+	#print(allVertsY)
+	#print()
+	plt.fill(allVertsX, allVertsY, color=(clr1, clr2, clr3))
+	#print(fullCell["vertices"][0][0][0], fullCell["vertices"][0][1][0], fullCell["vertices"][0][0][1], fullCell["vertices"][0][1][1])
+	#plt.plot([ fullCell["vertices"][0][0][0], fullCell["vertices"][0][1][0], fullCell["vertices"][1][1][0], fullCell["vertices"][2][1][0] ], [ fullCell["vertices"][0][0][1], fullCell["vertices"][0][1][1], fullCell["vertices"][1][1][1], fullCell["vertices"][2][1][1] ], color=(clr1, clr2, clr3))
+	#plt.plot([0, 0], [75, 0], "-bo")
 
 for site in cell: #If I want to make it so that it displays all of the perp lines, go to the area for finding the intersection of 3 lines and comment out all of the references to cell
 	plt.plot(cell[site]["point"][0], cell[site]["point"][1], "ro")
@@ -628,18 +699,6 @@ for site in cell: #If I want to make it so that it displays all of the perp line
 	#plt.plot([intersection3Points[key]["line3"]["boundA"][0], intersection3Points[key]["line3"]["boundB"][0]], [intersection3Points[key]["line3"]["boundA"][1], intersection3Points[key]["line3"]["boundB"][1]], "-bo")
 	#pass
 
-for entry in finalCell:
-	#fullCell = finalCell[entry]
-	clr1 = random.random()
-	clr2 = random.random()
-	clr3 = random.random()
 
-	for edge in finalCell[entry]["vertices"]:
-		#print(edge)
-		#vert = finalCell[entry]["vertices"]
-		plt.plot([edge[0][0], edge[1][0]], [edge[0][1], edge[1][1]], color=(clr1, clr2, clr3))
-	#print(fullCell["vertices"][0][0][0], fullCell["vertices"][0][1][0], fullCell["vertices"][0][0][1], fullCell["vertices"][0][1][1])
-	#plt.plot([ fullCell["vertices"][0][0][0], fullCell["vertices"][0][1][0], fullCell["vertices"][1][1][0], fullCell["vertices"][2][1][0] ], [ fullCell["vertices"][0][0][1], fullCell["vertices"][0][1][1], fullCell["vertices"][1][1][1], fullCell["vertices"][2][1][1] ], color=(clr1, clr2, clr3))
-	#plt.plot([0, 0], [75, 0], "-bo")
 	
 plt.show()
