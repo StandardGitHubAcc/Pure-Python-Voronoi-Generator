@@ -1,231 +1,309 @@
-#https://stackoverflow.com/questions/28504737/how-to-plot-a-single-point-in-matplotlib
-#https://www.geeksforgeeks.org/create-2d-pixel-plot-in-python/
-#https://stackoverflow.com/questions/66238749/how-to-find-the-closest-coordinate-from-a-list-of-points
-#https://www.geeksforgeeks.org/sorting-algorithms-in-python/
-#WORKS
-#import numpy as np
+
 import random
 import matplotlib.pyplot as plt
-#import math
 
 defaultBounds = [[0, 200], [200, 0]]
+def main(plt):
+	nPoints = random.randint(3, 5)
+	points = []
+	corners = [ [defaultBounds[0][0], defaultBounds[1][1]], [defaultBounds[0][0], defaultBounds[0][1]], [defaultBounds[1][0], defaultBounds[1][1]], [defaultBounds[0][1], defaultBounds[1][0]] ]
+	cell = {}
+	intersection3Points = {}
+	edges = {}
 
-points = [(50, 50), (25, 25), (75, 75), (98, 70), (30, 180)]
-#		bottomleft, topleft, bottomright, topright
-corners = [[0, 0], [0, 200], [200, 0], [200, 200]] #[ [defaultBounds[0][0], defaultBounds[1][1]], [defaultBounds[0][0], defaultBounds[0][1]], [defaultBounds[1][0], defaultBounds[1][1]], [defaultBounds[0][1], defaultBounds[1][0]] ]
-#points = [(50, 50), (25, 25), (75, 75)]
-#data = []
-#cell = []
-cell = {}
-intersection3Points = {}
-finalCell = {}
+	def distance(x1, y1, x2, y2):
+		return (((x1 - x2) ** 2) + ((y1 - y2) ** 2)) ** 0.5
 
-def distance(x1, y1, x2, y2):
-	return (((x1 - x2) ** 2) + ((y1 - y2) ** 2)) ** 0.5
-
-def bubbleSort(arr): #Not used but a good template
+	def bubbleSort(arr): #Not used but a good template
      
-    n = len(arr)
+		n = len(arr)
  
-    # For loop to traverse through all 
-    # element in an array
-    for i in range(n):
-        for j in range(0, n - i - 1):
+		# For loop to traverse through all 
+		# element in an array
+		for i in range(n):
+			for j in range(0, n - i - 1):
              
-            # Range of the array is from 0 to n-i-1
-            # Swap the elements if the element found 
-            #is greater than the adjacent element
-            if arr[j] > arr[j + 1]:
-                arr[j], arr[j + 1] = arr[j + 1], arr[j]
+				# Range of the array is from 0 to n-i-1
+				# Swap the elements if the element found 
+				#is greater than the adjacent element
+				if arr[j] > arr[j + 1]:
+					arr[j], arr[j + 1] = arr[j + 1], arr[j]
 
-def distanceTargetSort(target, array):
-	n = len(array)
-	
-	for i in range(n):
-		for j in range(0, n - i - 1):
-			point1 = array[j]["midpoint"]
-			point2 = array[j + 1]["midpoint"]
-
-			distance1 = distance(target[0], target[1], point1[0], point1[1])
-			distance2 = distance(target[0], target[1], point2[0], point2[1])
-
-			if distance1 > distance2:
-				array[j], array[j + 1] = array[j + 1], array[j]
-			
-
-def intersectSolver(line1, line2):
-	midPt1 = line1["midpoint"]
-	midPt2 = line2["midpoint"]
-
-	slope1 = line1["slope"]
-	slope2 = line2["slope"]
-
-	if slope1 != slope2:
-
-		#x = (midPt1[0] * slope1) - (midPt2[0] * slope2) - midPt1[1] + midPt2[1]
-		#y = slope1 * (x - midPt1[0]) + midPt1[1]
-
-		#x = ( (slope1 * midPt1[0]) - (slope2 * midPt2[0]) + midPt1[1] - midPt2[1]) / (slope1 - slope2)
-		#y = slope1 * (x - midPt1[0]) + midPt1[1]
-
-		yInt1 = (slope1 * -1 * midPt1[0]) + midPt1[1]
-		yInt2 = (slope2 * -1 * midPt2[0]) + midPt2[1]
-
-		x = (yInt2 - yInt1) / (slope1 - slope2)
-		y = (slope1 * x) + yInt1
-
-		#print(f"intersect of y = {slope1}(x - {midPt1[0]}) + {midPt1[1]} and y = {slope2}(x - {midPt2[0]}) + {midPt2[1]} is ({x}, {y})")
-		
-		if (x > line1["boundA"][0] and x < line1["boundB"][0] and y < line1["boundA"][1] and y > line1["boundB"][1]) and (x > line2["boundA"][0] and x < line2["boundB"][0] and y < line2["boundA"][1] and y > line2["boundB"][1]):
-			return x, y
-		else:
-			#print(f'intersection is out of bounds ({line1["boundA"][0]}, {line1["boundA"][1]}) ({line1["boundB"][0]}, {line1["boundB"][1]}) or ({line2["boundA"][0]}, {line2["boundA"][1]}) ({line2["boundB"][0]}, {line2["boundB"][1]})')
-			return None, None
-	else:
-		#print(f"there is no interesection of y = {slope1}(x - {midPt1[0]}) + {midPt1[1]} and y = {slope2}(x - {midPt2[0]}) + {midPt2[1]} or they are the same equation")
-		return None, None
-
-
-def equationToPoint(equation, x):
-	return equation["slope"] * (x - equation["midpoint"][0]) + equation["midpoint"][1]
-	
-def setDefaultBounds(slope, mPtX, mPtY, givenBounds):#, lineBounds):
-	leftBound = givenBounds[0][0]
-	topBound = givenBounds[0][1]
-	rightBound = givenBounds[1][0]
-	bottomBound = givenBounds[1][1]
-
-	pointA = (0, 0)#lineBounds[0]
-	pointB = (0, 0)#lineBounds[1]
-
-	yA = slope * (leftBound - mPtX) + mPtY
-	
-	if yA > topBound:
-		xA = mPtX + (topBound - mPtY)/slope
-		pointA = (xA, topBound)
-	elif yA < bottomBound:
-		xA = mPtX + (bottomBound - mPtY)/slope
-		pointA = (xA, bottomBound)
-	else:
-		pointA = (leftBound, yA)
-
-	yB = slope * (rightBound - mPtX) + mPtY
-	
-	if yB > topBound:
-		xB = mPtX + (topBound - mPtY)/slope
-		pointB = (xB, topBound)
-	elif yB < bottomBound:
-		xB = mPtX + (bottomBound - mPtY)/slope
-		pointB = (xB, bottomBound)
-	else:
-		pointB = (rightBound, yB)
-
-	return pointA, pointB
-
-def pointDistanceTargetSort(target, array): 
+	def distanceTargetSort(target, array):
 		n = len(array)
 	
 		for i in range(n):
 			for j in range(0, n - i - 1):
-				point1 = array[j]
-				point2 = array[j + 1]
+				point1 = array[j]["midpoint"]
+				point2 = array[j + 1]["midpoint"]
 
 				distance1 = distance(target[0], target[1], point1[0], point1[1])
 				distance2 = distance(target[0], target[1], point2[0], point2[1])
 
 				if distance1 > distance2:
 					array[j], array[j + 1] = array[j + 1], array[j]
+			
 
-#points = [[50, 50], [25, 25], [75, 75]]
+	def intersectSolver(line1, line2):
+		midPt1 = line1["midpoint"]
+		midPt2 = line2["midpoint"]
 
-n = len(points)
+		slope1 = line1["slope"]
+		slope2 = line2["slope"]
+
+		if slope1 != slope2:
+
+			#x = (midPt1[0] * slope1) - (midPt2[0] * slope2) - midPt1[1] + midPt2[1]
+			#y = slope1 * (x - midPt1[0]) + midPt1[1]
+
+			#x = ( (slope1 * midPt1[0]) - (slope2 * midPt2[0]) + midPt1[1] - midPt2[1]) / (slope1 - slope2)
+			#y = slope1 * (x - midPt1[0]) + midPt1[1]
+
+			yInt1 = (slope1 * -1 * midPt1[0]) + midPt1[1]
+			yInt2 = (slope2 * -1 * midPt2[0]) + midPt2[1]
+
+			x = (yInt2 - yInt1) / (slope1 - slope2)
+			y = (slope1 * x) + yInt1
+
+			#print(f"intersect of y = {slope1}(x - {midPt1[0]}) + {midPt1[1]} and y = {slope2}(x - {midPt2[0]}) + {midPt2[1]} is ({x}, {y})")
+		
+			#print(x, y)
+			#print(x > line1["boundA"][0], x > line2["boundA"][0], x < line1["boundB"][0], x < line2["boundB"][0])
+			#if slope1 < 0:
+			#	print(y < line1["boundA"][1], y > line1["boundB"][1])
+			#else:
+			#	print(y > line1["boundA"][1], y < line1["boundB"][1])
+
+			#if slope2 < 0:
+			#	print(y < line2["boundA"][1], y > line2["boundB"][1])
+			#else:
+			#	print(y > line2["boundA"][1], y < line2["boundB"][1])
+
+			#print(f'line1: {line1["boundA"]} {line1["boundB"]} line2: {line2["boundA"]} {line2["boundB"]}')
+
+			if x > line1["boundA"][0] and x > line2["boundA"][0] and x < line1["boundB"][0] and x < line2["boundB"][0]:
+				check1 = False
+				check2 = False
+
+				if (slope1 < 0 and y < line1["boundA"][1] and y > line1["boundB"][1]) or (slope1 > 0 and y > line1["boundA"][1] and y < line1["boundB"][1]):
+					check1 = True
+
+				if (slope2 < 0 and y < line2["boundA"][1] and y > line2["boundB"][1]) or (slope2 > 0 and y > line2["boundA"][1] and y < line2["boundB"][1]):
+					check2 = True
+
+				if check1 == True and check2 == True:
+					return x, y
+				else:
+					return None, None
+			else:
+				#print(f'intersection is out of bounds ({line1["boundA"][0]}, {line1["boundA"][1]}) ({line1["boundB"][0]}, {line1["boundB"][1]}) or ({line2["boundA"][0]}, {line2["boundA"][1]}) ({line2["boundB"][0]}, {line2["boundB"][1]})')
+				return None, None
+		else:
+			#print(f"there is no interesection of y = {slope1}(x - {midPt1[0]}) + {midPt1[1]} and y = {slope2}(x - {midPt2[0]}) + {midPt2[1]} or they are the same equation")
+			return None, None
+
+
+	def equationToPoint(equation, x):
+		return equation["slope"] * (x - equation["midpoint"][0]) + equation["midpoint"][1]
 	
-for i in range(n):
-	for j in range(0, n - i - 1):
-		if points[j][1] > points[j + 1][1]:
-			points[j], points[j + 1] = points[j + 1], points[j]
+	def setDefaultBounds(slope, mPtX, mPtY, givenBounds):#, lineBounds):
+		leftBound = givenBounds[0][0]
+		topBound = givenBounds[0][1]
+		rightBound = givenBounds[1][0]
+		bottomBound = givenBounds[1][1]
 
-for i in range(n):
-	cell.update({ f"{str(points[i]).replace(', ', '_')}" : {"point":points[i], "otherPoint":{ "(None_None)" : {"point":[None, None], "slope":None, "midpoint":[None, None], "boundA":[0, 200], "boundB":[200, 0]} } } })
+		pointA = [0, 0]#lineBounds[0]
+		pointB = [0, 0]#lineBounds[1]
 
-# Go through the points and find all of the perpendicular lines, as well as setting the boundary for each line
-length = points.__len__()
-for i in range(0, length):
-	pt = points[i]
-	points2 = points.copy()
-	points2.remove(pt)
+		yA = slope * (leftBound - mPtX) + mPtY
+	
+		if yA > topBound:
+			xA = mPtX + (topBound - mPtY)/slope
+			pointA = [xA, topBound]
+		elif yA < bottomBound:
+			xA = mPtX + (bottomBound - mPtY)/slope
+			pointA = [xA, bottomBound]
+		else:
+			pointA = [leftBound, yA]
 
-	#print(pt)
+		yB = slope * (rightBound - mPtX) + mPtY
+	
+		if yB > topBound:
+			xB = mPtX + (topBound - mPtY)/slope
+			pointB = [xB, topBound]
+		elif yB < bottomBound:
+			xB = mPtX + (bottomBound - mPtY)/slope
+			pointB = [xB, bottomBound]
+		else:
+			pointB = [rightBound, yB]
 
-	n = len(points2)
+		return pointA, pointB
+
+	def pointDistanceTargetSort(target, array): 
+			n = len(array)
+	
+			for i in range(n):
+				for j in range(0, n - i - 1):
+					point1 = array[j]
+					point2 = array[j + 1]
+
+					distance1 = distance(target[0], target[1], point1[0], point1[1])
+					distance2 = distance(target[0], target[1], point2[0], point2[1])
+
+					if distance1 > distance2:
+						array[j], array[j + 1] = array[j + 1], array[j]
+
+
+	for i in range(0, nPoints):
+		n1 = int(random.random() * 200)
+		n2 = int(random.random() * 200)
+		points.append((n1, n2))
+
+	n = len(points)
 	
 	for i in range(n):
 		for j in range(0, n - i - 1):
-			point1 = points2[j]
-			point2 = points2[j + 1]
+			if points[j][1] > points[j + 1][1]:
+				points[j], points[j + 1] = points[j + 1], points[j]
 
-			distance1 = distance(pt[0], pt[1], point1[0], point1[1])
-			distance2 = distance(pt[0], pt[1], point2[0], point2[1])
-
-			if distance1 > distance2:
-				points2[j], points2[j + 1] = points2[j + 1], points2[j]
+	for i in range(n):
+		cell.update({ f"{str(points[i]).replace(', ', '_')}" : {"point":points[i], "otherPoint":{ "(None_None)" : {"point":[None, None], "slope":None, "midpoint":[None, None], "boundA":[0, 200], "boundB":[200, 0]} } } })
 
 
-	def solver(a, b, c, d):
-		#if c < a and d < b:
-		#	(a, b), (c, d) = (c, d), (a, b)
 
-		m = (b - d) / (a - c)
+	#[(88, 56), (178, 131), (28, 147), (89, 181)] #problem
+	#[(187, 34), (112, 75), (91, 144)] #problem?
+	#[(52, 31), (2, 72), (125, 92)] #not problem
+	#[(27, 102), (85, 131), (40, 155), (141, 157)] #problem
+	#[(195, 68), (149, 99), (65, 114), (113, 133), (168, 192)] #problem?
+	#[(112, 39), (54, 63), (79, 142), (63, 148)] #problem?
+	#[(68, 7), (52, 39), (17, 53), (180, 139)] #not problem?
+	#[(62, 22), (34, 46), (184, 66), (197, 99)] #problem!
+	#[(22, 53), (111, 56), (5, 70), (87, 89), (43, 124)] #problem
+	#[(21, 81), (133, 99), (57, 111), (113, 173)] #very good example of a problem
+	#[(13, 109), (2, 145), (174, 174), (157, 191)] #problem
 
-		mPtX = (a + c) / 2
-		mPtY = (b + d) / 2
+	#[(82, 15), (108, 74), (55, 161)] #didn't detect a 3-intersect
+	#[(127, 14), (104, 85), (153, 90), (134, 113)] #very incorrect
+	#[(97, 49), (67, 91), (155, 152), (99, 179)] #very incorrect
+	#[(56, 25), (46, 159), (171, 161), (14, 165)]
+	#[(197, 3), (132, 19), (89, 179)] #didn't detect a 3-intersect
+	#[(108, 17), (2, 41), (193, 53)] #working correctly
+	#[(191, 97), (180, 162), (144, 196)] #didn't detect a 3-intersect
+	#[(143, 14), (163, 78), (161, 98), (0, 171)] #has maybe two 3-intersects close together
+	#[(99, 42), (154, 80), (5, 140), (155, 170), (101, 171)]
+	#[(21, 14), (166, 67), (173, 108), (8, 112), (55, 113)]
+	print(points)
+
+	# easy to see arrangements
+	#[(3, 56), (77, 74), (93, 187)]
+	#[(37, 38), (131, 51), (121, 108), (33, 111)]
+	#[(19, 43), (110, 55), (14, 131), (150, 192)]
+
+	#[(102, 110), (48, 145), (6, 198)]
+	#[(168, 15), (51, 117), (19, 147)]
+	#[(38, 69), (127, 168), (39, 171)]
+	#[(14, 31), (16, 35), (76, 37), (79, 114), (63, 120)]
+	#[(196, 5), (198, 15), (6, 72)]
+	#[(7, 14), (17, 62), (186, 82), (197, 115), (178, 139)]
+	#[(39, 115), (23, 125), (40, 126)]
+	#[(12, 40), (163, 79), (33, 136)]
+	#[(88, 75), (4, 103), (191, 156), (118, 169)]
+	#[(41, 69), (89, 73), (121, 76), (74, 78), (52, 111)]
+	#[(132, 1), (130, 74), (126, 130), (2, 135), (47, 139)]
+	#[(27, 97), (6, 123), (67, 158), (115, 197)]
+
+	# the cases were lines that appear to intersect but are not registered is when one of the lines is actually 2 lines less than 0.3 appart, but they intersect at two diff spots
+	#[(86, 29), (134, 29), (30, 101)] 
+	#[(193, 9), (162, 18), (141, 54), (56, 54), (137, 70)]
+
+	# Go through the points and find all of the perpendicular lines, as well as setting the boundary for each line
+	length = points.__len__()
+	for i in range(0, length):
+		pt = points[i]
+		points2 = points.copy()
+		points2.remove(pt)
+
+		#print(pt)
+
+		n = len(points2)
+	
+		for i in range(n):
+			for j in range(0, n - i - 1):
+				point1 = points2[j]
+				point2 = points2[j + 1]
+
+				distance1 = distance(pt[0], pt[1], point1[0], point1[1])
+				distance2 = distance(pt[0], pt[1], point2[0], point2[1])
+
+				if distance1 > distance2:
+					points2[j], points2[j + 1] = points2[j + 1], points2[j]
+
+
+		def solver(a, b, c, d):
+			#if c < a and d < b:
+			#	(a, b), (c, d) = (c, d), (a, b)
+
+			m = 0
+
+			if (b - d) == 0 and (a - c) < 0:
+				m = 1000
+			elif (b - d) == 0 and (a - c) > 0:
+				m = -1000
+			else:
+				m = -1 * (a - c) / (b - d)
 		
-		if f"({a}_{b})" != f"({c}_{d})":
 
-			boundA, boundB = setDefaultBounds(-1/m, mPtX, mPtY, defaultBounds)
+			mPtX = (a + c) / 2
+			mPtY = (b + d) / 2
+		
+			if f"({a}_{b})" != f"({c}_{d})":
 
-			if "(None_None)" == list(cell[f"({a}_{b})"]["otherPoint"].keys())[0]:
-				cell.update({ f"({a}_{b})" : {"point":[a, b], "otherPoint":{ f"({c}_{d})" : {"point":[c, d], "slope":-1/m, "midpoint":[mPtX, mPtY], "boundA":boundA, "boundB":boundB} } } })
-				#print(f"({a}_{b}) contains a (None_None)")
-			elif not f"({a}_{b})" in cell:
-				cell.update({ f"({a}_{b})" : {"point":[a, b], "otherPoint":{ f"({c}_{d})" : {"point":[c, d], "slope":-1/m, "midpoint":[mPtX, mPtY], "boundA":boundA, "boundB":boundB} } } })
-				#print(f"cell does not contain ({a}_{b})")
-			elif f"({a}_{b})" in cell:
-				#print(f"cell contains ({a}_{b})")
-				if not f"({c}_{d})" in cell[f"({a}_{b})"]["otherPoint"]:
-					#print(f"({a}_{b}) does not contain ({c}_{d})")
-					cell[f"({a}_{b})"]["otherPoint"].update({ f"({c}_{d})" : {"point":[c, d], "slope":-1/m, "midpoint":[mPtX, mPtY], "boundA":boundA, "boundB":boundB} } )
+				boundA, boundB = setDefaultBounds(m, mPtX, mPtY, defaultBounds)
 
-	for j in range(0, n):
-		solver(pt[0], pt[1], points2[j][0], points2[j][1])
+				if "(None_None)" == list(cell[f"({a}_{b})"]["otherPoint"].keys())[0]:
+					cell.update({ f"({a}_{b})" : {"point":[a, b], "otherPoint":{ f"({c}_{d})" : {"point":[c, d], "slope":m, "midpoint":[mPtX, mPtY], "boundA":boundA, "boundB":boundB} } } })
+					#print(f"({a}_{b}) contains a (None_None)")
+				elif not f"({a}_{b})" in cell:
+					cell.update({ f"({a}_{b})" : {"point":[a, b], "otherPoint":{ f"({c}_{d})" : {"point":[c, d], "slope":m, "midpoint":[mPtX, mPtY], "boundA":boundA, "boundB":boundB} } } })
+					#print(f"cell does not contain ({a}_{b})")
+				elif f"({a}_{b})" in cell:
+					#print(f"cell contains ({a}_{b})")
+					if not f"({c}_{d})" in cell[f"({a}_{b})"]["otherPoint"]:
+						#print(f"({a}_{b}) does not contain ({c}_{d})")
+						cell[f"({a}_{b})"]["otherPoint"].update({ f"({c}_{d})" : {"point":[c, d], "slope":m, "midpoint":[mPtX, mPtY], "boundA":boundA, "boundB":boundB} } )
 
-#print(cell.__len__())
-# Remove the midpoints that are too close to a site to possibly be valid
-for site in cell:
-	kys = list(cell[site]["otherPoint"].keys())
-	#print(cell[site]["otherPoint"].__len__())
-	for key in kys:
-		#print(site, key, cell[site]["otherPoint"][key]["midpoint"])
-		#dist = distance(cell[site]["point"][0], cell[site]["point"][1], cell[site]["otherPoint"][key]["midpoint"][0], cell[site]["otherPoint"][key]["midpoint"][1])
-		for point in points:
-			try:
-				#print(point, key, cell[site]["otherPoint"][key]["midpoint"])
-				dist = distance(point[0], point[0], cell[site]["otherPoint"][key]["midpoint"][0], cell[site]["otherPoint"][key]["midpoint"][1])
-				#print(dist)
-				if dist < 0.1:
-					del cell[site]["otherPoint"][key]
-				
-					#print("deleted")
-			except Exception:
-				pass
+		for j in range(0, n):
+			solver(pt[0], pt[1], points2[j][0], points2[j][1])
 
-# Go through the points and find the tripple intersection points
-for currentPoint in points:
 
-	cell2 = cell.copy()
-	arrayPoint = str(currentPoint).replace(", ", "_")
+	for site in cell:
+		kys = list(cell[site]["otherPoint"].keys())
 
-	def sort(target, array):
+		for key in kys:
+			for point in points:
+				if key in cell[site]["otherPoint"]:
+					dist = distance(point[0], point[0], cell[site]["otherPoint"][key]["midpoint"][0], cell[site]["otherPoint"][key]["midpoint"][1])
+					if dist < 0.1:
+						del cell[site]["otherPoint"][key]
+						print("deleting")
+					
+		for key1 in kys:
+			for key2 in kys:
+				if key1 != key2:
+					if (cell[site]["otherPoint"][key1]["boundA"][0] - cell[site]["otherPoint"][key2]["boundA"][0] < 0.3 and cell[site]["otherPoint"][key1]["boundA"][0] - cell[site]["otherPoint"][key2]["boundA"][0] > -0.3) and (cell[site]["otherPoint"][key1]["boundB"][0] - cell[site]["otherPoint"][key2]["boundB"][0] < 0.3 and cell[site]["otherPoint"][key1]["boundB"][0] - cell[site]["otherPoint"][key2]["boundB"][0] > -0.3):
+						cell[site]["otherPoint"][key1]["boundA"][0] = (cell[site]["otherPoint"][key1]["boundA"][0] + cell[site]["otherPoint"][key2]["boundA"][0])/2
+						cell[site]["otherPoint"][key1]["boundB"][0] = (cell[site]["otherPoint"][key1]["boundB"][0] + cell[site]["otherPoint"][key2]["boundB"][0])/2
+						cell[site]["otherPoint"][key2]["boundA"][0] = (cell[site]["otherPoint"][key1]["boundA"][0] + cell[site]["otherPoint"][key2]["boundA"][0])/2
+						cell[site]["otherPoint"][key2]["boundB"][0] = (cell[site]["otherPoint"][key1]["boundB"][0] + cell[site]["otherPoint"][key2]["boundB"][0])/2
+						#print("merging")
+	#print(points.__len__())
+	#print(cell.__len__())
+	for currentPoint in points:
+		cell2 = cell.copy()
+		arrayPoint = str(currentPoint).replace(", ", "_")
+		array = cell2[arrayPoint]["otherPoint"]
+
 		n = len(array)
 
 		keys = list(array.keys())
@@ -235,475 +313,569 @@ for currentPoint in points:
 				point1 = array[keys[j]]["midpoint"]
 				point2 = array[keys[j + 1]]["midpoint"]
 
-				distance1 = distance(target[0], target[1], point1[0], point1[1])
-				distance2 = distance(target[0], target[1], point2[0], point2[1])
+				distance1 = distance(currentPoint[0], currentPoint[1], point1[0], point1[1])
+				distance2 = distance(currentPoint[0], currentPoint[1], point2[0], point2[1])
 
 				if distance1 > distance2:
 					array[keys[j]], array[keys[j + 1]] = array[keys[j + 1]], array[keys[j]]
 
-	sort(cell2[arrayPoint]["point"], cell2[arrayPoint]["otherPoint"])
-	#print(cell2[arrayPoint]["otherPoint"].__len__())
-	kys = list(cell2[arrayPoint]["otherPoint"].keys())
+		keys = list(array.keys())
+		#print(currentPoint)
+		#print(array.__len__())
+		for key1 in keys:
+			for key2 in keys:
+				if key1 != key2:
+					line1 = array[key1]
+					line2 = array[key2]
+					#print()
+					intX, intY = intersectSolver(line1, line2)
+					#print(intX, intY, f"({intX}_{intY})" in intersection3Points)
+					if intX != None and not f"({intX}_{intY})" in intersection3Points:
+						line3 = cell2[key1]["otherPoint"][key2]
+						testY = equationToPoint(line3, intX)
+						testY = float("%.8f" % testY)
+						intY = float("%.8f" % intY)
+						intX = float("%.8f" % intX)
+						#print(testY, intY, testY == intY)
+						if testY == intY:
+							#intersection3Points.update({f"({intX}_{intY})" : {"intPoint":[intX, intY], "points":[currentPoint, line1["point"], line2["point"]], "line1":line1, "line2":line2, "line3":line3}})
+							#intersection3Points.update({f"({intX}_{intY})" : {"point":[intX, intY]}})
+							#distCurrentToL1 = distance(currentPoint[0], currentPoint[1], line1["point"][0], line1["point"][1]) #line1 goes through this midpoint
+							#distCurrentToL2 = distance(currentPoint[0], currentPoint[1], line2["point"][0], line2["point"][1]) #line2 goes through this midpoint
+							#distL1ToL2 = distance(line1["point"][0], line1["point"][1], line2["point"][0], line2["point"][1]) #line3 goes through this midpoint
 
-	for key1 in kys:
-		for key2 in kys:
-			if key1 != key2:
-				line1 = cell2[arrayPoint]["otherPoint"][key1]
-				line2 = cell2[arrayPoint]["otherPoint"][key2]
-				intX, intY = intersectSolver(line1, line2)
-				if intX != None:
-					#intY = "%.8f" % intY
-					#if not f"({intX}_{intY})" in intersection3Points:
-					#print(f"site: {currentPoint} point1: {line1['point']} point2: {line2['point']} intersect: {intX, intY}")
-					#plt.plot(intX, intY, "bo")
+							#distances = {arrayPoint : {key1: distance(currentPoint[0], currentPoint[1], line1["point"][0], line1["point"][1]), key2 : distance(line1["point"][0], line1["point"][1], line2["point"][0], line2["point"][1])}}
 
-					line3 = cell2[key1]["otherPoint"][key2]
-					#print(line3["point"])
-					yTest = equationToPoint(line3, intX)
-					yTest = float("%.8f" % yTest)
-					intY = float("%.8f" % intY)
-					intX = float("%.8f" % intX)
-					#print(intY)
-					#print(yTest)
-					
-					if yTest == intY:
-						#print("success")
+							#print(line1["midpoint"][1] > intY, line2["midpoint"][1] > intY, line3["midpoint"][1] > intY)
 
-						distCurrentToL1 = distance(currentPoint[0], currentPoint[1], line1["point"][0], line1["point"][1])
-						distCurrentToL2 = distance(currentPoint[0], currentPoint[1], line2["point"][0], line2["point"][1])
-						distL1ToL2 = distance(line1["point"][0], line1["point"][1], line2["point"][0], line2["point"][1])
+# 							if distCurrentToL1 > distCurrentToL2 and distCurrentToL1 > distL1ToL2: #works reasonably well - better than previous attempts
+# 								if line1["midpoint"][0] > intX:
+# 									print("midPoint of line1 is greater than intX")
+# 									line1["boundB"] = [intX, intY]
+# 									if line2["midpoint"][0] > intX:
+# 										line2["boundA"] == [intX, intY]
+# 									else:
+# 										line2["boundB"] == [intX, intY]
+# 									if line3["midpoint"][0] > intX:
+# 										line3["boundA"] == [intX, intY]
+# 									else:
+# 										line3["boundB"] == [intX, intY]
+# 									
+# 								elif line1["midpoint"][0] < intX:
+# 									print("midPoint of line1 is less than than intX")
+# 									line1["boundA"] = [intX, intY]
+# 									if line2["midpoint"][0] > intX:
+# 										line2["boundB"] == [intX, intY]
+# 									else:
+# 										line2["boundA"] == [intX, intY]
+# 									if line3["midpoint"][0] > intX:
+# 										line3["boundB"] == [intX, intY]
+# 									else:
+# 										line3["boundA"] == [intX, intY]
+# 
+# 							elif distCurrentToL2 > distCurrentToL1 and distCurrentToL2 > distL1ToL2:
+# 								if line2["midpoint"][0] > intX:
+# 									print("midPoint of line2 is greater than intX")
+# 									line2["boundB"] = [intX, intY]
+# 									if line1["midpoint"][0] > intX:
+# 										line1["boundA"] == [intX, intY]
+# 									else:
+# 										line1["boundB"] == [intX, intY]
+# 									if line3["midpoint"][0] > intX:
+# 										line3["boundA"] == [intX, intY]
+# 									else:
+# 										line3["boundB"] == [intX, intY]
+# 									
+# 								elif line2["midpoint"][0] < intX:
+# 									print("midPoint of line2 is less than than intX")
+# 									line2["boundA"] = [intX, intY]
+# 									if line1["midpoint"][0] > intX:
+# 										line1["boundB"] == [intX, intY]
+# 									else:
+# 										line1["boundA"] == [intX, intY]
+# 									if line3["midpoint"][0] > intX:
+# 										line3["boundB"] == [intX, intY]
+# 									else:
+# 										line3["boundA"] == [intX, intY]
 
-						#distances = {arrayPoint : {key1: distance(currentPoint[0], currentPoint[1], line1["point"][0], line1["point"][1]), key2 : distance(line1["point"][0], line1["point"][1], line2["point"][0], line2["point"][1])}}
+							
+							d1 = distance(intX, intY, currentPoint[0], currentPoint[1])
+							d2 = distance(intX, intY, line1["point"][0], line1["point"][1])
+							d3 = distance(intX, intY, line2["point"][0], line2["point"][1])
 
-						if distCurrentToL1 > distCurrentToL2 and distCurrentToL1 > distL1ToL2:
-							if intX > line1["midpoint"][0]:
-								line1["boundA"] = [intX, intY]
-								cell[arrayPoint]["otherPoint"][key1]["boundA"] = [intX, intY]
-								cell[key1]["otherPoint"][arrayPoint]["boundA"] = [intX, intY]
-							else:
-								line1["boundB"] = [intX, intY]
-								cell[arrayPoint]["otherPoint"][key1]["boundB"] = [intX, intY]
-								cell[key1]["otherPoint"][arrayPoint]["boundB"] = [intX, intY]
-						else:
-							if intX > line1["midpoint"][0]:
-								line1["boundB"] = [intX, intY]
-								cell[arrayPoint]["otherPoint"][key1]["boundB"] = [intX, intY]
-								cell[key1]["otherPoint"][arrayPoint]["boundB"] = [intX, intY]
-							else:
-								line1["boundA"] = [intX, intY]
-								cell[arrayPoint]["otherPoint"][key1]["boundA"] = [intX, intY]
-								cell[key1]["otherPoint"][arrayPoint]["boundA"] = [intX, intY]
+							d1 = float("%.5f" % d1)
+							d2 = float("%.5f" % d2)
+							d3 = float("%.5f" % d3)
 
-						if distCurrentToL2 > distCurrentToL1 and distCurrentToL2 > distL1ToL2:
-							if intX > line2["midpoint"][0]:
-								line2["boundA"] = [intX, intY]
-								cell[arrayPoint]["otherPoint"][key2]["boundA"] = [intX, intY]
-								cell[key2]["otherPoint"][arrayPoint]["boundA"] = [intX, intY]
-							else:
-								line2["boundB"] = [intX, intY]
-								cell[arrayPoint]["otherPoint"][key2]["boundB"] = [intX, intY]
-								cell[key2]["otherPoint"][arrayPoint]["boundB"] = [intX, intY]
-						else:
-							if intX > line2["midpoint"][0]:
-								line2["boundB"] = [intX, intY]
-								cell[arrayPoint]["otherPoint"][key2]["boundB"] = [intX, intY]
-								cell[key2]["otherPoint"][arrayPoint]["boundB"] = [intX, intY]
-							else:
-								line2["boundA"] = [intX, intY]
-								cell[arrayPoint]["otherPoint"][key2]["boundA"] = [intX, intY]
-								cell[key2]["otherPoint"][arrayPoint]["boundA"] = [intX, intY]
+							# print(d1 == d2 == d3)
 
-						if distL1ToL2 > distCurrentToL1 and distL1ToL2 > distCurrentToL2:
-							if intX > line3["midpoint"][0]:
-								line3["boundA"] = [intX, intY]
-								cell[key1]["otherPoint"][key2]["boundA"] = [intX, intY]
-								cell[key2]["otherPoint"][key1]["boundA"] = [intX, intY]
-							else:
-								line3["boundB"] = [intX, intY]
-								cell[key1]["otherPoint"][key2]["boundB"] = [intX, intY]
-								cell[key2]["otherPoint"][key1]["boundB"] = [intX, intY]
-						else:
-							if intX > line3["midpoint"][0]:
-								line3["boundB"] = [intX, intY]
-								cell[key1]["otherPoint"][key2]["boundB"] = [intX, intY]
-								cell[key2]["otherPoint"][key1]["boundB"] = [intX, intY]
-							else:
-								line3["boundA"] = [intX, intY]
-								cell[key1]["otherPoint"][key2]["boundA"] = [intX, intY]
-								cell[key2]["otherPoint"][key1]["boundA"] = [intX, intY]
+							def changeBoundry(line1, line2, line3): #why isn't this used?
+								line1 = line1
+								line2 = line2
+								line3 = line3
 
-						#print(distance(intX, intY, currentPoint[0], currentPoint[1]))
-						#print(distance(intX, intY, line1["point"][0], line1["point"][1]))
-						#print(distance(intX, intY, line2["point"][0], line2["point"][1]))
-						#print(key1)
-						#print()
+								if line1["midpoint"][0] > intX:
+									print("line1 > intX")
+									line1["boundB"] = [intX, intY]
 
-						intersection3Points.update({ f"({intX}_{intY})" : {
-"intPosition":[intX, intY], 
-"line1":{"points":[currentPoint, line1["point"]], "slope":line1["slope"], "midpoint":line1["midpoint"], "boundA":line1["boundA"], "boundB":line1["boundB"]},
-"line2":{"points":[currentPoint, line2["point"]], "slope":line2["slope"], "midpoint":line2["midpoint"], "boundA":line2["boundA"], "boundB":line2["boundB"]},
-"line3":{"points":[line1["point"], line2["point"]], "slope":line3["slope"], "midpoint":line3["midpoint"], "boundA":line3["boundA"], "boundB":line3["boundB"]}
-						}})
+									if line2["midpoint"][0] > intX:
+										print("a1 line2 > intx")
+										line2["boundA"] == [intX, intY]
+									else:
+										print("a1 line2 < intx")
+										line2["boundB"] == [intX, intY]
+
+									if line3["midpoint"][0] > intX:
+										print("a1 line3 > intx")
+										line3["boundA"] == [intX, intY]
+									else:
+										print("a1 line3 < intx")
+										line3["boundB"] == [intX, intY]
+									
+								elif line1["midpoint"][0] < intX:
+									print("line1 < intX")
+									line1["boundA"] = [intX, intY]
+
+									if line2["midpoint"][0] > intX:
+										line2["boundB"] == [intX, intY]
+										print("a2 line2 > intx")
+									else:
+										print("a2 line2 < intx")
+										line2["boundA"] == [intX, intY]
+
+									if line3["midpoint"][0] > intX:
+										line3["boundB"] == [intX, intY]
+										print("a2 line3 > intx")
+									else:
+										line3["boundA"] == [intX, intY]
+										print("a2 line3 < intx")
+
+								return line1, line2, line3
 
 
-#print(cell.__len__())
+							if d1 == d2 == d3:
+								intersection3Points.update({f"({intX}_{intY})" : {"intPoint":[intX, intY], "points":[currentPoint, line1["point"], line2["point"]], "line1":line1, "line2":line2, "line3":line3}})
+# 								if (line1["midpoint"][0] < intX and line2["midpoint"][0] < intX and line3["midpoint"][0] < intX) or (line1["midpoint"][0] > intX and line2["midpoint"][0] > intX and line3["midpoint"][0] > intX) or (line1["midpoint"][1] < intY and line2["midpoint"][1] < intY and line3["midpoint"][1] < intY) or (line1["midpoint"][1] > intY and line2["midpoint"][1] > intY and line3["midpoint"][1] > intY):
+# 									intToM1 = distance(intX, intY, line1["midpoint"][0], line1["midpoint"][1])
+# 									intToM2 = distance(intX, intY, line2["midpoint"][0], line2["midpoint"][1])
+# 									intToM3 = distance(intX, intY, line3["midpoint"][0], line3["midpoint"][1])
+# 									if intToM1 < intToM2 and intToM1 < intToM3:
+# # 										if line1["midpoint"][0] > intX:
+# # 											print("midPoint of line1 is greater than intX")
+# # 											line1["boundB"] = [intX, intY]
+# # 
+# # 											if line2["midpoint"][0] > intX:
+# # 												print("a1 line2 > intx")
+# # 												line2["boundA"] == [intX, intY]
+# # 											else:
+# # 												print("a1 line2 < intx")
+# # 												line2["boundB"] == [intX, intY]
+# # 
+# # 											if line3["midpoint"][0] > intX:
+# # 												print("a1 line3 > intx")
+# # 												line3["boundA"] == [intX, intY]
+# # 											else:
+# # 												print("a1 line3 < intx")
+# # 												line3["boundB"] == [intX, intY]
+# # 									
+# # 										elif line1["midpoint"][0] < intX:
+# # 											print("midPoint of line1 is less than than intX")
+# # 											line1["boundA"] = [intX, intY]
+# # 
+# # 											if line2["midpoint"][0] > intX:
+# # 												line2["boundB"] == [intX, intY]
+# # 												print("a2 line2 > intx")
+# # 											else:
+# # 												print("a2 line2 < intx")
+# # 												line2["boundA"] == [intX, intY]
+# # 
+# # 											if line3["midpoint"][0] > intX:
+# # 												line3["boundB"] == [intX, intY]
+# # 												print("a2 line3 > intx")
+# # 											else:
+# # 												line3["boundA"] == [intX, intY]
+# # 												print("a2 line3 < intx")
+# 										line1, line2, line3 = changeBoundry(line1, line2, line3)
+# 									elif intToM2 < intToM1 and intToM2 < intToM3:
+# # 										if line2["midpoint"][0] > intX:
+# # 											print("midPoint of line2 is greater than intX")
+# # 											line2["boundB"] = [intX, intY]
+# # 
+# # 											if line1["midpoint"][0] > intX:
+# # 												line1["boundA"] == [intX, intY]
+# # 												print("a3 line1 > intx")
+# # 											else:
+# # 												print("a3 line1 < intx")
+# # 												line1["boundB"] == [intX, intY]
+# # 
+# # 											if line3["midpoint"][0] > intX:
+# # 												line3["boundA"] == [intX, intY]
+# # 												print("a3 line3 > intx")
+# # 											else:
+# # 												line3["boundB"] == [intX, intY]
+# # 												print("a3 line3 < intx")
+# # 									
+# # 										elif line2["midpoint"][0] < intX:
+# # 											print("midPoint of line2 is less than than intX")
+# # 											line2["boundA"] = [intX, intY]
+# # 
+# # 											if line1["midpoint"][0] > intX:
+# # 												line1["boundB"] == [intX, intY]
+# # 												print("a4 line1 > intx")
+# # 											else:
+# # 												line1["boundA"] == [intX, intY]
+# # 												print("a4 line1 < intx")
+# # 
+# # 											if line3["midpoint"][0] > intX:
+# # 												line3["boundB"] == [intX, intY]
+# # 												print("a4 line3 > intx")
+# # 											else:
+# # 												line3["boundA"] == [intX, intY]
+# # 												print("a4 line3 < intx")
+# 										line2, line1, line3 = changeBoundry(line2, line1, line3)
+# 									elif intToM3 < intToM1 and intToM3 < intToM2:
+# # 										if line3["midpoint"][0] > intX:
+# # 											print("midPoint of line3 is greater than intX")
+# # 											line3["boundB"] = [intX, intY]
+# # 
+# # 											if line1["midpoint"][0] > intX:
+# # 												line1["boundA"] == [intX, intY]
+# # 												print("a5 line1 > intx")
+# # 											else:
+# # 												print("a5 line1 < intx")
+# # 												line1["boundB"] == [intX, intY]
+# # 
+# # 											if line2["midpoint"][0] > intX:
+# # 												print("a5 line2 > intx")
+# # 												line2["boundA"] == [intX, intY]
+# # 											else:
+# # 												print("a5 line2 < intx")
+# # 												line2["boundB"] == [intX, intY]
+# # 									
+# # 										elif line3["midpoint"][0] < intX:
+# # 											print("midPoint of line3 is less than than intX")
+# # 											line3["boundA"] = [intX, intY]
+# # 
+# # 											if line1["midpoint"][0] > intX:
+# # 												print("a6 line1 > intx")
+# # 												line1["boundB"] == [intX, intY]
+# # 											else:
+# # 												print("a6 line1 < intx")
+# # 												line1["boundA"] == [intX, intY]
+# # 
+# # 											if line2["midpoint"][0] > intX:
+# # 												line2["boundB"] == [intX, intY]
+# # 												print("a6 line2 > intx")
+# # 											else:
+# # 												print("a6 line2 < intx")
+# # 												line2["boundA"] == [intX, intY]
+# 										line3, line1, line2 = changeBoundry(line3, line1, line2)
+# 									#print(f'a intersect: {intX, intY} line1: {line1["boundA"], line1["boundB"]} line2: {line2["boundA"], line2["boundB"]} line3: {line3["boundA"], line3["boundB"]}')
+# 									print("finish a")
+# 									print(f'{intX, intY} line1: {line1["boundA"], line1["boundB"]}')
+# 									print(f'{intX, intY} line2: {line2["boundA"], line2["boundB"]}')
+# 									print(f'{intX, intY} line3: {line3["boundA"], line3["boundB"]}')
+# 									intersection3Points.update({f"({intX}_{intY})" : {"intPoint":[intX, intY], "points":[currentPoint, line1["point"], line2["point"]], "line1":line1, "line2":line2, "line3":line3}})
+# 								else:
+# 									if line1["midpoint"][0] < intX:
+# 										line1["boundB"] = [intX, intY]
+# 									else:
+# 										line1["boundA"] = [intX, intY]
+# 
+# 									if line2["midpoint"][0] < intX:
+# 										line2["boundB"] = [intX, intY]
+# 									else:
+# 										line2["boundA"] = [intX, intY]
+# 
+# 									if line3["midpoint"][0] < intX:
+# 										line3["boundB"] = [intX, intY]
+# 									else:
+# 										line3["boundA"] = [intX, intY]
+# 									#print(f'b intersect: {intX, intY} line1: {line1["boundA"], line1["boundB"]} line2: {line2["boundA"], line2["boundB"]} line3: {line3["boundA"], line3["boundB"]}')
+# 									print("finish b")
+# 									print(f'{intX, intY} line1: {line1["boundA"], line1["boundB"]}')
+# 									print(f'{intX, intY} line2: {line2["boundA"], line2["boundB"]}')
+# 									print(f'{intX, intY} line3: {line3["boundA"], line3["boundB"]}')
+# 									intersection3Points.update({f"({intX}_{intY})" : {"intPoint":[intX, intY], "points":[currentPoint, line1["point"], line2["point"]], "line1":line1, "line2":line2, "line3":line3}})
+#
+# 							minDist = 1000
+# 
+# 							if d1 < d2 and d1 < d3:
+# 								minDist = d1
+# 							elif d2 < d1 and d2 < d3:
+# 								minDist = d2
+# 							elif d3 < d1 and d3 < d2:
+# 								minDist = d3
+# 
+# 							correct = True
+# 
+# 							for site in points:
+# 								if site != currentPoint and site != line1["point"] and site != line2["point"]:
+# 									if distance(intX, intY, site[0], site[1]) < minDist:
+# 										correct = False
+# 										break
+# 								
+# 							if correct == True:
+# 							if line1["midpoint"][0] < intX and line1["midpoint"][1] < intY:
+# 								line1["boundB"] = [intX, intY]
+# 							elif line1["midpoint"][0] < intX and line1["midpoint"][1] > intY:
+# 								line1["boundB"] = [intX, intY]
+# 							elif line1["midpoint"][0] > intX and line1["midpoint"][1] < intY:
+# 								line1["boundA"] = [intX, intY]
+# 							elif line1["midpoint"][0] > intX and line1["midpoint"][1] > intY:
+# 								line1["boundA"] = [intX, intY]
+# 
+# 							if line2["midpoint"][0] < intX and line2["midpoint"][1] < intY:
+# 								line2["boundB"] = [intX, intY]
+# 							elif line2["midpoint"][0] < intX and line2["midpoint"][1] > intY:
+# 								line2["boundB"] = [intX, intY]
+# 							elif line2["midpoint"][0] > intX and line2["midpoint"][1] < intY:
+# 								line2["boundA"] = [intX, intY]
+# 							elif line2["midpoint"][0] > intX and line2["midpoint"][1] > intY:
+# 								line2["boundA"] = [intX, intY]
+# 
+# 							if line3["midpoint"][0] < intX and line3["midpoint"][1] < intY:
+# 								line3["boundB"] = [intX, intY]
+# 							elif line3["midpoint"][0] < intX and line3["midpoint"][1] > intY:
+# 								line3["boundB"] = [intX, intY]
+# 							elif line3["midpoint"][0] > intX and line3["midpoint"][1] < intY:
+# 								line3["boundA"] = [intX, intY]
+# 							elif line3["midpoint"][0] > intX and line3["midpoint"][1] > intY:
+# 								line3["boundA"] = [intX, intY]
+# 							print()
+# 							testP1X = intX - 0.1
+# 							testP2X = intX + 0.1
+# 							print(intX)
+# 							print(currentPoint[0] < intX, line1["point"][0] < intX)
+# 							L1Dist1 = distance(testP1X, equationToPoint(line1, testP1X), line2["point"][0], line2["point"][1])
+# 							L1Dist2 = distance(testP2X, equationToPoint(line1, testP2X), line2["point"][0], line2["point"][1])
+# 							print(L1Dist1, L1Dist2)
+# 							print(L1Dist1 < L1Dist2)
+# 							if L1Dist1 < L1Dist2:
+# 								line1["boundB"] = [intX, intY]
+# 							else:
+# 								line1["boundA"] = [intX, intY]
 
-for site in cell:
-	cellKeys = list(cell[site]["otherPoint"].keys())
-	for key in cellKeys:
-		for entry in intersection3Points:
-			try:
-				intX1, intY1 = intersectSolver(cell[site]["otherPoint"][key], intersection3Points[entry]["line1"])
-				intX2, intY2 = intersectSolver(cell[site]["otherPoint"][key], intersection3Points[entry]["line2"])
-				intX3, intY3 = intersectSolver(cell[site]["otherPoint"][key], intersection3Points[entry]["line3"])
-				#print(site, cell[site]["otherPoint"][key]["midpoint"][0])
+# 							L2Dist1 = distance(testP1X, equationToPoint(line2, testP1X), line1["point"][0], line1["point"][1])
+# 							L2Dist2 = distance(testP2X, equationToPoint(line2, testP2X), line1["point"][0], line1["point"][1])
 
-				if intX1 != None or intX2 != None or intX3 != None:
-					print(f'deleting {cell[site]["otherPoint"][key]}')
-					del cell[site]["otherPoint"][key]
-			except Exception:
-				pass
+# 							if L2Dist1 < L2Dist2:
+# 								line2["boundB"] = [intX, intY]
+# 							else:
+# 								line2["boundA"] = [intX, intY]
+
+# 							L3Dist1 = distance(testP1X, equationToPoint(line3, testP1X), currentPoint[0], currentPoint[1])
+# 							L3Dist2 = distance(testP2X, equationToPoint(line3, testP2X), currentPoint[0], currentPoint[1])
+
+# 							if L3Dist1 < L3Dist2:
+# 								line3["boundB"] = [intX, intY]
+# 							else:
+# 								line3["boundA"] = [intX, intY]
+
+# 							intersection3Points.update({f"({intX}_{intY})" : {"intPosition":[intX, intY]}})
+							
+# 							if d1 == d2 == d3:
+# 								intersection3Points.update({f"({intX}_{intY})" : {"intPosition":[intX, intY]}})
+# 							if line1["midpoint"][0] < intX:
+# 								line1["boundB"] = [intX, intY]
+# 							elif line1["midpoint"][0] > intX:
+# 								line1["boundA"] = [intX, intY]
+							
+# 							if line2["midpoint"][0] < intX:
+# 								line2["boundB"] = [intX, intY]
+# 							elif line2["midpoint"][0] > intX:
+# 								line2["boundA"] = [intX, intY]
+# 
+# 							if line3["midpoint"][0] < intX:
+# 								line3["boundB"] = [intX, intY]
+# 							elif line3["midpoint"][0] > intX:
+# 								line3["boundA"] = [intX, intY]
+
+# 							if distCurrentToL1 > distCurrentToL2 and distCurrentToL1 > distL1ToL2:
+# 								line1["boundB"], line1["boundA"] = line1["boundA"], line1["boundB"]
+# 							elif distCurrentToL2 > distCurrentToL1 and distCurrentToL2 > distL1ToL2:
+# 								line2["boundB"], line2["boundA"] = line2["boundA"], line2["boundB"]
+# 							elif distL1ToL2 > distCurrentToL1 and distL1ToL2 > distCurrentToL2:
+# 								line3["boundB"], line3["boundA"] = line3["boundA"], line3["boundB"]
+
+# 							if line1["midpoint"][1] > intY:
+# 								line1["boundB"] = [intX, intY]
+# 							elif line1["midpoint"][1] < intY:
+# 								line1["boundA"] = [intX, intY]
+# 
+# 							if line2["midpoint"][1] > intY:
+# 								line2["boundB"] = [intX, intY]
+# 							elif line2["midpoint"][1] < intY:
+# 								line2["boundA"] = [intX, intY]
+# 
+# 							if line3["midpoint"][1] > intY:
+# 								line3["boundB"] = [intX, intY]
+# 							elif line3["midpoint"][1] < intY:
+# 								line3["boundA"] = [intX, intY]
+
+# 							if line1["midpoint"][1] > intY:
+# 								if distCurrentToL1 > distCurrentToL2 and distCurrentToL1 > distL1ToL2:
+# 									line1["boundA"] = [intX, intY]
+# 								else:
+# 									line1["boundB"] = [intX, intY]
+# 							elif line1["midpoint"][1] < intY:
+# 								if distCurrentToL1 > distCurrentToL2 and distCurrentToL1 > distL1ToL2:
+# 									line1["boundB"] = [intX, intY]
+# 								else:
+# 									line1["boundA"] = [intX, intY]
+# 
+# 							if line2["midpoint"][1] > intY:
+# 								if distCurrentToL2 > distCurrentToL1 and distCurrentToL2 > distL1ToL2:
+# 									line2["boundA"] = [intX, intY]
+# 								else:
+# 									line2["boundB"] = [intX, intY]
+# 							elif line2["midpoint"][1] < intY:
+# 								if distCurrentToL2 > distCurrentToL1 and distCurrentToL2 > distL1ToL2:
+# 									line2["boundB"] = [intX, intY]
+# 								else:
+# 									line2["boundA"] = [intX, intY]
+# 
+# 							if line3["midpoint"][1] > intY:
+# 								if distL1ToL2 > distCurrentToL1 and distL1ToL2 > distCurrentToL2:
+# 									line3["boundA"] = [intX, intY]
+# 								else:
+# 									line3["boundB"] = [intX, intY]
+# 							elif line3["midpoint"][1] < intY:
+# 								if distL1ToL2 > distCurrentToL1 and distL1ToL2 > distCurrentToL2:
+# 									line3["boundB"] = [intX, intY]
+# 								else:
+# 									line3["boundA"] = [intX, intY]
+							
+# 							intersection3Points.update({ f"({intX}_{intY})" : {
+# 	"intPosition":[intX, intY], 
+# 	"line1":{"points":[currentPoint, line1["point"]], "slope":line1["slope"], "midpoint":line1["midpoint"], "boundA":line1["boundA"], "boundB":line1["boundB"]},
+# 	"line2":{"points":[currentPoint, line2["point"]], "slope":line2["slope"], "midpoint":line2["midpoint"], "boundA":line2["boundA"], "boundB":line2["boundB"]},
+# 	"line3":{"points":[line1["point"], line2["point"]], "slope":line3["slope"], "midpoint":line3["midpoint"], "boundA":line3["boundA"], "boundB":line3["boundB"]}
+# 							}})
+
+# 			closest = array[keys[0]]["midpoint"]
+# 			minDist = distance(currentPoint[0], currentPoint[1], closest[0], closest[1])
+# 			intersects = list(intersection3Points.keys())
+# 			for inter in intersects:
+# 				testDist = distance(intersection3Points[inter]["intPoint"][0], intersection3Points[inter]["intPoint"][1], currentPoint[0], currentPoint[1])
+# 				if testDist < minDist:
+# 					try:
+# 						del intersection3Points[inter]
+# 						print("removing an intersection")
+# 					except Exception:
+# 						pass
+
+			def createLine(a, b, c, d):
+				m = 0
+
+				if (a - c) == 0 and (b - d) < 0:
+					m = -1000
+				elif (a - c) == 0 and (b - d) > 0:
+					m = 1000
+				else:
+					m = (b - d) / (a - c)
+
+				mPtX = (a + c) / 2
+				mPtY = (b + d) / 2
+
+				return {"slope":m, "midpoint":[mPtX, mPtY]}
+
+				
 				
 
-# Need to 
-# 1. determine if the boundry of a line is on the overall boundry
-# 2. find other points that have hit the overall boundry
-# 3. determine if those points should be connected
-# 4. determine if the site is the closest one to one of the corners
-# 5. if it is, include the corner point along with the other two points
+			closest = array[keys[0]]["midpoint"]
+			minDist = distance(currentPoint[0], currentPoint[1], closest[0], closest[1])
+			intersects = list(intersection3Points.keys())
+			for inter in intersects:
+				testDist = distance(intersection3Points[inter]["intPoint"][0], intersection3Points[inter]["intPoint"][1], currentPoint[0], currentPoint[1])
+				if testDist < minDist:
+					try:
+						del intersection3Points[inter]
+						print("removing an intersection")
+					except Exception:
+						pass
+				else:
+					#S1ToS2 = createLine(intersection3Points[inter]["points"][0][0], intersection3Points[inter]["points"][0][1], intersection3Points[inter]["points"][1][0], intersection3Points[inter]["points"][1][1])
+					#S1ToS3 = createLine(intersection3Points[inter]["points"][0][0], intersection3Points[inter]["points"][0][1], intersection3Points[inter]["points"][2][0], intersection3Points[inter]["points"][2][1])
+					#S2ToS3 = createLine(intersection3Points[inter]["points"][1][0], intersection3Points[inter]["points"][1][1], intersection3Points[inter]["points"][2][0], intersection3Points[inter]["points"][2][1])
 
-# For each of the sites related to a 3-intersect, if the lines with the other two points both hit an overall boundry, those two points should be connected
+					checkPolygonVerts = [intersection3Points[inter]["intPoint"], intersection3Points[inter]["points"][0], intersection3Points[inter]["points"][1], intersection3Points[inter]["points"][2]]
 
-# a site may only be completely surrounded if it is paired with at least 3 other sites
-#	if a site is paired with 1 other site, that site must be in the corner
-#	just because a site is paired with 3 other sites does not mean that it will be completely surrounded
 
-for site in cell:
-	leftX = defaultBounds[0][0]
-	rightX = defaultBounds[1][0]
-	bottomY = defaultBounds[1][1]
-	topY = defaultBounds[0][1]
+			#this function is a mess and is probably not organized correct; need to organize it
+			def updateEdges(intersects, inter1, inter2, lineKey): #inter1 is array form of the first intersect point
+				global edges
+				int1 = intersects[inter1]["intPoint"] #the first 3-intersect point
+				int2 = intersects[inter2]["intPoint"] #the second 3-intersect point
+				site1 = str(intersects[inter1]["points"][0]).replace(", ", "_") #the first site
+				site2 = str(intersects[inter2][lineKey]["point"]).replace(", ", "_") #the second site
+				if int2[0] < int1[0]:
+					int1, int2 = int2, int1
 
-	def distBoundryTargetSort(target, array):
-		n = len(array)
-	
-		for i in range(n):
-			for j in range(0, n - i - 1):
-				point1 = array[j]["boundB"]
-				point2 = array[j + 1]["boundA"]
+				if site1 in edges:
+					edges[site1]["otherPoint"].update({inter1 : {"point":intersects[inter1]["point"], "slope":intersects[inter1][lineKey]["slope"], "midpoint":intersects[inter1][lineKey]["midpoint"], "boundA":int1, "boundB":int2  }})
+				else:
+					edges.update({site1 : {"point":intersects[inter1]["points"][0], "otherPoint":{inter1 : {"point":intersects[inter1]["point"], "slope":intersects[inter1][lineKey]["slope"], "midpoint":intersects[inter1][lineKey]["midpoint"], "boundA":int1, "boundB":int2  }}}})
 
-				distance1 = distance(target[0], target[1], point1[0], point1[1])
-				distance2 = distance(target[0], target[1], point2[0], point2[1])
+				if site2 in edges:
+					edges[site2]["otherPoint"].update({inter1 : {"point":intersects[inter1]["point"], "slope":intersects[inter1][lineKey]["slope"], "midpoint":intersects[inter1][lineKey]["midpoint"], "boundA":int1, "boundB":int2  }})
+				else:
+					edges.update({site2 : {"point":intersects[inter2][lineKey]["point"], "otherPoint":{inter1 : {"point":intersects[inter1]["point"], "slope":intersects[inter1][lineKey]["slope"], "midpoint":intersects[inter1][lineKey]["midpoint"], "boundA":int1, "boundB":int2  }}}})
 
-				if distance1 > distance2:
-					array[j], array[j + 1] = array[j + 1], array[j]
+# 				if intersects[inter1]["intPoint"][0] < intersects[inter2]["intPoint"][0]:
+# 					edges.update({str(intersects[inter1]["points"][0]).replace(", ", "_") : {"point":intersects[inter1]["points"][0], "otherPoint":{inter1 : {"point":intersects[inter1][lineKey]["point"], "slope":intersects[inter1][lineKey]["slope"], "midpoint":intersects[inter1][lineKey]["midpoint"], "boundA":intersects[inter1]["intPoint"], "boundB":intersects[inter2]["intPoint"]  }}}})
+# 				else:
+# 					edges.update({str(intersects[inter1]["points"][0]).replace(", ", "_") : {"point":intersects[inter1]["points"][0], "otherPoint":{inter1 : {"point":intersects[inter1][lineKey]["point"], "slope":intersects[inter1][lineKey]["slope"], "midpoint":intersects[inter1][lineKey]["midpoint"], "boundA":intersects[inter2]["intPoint"], "boundB":intersects[inter1]["intPoint"]  }}}})	
 
-	def keyToPoints(key):
-		return list(map(float, key.replace("_", ", ").removesuffix(")").removeprefix("(").split(", ")))
+			for inter1 in intersects:
+				for inter2 in intersects:
+					if inter1 != inter2:
+						if (intersection3Points[inter1]["line1"] == intersection3Points[inter2]["line1"] or intersection3Points[inter1]["line1"] == intersection3Points[inter2]["line2"] or intersection3Points[inter1]["line1"] == intersection3Points[inter2]["line3"]):
+# 							if intersects[inter1]["line1"] == intersects[inter2]["line1"]:
+								#addEdge(intersects[inter1]["line1"], intersects[inter2]["line1"], intersects[inter1]["line1"]["point"], intersects[inter1]["points"][0])
+# 								if intersects[inter1]["intPoint"][0] < intersects[inter2]["intPoint"][0]:
+# 									edges.update({str(intersects[inter1]["points"][0]).replace(", ", "_") : {"point":intersects[inter1]["points"][0], "otherPoint":{inter1 : {"point":intersects[inter1]["line1"]["point"], "slope":intersects[inter1]["line1"]["slope"], "midpoint":intersects[inter1]["line1"]["midpoint"], "boundA":intersects[inter1]["intPoint"], "boundB":intersects[inter2]["intPoint"]  }}}})
+# 								else:
+# 									edges.update({str(intersects[inter1]["points"][0]).replace(", ", "_") : {"point":intersects[inter1]["points"][0], "otherPoint":{inter1 : {"point":intersects[inter1]["line1"]["point"], "slope":intersects[inter1]["line1"]["slope"], "midpoint":intersects[inter1]["line1"]["midpoint"], "boundA":intersects[inter2]["intPoint"], "boundB":intersects[inter1]["intPoint"]  }}}})	
+# 								updateEdges(intersects, inter1, inter2, "line1")
+# 							elif intersects[inter1]["line1"] == intersects[inter2]["line2"]:
+# 								updateEdges(intersects, inter1, inter2, "line1")
+# 							else:
+							updateEdges(intersection3Points, inter1, inter2, "line1")
+						elif (intersection3Points[inter1]["line2"] == intersection3Points[inter2]["line1"] or intersection3Points[inter1]["line2"] == intersection3Points[inter2]["line2"] or intersection3Points[inter1]["line2"] == intersection3Points[inter2]["line3"]):
+							updateEdges(intersection3Points, inter1, inter2, "line2")
+						elif (intersection3Points[inter1]["line3"] == intersection3Points[inter2]["line1"] or intersection3Points[inter1]["line3"] == intersection3Points[inter2]["line2"] or intersection3Points[inter1]["line3"] == intersection3Points[inter2]["line3"]):
+							updateEdges(intersection3Points, inter1, inter2, "line3")
 
-	match cell[site]["otherPoint"].__len__():
-		case 0:
-			#finalCell.update({ site: {"pointForm":keyToPoints(site), "vertices":[corners[0], corners[1], corners[2], corners[3] ]} })
-			finalCell.update({ site: {"pointForm":keyToPoints(site), "vertices":[[corners[1], corners[2]], [corners[2], corners[4]], [corners[4], corners[3]], [corners[3], corners[0]], [corners[0], corners[1]] ]} })
-		case 1: #will probably need to redo the organization of the vertices within finalCell to avoid any mistakes
-			#figure out which corner it is closests to and where the boundrys of the lines are
-			ky = list(cell[site]["otherPoint"].keys())[0]
-			boundAX = cell[site]["otherPoint"][ky]["boundA"][0]
-			boundAY = cell[site]["otherPoint"][ky]["boundA"][1]
-			boundBX = cell[site]["otherPoint"][ky]["boundB"][0]
-			boundBY = cell[site]["otherPoint"][ky]["boundB"][1]
-			if ( boundAX == leftX and (boundBY == topY or boundBY == bottomY) ) or ( boundBX == rightX and (boundAY == topY or boundAY == bottomY) ): #if the site is in a corner
-				#print("corner")
-				corner = corners.copy()
-				pointDistanceTargetSort(keyToPoints(site), corner)
-				#finalCell.update( { site: {"pointForm":keyToPoints(site), "vertices":[cell[site]["otherPoint"][ky]["boundA"], corner[0], cell[site]["otherPoint"][ky]["boundB"] ]} })
-				finalCell.update( { site: {"pointForm":keyToPoints(site), "vertices":[[cell[site]["otherPoint"][ky]["boundA"], corner[0]], [corner[0], cell[site]["otherPoint"][ky]["boundB"]], [cell[site]["otherPoint"][ky]["boundB"], cell[site]["otherPoint"][ky]["boundA"]] ]} })
-			else: #if the site is not in a corner  #would be the same as elif ( boundAX == leftX and boundBX == rightX ) or ( boundAY == bottomY and boundBY == topY ) or (boundAY == topY and boundBY == bottomY):
+	print(intersection3Points.__len__())
+	#print(intersection3Points)
 
-				if boundAX == leftX and boundBX == rightX: #if the cell stretches horizontally across the area
-					if cell[site]["otherPoint"][ky]["point"][1] > cell[site]["point"][1]: #if the site is below its pair
-						#finalCell.update({ site: {"pointForm":keyToPoints(site), "vertices":[cell[site]["otherPoint"][ky]["boundA"], corners[0], corners[2], cell[site]["otherPoint"][ky]["boundB"] ]} })
-						finalCell.update({ site: {"pointForm":keyToPoints(site), "vertices":[[cell[site]["otherPoint"][ky]["boundA"], corners[0]], [corners[0], corners[2]], [corners[2], cell[site]["otherPoint"][ky]["boundB"]], [cell[site]["otherPoint"][ky]["boundB"], cell[site]["otherPoint"][ky]["boundA"]] ]} })
-					else: #if the site is above its pair
-						#finalCell.update({ site: {"pointForm":keyToPoints(site), "vertices":[cell[site]["otherPoint"][ky]["boundA"], corners[1], corners[3], cell[site]["otherPoint"][ky]["boundB"] ]} })
-						finalCell.update({ site: {"pointForm":keyToPoints(site), "vertices":[[cell[site]["otherPoint"][ky]["boundA"], corners[1]], [corners[1], corners[3]], [corners[3], cell[site]["otherPoint"][ky]["boundB"]], [cell[site]["otherPoint"][ky]["boundB"], cell[site]["otherPoint"][ky]["boundA"]] ]} })
+	plt.title("pixel_plot")
 
-				else: #if the cell stretches vertically across the area  #elif (boundAX == bottomY and boundBX == topY) or (boundAX == topY and boundBX == bottomY):
-					if cell[site]["otherPoint"][ky]["point"][0] > cell[site]["point"][0]: #if the site is to the left of the pair
-						#finalCell.update({ site: {"pointForm":keyToPoints(site), "vertices":[cell[site]["otherPoint"][ky]["boundA"], corners[0], corners[1], cell[site]["otherPoint"][ky]["boundB"] ]} })
-						if cell[site]["otherPoint"][ky]["slope"] < 0:
-							finalCell.update({ site: {"pointForm":keyToPoints(site), "vertices":[[cell[site]["otherPoint"][ky]["boundA"], corners[1]], [corners[1], corners[0]], [corners[0], cell[site]["otherPoint"][ky]["boundB"]], [cell[site]["otherPoint"][ky]["boundB"], cell[site]["otherPoint"][ky]["boundA"]] ]} })
-						else:
-							finalCell.update({ site: {"pointForm":keyToPoints(site), "vertices":[[cell[site]["otherPoint"][ky]["boundA"], corners[0]], [corners[0], corners[1]], [corners[1], cell[site]["otherPoint"][ky]["boundB"]], [cell[site]["otherPoint"][ky]["boundB"], cell[site]["otherPoint"][ky]["boundA"]] ]} })
-					else: #if the site is to the right of the pair
-						#finalCell.update({ site: {"pointForm":keyToPoints(site), "vertices":[cell[site]["otherPoint"][ky]["boundA"], corners[2], corners[3], cell[site]["otherPoint"][ky]["boundB"] ]} })
-						if cell[site]["otherPoint"][ky]["slope"] < 0:
-							finalCell.update({ site: {"pointForm":keyToPoints(site), "vertices":[[cell[site]["otherPoint"][ky]["boundA"], corners[4]], [corners[4], corners[3]], [corners[3], cell[site]["otherPoint"][ky]["boundB"]], [cell[site]["otherPoint"][ky]["boundB"], cell[site]["otherPoint"][ky]["boundA"]] ]} })
-						else:
-							finalCell.update({ site: {"pointForm":keyToPoints(site), "vertices":[[cell[site]["otherPoint"][ky]["boundA"], corners[3]], [corners[3], corners[4]], [corners[4], cell[site]["otherPoint"][ky]["boundB"]], [cell[site]["otherPoint"][ky]["boundB"], cell[site]["otherPoint"][ky]["boundA"]] ]} })
-		case 2:
-			boundryPairs = [] 
-			sharedPoint = (0, 0)
-			#print()
-			kys = list(cell[site]["otherPoint"].keys())
+	for pt in points:
+		plt.plot(pt[0], pt[1], "ro")
 
-			line1 = cell[site]["otherPoint"][kys[0]]
-			line2 = cell[site]["otherPoint"][kys[1]]
+	for site in cell:
+		plt.plot(cell[site]["point"][0], cell[site]["point"][1], "ro")
+		for line in cell[site]["otherPoint"]:
+			plt.plot(cell[site]["otherPoint"][line]["midpoint"][0], cell[site]["otherPoint"][line]["midpoint"][1], "yo")
 
-			L1boundAX = line1["boundA"][0]
-			L1boundAY = line1["boundA"][1]
-			L1boundBX = line1["boundB"][0]
-			L1boundBY = line1["boundB"][1]
+			plt.plot([cell[site]["otherPoint"][line]["boundA"][0], cell[site]["otherPoint"][line]["boundB"][0]], [cell[site]["otherPoint"][line]["boundA"][1], cell[site]["otherPoint"][line]["boundB"][1]], color=(random.random(), random.random(), random.random()))
 
-			L2boundAX = line2["boundA"][0]
-			L2boundAY = line2["boundA"][1]
-			L2boundBX = line2["boundB"][0]
-			L2boundBY = line2["boundB"][1]
+	for point in intersection3Points:
+		plt.plot(intersection3Points[point]["intPoint"][0], intersection3Points[point]["intPoint"][1], "bo")
 
-			L1BoundPt = (0, 0)
-			L2BoundPt = (0, 0)
+	plt.show()
 
-			avX = (line1["point"][0] + line2["point"][0])/(2)
-			avY = (line1["point"][1] + line2["point"][1])/(2)
 
-			
-			#P1Type = "None"
-			#P2Type = "None"
 
-			#print((L1boundAX, L1boundAY), (L1boundBX, L1boundBY))
-			#print((L2boundAX, L2boundAY), (L2boundBX, L2boundBY))
-
-			if L1boundAX == leftX or L1boundAY == topY or L1boundAY == bottomY:
-				L1BoundPt = (L1boundAX, L1boundAY)
-				sharedPoint = (L1boundBX, L1boundBY)
-				#P1Type = "A"
-			elif L1boundBX == rightX or L1boundBY == topY or L1boundBY == bottomY:
-				L1BoundPt = (L1boundBX, L1boundBY)
-				sharedPoint = (L1boundAX, L1boundAY)
-				#P1Type = "B"
-
-			if L2boundAX == leftX or L2boundAY == topY or L2boundAY == bottomY:
-				L2BoundPt = (L2boundAX, L2boundAY)
-				#P2Type = "A"
-			elif L2boundBX == rightX or L2boundBY == topY or L2boundBY == bottomY:
-				L2BoundPt = (L2boundBX, L2boundBY)
-				#P2Type = "B"
-
-			if L1BoundPt[0] == L2BoundPt[0] and L1BoundPt[1] != L2BoundPt[1]:
-				boundryPairs.extend([L1BoundPt, L2BoundPt])
-			else:
-				if L1BoundPt[0] > L2BoundPt[0]:
-					L1BoundPt, L2BoundPt = L2BoundPt, L1BoundPt
-
-				if L1BoundPt[0] == leftX and L2BoundPt[1] == topY: #top left
-					boundryPairs.extend([ [L1BoundPt, corners[1]], [corners[1], L2BoundPt] ])
-					#print("top left")
-				elif L1BoundPt[0] == leftX and L2BoundPt[1] == bottomY: #bottom left
-					boundryPairs.extend([ [L1BoundPt, corners[0]], [corners[0], L2BoundPt] ])
-					#print("bottom left")
-					#print(L1BoundPt, L2BoundPt[1], corners[0], bottomY)
-				elif L1BoundPt[0] == rightX and L2BoundPt[1] == topY: #top right
-					boundryPairs.extend([ [L1BoundPt, corners[3]], [corners[3], L2BoundPt] ])
-					#print("top right")
-				elif L1BoundPt[0] == rightX and L2BoundPt[1] == bottomY: #bottom right
-					boundryPairs.extend([ [L1BoundPt, corners[2]], [corners[2], L2BoundPt] ])
-					#print("bottom right")
-				elif L1BoundPt[0] == leftX and L2BoundPt[0] == rightX:
-					if cell[site]["point"][1] < avY: # if the site is on the bottom
-						boundryPairs.extend([ [L1BoundPt, corners[0]], [corners[0], corners[2]], [corners[2], L2BoundPt] ])
-						#print("bottom")
-					else:
-						boundryPairs.extend([ [L1BoundPt, corners[1]], [corners[1], corners[3]], [corners[3], L2BoundPt] ])
-						#print("top")
-				elif (L1BoundPt[1] == topY and L2BoundPt[1] == bottomY) or (L1BoundPt[1] == bottomY and L2BoundPt[1] == topY):
-					if cell[site]["point"][0] < avX: #if the site is on the left
-						d1 = distance(L1BoundPt[0], L1BoundPt[1], corners[0][0], corners[0][1])
-						d2 = distance(L1BoundPt[0], L1BoundPt[1], corners[1][0], corners[1][1])
-						#print("left")
-						if d1 < d2:
-							boundryPairs.extend([ [L1BoundPt, corners[0]], [corners[0], corners[1]], [corners[1], L2BoundPt] ])
-						else:
-							boundryPairs.extend([ [L1BoundPt, corners[1]], [corners[1], corners[0]], [corners[0], L2BoundPt] ])
-						
-					else:
-						d1 = distance(L1BoundPt[0], L1BoundPt[1], corners[2][0], corners[2][1])
-						d2 = distance(L1BoundPt[0], L1BoundPt[1], corners[3][0], corners[3][1])
-						#print("right")
-						if d1 < d2:
-							boundryPairs.extend([ [L1BoundPt, corners[2]], [corners[2], corners[3]], [corners[3], L2BoundPt] ])
-						else:
-							boundryPairs.extend([ [L1BoundPt, corners[3]], [corners[3], corners[2]], [corners[2], L2BoundPt] ])
-
-				
-				#print(site, boundryPairs)
-				#print(f'{cell[site]["point"]} {avX, avY}')
-			prevFirst = boundryPairs[0][0]
-			prevLast = boundryPairs[-1][1]
-			boundryPairs.insert(0, [sharedPoint, prevFirst])
-			boundryPairs.insert(-1, [prevLast, sharedPoint])
-			#print(boundryPairs)
-			finalCell.update({ site: {"pointForm":keyToPoints(site), "vertices":boundryPairs} })
-		case _: #default
-			boundryPairs = [] 
-
-			for line in cell[site]["otherPoint"]: #this works for cases such as site (50, 50) since it has a pair of points on the boundry on two different boundries, 
-				boundAX = cell[site]["otherPoint"][line]["boundA"][0]
-				boundAY = cell[site]["otherPoint"][line]["boundA"][1]
-				boundBX = cell[site]["otherPoint"][line]["boundB"][0]
-				boundBY = cell[site]["otherPoint"][line]["boundB"][1]
-
-				if boundAX == leftX or boundAY == topY or boundAY == bottomY:
-					for line2 in cell[site]["otherPoint"]:
-						if line2 != line1:
-							boundAX2 = cell[site]["otherPoint"][line2]["boundA"][0]
-							boundAY2 = cell[site]["otherPoint"][line2]["boundA"][1]
-							#boundBX2 = cell[site]["otherPoint"][line2]["boundB"][0]
-							#boundBY2 = cell[site]["otherPoint"][line2]["boundB"][1]	
-							if (boundAX == boundAX2 and boundAY != boundAY2) or (boundAY == boundAY2 and boundAX != boundAX2):
-								if not [cell[site]["otherPoint"][line]["boundA"], cell[site]["otherPoint"][line2]["boundA"]] in boundryPairs and not [cell[site]["otherPoint"][line2]["boundA"], cell[site]["otherPoint"][line]["boundA"]] in boundryPairs:
-									boundryPairs.append([cell[site]["otherPoint"][line]["boundA"], cell[site]["otherPoint"][line2]["boundA"]])
-				
-				if boundBX == rightX or boundBY == topY or boundBY == bottomY:
-					for line2 in cell[site]["otherPoint"]:
-						if line2 != line1:
-							#boundAX2 = cell[site]["otherPoint"][line2]["boundA"][0]
-							#boundAY2 = cell[site]["otherPoint"][line2]["boundA"][1]
-							boundBX2 = cell[site]["otherPoint"][line2]["boundB"][0]
-							boundBY2 = cell[site]["otherPoint"][line2]["boundB"][1]	
-							if (boundBX == boundBX2 and boundBY != boundBY2) or (boundBY == boundBY2 and boundBX != boundBX2):
-								if not [cell[site]["otherPoint"][line]["boundB"], cell[site]["otherPoint"][line2]["boundB"]] in boundryPairs and not [cell[site]["otherPoint"][line2]["boundB"], cell[site]["otherPoint"][line]["boundB"]] in boundryPairs:
-									boundryPairs.append([cell[site]["otherPoint"][line]["boundB"], cell[site]["otherPoint"][line2]["boundB"]])
-
-				#print()
-				#print(site, boundryPairs)
-
-			#n = boundryPairs.__len__() + cell.__len__()
-#			cell2 = cell.copy()
-#			vertices = []
-#			for line in cell[site]["otherPoints"]:
-#				vertices.append([cell[site]["otherPoints"][line]["boundA"], cell[site]["otherPoints"][line]["boundB"]])
-#				for pair in boundryPairs:
-#					if boundryPairs[pair][0] == cell[site]["otherPoints"][line]["boundB"] or boundryPairs[pair][1] == cell[site]["otherPoints"][line]["boundA"]:
-#						vertices.append()
-			
-			#vertices = boundryPairs.copy()
-			vertices = []
-			#for i in range(0, boundryPairs.__len__()-1):
-				#print(i, boundryPairs[i], boundryPairs[i+1])
-			#	vertices.append([boundryPairs[i], boundryPairs[i + 1]])
-
-			for line in cell[site]["otherPoint"]:
-				vertices.append([cell[site]["otherPoint"][line]["boundA"], cell[site]["otherPoint"][line]["boundB"]])
-
-			for bound in boundryPairs:
-				vertices.append(bound)
-			#print()
-			#print(vertices)
-			#flat_list = []
-			#for sublist in vertices:
-			#	for item in sublist:
-			#		flat_list.append(item)
-			#print(flat_list)
-			finalCell.update({ site: {"pointForm":keyToPoints(site), "vertices":vertices} })
-
-for site in finalCell:
-	verts = finalCell[site]["vertices"].copy()		
-	vertsOrder = []
-
-	n = len(verts)
- 
-    # For loop to traverse through all 
-    # element in an array
-	for i in range(n):
-		for j in range(0, n - i - 1):
-             
-            # Range of the array is from 0 to n-i-1
-            # Swap the elements if the element found 
-            #is greater than the adjacent element
-			if verts[j][0][0] > verts[j + 1][0][0]:
-				verts[j], verts[j + 1] = verts[j + 1], verts[j]
-
-	for i in range(n-1):
-		for j in range(n):
-			if verts[i][1] == verts[j][0]:
-				verts[i + 1], verts[j] = verts[j], verts[i + 1]
-				
-	#print(verts)
-
-	finalCell[site]["vertices"] = verts
-
-	#if site == "(50_50)":
-	#	print(finalCell[site]["vertices"])
-
-#	for p1 in verts:
-#		suc = False
-#		for p2 in verts:
-#			if p1[1][0] == p2[0][0] and p1[1][1] == p2[0][0]:
-#				pass
-
-	
 
 plt.figure(figsize=(7, 7))
-plt.ylim(defaultBounds[1][1], defaultBounds[1][0])
-plt.xlim(defaultBounds[0][0], defaultBounds[0][1])
-
-plt.title("pixel_plot")
-
-for entry in finalCell:
-	#fullCell = finalCell[entry]
-	clr1 = random.random()
-	clr2 = random.random()
-	clr3 = random.random()
-	allVertsX = []
-	allVertsY = []
-	#print(finalCell[entry]["vertices"])
-
-	for edge in finalCell[entry]["vertices"]:
-		#print(edge)
-		#vert = finalCell[entry]["vertices"]
-		#print(edge)
-		#plt.plot([edge[0][0], edge[1][0]], [edge[0][1], edge[1][1]], color=(clr1, clr2, clr3))
-		plt.plot([edge[0][0], edge[1][0]], [edge[0][1], edge[1][1]], color=(clr1, clr2, clr3), linewidth=4)
-		allVertsX.append(edge[0][0])
-		allVertsY.append(edge[0][1])
-		#if not edge[0][0] in allVertsX and not edge[0][1] in allVertsY:
-		#	allVertsX.append(edge[0][0])
-		#	allVertsY.append(edge[0][1])
-			
-	#print()
-	#print(allVertsX)
-	#print(allVertsY)
-	#print()
-	plt.fill(allVertsX, allVertsY, color=(clr1, clr2, clr3))
-	#print(fullCell["vertices"][0][0][0], fullCell["vertices"][0][1][0], fullCell["vertices"][0][0][1], fullCell["vertices"][0][1][1])
-	#plt.plot([ fullCell["vertices"][0][0][0], fullCell["vertices"][0][1][0], fullCell["vertices"][1][1][0], fullCell["vertices"][2][1][0] ], [ fullCell["vertices"][0][0][1], fullCell["vertices"][0][1][1], fullCell["vertices"][1][1][1], fullCell["vertices"][2][1][1] ], color=(clr1, clr2, clr3))
-	#plt.plot([0, 0], [75, 0], "-bo")
-
-for site in cell: #If I want to make it so that it displays all of the perp lines, go to the area for finding the intersection of 3 lines and comment out all of the references to cell
-	plt.plot(cell[site]["point"][0], cell[site]["point"][1], "ro")
-	#print(cell[site]["otherPoint"].__len__())
-	for line in cell[site]["otherPoint"]:
-		#print(cell[site]["point"], line, cell[site]["otherPoint"][line]["boundA"], cell[site]["otherPoint"][line]["boundB"])
-		#print(f'site: {cell[site]["point"]} line: {line} midpoint: {cell[site]["otherPoint"][line]["midpoint"]} boundA: {cell[site]["otherPoint"][line]["boundA"]} boundB: {cell[site]["otherPoint"][line]["boundB"]}')
-		plt.plot(cell[site]["otherPoint"][line]["midpoint"][0], cell[site]["otherPoint"][line]["midpoint"][1], "yo")
-
-		plt.plot([cell[site]["otherPoint"][line]["boundA"][0], cell[site]["otherPoint"][line]["boundB"][0]], [cell[site]["otherPoint"][line]["boundA"][1], cell[site]["otherPoint"][line]["boundB"][1]], "-go")
-		#plt.plot([cell[site]["otherPoint"][line]["boundA"][0], cell[site]["otherPoint"][line]["boundB"][0]], [cell[site]["otherPoint"][line]["boundA"][1], cell[site]["otherPoint"][line]["boundB"][1]], color="red")
-
-#intersect3Keys = intersection3Points.keys()
-
-#for key in intersect3Keys:
-	#plt.plot(intersection3Points[key]["intPosition"][0], intersection3Points[key]["intPosition"][1], "bo")
-	#print(f'intersection point {intersection3Points[key]["intPosition"]} between {intersection3Points[key]["line1"]["points"][0]} {intersection3Points[key]["line2"]["points"][1]} {intersection3Points[key]["line3"]["points"][0]}')
-	#print(f'point: {intersection3Points[key]["line1"]["points"][0]} {intersection3Points[key]["line1"]["points"][1]} boundA: {intersection3Points[key]["line1"]["boundA"]} boundB: {intersection3Points[key]["line1"]["boundB"]}')
-	#print(f'point: {intersection3Points[key]["line2"]["points"][0]} {intersection3Points[key]["line2"]["points"][1]} boundA: {intersection3Points[key]["line2"]["boundA"]} boundB: {intersection3Points[key]["line2"]["boundB"]}')
-	#print(f'point: {intersection3Points[key]["line3"]["points"][0]} {intersection3Points[key]["line3"]["points"][1]} boundA: {intersection3Points[key]["line3"]["boundA"]} boundB: {intersection3Points[key]["line3"]["boundB"]}')
-	#plt.plot([intersection3Points[key]["line1"]["boundA"][0], intersection3Points[key]["line1"]["boundB"][0]], [intersection3Points[key]["line1"]["boundA"][1], intersection3Points[key]["line1"]["boundB"][1]], "-bo")
-	#plt.plot([intersection3Points[key]["line2"]["boundA"][0], intersection3Points[key]["line2"]["boundB"][0]], [intersection3Points[key]["line2"]["boundA"][1], intersection3Points[key]["line2"]["boundB"][1]], "-bo")
-	#plt.plot([intersection3Points[key]["line3"]["boundA"][0], intersection3Points[key]["line3"]["boundB"][0]], [intersection3Points[key]["line3"]["boundA"][1], intersection3Points[key]["line3"]["boundB"][1]], "-bo")
-	#pass
-
-
+for i in range(0, 20):
 	
-plt.show()
-
+	plt.ylim(defaultBounds[1][1], defaultBounds[1][0])
+	plt.xlim(defaultBounds[0][0], defaultBounds[0][1])
+	main(plt)
+	#sleep(1)
+	plt.clf()
+	
