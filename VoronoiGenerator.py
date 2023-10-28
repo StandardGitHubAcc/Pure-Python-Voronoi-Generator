@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 
 defaultBounds = [[0, 200], [200, 0]]
 def main(plt):
-	nPoints = random.randint(3, 5)
+	nPoints = 4#random.randint(3, 5)
 	points = []
 	corners = [ [defaultBounds[0][0], defaultBounds[1][1]], [defaultBounds[0][0], defaultBounds[0][1]], [defaultBounds[1][0], defaultBounds[1][1]], [defaultBounds[0][1], defaultBounds[1][0]] ]
 	cell = {}
@@ -97,7 +97,7 @@ def main(plt):
 				else:
 					return None, None
 			else:
-				#print(f'intersection is out of bounds ({line1["boundA"][0]}, {line1["boundA"][1]}) ({line1["boundB"][0]}, {line1["boundB"][1]}) or ({line2["boundA"][0]}, {line2["boundA"][1]}) ({line2["boundB"][0]}, {line2["boundB"][1]})')
+				#print(f'intersection {x, y} is out of bounds {line1["boundA"]} {line1["boundB"]} or {line2["boundA"]} {line2["boundB"]}')
 				return None, None
 		else:
 			#print(f"there is no interesection of y = {slope1}(x - {midPt1[0]}) + {midPt1[1]} and y = {slope2}(x - {midPt2[0]}) + {midPt2[1]} or they are the same equation")
@@ -159,7 +159,7 @@ def main(plt):
 		n1 = int(random.random() * 200)
 		n2 = int(random.random() * 200)
 		points.append((n1, n2))
-
+	points = [(100, 10), (156, 109), (118, 144), (197, 160)]
 	n = len(points)
 	
 	for i in range(n):
@@ -170,7 +170,7 @@ def main(plt):
 	for i in range(n):
 		cell.update({ f"{str(points[i]).replace(', ', '_')}" : {"point":points[i], "otherPoint":{ "(None_None)" : {"point":[None, None], "slope":None, "midpoint":[None, None], "boundA":[0, 200], "boundB":[200, 0]} } } })
 
-
+	
 
 	#[(88, 56), (178, 131), (28, 147), (89, 181)] #problem
 	#[(187, 34), (112, 75), (91, 144)] #problem?
@@ -265,16 +265,15 @@ def main(plt):
 			if f"({a}_{b})" != f"({c}_{d})":
 
 				boundA, boundB = setDefaultBounds(m, mPtX, mPtY, defaultBounds)
-
-				if "(None_None)" == list(cell[f"({a}_{b})"]["otherPoint"].keys())[0]:
-					cell.update({ f"({a}_{b})" : {"point":[a, b], "otherPoint":{ f"({c}_{d})" : {"point":[c, d], "slope":m, "midpoint":[mPtX, mPtY], "boundA":boundA, "boundB":boundB} } } })
-					#print(f"({a}_{b}) contains a (None_None)")
-				elif not f"({a}_{b})" in cell:
+			
+				if not f"({a}_{b})" in cell:
 					cell.update({ f"({a}_{b})" : {"point":[a, b], "otherPoint":{ f"({c}_{d})" : {"point":[c, d], "slope":m, "midpoint":[mPtX, mPtY], "boundA":boundA, "boundB":boundB} } } })
 					#print(f"cell does not contain ({a}_{b})")
 				elif f"({a}_{b})" in cell:
 					#print(f"cell contains ({a}_{b})")
-					if not f"({c}_{d})" in cell[f"({a}_{b})"]["otherPoint"]:
+					if "(None_None)" == list(cell[f"({a}_{b})"]["otherPoint"].keys())[0]:
+						cell.update({ f"({a}_{b})" : {"point":[a, b], "otherPoint":{ f"({c}_{d})" : {"point":[c, d], "slope":m, "midpoint":[mPtX, mPtY], "boundA":boundA, "boundB":boundB} } } })
+					elif not f"({c}_{d})" in cell[f"({a}_{b})"]["otherPoint"]:
 						#print(f"({a}_{b}) does not contain ({c}_{d})")
 						cell[f"({a}_{b})"]["otherPoint"].update({ f"({c}_{d})" : {"point":[c, d], "slope":m, "midpoint":[mPtX, mPtY], "boundA":boundA, "boundB":boundB} } )
 
@@ -349,55 +348,55 @@ def main(plt):
 
 							# print(d1 == d2 == d3)
 
-							def changeBoundry(line1, line2, line3): #why isn't this used?
-								line1 = line1
-								line2 = line2
-								line3 = line3
-
-								if line1["midpoint"][0] > intX:
-									print("line1 > intX")
-									line1["boundB"] = [intX, intY]
-
-									if line2["midpoint"][0] > intX:
-										print("a1 line2 > intx")
-										line2["boundA"] == [intX, intY]
-									else:
-										print("a1 line2 < intx")
-										line2["boundB"] == [intX, intY]
-
-									if line3["midpoint"][0] > intX:
-										print("a1 line3 > intx")
-										line3["boundA"] == [intX, intY]
-									else:
-										print("a1 line3 < intx")
-										line3["boundB"] == [intX, intY]
-									
-								elif line1["midpoint"][0] < intX:
-									print("line1 < intX")
-									line1["boundA"] = [intX, intY]
-
-									if line2["midpoint"][0] > intX:
-										line2["boundB"] == [intX, intY]
-										print("a2 line2 > intx")
-									else:
-										print("a2 line2 < intx")
-										line2["boundA"] == [intX, intY]
-
-									if line3["midpoint"][0] > intX:
-										line3["boundB"] == [intX, intY]
-										print("a2 line3 > intx")
-									else:
-										line3["boundA"] == [intX, intY]
-										print("a2 line3 < intx")
-
-								return line1, line2, line3
+# 							def changeBoundry(line1, line2, line3): #why isn't this used?
+# 								line1 = line1
+# 								line2 = line2
+# 								line3 = line3
+# 
+# 								if line1["midpoint"][0] > intX:
+# 									print("line1 > intX")
+# 									line1["boundB"] = [intX, intY]
+# 
+# 									if line2["midpoint"][0] > intX:
+# 										print("a1 line2 > intx")
+# 										line2["boundA"] == [intX, intY]
+# 									else:
+# 										print("a1 line2 < intx")
+# 										line2["boundB"] == [intX, intY]
+# 
+# 									if line3["midpoint"][0] > intX:
+# 										print("a1 line3 > intx")
+# 										line3["boundA"] == [intX, intY]
+# 									else:
+# 										print("a1 line3 < intx")
+# 										line3["boundB"] == [intX, intY]
+# 									
+# 								elif line1["midpoint"][0] < intX:
+# 									print("line1 < intX")
+# 									line1["boundA"] = [intX, intY]
+# 
+# 									if line2["midpoint"][0] > intX:
+# 										line2["boundB"] == [intX, intY]
+# 										print("a2 line2 > intx")
+# 									else:
+# 										print("a2 line2 < intx")
+# 										line2["boundA"] == [intX, intY]
+# 
+# 									if line3["midpoint"][0] > intX:
+# 										line3["boundB"] == [intX, intY]
+# 										print("a2 line3 > intx")
+# 									else:
+# 										line3["boundA"] == [intX, intY]
+# 										print("a2 line3 < intx")
+# 
+# 								return line1, line2, line3
 
 
 							if d1 == d2 == d3:
 								intersection3Points.update({f"({intX}_{intY})" : {"intPoint":[intX, intY], "points":[currentPoint, line1["point"], line2["point"]], "line1":line1, "line2":line2, "line3":line3}})
 
 		def createLine(a, b, c, d):
-			if a < c:
+			if a > c:
 				a, b, c, d = c, d, a, b
 			m = 0
 
@@ -411,7 +410,7 @@ def main(plt):
 			mPtX = (a + c) / 2
 			mPtY = (b + d) / 2
 
-			return {"slope":m, "midpoint":[mPtX, mPtY], "boundA":[a, b], "boundB":[b, c]}
+			return {"slope":m, "midpoint":[mPtX, mPtY], "boundA":[a, b], "boundB":[c, d]}
 
 		closest = array[keys[0]]["midpoint"]
 		minDist = distance(currentPoint[0], currentPoint[1], closest[0], closest[1])
@@ -425,85 +424,31 @@ def main(plt):
 				except Exception:
 					pass
 			else:
-				#S1ToS2 = createLine(intersection3Points[inter]["points"][0][0], intersection3Points[inter]["points"][0][1], intersection3Points[inter]["points"][1][0], intersection3Points[inter]["points"][1][1])
-				#S1ToS3 = createLine(intersection3Points[inter]["points"][0][0], intersection3Points[inter]["points"][0][1], intersection3Points[inter]["points"][2][0], intersection3Points[inter]["points"][2][1])
-				#S2ToS3 = createLine(intersection3Points[inter]["points"][1][0], intersection3Points[inter]["points"][1][1], intersection3Points[inter]["points"][2][0], intersection3Points[inter]["points"][2][1])
-
-				#checkPolygonVerts = [intersection3Points[inter]["intPoint"], intersection3Points[inter]["points"][0], intersection3Points[inter]["points"][1], intersection3Points[inter]["points"][2]]
-				#distanceTargetSort([defaultBounds[0][0], defaultBounds[1][1]], checkPolygonVerts)
-	
-				#left = 0
-				#right = 0
-				#bottom = 0
-				#top = 0
 
 				site1 = intersection3Points[inter]["points"][0]
 				site2 = intersection3Points[inter]["points"][1]
 				site3 = intersection3Points[inter]["points"][2]
 				#intPt = intersection3Points[inter]["intPoint"]
 
-# 				def assignment(check1, check2, check3, check4):
-# 					location = 0
-# 					if check1 < check2 and check1 < check3 and check1 < check4:
-# 						location = check1
-# 					elif check2 < check1 and check2 < check3 and check2 < check4:
-# 						location = check2
-# 					elif check3 < check1 and check3 < check2 and check3 < check4:
-# 						location = check3
-# 					elif check4 < check1 and check4 < check2 and check4 < check3:
-# 						location = check4
-# 
-# 					return location
-# 
-# 				left = assignment(site1[0], site2[0], site3[0], intPt[0])
-
-# 				if site1[0] < site2[0] and site1[0] < site3[0] and site1[0] < intPt[0]:
-# 					left = site1
-# 				elif site2[0] < site1[0] and site2[0] < site3[0] and site2[0] < intPt[0]:
-# 					left = site2
-# 				elif site3[0] < site1[0] and site3[0] < site2[0] and site3[0] < intPt[0]:
-# 					left = site3
-# 				elif intPt[0] < site1[0] and intPt[0] < site2[0] and intPt[0] < site3[0]:
-# 					left = intPt
-# 
-# 				if site1[0] > site2[0] and site1[0] > site3[0] and site1[0] > intPt[0]:
-# 					right = site1
-# 				elif site2[0] > site1[0] and site2[0] > site3[0] and site2[0] > intPt[0]:
-# 					right = site2
-# 				elif site3[0] > site1[0] and site3[0] > site2[0] and site3[0] > intPt[0]:
-# 					right = site3
-# 				elif intPt[0] > site1[0] and intPt[0] > site2[0] and intPt[0] > site3[0]:
-# 					right = intPt
-# 
-# 				if site1[1] < site2[1] and site1[1] < site3[1] and site1[1] < intPt[1]:
-# 					top = site1
-# 				elif site2[1] < site1[1] and site2[1] < site3[1] and site2[1] < intPt[1]:
-# 					top = site2
-# 				elif site3[1] < site1[1] and site3[1] < site2[1] and site3[1] < intPt[1]:
-# 					top = site3
-# 				elif intPt[1] < site1[1] and intPt[1] < site2[1] and intPt[1] < site3[1]:
-# 					top = intPt
-# 
-# 				if site1[1] > site2[1] and site1[1] > site3[1] and site1[1] > intPt[1]:
-# 					bottom = site1
-# 				elif site2[1] > site1[1] and site2[1] > site3[1] and site2[1] > intPt[1]:
-# 					bottom = site2
-# 				elif site3[1] > site1[1] and site3[1] > site2[1] and site3[1] > intPt[1]:
-# 					bottom = site3
-# 				elif intPt[1] > site1[1] and intPt[1] > site2[1] and intPt[1] > site3[1]:
-# 					bottom = intPt
-
 				S1ToS2 = createLine(site1[0], site1[1], site2[0], site2[1])
 				S1ToS3 = createLine(site1[0], site1[1], site3[0], site3[1])
 				S2ToS3 = createLine(site2[0], site2[1], site3[0], site3[1])
 
+				#plt.plot([site1[0], site2[0], site3[0]], [site1[1], site2[1], site3[1]], "-yo")
+
 				for pt in points:
-					if pt != site1 and pt != site2 and pt != site3:
+					#if pt != site1 and pt != site2 and pt != site3:
+					if pt[0] != site1[0] and pt[1] != site1[1] and pt[0] != site2[0] and pt[1] != site2[1] and pt[0] != site3[0] and pt[1] != site3[1]:
+						#print(f"slope:{(pt[1] - defaultBounds[0][1])/(pt[0] - defaultBounds[0][0])}")
+						#print(f"midpoint:{(pt[0] + defaultBounds[0][0])/2, (pt[1] + defaultBounds[0][1])/2}")
+						#print(f'boundA:{defaultBounds[0][0], defaultBounds[0][1]}')
+						#print(f'boundB:{pt}')
 						test = {"slope":(pt[1] - defaultBounds[0][1])/(pt[0] - defaultBounds[0][0]), "midpoint":[(pt[0] + defaultBounds[0][0])/2, (pt[1] + defaultBounds[0][1])/2], "boundA":[defaultBounds[0][0], defaultBounds[0][1]], "boundB":pt}
+						#plt.plot([defaultBounds[0][0], pt[0]], [defaultBounds[0][1], pt[1]], "-go")
 						int1X, int1Y = intersectSolver(S1ToS2, test)
 						int2X, int2Y = intersectSolver(S1ToS3, test)
 						int3X, int3Y = intersectSolver(S2ToS3, test)
-
+						
 						nIntersects = 0
 						if int1X != None:
 							nIntersects += 1
@@ -511,10 +456,19 @@ def main(plt):
 							nIntersects += 1
 						if int3X != None:
 							nIntersects += 1
-
+						
 						if nIntersects == 1:
+							#print()
+							#print(nIntersects)
+							#print((int1X, int1Y), (int2X, int2Y), (int3X, int3Y))
+							#print(test)
+							#print(site1, site2, site3)
+							#print(S1ToS2, S1ToS3, S2ToS3)
+							#print((defaultBounds[0][0], defaultBounds[0][1]), pt)
+							print(f"point being removed: {intersection3Points[inter]['intPoint']}")
 							del intersection3Points[inter]
-							print("there is a site inside the polygon")
+							#print("there is a site inside the polygon")
+							#print()
 
 		#this function is a mess and is probably not organized correct; need to organize it
 # 		def updateEdges(intersects, inter1, inter2, lineKey): #inter1 is array form of the first intersect point
@@ -546,7 +500,50 @@ def main(plt):
 # 					elif (intersection3Points[inter1]["line3"] == intersection3Points[inter2]["line1"] or intersection3Points[inter1]["line3"] == intersection3Points[inter2]["line2"] or intersection3Points[inter1]["line3"] == intersection3Points[inter2]["line3"]):
 # 						updateEdges(intersection3Points, inter1, inter2, "line3")
 
-	print(intersection3Points.__len__())
+	def updateEdges(array, key1, key2, line, edges):
+		site1 = array[key1][line]["point"]
+		site2 = array[key2][line]["point"]
+
+		intPt1 = array[key1]["intPoint"]
+		intPt2 = array[key2]["intPoint"]
+
+		boundA = array[key1]["intPoint"]
+		boundB = array[key2]["intPoint"]
+
+		if boundA[0] > boundB[0]:
+			boundA, boundB = boundB, boundA
+
+		if not key1 in edges:
+			edges.update({key1 : {"point":site1, "edge": [{"boundA":boundA, "boundB":boundB}] }})
+		else:
+			edges[key1]["edge"].append({"boundA":boundA, "boundB":boundB})
+
+		if not key2 in edges:
+			edges.update({key2 : {"point":site2, "edge": [{"boundA":boundA, "boundB":boundB}] }})
+		else:
+			edges[key2]["edge"].append({"boundA":boundA, "boundB":boundB})
+
+	print("making edges")
+	intKeys = list(intersection3Points.keys())
+	for key1 in intKeys:
+		for key2 in intKeys:
+			if key1 != key2:
+				int1Line1 = intersection3Points[key1]["line1"]
+				int1Line2 = intersection3Points[key1]["line2"]
+				int1Line3 = intersection3Points[key1]["line3"]
+
+				int2Line1 = intersection3Points[key2]["line1"]
+				int2Line2 = intersection3Points[key2]["line2"]
+				int2Line3 = intersection3Points[key2]["line3"]
+
+				if int1Line1 == int2Line1 or int1Line1 == int2Line2 or int1Line1 == int2Line3:
+					updateEdges(intersection3Points, key1, key2, "line1", edges)
+				elif int1Line2 == int2Line1 or int1Line2 == int2Line2 or int1Line2 == int2Line3:
+					updateEdges(intersection3Points, key1, key2, "line2", edges)
+				elif int1Line3 == int2Line1 or int1Line3 == int2Line2 or int1Line3 == int2Line3:
+					updateEdges(intersection3Points, key1, key2, "line3", edges)
+
+	#print(intersection3Points.__len__())
 	#print(intersection3Points)
 
 	plt.title("pixel_plot")
@@ -564,6 +561,10 @@ def main(plt):
 	for point in intersection3Points:
 		plt.plot(intersection3Points[point]["intPoint"][0], intersection3Points[point]["intPoint"][1], "bo")
 
+	for site in edges:
+		for edgeN in edges[site]["edge"]:
+			plt.plot([edgeN["boundA"][0], edgeN["boundB"][0]], [edgeN["boundA"][1], edgeN["boundB"][1]], "-bo")
+
 	plt.show()
 
 
@@ -578,4 +579,5 @@ for i in range(0, 20):
 	#sleep(1)
 	plt.clf()
 	
+
 
