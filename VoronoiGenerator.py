@@ -2,6 +2,7 @@
 from email.policy import default
 import random
 import matplotlib.pyplot as plt
+#import mplcursors
 
 defaultBounds = [[0, 200], [200, 0]]
 def main(plt):
@@ -11,7 +12,7 @@ def main(plt):
 	cell = {}
 	intersection3Points = {}
 	edges = {}
-	possibleEdges = {}
+	#possibleEdges = {}
 
 	def distance(x1, y1, x2, y2):
 		return (((x1 - x2) ** 2) + ((y1 - y2) ** 2)) ** 0.5
@@ -169,7 +170,7 @@ def main(plt):
 		n1 = int(random.random() * 200)
 		n2 = int(random.random() * 200)
 		points.append([n1, n2])
-	#points = [(100, 10), (156, 109), (118, 144), (197, 160)]
+	#points = [[174, 14], [159, 100], [127, 103], [176, 105]]
 	n = len(points)
 	
 	for i in range(n):
@@ -210,6 +211,9 @@ def main(plt):
 	#[(67, 55), (31, 64), (151, 76), (111, 188)] #an example of the removal of an intersection working
 
 	#[(183, 55), (150, 64), (118, 104), (106, 119)] #problem
+
+	#[[174, 14], [159, 100], [127, 103], [176, 105]] #edge formation not working?
+
 	print(points)
 
 	# easy to see arrangements
@@ -372,7 +376,11 @@ def main(plt):
 							d3 = float("%.5f" % d3)
 
 							if d1 == d2 == d3:
-								intersection3Points.update({f"[{intX}_{intY}]" : {"intPoint":[intX, intY], "points":[currentPoint, line1["point"], line2["point"]], "line1":line1, "line2":line2, "line3":line3}})
+								intersection3Points.update({f"[{intX}_{intY}]" : {"intPoint":[intX, intY], "sites":[currentPoint, line1["point"], line2["point"]],
+ "line1":{"sites":[currentPoint, line1["point"]], "slope":line1["slope"], "midpoint":line1["midpoint"], "boundA":line1["boundA"], "boundB":line1["boundB"]},
+ "line2":{"sites":[currentPoint, line2["point"]], "slope":line2["slope"], "midpoint":line2["midpoint"], "boundA":line2["boundA"], "boundB":line2["boundB"]},
+ "line3":{"sites":[line1["point"], line2["point"]], "slope":line3["slope"], "midpoint":line3["midpoint"], "boundA":line3["boundA"], "boundB":line3["boundB"]}
+}})
 
 		def createLine(a, b, c, d):
 			if a > c:
@@ -403,9 +411,9 @@ def main(plt):
 				except Exception:
 					pass
 			else:
-				site1 = intersection3Points[inter]["points"][0]
-				site2 = intersection3Points[inter]["points"][1]
-				site3 = intersection3Points[inter]["points"][2]
+				site1 = intersection3Points[inter]["sites"][0]
+				site2 = intersection3Points[inter]["sites"][1]
+				site3 = intersection3Points[inter]["sites"][2]
 				#intPt = intersection3Points[inter]["intPoint"]
 
 				S1ToS2 = createLine(site1[0], site1[1], site2[0], site2[1])
@@ -443,7 +451,7 @@ def main(plt):
 	intersects = list(intersection3Points.keys())
 	for inter in intersects:
 		intPoint = intersection3Points[inter]["intPoint"]
-		minDist = distance(intPoint[0], intPoint[1], intersection3Points[inter]["points"][0][0], intersection3Points[inter]["points"][0][1]) - 0.1
+		minDist = distance(intPoint[0], intPoint[1], intersection3Points[inter]["sites"][0][0], intersection3Points[inter]["sites"][0][1]) - 0.1
 		for site in points:
 			dist = distance(intPoint[0], intPoint[1], site[0], site[1])
 			if dist < minDist:
@@ -576,79 +584,225 @@ def main(plt):
 # 				line3["boundA"] = intPt
 # 				#cell[key1]["otherPoint"][key2]["boundA"] = [intX, intY]
 # 				#cell[key2]["otherPoint"][key1]["boundA"] = [intX, intY]
-				
+	
+	for inter1 in intersection3Points:
+		for inter2 in intersection3Points:
+			if inter1 != inter2:
+				p1L1 = intersection3Points[inter1]["line1"]
+				p1L2 = intersection3Points[inter1]["line2"]
+				p1L3 = intersection3Points[inter1]["line3"]
 
-	def updateEdges(array, int1, int2, line, edges):
-		site1 = array[int1][line]["point"]
-		site2 = array[int2][line]["point"]
+				p2L1 = intersection3Points[inter2]["line1"]
+				p2L2 = intersection3Points[inter2]["line2"]
+				p2L3 = intersection3Points[inter2]["line3"]
 
-		#intPt1 = array[key1]["intPoint"]
-		#intPt2 = array[key2]["intPoint"]
+				if p1L1["slope"] == p2L1["slope"] or p1L1["slope"] == p2L2["slope"] or p1L1["slope"] == p2L3["slope"]:
+					if p1L1["slope"] == p2L1["slope"]:
+						if intersection3Points[inter1]["intPoint"][0] < intersection3Points[inter2]["intPoint"][0]:
+							p1L1["boundA"] = intersection3Points[inter1]["intPoint"]
+							p1L1["boundB"] = intersection3Points[inter2]["intPoint"]
+							p2L1["boundA"] = intersection3Points[inter1]["intPoint"]
+							p2L1["boundB"] = intersection3Points[inter2]["intPoint"]
+						else:
+							p1L1["boundB"] = intersection3Points[inter1]["intPoint"]
+							p1L1["boundA"] = intersection3Points[inter2]["intPoint"]
+							p2L1["boundB"] = intersection3Points[inter1]["intPoint"]
+							p2L1["boundA"] = intersection3Points[inter2]["intPoint"]
+					elif p1L1["slope"] == p2L2["slope"]:
+						if intersection3Points[inter1]["intPoint"][0] < intersection3Points[inter2]["intPoint"][0]:
+							p1L1["boundA"] = intersection3Points[inter1]["intPoint"]
+							p1L1["boundB"] = intersection3Points[inter2]["intPoint"]
+							p2L2["boundA"] = intersection3Points[inter1]["intPoint"]
+							p2L2["boundB"] = intersection3Points[inter2]["intPoint"]
+						else:
+							p1L1["boundB"] = intersection3Points[inter1]["intPoint"]
+							p1L1["boundA"] = intersection3Points[inter2]["intPoint"]
+							p2L2["boundB"] = intersection3Points[inter1]["intPoint"]
+							p2L2["boundA"] = intersection3Points[inter2]["intPoint"]
+					else:
+						if intersection3Points[inter1]["intPoint"][0] < intersection3Points[inter2]["intPoint"][0]:
+							p1L1["boundA"] = intersection3Points[inter1]["intPoint"]
+							p1L1["boundB"] = intersection3Points[inter2]["intPoint"]
+							p2L3["boundA"] = intersection3Points[inter1]["intPoint"]
+							p2L3["boundB"] = intersection3Points[inter2]["intPoint"]
+						else:
+							p1L1["boundB"] = intersection3Points[inter1]["intPoint"]
+							p1L1["boundA"] = intersection3Points[inter2]["intPoint"]
+							p2L3["boundB"] = intersection3Points[inter1]["intPoint"]
+							p2L3["boundA"] = intersection3Points[inter2]["intPoint"]
+				elif p1L2["slope"] == p2L1["slope"] or p1L2["slope"] == p2L2["slope"] or p1L2["slope"] == p2L3["slope"]:
+					if p1L2["slope"] == p2L1["slope"]:
+						if intersection3Points[inter1]["intPoint"][0] < intersection3Points[inter2]["intPoint"][0]:
+							p1L2["boundA"] = intersection3Points[inter1]["intPoint"]
+							p1L2["boundB"] = intersection3Points[inter2]["intPoint"]
+							p2L1["boundA"] = intersection3Points[inter1]["intPoint"]
+							p2L1["boundB"] = intersection3Points[inter2]["intPoint"]
+						else:
+							p1L2["boundB"] = intersection3Points[inter1]["intPoint"]
+							p1L2["boundA"] = intersection3Points[inter2]["intPoint"]
+							p2L1["boundB"] = intersection3Points[inter1]["intPoint"]
+							p2L1["boundA"] = intersection3Points[inter2]["intPoint"]
+					elif p1L2["slope"] == p2L2["slope"]:
+						if intersection3Points[inter1]["intPoint"][0] < intersection3Points[inter2]["intPoint"][0]:
+							p1L2["boundA"] = intersection3Points[inter1]["intPoint"]
+							p1L2["boundB"] = intersection3Points[inter2]["intPoint"]
+							p2L2["boundA"] = intersection3Points[inter1]["intPoint"]
+							p2L2["boundB"] = intersection3Points[inter2]["intPoint"]
+						else:
+							p1L2["boundB"] = intersection3Points[inter1]["intPoint"]
+							p1L2["boundA"] = intersection3Points[inter2]["intPoint"]
+							p2L2["boundB"] = intersection3Points[inter1]["intPoint"]
+							p2L2["boundA"] = intersection3Points[inter2]["intPoint"]
+					else:
+						if intersection3Points[inter1]["intPoint"][0] < intersection3Points[inter2]["intPoint"][0]:
+							p1L2["boundA"] = intersection3Points[inter1]["intPoint"]
+							p1L2["boundB"] = intersection3Points[inter2]["intPoint"]
+							p2L3["boundA"] = intersection3Points[inter1]["intPoint"]
+							p2L3["boundB"] = intersection3Points[inter2]["intPoint"]
+						else:
+							p1L2["boundB"] = intersection3Points[inter1]["intPoint"]
+							p1L2["boundA"] = intersection3Points[inter2]["intPoint"]
+							p2L3["boundB"] = intersection3Points[inter1]["intPoint"]
+							p2L3["boundA"] = intersection3Points[inter2]["intPoint"]
+				elif p1L3["slope"] == p2L1["slope"] or p1L3["slope"] == p2L2["slope"] or p1L3["slope"] == p2L3["slope"]:
+					if p1L3["slope"] == p2L1["slope"]:
+						if intersection3Points[inter1]["intPoint"][0] < intersection3Points[inter2]["intPoint"][0]:
+							p1L3["boundA"] = intersection3Points[inter1]["intPoint"]
+							p1L3["boundB"] = intersection3Points[inter2]["intPoint"]
+							p2L1["boundA"] = intersection3Points[inter1]["intPoint"]
+							p2L1["boundB"] = intersection3Points[inter2]["intPoint"]
+						else:
+							p1L3["boundB"] = intersection3Points[inter1]["intPoint"]
+							p1L3["boundA"] = intersection3Points[inter2]["intPoint"]
+							p2L1["boundB"] = intersection3Points[inter1]["intPoint"]
+							p2L1["boundA"] = intersection3Points[inter2]["intPoint"]
+					elif p1L3["slope"] == p2L2["slope"]:
+						if intersection3Points[inter1]["intPoint"][0] < intersection3Points[inter2]["intPoint"][0]:
+							p1L3["boundA"] = intersection3Points[inter1]["intPoint"]
+							p1L3["boundB"] = intersection3Points[inter2]["intPoint"]
+							p2L2["boundA"] = intersection3Points[inter1]["intPoint"]
+							p2L2["boundB"] = intersection3Points[inter2]["intPoint"]
+						else:
+							p1L3["boundB"] = intersection3Points[inter1]["intPoint"]
+							p1L3["boundA"] = intersection3Points[inter2]["intPoint"]
+							p2L2["boundB"] = intersection3Points[inter1]["intPoint"]
+							p2L2["boundA"] = intersection3Points[inter2]["intPoint"]
+					else:
+						if p1L3["slope"] == p2L1["slope"]:
+							if intersection3Points[inter1]["intPoint"][0] < intersection3Points[inter2]["intPoint"][0]:
+								p1L3["boundA"] = intersection3Points[inter1]["intPoint"]
+								p1L3["boundB"] = intersection3Points[inter2]["intPoint"]
+								p2L1["boundA"] = intersection3Points[inter1]["intPoint"]
+								p2L1["boundB"] = intersection3Points[inter2]["intPoint"]
+							else:
+								p1L3["boundB"] = intersection3Points[inter1]["intPoint"]
+								p1L3["boundA"] = intersection3Points[inter2]["intPoint"]
+								p2L1["boundB"] = intersection3Points[inter1]["intPoint"]
+								p2L1["boundA"] = intersection3Points[inter2]["intPoint"]
+						elif p1L3["slope"] == p2L2["slope"]:
+							if intersection3Points[inter1]["intPoint"][0] < intersection3Points[inter2]["intPoint"][0]:
+								p1L3["boundA"] = intersection3Points[inter1]["intPoint"]
+								p1L3["boundB"] = intersection3Points[inter2]["intPoint"]
+								p2L2["boundA"] = intersection3Points[inter1]["intPoint"]
+								p2L2["boundB"] = intersection3Points[inter2]["intPoint"]
+							else:
+								p1L3["boundB"] = intersection3Points[inter1]["intPoint"]
+								p1L3["boundA"] = intersection3Points[inter2]["intPoint"]
+								p2L2["boundB"] = intersection3Points[inter1]["intPoint"]
+								p2L2["boundA"] = intersection3Points[inter2]["intPoint"]
+						else:
+							if intersection3Points[inter1]["intPoint"][0] < intersection3Points[inter2]["intPoint"][0]:
+								p1L3["boundA"] = intersection3Points[inter1]["intPoint"]
+								p1L3["boundB"] = intersection3Points[inter2]["intPoint"]
+								p2L3["boundA"] = intersection3Points[inter1]["intPoint"]
+								p2L3["boundB"] = intersection3Points[inter2]["intPoint"]
+							else:
+								p1L3["boundB"] = intersection3Points[inter1]["intPoint"]
+								p1L3["boundA"] = intersection3Points[inter2]["intPoint"]
+								p2L3["boundB"] = intersection3Points[inter1]["intPoint"]
+								p2L3["boundA"] = intersection3Points[inter2]["intPoint"]
+
+	def updateEdges(array, int1, int2, line1, line2, edges):
+		site1 = array[int1][line1]["sites"][0]
+		site2 = array[int1][line1]["sites"][1]
 
 		edgeBoundA = array[int1]["intPoint"]
 		edgeBoundB = array[int2]["intPoint"]
 
 		if edgeBoundA[0] > edgeBoundB[0]:
 			edgeBoundA, edgeBoundB = edgeBoundB, edgeBoundA
-		
-
-		if not int1 in edges:
-			edges.update({int1 : {"point":site1, "edge": [{"boundA":edgeBoundA, "boundB":edgeBoundB}] }})
+			array[int1][line1]["boundB"] = edgeBoundB
+			array[int2][line2]["boundA"] = edgeBoundA
+			print("change")
 		else:
-			edges[int1]["edge"].append({"boundA":edgeBoundA, "boundB":edgeBoundB})
+			array[int1][line1]["boundA"] = edgeBoundA
+			array[int2][line2]["boundB"] = edgeBoundB
+		print(edgeBoundA, edgeBoundB)
 
-		if not int2 in edges:
-			edges.update({int2 : {"point":site2, "edge": [{"boundA":edgeBoundA, "boundB":edgeBoundB}] }})
+		if not f"[{site1[0]}_{site1[1]}]" in edges:
+			edges.update({f"[{site1[0]}_{site1[1]}]" : {"sitePoint":site1, "edges":[{"boundA":edgeBoundA, "boundB":edgeBoundB}]}})
 		else:
-			edges[int2]["edge"].append({"boundA":edgeBoundA, "boundB":edgeBoundB})
+			edges[f"[{site1[0]}_{site1[1]}]"]["edges"].append({"boundA":edgeBoundA, "boundB":edgeBoundB})
 	
-		print(site1, site2)
+		if not f"[{site2[0]}_{site2[1]}]" in edges:
+			edges.update({f"[{site2[0]}_{site2[1]}]" : {"sitePoint":site2, "edges":[{"boundA":edgeBoundA, "boundB":edgeBoundB}]}})
+		else:
+			edges[f"[{site2[0]}_{site2[1]}]"]["edges"].append({"boundA":edgeBoundA, "boundB":edgeBoundB})
 
-		print(array[int1][line])
-		print(array[int2][line])
-		
-		possibleEdges1 = array[int1].copy()
-		del possibleEdges1[line]
-		del possibleEdges1["points"][possibleEdges1["points"].index(site1)]
-		del possibleEdges1["intPoint"]
-		print(possibleEdges1)
-		
-		possibleKeys1 = list(possibleEdges1.keys())
+		print(array[int1][line1])
+		print(array[int2][line2])
 
-		for key in possibleKeys1:
-			if key != 'points':
-				if (possibleEdges1[key]["boundA"][0] == defaultBounds[0][0] or possibleEdges1[key]["boundA"][1] == defaultBounds[0][1] or possibleEdges1[key]["boundA"][1] == defaultBounds[1][1]) or (possibleEdges1[key]["boundB"][0] == defaultBounds[1][0] or possibleEdges1[key]["boundB"][1] == defaultBounds[0][1] or possibleEdges1[key]["boundB"][1] == defaultBounds[1][1]):
-					edges[int1]["edge"].append([{"boundA":possibleEdges1[key]["boundA"], "boundB":possibleEdges1[key]["boundB"]}])
+		possibleEdges = array[int1].copy()
+		del possibleEdges[line1]
+		del possibleEdges["sites"]
+		del possibleEdges["intPoint"]
+		print(f"possibleEdges- {possibleEdges}")
 
-# 		possEdgesKeys = list(possibleEdges.keys())
-# 		L1Midpoint = str(array[int1][line]["midpoint"]).replace(", ", "_")
-# 
-# 		temp =  array[int1].copy()
-# 		del temp[line]
-# 		del temp["intPoint"]
-# 		del temp["points"][temp["points"].index(site1)]
-# 		print(temp)
-# 
-# 		if possEdgesKeys.__len__() != 0:
-# 			if L1Midpoint in possEdgesKeys:
-# 				del possibleEdges[L1Midpoint]
-# 			else:
-# 				possibleEdges.update({L1Midpoint : {"sites":{[site1, site2]}, "line":line} })
-# 		else:
-# 			possibleEdges.update({L1Midpoint : {"sites":[site1, site2], "line":line} })
-
+		possibleKeys = list(possibleEdges.keys())
+		for key in possibleKeys:
+			if (possibleEdges[key]["boundA"][0] == defaultBounds[0][0] or possibleEdges[key]["boundA"][1] == defaultBounds[0][1] or possibleEdges[key]["boundA"][1] == defaultBounds[1][1]) or (possibleEdges[key]["boundB"][0] == defaultBounds[1][0] or possibleEdges[key]["boundB"][1] == defaultBounds[0][1] or possibleEdges[key]["boundB"][1] == defaultBounds[1][1]):
+				edges[f"[{site1[0]}_{site1[1]}]"]["edges"].append({"boundA":possibleEdges[key]["boundA"], "boundB":possibleEdges[key]["boundB"]})
 		print()
-		# print(array[key1][line]["boundA"], array[key1][line]["boundB"])
-		#print(array[key2][line]["boundA"], array[key2][line]["boundB"])
 
-		# array[key1][line]["boundA"] = edgeBoundA
-		# array[key1][line]["boundB"] = edgeBoundB
-		#array[key2][line]["boundA"] = edgeBoundA
-		#array[key2][line]["boundB"] = edgeBoundB
-
-		# print(array[key1][line]["boundA"], array[key1][line]["boundB"])
-		#print(array[key2][line]["boundA"], array[key2][line]["boundB"])
-		# print()
+# 	def updateEdges(array, int1, int2, line, edges):
+# 		site1 = array[int1][line]["sites"][0]
+# 		site2 = array[int1][line]["sites"][1]
+# 
+# 		edgeBoundA = array[int1]["intPoint"]
+# 		edgeBoundB = array[int2]["intPoint"]
+# 
+# 		if edgeBoundA[0] > edgeBoundB[0]:
+# 			edgeBoundA, edgeBoundB = edgeBoundB, edgeBoundA
+# 			array[int1][line]["boundB"] = edgeBoundB
+# 			array[int2][line]["boundA"] = edgeBoundA
+# 		else:
+# 			array[int1][line]["boundA"] = edgeBoundA
+# 			array[int2][line]["boundB"] = edgeBoundB
+# 
+# 		if not f"[{site1[0]}_{site1[1]}]" in edges:
+# 			edges.update({f"[{site1[0]}_{site1[1]}]" : {"sitePoint":site1, "edges":[{"boundA":edgeBoundA, "boundB":edgeBoundB}]}})
+# 		else:
+# 			edges[f"[{site1[0]}_{site1[1]}]"]["edges"].append({"boundA":edgeBoundA, "boundB":edgeBoundB})
+# 	
+# 		if not f"[{site2[0]}_{site2[1]}]" in edges:
+# 			edges.update({f"[{site2[0]}_{site2[1]}]" : {"sitePoint":site2, "edges":[{"boundA":edgeBoundA, "boundB":edgeBoundB}]}})
+# 		else:
+# 			edges[f"[{site2[0]}_{site2[1]}]"]["edges"].append({"boundA":edgeBoundA, "boundB":edgeBoundB})
+# 
+# 		print(array[int1][line])
+# 		print(array[int2][line])
+# 
+# 		possibleEdges = array[int1].copy()
+# 		del possibleEdges[line]
+# 		del possibleEdges["sites"]
+# 		del possibleEdges["intPoint"]
+# 		#print(f"possibleEdges- {possibleEdges}")
+# 
+# 		possibleKeys = list(possibleEdges.keys())
+# 		for key in possibleKeys:
+# 			if (possibleEdges[key]["boundA"][0] == defaultBounds[0][0] or possibleEdges[key]["boundA"][1] == defaultBounds[0][1] or possibleEdges[key]["boundA"][1] == defaultBounds[1][1]) or (possibleEdges[key]["boundB"][0] == defaultBounds[1][0] or possibleEdges[key]["boundB"][1] == defaultBounds[0][1] or possibleEdges[key]["boundB"][1] == defaultBounds[1][1]):
+# 				edges[f"[{site1[0]}_{site1[1]}]"]["edges"].append({"boundA":possibleEdges[key]["boundA"], "boundB":possibleEdges[key]["boundB"]})
+# 		print()
 
 	print("making edges")
 	intKeys = list(intersection3Points.keys())
@@ -663,19 +817,64 @@ def main(plt):
 				int2Line2 = intersection3Points[key2]["line2"]
 				int2Line3 = intersection3Points[key2]["line3"]
 
-# 				if int1Line1 == int2Line1 or int1Line1 == int2Line2 or int1Line1 == int2Line3:
-# 					updateEdges(intersection3Points, key1, key2, "line1", edges)
-# 				elif int1Line2 == int2Line1 or int1Line2 == int2Line2 or int1Line2 == int2Line3:
-# 					updateEdges(intersection3Points, key1, key2, "line2", edges)
-# 				elif int1Line3 == int2Line1 or int1Line3 == int2Line2 or int1Line3 == int2Line3:
-# 					updateEdges(intersection3Points, key1, key2, "line3", edges)
+				#print(int1Line1["sites"][0] in int2Line1["sites"] and int1Line1["sites"][1] in int2Line1["sites"])
+				#print(int1Line1["sites"][0] in int2Line2["sites"] and int1Line1["sites"][1] in int2Line2["sites"])
+				#print(int1Line1["sites"][0] in int2Line3["sites"] and int1Line1["sites"][1] in int2Line3["sites"])
 
-				if (int1Line1["slope"] == int2Line1["slope"] and int1Line1["midpoint"] == int2Line1["midpoint"]) or (int1Line1["slope"] == int2Line2["slope"] and int1Line1["midpoint"] == int2Line2["midpoint"]) or (int1Line1["slope"] == int2Line3["slope"] and int1Line1["midpoint"] == int2Line3["midpoint"]):
-					updateEdges(intersection3Points, key1, key2, "line1", edges)
-				elif (int1Line2["slope"] == int2Line1["slope"] and int1Line2["midpoint"] == int2Line1["midpoint"]) or (int1Line2["slope"] == int2Line2["slope"] and int1Line2["midpoint"] == int2Line2["midpoint"]) or (int1Line2["slope"] == int2Line3["slope"] and int1Line2["midpoint"] == int2Line3["midpoint"]):
-					updateEdges(intersection3Points, key1, key2, "line2", edges)
-				elif (int1Line3["slope"] == int2Line1["slope"] and int1Line3["midpoint"] == int2Line1["midpoint"]) or (int1Line3["slope"] == int2Line2["slope"] and int1Line3["midpoint"] == int2Line2["midpoint"]) or (int1Line3["slope"] == int2Line3["slope"] and int1Line3["midpoint"] == int2Line3["midpoint"]):
-					updateEdges(intersection3Points, key1, key2, "line3", edges)
+				print(int1Line1["midpoint"] == int2Line1["midpoint"], int1Line1["midpoint"], int2Line1["midpoint"])
+				print(int1Line1["midpoint"] == int2Line2["midpoint"], int1Line1["midpoint"], int2Line2["midpoint"])
+				print(int1Line1["midpoint"] == int2Line3["midpoint"], int1Line1["midpoint"], int2Line3["midpoint"])
+
+				print()
+
+				if int1Line1["midpoint"] == int2Line1["midpoint"] or int1Line1["midpoint"] == int2Line2["midpoint"] or int1Line1["midpoint"] == int2Line3["midpoint"]:
+					if (int1Line1["boundA"][0] == defaultBounds[0][0] or int1Line1["boundA"][1] == defaultBounds[0][1] or int1Line1["boundA"][1] == defaultBounds[1][1]) and (int1Line1["boundB"][0] == defaultBounds[1][0] or int1Line1["boundB"][1] == defaultBounds[0][1] or int1Line1["boundB"][1] == defaultBounds[1][1]):
+						pass
+					if int1Line1["midpoint"] == int2Line1["midpoint"]:
+						updateEdges(intersection3Points, key1, key2, "line1", "line1", edges)
+					elif int1Line1["midpoint"] == int2Line2["midpoint"]:
+						updateEdges(intersection3Points, key1, key2, "line1", "line2", edges)
+					else:
+						updateEdges(intersection3Points, key1, key2, "line1", "line3", edges)
+				elif int1Line2["midpoint"] == int2Line1["midpoint"] or int1Line2["midpoint"] == int2Line2["midpoint"] or int1Line2["midpoint"] == int2Line3["midpoint"]:
+					if int1Line2["midpoint"] == int2Line1["midpoint"]:
+						updateEdges(intersection3Points, key1, key2, "line2", "line1", edges)
+					elif int1Line2["midpoint"] == int2Line2["midpoint"]:
+						updateEdges(intersection3Points, key1, key2, "line2", "line2", edges)
+					else:
+						updateEdges(intersection3Points, key1, key2, "line2", "line3", edges)
+				elif int1Line3["midpoint"] == int2Line1["midpoint"] or int1Line3["midpoint"] == int2Line2["midpoint"] or int1Line3["midpoint"] == int2Line3["midpoint"]:
+					if int1Line3["midpoint"] == int2Line1["midpoint"]:
+						updateEdges(intersection3Points, key1, key2, "line3", "line1", edges)
+					elif int1Line3["midpoint"] == int2Line2["midpoint"]:
+						updateEdges(intersection3Points, key1, key2, "line3", "line2", edges)
+					else:
+						updateEdges(intersection3Points, key1, key2, "line3", "line3", edges)
+
+# 				if int1Line1["midpoint"] == int2Line1["midpoint"] or int1Line1["midpoint"] == int2Line2["midpoint"] or int1Line1["midpoint"] == int2Line3["midpoint"]:
+# 					updateEdges(intersection3Points, key1, key2, "line1", edges)
+# 				elif int1Line2["midpoint"] == int2Line1["midpoint"] or int1Line2["midpoint"] == int2Line2["midpoint"] or int1Line2["midpoint"] == int2Line3["midpoint"]:
+# 					updateEdges(intersection3Points, key1, key2, "line2", edges)
+# 				elif int1Line3["midpoint"] == int2Line1["midpoint"] or int1Line3["midpoint"] == int2Line2["midpoint"] or int1Line3["midpoint"] == int2Line3["midpoint"]:
+# 					updateEdges(intersection3Points, key1, key2, "line3", edges)
+	
+
+# 				if (int1Line1[0] in int2Line1 and int1Line1[1] in int2Line1):
+# 					updateEdges(intersection3Points, key1, key2, "line1", edges)
+
+# 				if (int1Line1["sites"][0] in int2Line1["sites"] and int1Line1["sites"][1] in int2Line1["sites"]) or (int1Line1["sites"][0] in int2Line2["sites"] and int1Line1["sites"][1] in int2Line2["sites"]) or (int1Line1["sites"][0] in int2Line3["sites"] and int1Line1["sites"][1] in int2Line3["sites"]):
+# 					updateEdges(intersection3Points, key1, key2, "line1", edges)
+# 				elif (int1Line1["sites"][0] in int2Line2["sites"] and int1Line1["sites"][1] in int2Line2["sites"]) or (int1Line2["sites"][0] in int2Line2["sites"] and int1Line2["sites"][1] in int2Line2["sites"]) or (int1Line2["sites"][0] in int2Line3["sites"] and int1Line2["sites"][1] in int2Line3["sites"]):
+# 					updateEdges(intersection3Points, key1, key2, "line2", edges)
+# 				elif (int1Line1["sites"][0] in int2Line3["sites"] and int1Line1["sites"][1] in int2Line3["sites"]) or (int1Line3["sites"][0] in int2Line2["sites"] and int1Line3["sites"][1] in int2Line2["sites"]) or (int1Line3["sites"][0] in int2Line3["sites"] and int1Line3["sites"][1] in int2Line3["sites"]):
+# 					updateEdges(intersection3Points, key1, key2, "line3", edges)			
+
+# 				if (int1Line1["slope"] == int2Line1["slope"] and int1Line1["midpoint"] == int2Line1["midpoint"]) or (int1Line1["slope"] == int2Line2["slope"] and int1Line1["midpoint"] == int2Line2["midpoint"]) or (int1Line1["slope"] == int2Line3["slope"] and int1Line1["midpoint"] == int2Line3["midpoint"]):
+# 					updateEdges(intersection3Points, key1, key2, "line1", edges)
+# 				elif (int1Line2["slope"] == int2Line1["slope"] and int1Line2["midpoint"] == int2Line1["midpoint"]) or (int1Line2["slope"] == int2Line2["slope"] and int1Line2["midpoint"] == int2Line2["midpoint"]) or (int1Line2["slope"] == int2Line3["slope"] and int1Line2["midpoint"] == int2Line3["midpoint"]):
+# 					updateEdges(intersection3Points, key1, key2, "line2", edges)
+# 				elif (int1Line3["slope"] == int2Line1["slope"] and int1Line3["midpoint"] == int2Line1["midpoint"]) or (int1Line3["slope"] == int2Line2["slope"] and int1Line3["midpoint"] == int2Line2["midpoint"]) or (int1Line3["slope"] == int2Line3["slope"] and int1Line3["midpoint"] == int2Line3["midpoint"]):
+# 					updateEdges(intersection3Points, key1, key2, "line3", edges)
 
 
 	plt.title("pixel_plot")
@@ -697,11 +896,19 @@ def main(plt):
 		plt.plot([intersection3Points[point]["line3"]["boundA"][0], intersection3Points[point]["line3"]["boundB"][0]], [intersection3Points[point]["line3"]["boundA"][1], intersection3Points[point]["line3"]["boundB"][1]], color=(random.random(), random.random(), random.random()))
 
 	for site in edges:
-		for edgeN in edges[site]["edge"]:
+		for edgeN in edges[site]["edges"]:
 			plt.plot([edgeN["boundA"][0], edgeN["boundB"][0]], [edgeN["boundA"][1], edgeN["boundB"][1]], "-bo")
 
-	for boundEdgeMid in possibleEdges:
-		plt.plot([possibleEdges[boundEdgeMid]["line"]["boundA"][0], possibleEdges[boundEdgeMid]["line"]["boundB"][0]], [possibleEdges[boundEdgeMid]["line"]["boundA"][1], possibleEdges[boundEdgeMid]["line"]["boundB"][1]], "-go")
+# 	for boundEdgeMid in possibleEdges:
+# 		plt.plot([possibleEdges[boundEdgeMid]["line"]["boundA"][0], possibleEdges[boundEdgeMid]["line"]["boundB"][0]], [possibleEdges[boundEdgeMid]["line"]["boundA"][1], possibleEdges[boundEdgeMid]["line"]["boundB"][1]], "-go")
+
+#	def showAnnotation(sel):
+		#sel.annotation.set_text(f"")
+#		print(sel.index)
+		
+
+#	cursor1 = mplcursors.cursor(hover=True)
+#	cursor1.connect('add', showAnnotation)
 
 	plt.show()
 
