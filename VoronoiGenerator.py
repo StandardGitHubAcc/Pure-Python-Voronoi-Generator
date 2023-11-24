@@ -1,5 +1,4 @@
 
-from email.policy import default
 import random
 import matplotlib.pyplot as plt
 #import mplcursors
@@ -216,7 +215,7 @@ def main(plt):
 		n1 = int(random.random() * 200)
 		n2 = int(random.random() * 200)
 		points.append([n1, n2])
-	#points = [[73, 147], [140, 180], [6, 187]]
+	#points = [[168, 38], [145, 89], [156, 176]]
 	n = len(points)
 	
 	for i in range(n):
@@ -259,6 +258,8 @@ def main(plt):
 	#[(183, 55), (150, 64), (118, 104), (106, 119)] #problem
 
 	#[[174, 14], [159, 100], [127, 103], [176, 105]] #edge formation not working?
+
+	#[[18, 22], [23, 22], [36, 133]] # not sure how to fix this or what exactly is causing it
 
 	print(points)
 
@@ -355,18 +356,27 @@ def main(plt):
 		for j in range(0, n):
 			solver(pt[0], pt[1], points2[j][0], points2[j][1])
 
-	#removes intersects that are too close to a site and merges lines that are too close
+	# Fixes some lines
 	for site in cell:
 		kys = list(cell[site]["otherPoint"].keys())
 
+		# Removes lines that are too close to a site
 		for key in kys:
+
+			#dist1 = distance(cell[site]["otherPoint"][key]["midpoint"][0], cell[site]["otherPoint"][key]["midpoint"][1], cell[site]["point"][0], cell[site]["point"][1])
 			for point in points:
 				if key in cell[site]["otherPoint"]:
 					dist = distance(point[0], point[0], cell[site]["otherPoint"][key]["midpoint"][0], cell[site]["otherPoint"][key]["midpoint"][1])
 					if dist < 0.1:
 						del cell[site]["otherPoint"][key]
 						print("deleting")
-					
+					#else:
+						#dist2 = distance(cell[site]["otherPoint"][key]["midpoint"][0], cell[site]["otherPoint"][key]["midpoint"][1], point[0], point[1])
+						#if dist2 < dist1:
+							#del cell[site]["otherPoint"][key]
+							#print(f"deleting {site} - {key}")
+		kys = list(cell[site]["otherPoint"].keys())
+		# Merges lines that are too close
 		for key1 in kys:
 			for key2 in kys:
 				if key1 != key2:
@@ -397,6 +407,7 @@ def main(plt):
 					array[keys[j]], array[keys[j + 1]] = array[keys[j + 1]], array[keys[j]]
 
 		keys = list(array.keys())
+		print(keys)
 		for key1 in keys:
 			for key2 in keys:
 				if key1 != key2:
@@ -503,7 +514,7 @@ def main(plt):
 			if dist < minDist:
 				del intersection3Points[inter]
 				break
-	# Need to also change cell list somehow
+	# Changes the boundaries of the lines that have 3-intersection points
 	for inter in intersection3Points:
 		intPt = intersection3Points[inter]["intPoint"]
 		line1 = intersection3Points[inter]["line1"]
@@ -706,6 +717,7 @@ def main(plt):
 								#p1L3["boundA"] = intersection3Points[inter2]["intPoint"]
 								p2L3["boundB"] = intersection3Points[inter1]["intPoint"]
 								#p2L3["boundA"] = intersection3Points[inter2]["intPoint"]
+	
 	# changes the boundries of the lines in the "cell" list
 	if intersection3Points.__len__() > 0:
 		for inter in intersection3Points:
@@ -769,50 +781,56 @@ def main(plt):
 
 	# Makes edges that are guaranteed correct
 	intKeys = list(intersection3Points.keys())
-	for key1 in intKeys:
-		for key2 in intKeys:
-			if key1 != key2:
-				int1Line1 = intersection3Points[key1]["line1"]
-				int1Line2 = intersection3Points[key1]["line2"]
-				int1Line3 = intersection3Points[key1]["line3"]
+	if intKeys.__len__() == 1:
+		edges.update({pointToKey(intersection3Points[intKeys[0]]["sites"][0]) : {"sitePoint":intersection3Points[intKeys[0]]["sites"][0], "edges":[{"boundA":intersection3Points[intKeys[0]]["line1"]["boundA"], "boundB":intersection3Points[intKeys[0]]["line1"]["boundB"]}, {"boundA":intersection3Points[intKeys[0]]["line2"]["boundA"], "boundB":intersection3Points[intKeys[0]]["line2"]["boundB"]}]}})
+		edges.update({pointToKey(intersection3Points[intKeys[0]]["sites"][1]) : {"sitePoint":intersection3Points[intKeys[0]]["sites"][1], "edges":[{"boundA":intersection3Points[intKeys[0]]["line1"]["boundA"], "boundB":intersection3Points[intKeys[0]]["line1"]["boundB"]}, {"boundA":intersection3Points[intKeys[0]]["line3"]["boundA"], "boundB":intersection3Points[intKeys[0]]["line3"]["boundB"]}]}})
+		edges.update({pointToKey(intersection3Points[intKeys[0]]["sites"][2]) : {"sitePoint":intersection3Points[intKeys[0]]["sites"][2], "edges":[{"boundA":intersection3Points[intKeys[0]]["line2"]["boundA"], "boundB":intersection3Points[intKeys[0]]["line2"]["boundB"]}, {"boundA":intersection3Points[intKeys[0]]["line3"]["boundA"], "boundB":intersection3Points[intKeys[0]]["line3"]["boundB"]}]}})
 
-				int2Line1 = intersection3Points[key2]["line1"]
-				int2Line2 = intersection3Points[key2]["line2"]
-				int2Line3 = intersection3Points[key2]["line3"]
+	elif intKeys.__len__() > 1:
+		for key1 in intKeys:
+			for key2 in intKeys:
+				if key1 != key2:
+					int1Line1 = intersection3Points[key1]["line1"]
+					int1Line2 = intersection3Points[key1]["line2"]
+					int1Line3 = intersection3Points[key1]["line3"]
 
-				#print(int1Line1["sites"][0] in int2Line1["sites"] and int1Line1["sites"][1] in int2Line1["sites"])
-				#print(int1Line1["sites"][0] in int2Line2["sites"] and int1Line1["sites"][1] in int2Line2["sites"])
-				#print(int1Line1["sites"][0] in int2Line3["sites"] and int1Line1["sites"][1] in int2Line3["sites"])
+					int2Line1 = intersection3Points[key2]["line1"]
+					int2Line2 = intersection3Points[key2]["line2"]
+					int2Line3 = intersection3Points[key2]["line3"]
 
-				print(int1Line1["midpoint"] == int2Line1["midpoint"], int1Line1["midpoint"], int2Line1["midpoint"])
-				print(int1Line1["midpoint"] == int2Line2["midpoint"], int1Line1["midpoint"], int2Line2["midpoint"])
-				print(int1Line1["midpoint"] == int2Line3["midpoint"], int1Line1["midpoint"], int2Line3["midpoint"])
+					#print(int1Line1["sites"][0] in int2Line1["sites"] and int1Line1["sites"][1] in int2Line1["sites"])
+					#print(int1Line1["sites"][0] in int2Line2["sites"] and int1Line1["sites"][1] in int2Line2["sites"])
+					#print(int1Line1["sites"][0] in int2Line3["sites"] and int1Line1["sites"][1] in int2Line3["sites"])
 
-				print()
+					#print(int1Line1["midpoint"] == int2Line1["midpoint"], int1Line1["midpoint"], int2Line1["midpoint"])
+					#print(int1Line1["midpoint"] == int2Line2["midpoint"], int1Line1["midpoint"], int2Line2["midpoint"])
+					#print(int1Line1["midpoint"] == int2Line3["midpoint"], int1Line1["midpoint"], int2Line3["midpoint"])
 
-				if int1Line1["midpoint"] == int2Line1["midpoint"] or int1Line1["midpoint"] == int2Line2["midpoint"] or int1Line1["midpoint"] == int2Line3["midpoint"]:
-					if (int1Line1["boundA"][0] == defaultBounds[0][0] or int1Line1["boundA"][1] == defaultBounds[0][1] or int1Line1["boundA"][1] == defaultBounds[1][1]) and (int1Line1["boundB"][0] == defaultBounds[1][0] or int1Line1["boundB"][1] == defaultBounds[0][1] or int1Line1["boundB"][1] == defaultBounds[1][1]):
-						pass
-					if int1Line1["midpoint"] == int2Line1["midpoint"]:
-						updateEdges(intersection3Points, key1, key2, "line1", "line1", edges)
-					elif int1Line1["midpoint"] == int2Line2["midpoint"]:
-						updateEdges(intersection3Points, key1, key2, "line1", "line2", edges)
-					else:
-						updateEdges(intersection3Points, key1, key2, "line1", "line3", edges)
-				elif int1Line2["midpoint"] == int2Line1["midpoint"] or int1Line2["midpoint"] == int2Line2["midpoint"] or int1Line2["midpoint"] == int2Line3["midpoint"]:
-					if int1Line2["midpoint"] == int2Line1["midpoint"]:
-						updateEdges(intersection3Points, key1, key2, "line2", "line1", edges)
-					elif int1Line2["midpoint"] == int2Line2["midpoint"]:
-						updateEdges(intersection3Points, key1, key2, "line2", "line2", edges)
-					else:
-						updateEdges(intersection3Points, key1, key2, "line2", "line3", edges)
-				elif int1Line3["midpoint"] == int2Line1["midpoint"] or int1Line3["midpoint"] == int2Line2["midpoint"] or int1Line3["midpoint"] == int2Line3["midpoint"]:
-					if int1Line3["midpoint"] == int2Line1["midpoint"]:
-						updateEdges(intersection3Points, key1, key2, "line3", "line1", edges)
-					elif int1Line3["midpoint"] == int2Line2["midpoint"]:
-						updateEdges(intersection3Points, key1, key2, "line3", "line2", edges)
-					else:
-						updateEdges(intersection3Points, key1, key2, "line3", "line3", edges)
+					#print()
+
+					if int1Line1["midpoint"] == int2Line1["midpoint"] or int1Line1["midpoint"] == int2Line2["midpoint"] or int1Line1["midpoint"] == int2Line3["midpoint"]:
+						if (int1Line1["boundA"][0] == defaultBounds[0][0] or int1Line1["boundA"][1] == defaultBounds[0][1] or int1Line1["boundA"][1] == defaultBounds[1][1]) and (int1Line1["boundB"][0] == defaultBounds[1][0] or int1Line1["boundB"][1] == defaultBounds[0][1] or int1Line1["boundB"][1] == defaultBounds[1][1]):
+							pass
+						if int1Line1["midpoint"] == int2Line1["midpoint"]:
+							updateEdges(intersection3Points, key1, key2, "line1", "line1", edges)
+						elif int1Line1["midpoint"] == int2Line2["midpoint"]:
+							updateEdges(intersection3Points, key1, key2, "line1", "line2", edges)
+						else:
+							updateEdges(intersection3Points, key1, key2, "line1", "line3", edges)
+					elif int1Line2["midpoint"] == int2Line1["midpoint"] or int1Line2["midpoint"] == int2Line2["midpoint"] or int1Line2["midpoint"] == int2Line3["midpoint"]:
+						if int1Line2["midpoint"] == int2Line1["midpoint"]:
+							updateEdges(intersection3Points, key1, key2, "line2", "line1", edges)
+						elif int1Line2["midpoint"] == int2Line2["midpoint"]:
+							updateEdges(intersection3Points, key1, key2, "line2", "line2", edges)
+						else:
+							updateEdges(intersection3Points, key1, key2, "line2", "line3", edges)
+					elif int1Line3["midpoint"] == int2Line1["midpoint"] or int1Line3["midpoint"] == int2Line2["midpoint"] or int1Line3["midpoint"] == int2Line3["midpoint"]:
+						if int1Line3["midpoint"] == int2Line1["midpoint"]:
+							updateEdges(intersection3Points, key1, key2, "line3", "line1", edges)
+						elif int1Line3["midpoint"] == int2Line2["midpoint"]:
+							updateEdges(intersection3Points, key1, key2, "line3", "line2", edges)
+						else:
+							updateEdges(intersection3Points, key1, key2, "line3", "line3", edges)
 
 	siteKeys = cell.keys()
 	
@@ -836,7 +854,7 @@ def main(plt):
 				del cell[site]["otherPoint"][list(cell[site]["otherPoint"].keys())[1]]
 					
 
-	edgeSiteKeys = list(edges.keys())
+	#edgeSiteKeys = list(edges.keys())
 	leftX = defaultBounds[0][0]
 	rightX = defaultBounds[1][0]
 	bottomY = defaultBounds[1][1]
@@ -937,6 +955,11 @@ def main(plt):
 				boundTPts = []
 				boundBPts = []
 
+				topLeft = corners[1]
+				topRight = corners[2]
+				bottomLeft = corners[0]
+				bottomRight = corners[3]
+
 				kys = list(cell[site]["otherPoint"].keys())
 
 				for otherSiteKey in kys:
@@ -959,63 +982,10 @@ def main(plt):
 					
 					#possiblePairs.append([otherSite["boundA"], otherSite["boundB"]])
 					if not otherSiteKey in edges:
-						boundryPairs.append([otherSite["boundA"], otherSite["boundB"]])
-
-				if boundLPts.__len__() > 1:
-					boundryPairs.append([boundLPts[0], boundLPts[1]])
-				elif boundLPts.__len__() == 1 and boundTPts.__len__() == 1:
-					print("corner")
-					boundryPairs.extend([[boundLPts[0], corners[1]], [corners[1], boundTPts[0]]])
-					#boundryPairs.append([boundLPts[0], boundRPts[0]])
-
-				if boundRPts.__len__() > 1:
-					boundryPairs.append([boundRPts[0], boundRPts[1]])
-				elif boundRPts.__len__() == 1 and boundBPts.__len__():
-					print("corner")
-					boundryPairs.extend([[boundRPts[0], corners[3]], [corners[3], boundBPts[0]]])
-					#boundryPairs.append([boundRPts[0], boundBPts[0]])
-
-				if boundTPts.__len__() > 1:
-					boundryPairs.append([boundTPts[0], boundTPts[1]])
-				elif boundTPts.__len__() == 1 and boundRPts.__len__() == 1:
-					print("corner")
-					boundryPairs.extend([[boundTPts[0], corners[2]], [corners[2], boundRPts[0]]])
-					#boundryPairs.append([boundTPts[0], boundRPts[0]])
-
-				if boundBPts.__len__() > 1:
-					boundryPairs.append([boundBPts[0], boundBPts[1]])
-				elif boundBPts.__len__() == 1 and boundLPts.__len__() == 1:
-					print("corner")
-					boundryPairs.extend([[boundBPts[0], corners[0]], [corners[0], boundLPts[0]]])
-					#boundryPairs.append([boundBPts[0], boundLPts[0]])
+						#boundryPairs.append([otherSite["boundA"], otherSite["boundB"]])
+						pass
 
 				
-				#if boundBPts.__len__() > 1 and boundLPts.__len__() > 1:
-				#	possiblePairs.append([findMinY(boundLPts), findMinX(boundBPts)])
-				#if boundLPts.__len__() > 1 and boundTPts.__len__() > 1:
-				#	possiblePairs.append([findMaxY(boundLPts), findMinX(boundTPts)])
-				#if boundTPts.__len__() > 1 and boundRPts.__len__() > 1:
-				#	possiblePairs.append([findMaxX(boundTPts), findMaxY(boundRPts)])
-				#if boundBPts.__len__() > 1 and boundRPts.__len__() > 1:
-				#	possiblePairs.append([findMaxX(boundBPts), findMinY(boundRPts)])
-
-
-				if boundLPts.__len__() == 1 and boundRPts.__len__() == 1:
-					midY = (boundLPts[0][1] + boundRPts[0][1])/2
-					if midY > cell[site]["point"][1]:
-						boundryPairs.extend([[boundLPts[0], corners[0]], [corners[0], corners[3]], [corners[3], boundRPts[0]]])
-						#possiblePairs.append([boundLPts[0], boundRPts[0]])
-					else:
-						boundryPairs.extend([[boundLPts[0], corners[1]], [corners[1], corners[2]], [corners[2], boundRPts[0]]])
-						#possiblePairs.append([boundLPts[0], boundRPts[0]])
-				elif boundTPts.__len__() == 1 and boundBPts.__len__() == 1:
-					midX = (boundTPts[0][0] + boundBPts[0][0])/2
-					if midX > cell[site]["point"][0]:
-						boundryPairs.extend([[boundTPts[0], corners[2]], [corners[2], corners[3]], [corners[3], boundBPts[0]]])
-						#possiblePairs.append([boundTPts[0], boundBPts[0]])
-					else:
-						boundryPairs.extend([[boundTPts[0], corners[1]], [corners[1], corners[0]], [corners[0], boundBPts[0]]])
-						#possiblePairs.append([boundTPts[0], boundBPts[0]])
 
 				print(f"boundryPairs: {boundryPairs}")
 				print(f"boundLPts: {boundLPts}")
@@ -1209,4 +1179,5 @@ for i in range(0, 20):
 	main(plt)
 	#sleep(1)
 	plt.clf()
+
 
