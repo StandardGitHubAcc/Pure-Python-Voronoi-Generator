@@ -3,6 +3,7 @@ import random
 import math
 from math import *
 
+#                 width     height
 defaultBounds = [[0, 200], [200, 0]]
 points = [(50, 50), (25, 25), (75, 75), (98, 70)]
 #points = [(50, 50), (25, 20), (75, 75), (98, 70)]
@@ -11,6 +12,10 @@ points = [(50, 50), (25, 25), (75, 75), (98, 70)]
 corners = [[0, 0], [0, 200], [200, 0], [200, 200]] #[ [defaultBounds[0][0], defaultBounds[1][1]], [defaultBounds[0][0], defaultBounds[0][1]], [defaultBounds[1][0], defaultBounds[1][1]], [defaultBounds[0][1], defaultBounds[1][0]] ]
 
 cell = {}
+#activeSites = []
+#allVerts = []
+removeVerts = []
+finalCell = {}
 
 def distance(x1, y1, x2, y2):
 	return (((x1 - x2) ** 2) + ((y1 - y2) ** 2)) ** 0.5
@@ -30,6 +35,35 @@ def bubbleSort(arr): #Not used but a good template
             if arr[j] > arr[j + 1]:
                 arr[j], arr[j + 1] = arr[j + 1], arr[j]
 
+#https://www.geeksforgeeks.org/python-program-for-insertion-sort/
+def insertionSort(arr): #Not used but a good template
+    n = len(arr)  # Get the length of the array
+      
+    if n <= 1:
+        return  # If the array has 0 or 1 element, it is already sorted, so return
+ 
+    for i in range(1, n):  # Iterate over the array starting from the second element
+        key = arr[i]  # Store the current element as the key to be inserted in the right position
+        j = i-1
+        while j >= 0 and key < arr[j]:  # Move elements greater than key one position ahead
+            arr[j+1] = arr[j]  # Shift elements to the right
+            j -= 1
+        arr[j+1] = key  # Insert the key in the correct position
+
+def distanceVertTargetSortShort(target, array): #good for small arrays #I don't know how to use this
+    n = len(array)  # Get the length of the array
+      
+    if n <= 1:
+        return  # If the array has 0 or 1 element, it is already sorted, so return
+ 
+    for i in range(1, n):  # Iterate over the array starting from the second element
+        key = array[i]  # Store the current element as the key to be inserted in the right position
+        j = i-1
+        while j >= 0 and key < array[j]:  # Move elements greater than key one position ahead
+            array[j+1] = array[j]  # Shift elements to the right
+            j -= 1
+        array[j+1] = key  # Insert the key in the correct position
+        
 def distanceTargetSort(target, array):
     n = len(array)
  
@@ -45,6 +79,19 @@ def distanceTargetSort(target, array):
             if dist1 > dist2:
                 array[j], array[j + 1] = array[j + 1], array[j]
 
+def sortByY(array):
+    n = len(array)
+ 
+    for i in range(n):
+        for j in range(0, n - i - 1):
+             
+            # Range of the array is from 0 to n-i-1
+            # Swap the elements if the element found 
+            #is greater than the adjacent element
+            
+            if array[j][1] > array[j + 1][1]:
+                array[j], array[j + 1] = array[j + 1], array[j]
+                
 def find3Intersect(pt1, pt2, pt3): # division by zero happens with the points (50, 50) (25, 25) (75, 75)
     a, b, c, d, e, f = pt1[0], pt1[1], pt2[0], pt2[1], pt3[0], pt3[1]
     if (2 * ( ((a-e)*(b-d)) - ((a-c)*(b-f))) ) != 0:
@@ -65,25 +112,188 @@ def getTimeAtX(pt1, pt2, pt3, x):
     t = ((-1 * k) - ( (k**2) - (4 * j * L))**0.5) / (2 * j)
     return t
 
-def getYAtTime(pt1, t, x):
+def getYAtTimeAndX(pt1, t, x):
     a, b = pt1[0], pt1[1]
     y = (((x-a)**2) / (2 * (b-t))) + (0.5 * (b+t))
-    return y    
+    return y   
 
-for site in points:
-    for point2 in points:
-        if point2 != site:        
-            for point3 in points:   
-                if point3 != site and point3 != point2: #this system somehow gets one correct point, tho it has an incorrect point at several different times
-                    # the point found at time=13.6624 is in the correct location but was found in an incorrect way as the sweepline had not reached any sites yet, let alone one that could produce that normally
-                    #   (the point was produced by 3 of the parabolas opening upwards (since the sweepline was below them), so it was formed correctly but not under the correct circumstances)
-                    # the point found at time=75.009121 is the result of 3 parabolas intersecting when one of them should have been cut off by a circle event                    
-                    x = find3Intersect(site, point2, point3)
-                    t = getTimeAtX(site, point2, point3, x)
-                    y = getYAtTime(site, t, x)
-                    if t > defaultBounds[1][1] and t < defaultBounds[1][0]:
-                        print(f"({site[0]}, {site[1]}) ({point2[0]}, {point2[1]}) ({point3[0]}, {point3[1]}) time: {t} at ({x}, {y})")
-                        cell.update({f"{str(site).replace(', ', '_')}" : {"point1":site, "point2":point2, "point3":point3, "time":t, "at":[x, y]}})
+def yAtX(pt1, pt2, x):
+    a, b, c, d, = pt1[0], pt1[1], pt2[0], pt2[1]
+    y = ((c-a) / (b-d)) * (x - ( (a+c)/2) ) + ((b+d)/2)
+    return y
+    
+def xAtY(pt1, pt2, y):
+    a, b, c, d, = pt1[0], pt1[1], pt2[0], pt2[1]
+    x = ( (2 * y * (d-b)) - ((d**2) - (b**2)) + ((a**2) - (c**2)) ) / (2 * (a-c))
+    return x
+
+def tAtXandY(pt1, pt2, x, y):   
+    a, b, c, d, = pt1[0], pt1[1], pt2[0], pt2[1]
+    t = ((2 * y) + (( (4 * (y**2)) + 4*( ((x-a)**2) - (2 * y * b) + (b**2 ) ) ) ** 0.5)) / 2
+    return t    
+
+sortByY(points)
+
+for site1 in points:
+    for site2 in points:
+        if site1 != site2: #this stuff with bounds doesn't seem to change anything
+            boundVerts = []
+            
+            boundLy = yAtX(site1, site2, defaultBounds[0][0])
+            boundLt = tAtXandY(site1, site2, defaultBounds[0][0], boundLy)
+            boundRy = yAtX(site1, site2, defaultBounds[0][1])
+            boundRt = tAtXandY(site1, site2, defaultBounds[0][1], boundRy)
+
+            boundTx = xAtY(site1, site2, defaultBounds[1][0])
+            boundTt = tAtXandY(site1, site2, boundTx, defaultBounds[1][0])
+            boundBx = xAtY(site1, site2, defaultBounds[1][1])
+            boundBt = tAtXandY(site1, site2, boundBx, defaultBounds[1][1])
+
+            if boundLt < defaultBounds[1][0] and boundLt > defaultBounds[1][1]:            
+                #allVerts.append({"type":"leftBound", "time":boundLt, "at":[defaultBounds[0][0], boundLy]})
+                boundVerts.append({"type":"leftBound", "time":boundLt, "at":[defaultBounds[0][0], boundLy]})
+            if boundRt < defaultBounds[1][0] and boundRt > defaultBounds[1][1]:
+                #allVerts.append({"type":"rightBound", "time":boundRt, "at":[defaultBounds[0][1], boundRy]})
+                boundVerts.append({"type":"rightBound", "time":boundRt, "at":[defaultBounds[0][1], boundRy]})
+            if boundTt < defaultBounds[1][0] and boundTt > defaultBounds[1][1]:
+                #allVerts.append({"type":"topBound", "time":boundTt, "at":[boundTx, defaultBounds[1][0]]})
+                boundVerts.append({"type":"topBound", "time":boundTt, "at":[boundTx, defaultBounds[1][0]]})
+            if boundBt < defaultBounds[1][0] and boundBt > defaultBounds[1][1]:                                
+                #allVerts.append({"type":"bottomBound", "time":boundBt, "at":[boundBx, defaultBounds[1][1]]})
+                boundVerts.append({"type":"bottomBound", "time":boundBt, "at":[boundBx, defaultBounds[1][1]]})
+               
+            #print(boundVerts)
+            #allVerts.extend([{"type":"leftBound", "time":boundLt, "at":[defaultBounds[0][0], boundLy]}, {"type":"rightBound", "time":boundRt, "at":[defaultBounds[0][1], boundRy]}, 
+            #                 {"type":"topBound", "time":boundTt, "at":[boundTx, defaultBounds[1][0]]}, {"type":"bottomBound", "time":boundBt, "at":[boundBx, defaultBounds[1][1]]}])                                  
+                        
+            for site3 in points:
+                if site3 != site2 and site3 != site1:
+                    x = find3Intersect(site1, site2, site3)
+                    t = getTimeAtX(site1, site2, site3, x)
+                    y = getYAtTimeAndX(site1, t, x)
+                    if t > defaultBounds[1][1] and t < defaultBounds[1][0] and t < boundLt:
+                       print(f"({site1[0]}, {site1[1]}) ({site2[0]}, {site2[1]}) ({site3[0]}, {site3[1]}) time: {t} at ({x}, {y})")
+                       cell.update({f"{str(site1).replace(', ', '_')}" : {"point1":site1, "point2":site2, "point3":site3, "time":t, "at":[x, y]}})                                        
+                                                                            
+#print(allVerts)
+
+#activeSites.extend([points[0], points[1]])
+#activeSites.append(points[0])
+#for i in range(2, points.__len__()):
+#    activeSites.append(points[i])
+#    for site1 in activeSites:
+#        for site2 in activeSites:
+#            if site2 != site1:
+#                for site3 in activeSites:
+#                    if site3 != site2 and site3 != site1:
+                                                                                                            
+#    print(activeSites)    
+        
+
+#for site in points:
+#    for point2 in points:
+#        if point2 != site:        
+#            for point3 in points:   
+#                if point3 != site and point3 != point2: #this system somehow gets one correct point, tho it has an incorrect point at several different times
+#                    # the point found at time=13.6624 is in the correct location but was found in an incorrect way as the sweepline had not reached any sites yet, let alone one that could produce that normally
+#                    #   (the point was produced by 3 of the parabolas opening upwards (since the sweepline was below them), so it was formed correctly but not under the correct circumstances)
+#                    # the point found at time=75.009121 is the result of 3 parabolas intersecting when one of them should have been cut off by a circle event                    
+#                    x = find3Intersect(site, point2, point3)
+#                    t = getTimeAtX(site, point2, point3, x)
+#                    y = getYAtTime(site, t, x)
+#                    if t > defaultBounds[1][1] and t < defaultBounds[1][0]: #this somehow worked better
+#                    #if t > points[0][1] and t < defaultBounds[1][0]:                    
+#                        print(f"({site[0]}, {site[1]}) ({point2[0]}, {point2[1]}) ({point3[0]}, {point3[1]}) time: {t} at ({x}, {y})")
+#                        cell.update({f"{str(site).replace(', ', '_')}" : {"point1":site, "point2":point2, "point3":point3, "time":t, "at":[x, y]}})
+
+for site1 in cell:
+    for others in points:
+        #print(cell[site1]["point1"])        
+        if cell[site1]["point1"] != others and cell[site1]["point2"] != others and cell[site1]["point3"] != others:
+            #print(cell[site1]["time"], cell[site1]["at"])
+            otherPointY = getYAtTimeAndX(others, cell[site1]["time"], cell[site1]["at"][0])
+            #print(otherPointY)
+            if otherPointY > cell[site1]["at"][1]:
+                removeVerts.append(site1)
+                #print(f"remove {site1}")                                                                                         
+
+if removeVerts.__len__() > 0:
+    for vert in removeVerts:
+        del cell[vert]            
+
+usedPoints = []
+for entry in cell:
+    if cell[entry]["point1"] not in usedPoints:
+        usedPoints.append(cell[entry]["point1"])
+    if cell[entry]["point2"] not in usedPoints:
+        usedPoints.append(cell[entry]["point2"])
+    if cell[entry]["point3"] not in usedPoints:
+        usedPoints.append(cell[entry]["point3"])                
+
+print(usedPoints)                
+
+for i in range(points.__len__()):
+    point = points[i]    
+    if point not in usedPoints:
+        boundVerts = []
+    
+        site2 = 0        
+
+        if i + 1 == points.__len__():
+            site2 = points[i-1]
+        else:         
+            site2 = points[i+1]
+
+        boundLy = yAtX(point, site2, defaultBounds[0][0])
+        boundLt = tAtXandY(point, site2, defaultBounds[0][0], boundLy)
+        boundRy = yAtX(point, site2, defaultBounds[0][1])
+        boundRt = tAtXandY(point, site2, defaultBounds[0][1], boundRy)
+
+        boundTx = xAtY(point, site2, defaultBounds[1][0])
+        boundTt = tAtXandY(point, site2, boundTx, defaultBounds[1][0])
+        boundBx = xAtY(point, site2, defaultBounds[1][1])
+        boundBt = tAtXandY(point, site2, boundBx, defaultBounds[1][1])
+
+        #dist1 = distance(point[0], point[1], defaultBounds[0][0], boundLy)
+        #dist2 = distance(point[0], point[1], defaultBounds[0][1], boundRy)
+        #dist3 = distance(point[0], point[1], boundTx, defaultBounds[1][0])
+        #dist3 = distance(point[0], point[1], boundBx, defaultBounds[1][1])
+
+        pts = [[defaultBounds[0][0], boundLy], [defaultBounds[0][1], boundRy], [boundTx, defaultBounds[1][0]], [boundBx, defaultBounds[1][1]]]                
+
+        distanceTargetSort(point, pts)
+
+        #if boundLt < defaultBounds[1][0] and boundLt > defaultBounds[1][1]:            
+            #allVerts.append({"type":"leftBound", "time":boundLt, "at":[defaultBounds[0][0], boundLy]})
+        #    boundVerts.append({"type":"leftBound", "time":boundLt, "at":[defaultBounds[0][0], boundLy]})
+        #if boundRt < defaultBounds[1][0] and boundRt > defaultBounds[1][1]:
+            #allVerts.append({"type":"rightBound", "time":boundRt, "at":[defaultBounds[0][1], boundRy]})
+        #    boundVerts.append({"type":"rightBound", "time":boundRt, "at":[defaultBounds[0][1], boundRy]})
+        #if boundTt < defaultBounds[1][0] and boundTt > defaultBounds[1][1]:
+            #allVerts.append({"type":"topBound", "time":boundTt, "at":[boundTx, defaultBounds[1][0]]})
+        #    boundVerts.append({"type":"topBound", "time":boundTt, "at":[boundTx, defaultBounds[1][0]]})
+        #if boundBt < defaultBounds[1][0] and boundBt > defaultBounds[1][1]:                                
+            #allVerts.append({"type":"bottomBound", "time":boundBt, "at":[boundBx, defaultBounds[1][1]]})
+        #    boundVerts.append({"type":"bottomBound", "time":boundBt, "at":[boundBx, defaultBounds[1][1]]})
+        
+        #print(pts)
+        #print(f"({boundLy})")        
+
+        finalCell.update({f"{str(point).replace(', ', '_')}":{"site":point, "vertices":[ #I should add onto this list so that the list of verticies will also include the corner
+            [pts[0], pts[1]]
+            ]}})
+
+        relative = points.copy()
+        distanceTargetSort(point, points)
+        #print(f"relative:{relative}")
+        if f"{str(relative[1]).replace(', ', '_')}" in finalCell:
+            finalCell[f"{str(relative[1]).replace(', ', '_')}"]["vertices"].append([pts[0], pts[1]])
+        else:
+            finalCell.update({f"{str(relative[1]).replace(', ', '_')}":{"site":relative[1], "vertices":[
+            [pts[0], pts[1]]
+            ]}})                                          
+
+print(finalCell)
 
 plt.figure(figsize=(7, 7))
 plt.ylim(defaultBounds[1][1], defaultBounds[1][0])
@@ -96,12 +306,21 @@ for pt in points:
 
 for site in cell:  
     print(cell[site])
-    clr1, clr2, clr3 = random.random(), random.random(), random.random() 
+    #clr1, clr2, clr3 = random.random(), random.random(), random.random() 
     
     plt.plot(cell[site]["at"][0], cell[site]["at"][1], "go")#, color=(clr1, clr2, clr3))
     #plt.plot(cell[site]["at"][0], cell[site]["at"][1], color=(0.5, 0.5, 0.5))
     plt.plot([cell[site]["point2"][0], cell[site]["at"][0], cell[site]["point3"][0], cell[site]["at"][0], cell[site]["point1"][0]], [cell[site]["point2"][1], cell[site]["at"][1], cell[site]["point3"][1], cell[site]["at"][1], cell[site]["point1"][1]], "g") 
     #print(clr1, clr2, clr3)        
     
-
+for cell in finalCell:
+    for pairs in finalCell[cell]["vertices"]:    
+        #plt.plot([finalCell[cell]["vertices"][pairs][0][0], finalCell[cell]["vertices"][pairs][1][0]], [finalCell[cell]["vertices"][pairs][0][1], finalCell[cell]["vertices"][pairs][1][1]], "bo")
+        #plt.plot([pairs[0][0], pairs[1][0]], [pairs[0][1], pairs[1][1]], "bo")
+        plt.plot([pairs[0][0], pairs[1][0]], [pairs[0][1], pairs[1][1]], "b")        
+        #print(pairs[0][0], pairs[1][0], pairs[0][1], pairs[1][1])
+        #x1 = [pairs[0][0], pairs[1][0]]
+        #y1 = [pairs[0][1], pairs[1][1]]
+        #plt.plot(x1, y1, "b")                        
+        
 plt.show()
