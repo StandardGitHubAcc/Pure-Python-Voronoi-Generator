@@ -267,7 +267,9 @@ for site1 in points:
                             cell[f"{str(site1).replace(', ', '_')}"].append({"point1":site1, "point2":site2, "point3":site3, "time":float("%.10f" % t), "at":[float("%.10f" % x), float("%.10f" % y)]})
                         else:                            
                             cell.update({f"{str(site1).replace(', ', '_')}" : [{"point1":site1, "point2":site2, "point3":site3, "time":float("%.10f" % t), "at":[float("%.10f" % x), float("%.10f" % y)]}]})
-                        #cell[f"{str(site1).replace(', ', '_')}"].append({"point1":site1, "point2":site2, "point3":site3, "time":t, "at":[x, y]})                                        
+                        #cell[f"{str(site1).replace(', ', '_')}"].append({"point1":site1, "point2":site2, "point3":site3, "time":t, "at":[x, y]})
+                        
+                                       
                                                                             
 #print(allVerts)
 
@@ -537,12 +539,9 @@ def nearestBoundry(startPt, throughPt):
     
     return choice[0]    
 for vert in vertices: #need to figure out how to loop through all of the intersection points and see how many edges they are a part of, might be able to use a "match: case:" statement
-    
-
     numEdges = vertices[vert]["with"].__len__()
     aSites = vertices[vert]["sites"]
-    #possible = [sortByY([aSites[0], aSites[1]]), sortByY([aSites[0], aSites[2]]), sortByY([aSites[1], aSites[2]])]
-    #possible = []
+
     a = [aSites[0], aSites[1]]
     b = [aSites[0], aSites[2]]
     c = [aSites[1], aSites[2]]
@@ -550,7 +549,7 @@ for vert in vertices: #need to figure out how to loop through all of the interse
     sortByY(b)
     sortByY(c)
     possible = [a, b, c]                               
-    #withCopy = vertices[vert]["with"].copy()
+
     at = list(map(float, vert.replace("[", "").replace("]", "").split("_")))    
                 
     print(vert, vertices[vert], numEdges)
@@ -562,37 +561,35 @@ for vert in vertices: #need to figure out how to loop through all of the interse
             continue                                        
     print("possible:",possible)
 
-    match numEdges:
-        case 2:               
-            #point1, point2, point3 = aSites[0], aSites[1], aSites[2]
-
-            #temp = [point1, point2, point3]
+    #match numEdges:
+    #    case 2:
+    for i in range(0, 3-numEdges):
+            print("----------case2")    
+            newPoint = []                           
             temp = possible[0] 
             angle1 = angle(temp[0], temp[1], at)
-            #newPoint = rotate(temp[0], entry["at"], angle1/2) #works perfectly for most points, positive angles make counterclockwise rotations
-            # ^ some times work when the point is temp[0], other times it works when the point is temp[1]
-            #print(angle1)
+
+            #if at[1] < temp[0][1] or (at[0] < temp[0][0] and at[0] < temp[1][0]):
             #if at[1] < temp[0][1]:
-            #    angle1 = (2 * math.pi) - angle1       
+            if at[1] < temp[0][1] or not (at[0] > temp[0][0] and at[0] < temp[1][0]):            
+                angle1 = (2 * math.pi) - angle1       
 
-            angle1 = (2 * math.pi) - angle1
+            #angle1 = (2 * math.pi) - angle1
 
-            #print(f"angle1 degrees {(angle1) * (180/math.pi)} for {temp[0]} {temp[1]} {at}")
-            #print(angle1)            
-            newPoint = []
-            #if temp[0][0] < temp[1][0]:
             if at[1] < temp[0][1]:            
                 newPoint = rotate(temp[0], at, angle1/2)
             else:                    
                 newPoint = rotate(temp[1], at, angle1/2)
 
             boundry = nearestBoundry(at, newPoint)
-            #print("bound",boundry)            
-
-            #plt.plot([newPoint[0], at[0]], [newPoint[1], at[1]], "r")
-            #plt.plot([boundry[0], at[0]], [boundry[1], at[1]], "m")            
+            plt.plot([newPoint[0], at[0]], [newPoint[1], at[1]], "r")
             finalCell[f"{str(temp[0]).replace(', ', '_')}"]["vertices"].append([at, boundry])
-            finalCell[f"{str(temp[1]).replace(', ', '_')}"]["vertices"].append([at, boundry])            
+            finalCell[f"{str(temp[1]).replace(', ', '_')}"]["vertices"].append([at, boundry])
+
+            del possible[0]
+        #case 1:
+        #    print("---------case1")
+        #    print(possible)                                                            
 
 
                             
@@ -797,7 +794,3 @@ for cell in finalCell:
         #print(pairs)                        
         
 plt.show()
-
-
-
-
