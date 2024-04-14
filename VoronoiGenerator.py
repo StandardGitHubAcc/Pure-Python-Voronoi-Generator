@@ -1,3 +1,4 @@
+from decimal import DivisionByZero
 import matplotlib.pyplot as plt
 import random
 import math
@@ -13,14 +14,17 @@ defaultBounds = [[0, 200], [200, 0]]
 #points = [[90,81],[48,121],[163,120],[83,23]]
 
 #points = []
-#for i in range(1, 4):
+#for i in range(1, 8):
 #      points.append([random.randint(0, 200), random.randint(0, 200)])  
 
 #points = [[59, 55], [30, 88], [1, 93]] #[[186, 15], [162, 127], [25, 144]] this is pretty much just a bigger version of the first set
 #points = [[186, 15], [162, 127], [25, 144]]
 #points = [[19, 27], [131, 44], [38, 130]]
-#points = [[159, 66], [100, 166], [73, 197]]
-points = [[76, 30], [196, 40], [165, 47], [104, 66], [128, 120], [88, 159], [166, 180]]
+#points = [[57, 67], [21, 80], [79, 198]]#[[17, 45], [62, 54], [152, 194]]#[[159, 66], [100, 166], [73, 197]]#[[71, 79], [167, 127], [178, 141]]
+
+#[[106, 6], [88, 11], [9, 18], [2, 105], [20, 105], [115, 140], [52, 168]] causes division by zero in getTimeAtX
+points = [[13, 23], [181, 40], [129, 55], [93, 100], [59, 127], [12, 160], [156, 163]]
+#points = [[76, 30], [196, 40], [165, 47], [104, 66], [128, 120], [88, 159], [166, 180]] #easy to see graph
 
 #		bottomleft, topleft, bottomright, topright
 corners = [[0, 0], [0, 200], [200, 0], [200, 200]] #[ [defaultBounds[0][0], defaultBounds[1][1]], [defaultBounds[0][0], defaultBounds[0][1]], [defaultBounds[1][0], defaultBounds[1][1]], [defaultBounds[0][1], defaultBounds[1][0]] ]
@@ -134,12 +138,17 @@ def find2IntersectAtTime(pt1, pt2, t):
     return x                
 
 def getTimeAtX(pt1, pt2, pt3, x):
-    a, b, c, d, e, f = pt1[0], pt1[1], pt2[0], pt2[1], pt3[0], pt3[1]
-    j = b-d
-    k = -( (a**2) + (b**2) ) + (c**2) + (d**2) + (2 * x * (a-c))
-    L = f*( (a**2) - (c**2) + (b**2) - (d**2) - (2 * x * (a-c)) ) - (( ((x-e)**2) + (f**2) )*(b-d))
-    t = ((-1 * k) - ( (k**2) - (4 * j * L))**0.5) / (2 * j)
-    return t
+    try:    
+        a, b, c, d, e, f = pt1[0], pt1[1], pt2[0], pt2[1], pt3[0], pt3[1]
+        j = b-d
+        k = -( (a**2) + (b**2) ) + (c**2) + (d**2) + (2 * x * (a-c))
+        L = f*( (a**2) - (c**2) + (b**2) - (d**2) - (2 * x * (a-c)) ) - (( ((x-e)**2) + (f**2) )*(b-d))
+        t = ((-1 * k) - ( (k**2) - (4 * j * L))**0.5) / (2 * j)
+        return t        
+    except ZeroDivisionError:
+        print("zero division error in getTimeAtX")        
+        return defaultBounds[1][1] -5            
+    
 
 def getYAtTimeAndX(pt1, t, x):
     a, b = pt1[0], pt1[1]
@@ -171,8 +180,8 @@ for point in points:
 
 for site1 in points:
     for site2 in points:
-        if site1 != site2: #this stuff with bounds doesn't seem to change anything
-            #boundVerts = []
+        if site1 != site2: 
+            #boundVerts = [] #this stuff with bounds doesn't seem to change anything
             
             #boundLy = yAtX(site1, site2, defaultBounds[0][0])
             #boundLt = tAtXandY(site1, site2, defaultBounds[0][0], boundLy)
@@ -206,10 +215,15 @@ for site1 in points:
                     x = find3Intersect(site1, site2, site3)
                     t = getTimeAtX(site1, site2, site3, x)
                     y = getYAtTimeAndX(site1, t, x)
+                    print(f"-- ({site1[0]}, {site1[1]}) ({site2[0]}, {site2[1]}) ({site3[0]}, {site3[1]}) time: {t} at ({x}, {y})")                    
                     #if t > defaultBounds[1][1] and t < defaultBounds[1][0] and t < boundLt: #having the t < boundLt fixes some issues but seems like it will cause some later on
                     #if t > defaultBounds[1][1] and t < defaultBounds[1][0] and x >= defaultBounds[0][0] and x <= defaultBounds[0][1]:
-                    if t > points[0][1] and t < defaultBounds[1][0] and x >= defaultBounds[0][0] and x <= defaultBounds[0][1] and y >= defaultBounds[1][1] and y <= defaultBounds[1][0]:                    
-                        #print(f"({site1[0]}, {site1[1]}) ({site2[0]}, {site2[1]}) ({site3[0]}, {site3[1]}) time: {t} at ({x}, {y})")
+                    #if t > points[0][1] and t < defaultBounds[1][0] and x >= defaultBounds[0][0] and x <= defaultBounds[0][1] and y >= defaultBounds[1][1] and y <= defaultBounds[1][0]:                    
+                    #print(site1, points[0][1])
+                    #if t > points[0][1] and x >= defaultBounds[0][0] and x <= defaultBounds[0][1] and y >= defaultBounds[1][1] and y <= defaultBounds[1][0]:
+                    if t > site1[1] and t > site2[1] and t > site3[1] and x >= defaultBounds[0][0] and x <= defaultBounds[0][1] and y >= defaultBounds[1][1] and y <= defaultBounds[1][0]:                    
+                        if x > 130:                                                                    
+                            print(f"({site1[0]}, {site1[1]}) ({site2[0]}, {site2[1]}) ({site3[0]}, {site3[1]}) time: {t} at ({x}, {y})")
         
                         if f"{str(site1).replace(', ', '_')}" in cell:
                             cell[f"{str(site1).replace(', ', '_')}"].append({"point1":site1, "point2":site2, "point3":site3, "time":t, "at":[x, y]})
@@ -249,8 +263,8 @@ for site1 in points:
 #                        cell.update({f"{str(site).replace(', ', '_')}" : {"point1":site, "point2":point2, "point3":point3, "time":t, "at":[x, y]}})
 
 for site1 in cell:
-    for others in points:
-        
+    #for others in points:
+     for entry in cell[site1]:
 #        if cell[site1]["point1"] != others and cell[site1]["point2"] != others and cell[site1]["point3"] != others:
 #            #print(cell[site1]["time"], cell[site1]["at"])
 #            otherPointY = getYAtTimeAndX(others, cell[site1]["time"], cell[site1]["at"][0])
@@ -258,18 +272,24 @@ for site1 in cell:
 #            if otherPointY > cell[site1]["at"][1]:
 #                removeVerts.append(site1)
 #                #print(f"remove {site1}")                                                                                         
-        for entry in cell[site1]:
+        #for entry in cell[site1]:
+         for others in points:            
             #if entry["point1"] != others and entry["point2"] != others and entry["point3"] != others:
-            if entry["point1"] != others and entry["point2"] != others and entry["point3"] != others and others[1] < entry["time"]:                
+            if entry["point1"] != others and entry["point2"] != others and entry["point3"] != others and others[1] < entry["time"]:
+                                                
                 #print(cell[site1]["time"], cell[site1]["at"])
                 otherPointY = getYAtTimeAndX(others, entry["time"], entry["at"][0])
                 #print(otherPointY)
+                if entry["at"][1] > 120 and entry["at"][1] < 130:                
+                    print(others, otherPointY, entry["at"], entry["time"])
                 #print("test", otherPointY, entry["at"][1], entry)
                 #if otherPointY < defaultBounds[1][0]:                                
                 #    if otherPointY > entry["at"][1]:                                        
                 #        removeVerts.append([site1, entry])
                 #        #print(f"remove {site1} {entry}")
                 if otherPointY > entry["at"][1]:
+                    if 120 < entry["at"][1] < 130:                    
+                        print("   ", others, otherPointY, entry["at"], entry["time"])                    
                     #print(entry)
                     #print(site1)                                        
                     removeVerts.append([site1, entry])
@@ -279,8 +299,10 @@ if removeVerts.__len__() > 0:
     #for vert in removeVerts:
     #    del cell[vert]
     for site, vert in removeVerts:
-        #print("removing", cell[site][cell[site].index(vert)])        
-        try:        
+                
+        try:
+            if 120 < cell[site][cell[site].index(vert)]["at"][1] < 130:           
+                print("removing", cell[site][cell[site].index(vert)])                    
             del cell[site][cell[site].index(vert)]
         except Exception:
             pass                                            
@@ -314,12 +336,12 @@ for i in range(points.__len__()): # This works in most cases, but breaks when th
         boundVerts = []
     
         site2 = 0        
-
+        #print("a")
         if i + 1 == points.__len__():
             site2 = points[i-1]
         else:         
             site2 = points[i+1]
-
+        #print(point, site2)
         boundLy = yAtX(point, site2, defaultBounds[0][0])
         boundLt = tAtXandY(point, site2, defaultBounds[0][0], boundLy)
         boundRy = yAtX(point, site2, defaultBounds[0][1])
@@ -331,15 +353,21 @@ for i in range(points.__len__()): # This works in most cases, but breaks when th
         boundBt = tAtXandY(point, site2, boundBx, defaultBounds[1][1])
 
         pts = [[defaultBounds[0][0], boundLy], [defaultBounds[0][1], boundRy], [boundTx, defaultBounds[1][0]], [boundBx, defaultBounds[1][1]]]                
-
+        #print(pts)
         distanceTargetSort(point, pts)       
-
-        finalCell.update({f"{str(point).replace(', ', '_')}":{"site":point, "vertices":[ #I should add onto this list so that the list of verticies will also include the corner
+        #print(pts)
+        #print(f"{str(point).replace(', ', '_')}")        
+        #finalCell.update({f"{str(point).replace(', ', '_')}":{"site":point, "vertices":[ #I should add onto this list so that the list of verticies will also include the corner
+        #    [pts[0], pts[1]]
+        #    ]}})
+        #finalCell[f"{str(point).replace(', ', '_')}"]["vertices"].append([pts[0], pts[1]])
+        if not f"{str(point).replace(', ', '_')}" in finalCell:        
+            finalCell.update({f"{str(point).replace(', ', '_')}":{"site":point, "vertices":[ #I should add onto this list so that the list of verticies will also include the corner
             [pts[0], pts[1]]
             ]}})
-
         relative = points.copy()
-        distanceTargetSort(point, points)
+        #distanceTargetSort(point, points)
+        distanceTargetSort(point, relative)        
         #print(f"relative:{relative}")
         #if f"{str(relative[1]).replace(', ', '_')}" in finalCell:
         #    finalCell[f"{str(relative[1]).replace(', ', '_')}"]["vertices"].append([pts[0], pts[1]])
@@ -454,7 +482,8 @@ for site in cell:
     #print(cell[site])
     #clr1, clr2, clr3 = random.random(), random.random(), random.random() 
     for entry in cell[site]:
-        print(entry)        
+        if entry["at"][1] > 120 and entry["at"][1] < 130:       
+            print(entry)        
         plt.plot(entry["at"][0], entry["at"][1], "go")#, color=(clr1, clr2, clr3))
         #plt.plot(cell[site]["at"][0], cell[site]["at"][1], color=(0.5, 0.5, 0.5))
         plt.plot([entry["point2"][0], entry["at"][0], entry["point3"][0], entry["at"][0], entry["point1"][0]], [entry["point2"][1], entry["at"][1], entry["point3"][1], entry["at"][1], entry["point1"][1]], "g") 
@@ -475,5 +504,6 @@ for cell in finalCell:
         #plt.plot(x1, y1, "b")                        
         
 plt.show()
+
 
 
