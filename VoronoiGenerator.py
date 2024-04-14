@@ -29,10 +29,14 @@ defaultBounds = [[0, 200], [200, 0]]
 #points = [[106, 6], [88, 11], [9, 18], [2, 105], [20, 105], [115, 140], [52, 168]] #causes division by zero in getTimeAtX
 #points = [[13, 23], [181, 40], [129, 55], [93, 100], [59, 127], [12, 160], [156, 163]] #---
 points = [[76, 30], [196, 40], [165, 47], [104, 66], [128, 120], [88, 159], [166, 180]] #easy to see graph. In a previous, more broken version of the program, another line and intersection point near the one on the far right existed, which is necessary to correctly complete the graph
+# ^there is an issue with the plot for the line above
 
 #points = [[194, 2], [94, 30], [11, 91], [88, 92], [57, 143], [43, 190], [6, 198]]
 #points = [[12, 1], [97, 12], [168, 24], [98, 58], [182, 111], [102, 111], [72, 122]]
 
+#[[159, 12], [197, 12], [123, 38], [145, 92], [56, 123], [85, 160], [44, 166]] #causes a division by zero in yAtX
+
+#[[95, 52], [68, 62], [137, 79], [127, 132], [42, 155], [90, 182], [179, 183]] #might be messed up?
 
 #		bottomleft, topleft, bottomright, topright
 corners = [[0, 0], [0, 200], [200, 0], [200, 200]] #[ [defaultBounds[0][0], defaultBounds[1][1]], [defaultBounds[0][0], defaultBounds[0][1]], [defaultBounds[1][0], defaultBounds[1][1]], [defaultBounds[0][1], defaultBounds[1][0]] ]
@@ -139,11 +143,15 @@ def find3Intersect(pt1, pt2, pt3): # division by zero happens with the points (5
         return defaultBounds[0][0] - 5       
 
 def find2IntersectAtTime(pt1, pt2, t):
-    a, b, c, d, = pt1[0], pt1[1], pt2[0], pt2[1]
-    n = (2 * ((-1 * c * b) + (c * t) + (a * d) - (a * t))) / (b-d)
-    m = (-1 * (b-t) * (d-t)) + (( (c**2) * (b-t) ) + ( (a**2) * (d-t) )) / (b-d)
-    x = ((-1 * n) - ( (n**2) - (4 * m))**0.5) / 2
-    return x                
+    try:    
+        a, b, c, d, = pt1[0], pt1[1], pt2[0], pt2[1]
+        n = (2 * ((-1 * c * b) + (c * t) + (a * d) - (a * t))) / (b-d)
+        m = (-1 * (b-t) * (d-t)) + (( (c**2) * (b-t) ) + ( (a**2) * (d-t) )) / (b-d)
+        x = ((-1 * n) - ( (n**2) - (4 * m))**0.5) / 2
+        return x
+    except ZeroDivisionError:
+        print(f"zero division error in find2IntersectAtTime with {pt1} {pt2} {pt3} t={t}")        
+        return defaultBounds[1][1] -5                    
 
 def getTimeAtX(pt1, pt2, pt3, x):
     try:    
@@ -159,19 +167,31 @@ def getTimeAtX(pt1, pt2, pt3, x):
     
 
 def getYAtTimeAndX(pt1, t, x):
-    a, b = pt1[0], pt1[1]
-    y = (((x-a)**2) / (2 * (b-t))) + (0.5 * (b+t))
-    return y   
+    try:    
+        a, b = pt1[0], pt1[1]
+        y = (((x-a)**2) / (2 * (b-t))) + (0.5 * (b+t))
+        return y
+    except ZeroDivisionError:
+        print(f"zero division error in getYAtTimeAndX with {pt1} t={t} x={x}")
+        return defaultBounds[1][1] -5                       
 
 def yAtX(pt1, pt2, x):
-    a, b, c, d, = pt1[0], pt1[1], pt2[0], pt2[1]
-    y = ((c-a) / (b-d)) * (x - ( (a+c)/2) ) + ((b+d)/2)
-    return y
+    try:    
+        a, b, c, d, = pt1[0], pt1[1], pt2[0], pt2[1]
+        y = ((c-a) / (b-d)) * (x - ( (a+c)/2) ) + ((b+d)/2)
+        return y
+    except ZeroDivisionError:
+        print(f"zero division error in yAtX with {pt1} {pt2} x={x}")
+        return defaultBounds[1][1] -5                    
     
 def xAtY(pt1, pt2, y):
-    a, b, c, d, = pt1[0], pt1[1], pt2[0], pt2[1]
-    x = ( (2 * y * (d-b)) - ((d**2) - (b**2)) + ((a**2) - (c**2)) ) / (2 * (a-c))
-    return x
+    try:    
+        a, b, c, d, = pt1[0], pt1[1], pt2[0], pt2[1]
+        x = ( (2 * y * (d-b)) - ((d**2) - (b**2)) + ((a**2) - (c**2)) ) / (2 * (a-c))
+        return x
+    except ZeroDivisionError:
+        print(f"zero division error in xAtY with {pt1} {pt2} y={y}")
+        return defaultBounds[0][0] -5    
 
 def tAtXandY(pt1, pt2, x, y):   
     a, b, c, d, = pt1[0], pt1[1], pt2[0], pt2[1]
@@ -306,6 +326,7 @@ for site1 in cell:
                 #        removeVerts.append([site1, entry])
                 #        #print(f"remove {site1} {entry}")
                 if otherPointY > entry["at"][1]:
+                #if otherPointY > entry["time"]:                
                     #if entry["point1"] == [12, 160] or entry["point2"] == [12, 160] or entry["point3"] == [12, 160]:                    
                     #    print("   ", others, otherPointY, entry["at"], entry["time"])
                     #print("   ", others, otherPointY, entry["at"], entry["time"])                    
@@ -322,7 +343,7 @@ if removeVerts.__len__() > 0:
         try:
             #if 120 < cell[site][cell[site].index(vert)]["at"][1] < 130:           
             #    print("removing", cell[site][cell[site].index(vert)])
-            print("removing", cell[site][cell[site].index(vert)])                    
+            #print("removing", cell[site][cell[site].index(vert)])                    
             del cell[site][cell[site].index(vert)]
         except Exception:
             pass                                            
@@ -407,15 +428,40 @@ def slope(pt1, pt2):
 def midPoint(pt1, pt2):
     return [ (pt1[0] + pt2[0]) / 2,  (pt1[1] + pt2[1]) / 2]        
 
-def rotate(pt, origin, amount):
+def rotate(pt, origin, amount):   
+
     x = ((pt[0] - origin[0]) * math.cos(amount)) - ((pt[1] - origin[1]) * math.sin(amount))
     y = ((pt[1] - origin[1]) * math.cos(amount)) + ((pt[0] - origin[0]) * math.sin(amount))
     x += origin[0]
     y += origin[1]        
     return [x, y]           
 
+def angle(pt1, pt2, origin):
+    a, b, c, d, e, f = origin[0], origin[1], pt1[0], pt1[1], pt2[0], pt2[1]
+    #theta = math.acos( ( ((e -a) * (c-a)) + ((f-b) * (d-b)) ) / ( ( ( ((e-a)**2) + ((f-b)**2) ) * ( ((c-a)**2) + ((b-d)**2) ) ) ** 0.5 ) )
+    theta = math.acos( ( ((e -a) * (c-a)) + ((f-b) * (d-b)) ) / ( ( (( ((e-a)**2) + ((f-b)**2) ) ** 0.5) * (( ((c-a)**2) + ((b-d)**2) ) ** 0.5) ) ) )    
+    return theta           
+
+#converting from rectangular to polar to rectangular works for some points but not for others, idk why
+def rectToPolar(pt, origin):
+    a, b, c, d = pt[0], pt[1], origin[0], origin[1]
+    #theta = math.atan(b/a)
+    #r = ( (a**2) + (b**2) ) ** 0.5
+    theta = math.atan((b-d)/(a-c))
+    r = ( ((a-c)**2) + ((b-d)**2) ) ** 0.5
+    if (theta < 0):
+        theta = (2 * math.pi) + theta                   
+    return [r, theta]
+
+def polarToRect(pt, origin):
+    #x = pt[0] * math.cos(pt[1])
+    #y = pt[0] * math.sin(pt[1])
+    x = (pt[0] * math.cos(pt[1])) + origin[0]
+    y = (pt[0] * math.sin(pt[1])) + origin[1]     
+    return [x, y]                            
+
 for site in cell:
-    continue 
+ 
     for entry in cell[site]:    
         point1 = entry["point1"]
         point2 = entry["point2"]
@@ -430,14 +476,14 @@ for site in cell:
         #x = xAtY(temp[1], temp[2], defaultBounds[1][1])
         #plt.plot([x, entry["at"][0]], [0, entry["at"][1]], "m")        
 
-        #x = xAtY(temp[0], temp[2], defaultBounds[1][1]) #works for several cases, but not all
-        #plt.plot([x, entry["at"][0]], [0, entry["at"][1]], "m") 
+#         #x = xAtY(temp[0], temp[2], defaultBounds[1][1]) #works for several cases, but not all
+#         #plt.plot([x, entry["at"][0]], [0, entry["at"][1]], "m") 
         
-        #x = xAtY(temp[0], temp[2], defaultBounds[1][0]) #works for several cases, but not all
-        #plt.plot([x, entry["at"][0]], [200, entry["at"][1]], "c") 
+#         #x = xAtY(temp[0], temp[2], defaultBounds[1][0]) #works for several cases, but not all
+#         #plt.plot([x, entry["at"][0]], [200, entry["at"][1]], "c") 
 
-        x = xAtY(temp[1], temp[2], defaultBounds[1][0])
-        plt.plot([x, entry["at"][0]], [200, entry["at"][1]], "c")        
+#         x = xAtY(temp[1], temp[2], defaultBounds[1][0])
+#         plt.plot([x, entry["at"][0]], [200, entry["at"][1]], "c")        
 
         
 
@@ -449,50 +495,104 @@ for site in cell:
         start2y = yAtX(temp[0], temp[2], start2x)
         start3y = yAtX(temp[1], temp[2], start3x)
 
-        plt.plot([start1x, start2x, start3x], [start1y, start2y, start3y], "yo")
-        plt.plot([temp[0][0], start1x, temp[1][0]], [temp[0][1], start1y, temp[1][1]], "y")
-        plt.plot([temp[0][0], start2x, temp[2][0]], [temp[0][1], start2y, temp[2][1]], "y")
-        plt.plot([temp[1][0], start3x, temp[2][0]], [temp[1][1], start3y, temp[2][1]], "y")
+        #plt.plot([start1x, start2x, start3x], [start1y, start2y, start3y], "yo")
+        #plt.plot([temp[0][0], start1x, temp[1][0]], [temp[0][1], start1y, temp[1][1]], "y")
+        #plt.plot([temp[0][0], start2x, temp[2][0]], [temp[0][1], start2y, temp[2][1]], "y")
+        #plt.plot([temp[1][0], start3x, temp[2][0]], [temp[1][1], start3y, temp[2][1]], "y")
 
         slope1 = slope(entry["at"], [start1x, start1y])
 
-        #x = (0 - start1y + (slope1 * start1x)) / slope1
-        #plt.plot([x, entry["at"][0]], [0, entry["at"][1]], "k") 
+#         #x = (0 - start1y + (slope1 * start1x)) / slope1
+#         #plt.plot([x, entry["at"][0]], [0, entry["at"][1]], "k") 
         
-        #x = (0 - start1y + (slope1 * start1x)) / slope1
+#         #x = (0 - start1y + (slope1 * start1x)) / slope1
         plt.plot([start1x, entry["at"][0]], [start1y, entry["at"][1]], "k")
 
+        #print(temp[0], temp[1], entry["at"])
+        #angle1 = math.atan(distance(entry["at"][0], entry["at"][1], temp[1][0], temp[1][1])/distance(entry["at"][0], entry["at"][1], temp[0][0], temp[0][1]))
+        angle1 = angle(temp[0], temp[1], entry["at"])
+        #newPoint = rotate(temp[0], entry["at"], angle1/2) #works perfectly for most points, positive angles make counterclockwise rotations
+        # ^ some times work when the point is temp[0], other times it works when the point is temp[1]
 
-        angle1 = math.atan(distance(entry["at"][0], entry["at"][1], temp[1][0], temp[1][1])/distance(entry["at"][0], entry["at"][1], temp[0][0], temp[0][1]))
-        newPoint = rotate(temp[0], entry["at"], angle1)
-        print(temp[0], angle1)                
+        if entry["at"][1] < temp[0][1]:
+            angle1 = (2 * math.pi) - angle1       
+
+        print(f"angle1 degrees {(angle1) * (180/math.pi)} for {temp[0]} {temp[1]} {entry['at']}")
+        newPoint = []
+        if temp[0][0] < temp[1][0]:
+            newPoint = rotate(temp[0], entry["at"], angle1/2)
+        else:                    
+            newPoint = rotate(temp[1], entry["at"], angle1/2)
+        
+        
+                        
+
+        #angle2 = angle(temp[0], [entry["at"][0] + 10, entry["at"][1]], entry["at"])        
+        #print(temp[0], entry["at"], angle1, angle2)
+        a = rectToPolar(temp[0], entry["at"])        
+        #print("polar and rect test", temp[0], rectToPolar(temp[0], entry["at"]), polarToRect(rectToPolar(temp[0], entry["at"]), entry["at"]))                        
+        print("polar and rect test", temp[0], a, polarToRect(a, entry["at"]))  
+
+        polarTemp = [rectToPolar(temp[0], entry["at"]), rectToPolar(temp[1], entry["at"])]
+        sortByY(polarTemp)
+        print("polartemp",polarTemp)
+        #print("polar vs rect pts", temp, polarToRect(polarTemp[0], entry["at"]), polarToRect(polarTemp[1], entry["at"]))
+        
+        #angle3 = ((polarTemp[1][1] - polarTemp[0][1])/2) + polarTemp[0][1]
+        #newPoint = rotate(polarToRect(polarTemp[0], entry["at"]), entry["at"], angle1/2)
+        #newPoint = rotate(temp[0], entry["at"], angle3)
+        #newPoint = polarToRect([polarTemp[0][0], angle3], entry["at"])        
+        #print("angles:", angle1/2, angle3)                                
+        #newR = ((polarTemp[1][0] - polarTemp[0][0])/2) + min(polarTemp[1][0], polarTemp[0][0])
+        #newR = distance(entry["at"][0], entry["at"][1], temp[0][0], temp[0][1])        
+
+        #newPoint = rotate(temp[0], entry["at"], math.pi /2)
+
+        polarTemp = [[10, math.pi/4], [10, math.pi/2]]
+
+        #https://www.youtube.com/watch?v=EbAxIDGFF28
+        a = polarTemp[0]
+        b = polarTemp[1]                
+        newR = (a[0]**2) + (b[0]**2) - (2 * a[0] * b[0] * math.cos(b[1] - a[1]))
+        #angle3 = math.asin( (b[0] * math.sin(b[1] - a[1])) / newR ) + b[1]
+        angle3 = (math.asin( (b[0] * math.sin(b[1] - a[1])) / newR )/2) + b[1]       
+
+        print(temp[0], entry["at"], angle1/2, angle3)
+        #print("pts", newPoint, polarToRect([polarTemp[1][0], angle3], entry["at"]))
+        print("pts", newPoint, polarToRect([newR, angle3], entry["at"]))          
+
+        angle2 = angle(temp[0], [entry["at"][0] + 10, entry["at"][1]], entry["at"])
+        print(angle2, rectToPolar([entry["at"][0] + 10, entry["at"][1]], entry["at"]))
+        print(angle([entry["at"][0] + 10, entry["at"][1]], [entry["at"][0] + 10, entry["at"][1]], entry["at"]))
+
+        #newPoint = polarToRect([newR, angle3], entry["at"])
 
         plt.plot([newPoint[0], entry["at"][0]], [newPoint[1], entry["at"][1]], "r")
-           
+        print()   
         
-        continue        
+#         continue        
 
         #x = xAtY(temp[0], temp[1], defaultBounds[1][1])
         #plt.plot([x, entry["at"][0]], [0, entry["at"][1]], "m")
 
-        mid1 = midPoint(temp[0], temp[1])
-        mid2 = midPoint(temp[0], temp[2])
-        mid3 = midPoint(temp[1], temp[2])
+ #        mid1 = midPoint(temp[0], temp[1])
+ #        mid2 = midPoint(temp[0], temp[2])
+ #        mid3 = midPoint(temp[1], temp[2])
 
-        slope1 = slope(mid1, [start1x, start1y])
-        slope2 = slope(mid2, [start2x, start2y])
-        slope3 = slope(mid3, [start3x, start3y])
+#         slope1 = slope(mid1, [start1x, start1y])
+#         slope2 = slope(mid2, [start2x, start2y])
+#         slope3 = slope(mid3, [start3x, start3y])
 
-        dist1i = distance(mid1[0], mid1[1], entry["at"][0], entry["at"][1])
-        dist1s = distance(mid1[0], mid1[1], start1x, start1y)
+#         dist1i = distance(mid1[0], mid1[1], entry["at"][0], entry["at"][1])
+#         dist1s = distance(mid1[0], mid1[1], start1x, start1y)
 
-        if dist1i < dist1s:
-            if slope1 < 0:
-                x = xAtY(temp[0], temp[1], defaultBounds[1][1])
-                plt.plot([x, entry["at"][0]], [0, entry["at"][1]], "m")
-            else:                                                                                                                                                                                             
-                x = xAtY(temp[0], temp[1], defaultBounds[1][0])
-                plt.plot([x, entry["at"][0]], [0, entry["at"][1]], "m")
+#         if dist1i < dist1s:
+#             if slope1 < 0:
+#                 x = xAtY(temp[0], temp[1], defaultBounds[1][1])
+#                 plt.plot([x, entry["at"][0]], [0, entry["at"][1]], "m")
+#             else:                                                                                                                                                                                             
+#                 x = xAtY(temp[0], temp[1], defaultBounds[1][0])
+#                 plt.plot([x, entry["at"][0]], [0, entry["at"][1]], "m")
 
 
 #print(finalCell)
@@ -505,7 +605,7 @@ for site in cell:
         pt2 = entry["point2"]
         pt3 = entry["point3"]                           
         #f"{str(point).replace(', ', '_')}"
-        print(pt1, pt2, pt3)
+        #print(pt1, pt2, pt3)
         try:
             site2 = cell[f"{str(pt2).replace(', ', '_')}"]
             for entry2 in site2:
@@ -526,8 +626,9 @@ for site in cell:
         #except Exception as e:
         #    print(f"site3: {e} not in cell")                                
                                                                                                          
-
-
+#for site in finalCell:
+#    for entry in final[site]:
+        
 
 for pt in points:
     plt.plot(pt[0], pt[1], "ro")
@@ -538,7 +639,7 @@ for site in cell:
     for entry in cell[site]:
         #if entry["at"][1] > 120 and entry["at"][1] < 130:       
         #    print(entry)
-        print(entry)
+        #print(entry)
         #print(site)                
         plt.plot(entry["at"][0], entry["at"][1], "go")#, color=(clr1, clr2, clr3))
         #plt.plot(cell[site]["at"][0], cell[site]["at"][1], color=(0.5, 0.5, 0.5))
@@ -560,5 +661,6 @@ for cell in finalCell:
         #plt.plot(x1, y1, "b")                        
         
 plt.show()
+
 
 
