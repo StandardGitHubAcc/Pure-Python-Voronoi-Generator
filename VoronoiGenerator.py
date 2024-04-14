@@ -10,11 +10,17 @@ defaultBounds = [[0, 200], [200, 0]]
 #points = [(30, 40), (25, 60), (80, 97)]
 
 #points = [[30, 30], [40, 40], [10, 50]]
-points = [[90,81],[48,121],[163,120],[83,23]]
+#points = [[90,81],[48,121],[163,120],[83,23]]
 
 #points = []
-#for i in range(1, 8):
+#for i in range(1, 4):
 #      points.append([random.randint(0, 200), random.randint(0, 200)])  
+
+#points = [[59, 55], [30, 88], [1, 93]] #[[186, 15], [162, 127], [25, 144]] this is pretty much just a bigger version of the first set
+#points = [[186, 15], [162, 127], [25, 144]]
+#points = [[19, 27], [131, 44], [38, 130]]
+#points = [[159, 66], [100, 166], [73, 197]]
+points = [[76, 30], [196, 40], [165, 47], [104, 66], [128, 120], [88, 159], [166, 180]]
 
 #		bottomleft, topleft, bottomright, topright
 corners = [[0, 0], [0, 200], [200, 0], [200, 200]] #[ [defaultBounds[0][0], defaultBounds[1][1]], [defaultBounds[0][0], defaultBounds[0][1]], [defaultBounds[1][0], defaultBounds[1][1]], [defaultBounds[0][1], defaultBounds[1][0]] ]
@@ -109,13 +115,16 @@ def find3Intersect(pt1, pt2, pt3): # division by zero happens with the points (5
     a, b, c, d, e, f = pt1[0], pt1[1], pt2[0], pt2[1], pt3[0], pt3[1]
     if (2 * ( ((a-e)*(b-d)) - ((a-c)*(b-f))) ) != 0:
         x = ( ( ((a**2) - (e**2))*(b-d) ) - ( ((a**2) - (c**2)) * (b-f) ) - ( (d-f)*(b-f)*(b-d) )) / (2 * ( ((a-e)*(b-d)) - ((a-c)*(b-f))) )
+        #print("a",x)        
         return x
     else: # i need to have it return the midpoint between the site and nearest site if there is division by zero, because that means that the two lines are parallel and the farther site will not be valid
         #print(( ( ((a**2) - (e**2))*(b-d) ) - ( ((a**2) - (c**2)) * (b-f) ) - ( (d-f)*(b-f)*(b-d) )), (2 * ( ((a-e)*(b-d)) - ((a-c)*(b-f))) ))
         #print(f"({a}, {b}) ({c}, {d}) ({e}, {f})")
-        #print(a-e, b-d, a-c, b-f)                      
-        return (a - c)/2   #returning (a-c)/2 or 0 doesn't seem to make a difference
-        #return 0       
+        #print(a-e, b-d, a-c, b-f)
+        #print("b",(a - c)/2)                      
+        #return (a - c)/2   #returning (a-c)/2 or 0 doesn't seem to make a difference
+        #return 0
+        return defaultBounds[0][0] - 5       
 
 def find2IntersectAtTime(pt1, pt2, t):
     a, b, c, d, = pt1[0], pt1[1], pt2[0], pt2[1]
@@ -153,11 +162,12 @@ def tAtXandY(pt1, pt2, x, y):
     return t    
 
 sortByY(points)
+print(points)
 
 for point in points:
     finalCell.update({f"{str(point).replace(', ', '_')}" : {"site":point, "vertices":[]}})    
 
-print(f"finalCell:{finalCell}")
+#print(f"finalCell:{finalCell}")
 
 for site1 in points:
     for site2 in points:
@@ -197,8 +207,9 @@ for site1 in points:
                     t = getTimeAtX(site1, site2, site3, x)
                     y = getYAtTimeAndX(site1, t, x)
                     #if t > defaultBounds[1][1] and t < defaultBounds[1][0] and t < boundLt: #having the t < boundLt fixes some issues but seems like it will cause some later on
-                    if t > defaultBounds[1][1] and t < defaultBounds[1][0] and x >= defaultBounds[0][0] and x <= defaultBounds[0][1]:
-                        print(f"({site1[0]}, {site1[1]}) ({site2[0]}, {site2[1]}) ({site3[0]}, {site3[1]}) time: {t} at ({x}, {y})")
+                    #if t > defaultBounds[1][1] and t < defaultBounds[1][0] and x >= defaultBounds[0][0] and x <= defaultBounds[0][1]:
+                    if t > points[0][1] and t < defaultBounds[1][0] and x >= defaultBounds[0][0] and x <= defaultBounds[0][1] and y >= defaultBounds[1][1] and y <= defaultBounds[1][0]:                    
+                        #print(f"({site1[0]}, {site1[1]}) ({site2[0]}, {site2[1]}) ({site3[0]}, {site3[1]}) time: {t} at ({x}, {y})")
         
                         if f"{str(site1).replace(', ', '_')}" in cell:
                             cell[f"{str(site1).replace(', ', '_')}"].append({"point1":site1, "point2":site2, "point3":site3, "time":t, "at":[x, y]})
@@ -248,20 +259,27 @@ for site1 in cell:
 #                removeVerts.append(site1)
 #                #print(f"remove {site1}")                                                                                         
         for entry in cell[site1]:
-            if entry["point1"] != others and entry["point2"] != others and entry["point3"] != others:
+            #if entry["point1"] != others and entry["point2"] != others and entry["point3"] != others:
+            if entry["point1"] != others and entry["point2"] != others and entry["point3"] != others and others[1] < entry["time"]:                
                 #print(cell[site1]["time"], cell[site1]["at"])
                 otherPointY = getYAtTimeAndX(others, entry["time"], entry["at"][0])
                 #print(otherPointY)
+                #print("test", otherPointY, entry["at"][1], entry)
+                #if otherPointY < defaultBounds[1][0]:                                
+                #    if otherPointY > entry["at"][1]:                                        
+                #        removeVerts.append([site1, entry])
+                #        #print(f"remove {site1} {entry}")
                 if otherPointY > entry["at"][1]:
                     #print(entry)
                     #print(site1)                                        
                     removeVerts.append([site1, entry])
-                    #print(f"remove {site1}")
+                    #print(f"remove {site1} {entry}")
 
 if removeVerts.__len__() > 0:
     #for vert in removeVerts:
     #    del cell[vert]
     for site, vert in removeVerts:
+        #print("removing", cell[site][cell[site].index(vert)])        
         try:        
             del cell[site][cell[site].index(vert)]
         except Exception:
@@ -284,9 +302,13 @@ for entry in cell:
         if vert["point3"] not in usedPoints:
             usedPoints.append(vert["point3"])                                                    
 
-print(usedPoints)                
+#print(usedPoints)                
 
-for i in range(points.__len__()):
+for i in range(points.__len__()): # This works in most cases, but breaks when there are 3 points with parallel bisectors (in some cases)
+    # examples that break this:
+    # [[159, 66], [100, 166], [73, 197]]
+    # [[17, 45], [62, 54], [152, 194]]
+    # [[57, 67], [21, 80], [79, 198]]    
     point = points[i]    
     if point not in usedPoints:
         boundVerts = []
@@ -333,8 +355,15 @@ def slope(pt1, pt2):
 def midPoint(pt1, pt2):
     return [ (pt1[0] + pt2[0]) / 2,  (pt1[1] + pt2[1]) / 2]        
 
+def rotate(pt, origin, amount):
+    x = ((pt[0] - origin[0]) * math.cos(amount)) - ((pt[1] - origin[1]) * math.sin(amount))
+    y = ((pt[1] - origin[1]) * math.cos(amount)) + ((pt[0] - origin[0]) * math.sin(amount))
+    x += origin[0]
+    y += origin[1]        
+    return [x, y]           
+
 for site in cell:
-    continue    
+    continue 
     for entry in cell[site]:    
         point1 = entry["point1"]
         point2 = entry["point2"]
@@ -342,6 +371,23 @@ for site in cell:
 
         temp = [point1, point2, point3]
         sortByY(temp)
+
+        x = xAtY(temp[0], temp[1], defaultBounds[1][1]) #works for a majority of cases, broken by [[59, 55], [30, 88], [1, 93]] and [[21, 12], [27, 43], [174, 79]]
+        plt.plot([x, entry["at"][0]], [0, entry["at"][1]], "m")
+
+        #x = xAtY(temp[1], temp[2], defaultBounds[1][1])
+        #plt.plot([x, entry["at"][0]], [0, entry["at"][1]], "m")        
+
+        #x = xAtY(temp[0], temp[2], defaultBounds[1][1]) #works for several cases, but not all
+        #plt.plot([x, entry["at"][0]], [0, entry["at"][1]], "m") 
+        
+        #x = xAtY(temp[0], temp[2], defaultBounds[1][0]) #works for several cases, but not all
+        #plt.plot([x, entry["at"][0]], [200, entry["at"][1]], "c") 
+
+        x = xAtY(temp[1], temp[2], defaultBounds[1][0])
+        plt.plot([x, entry["at"][0]], [200, entry["at"][1]], "c")        
+
+        
 
         start1x = find2IntersectAtTime(temp[0], temp[1], temp[1][1])
         start2x = find2IntersectAtTime(temp[0], temp[2], temp[2][1])
@@ -355,6 +401,24 @@ for site in cell:
         plt.plot([temp[0][0], start1x, temp[1][0]], [temp[0][1], start1y, temp[1][1]], "y")
         plt.plot([temp[0][0], start2x, temp[2][0]], [temp[0][1], start2y, temp[2][1]], "y")
         plt.plot([temp[1][0], start3x, temp[2][0]], [temp[1][1], start3y, temp[2][1]], "y")
+
+        slope1 = slope(entry["at"], [start1x, start1y])
+
+        #x = (0 - start1y + (slope1 * start1x)) / slope1
+        #plt.plot([x, entry["at"][0]], [0, entry["at"][1]], "k") 
+        
+        #x = (0 - start1y + (slope1 * start1x)) / slope1
+        plt.plot([start1x, entry["at"][0]], [start1y, entry["at"][1]], "k")
+
+
+        angle1 = math.atan(distance(entry["at"][0], entry["at"][1], temp[1][0], temp[1][1])/distance(entry["at"][0], entry["at"][1], temp[0][0], temp[0][1]))
+        newPoint = rotate(temp[0], entry["at"], angle1)
+        print(temp[0], angle1)                
+
+        plt.plot([newPoint[0], entry["at"][0]], [newPoint[1], entry["at"][1]], "r")
+           
+        
+        continue        
 
         #x = xAtY(temp[0], temp[1], defaultBounds[1][1])
         #plt.plot([x, entry["at"][0]], [0, entry["at"][1]], "m")
@@ -379,7 +443,7 @@ for site in cell:
                 plt.plot([x, entry["at"][0]], [0, entry["at"][1]], "m")
 
 
-print(finalCell)
+#print(finalCell)
 
 
 
@@ -411,4 +475,5 @@ for cell in finalCell:
         #plt.plot(x1, y1, "b")                        
         
 plt.show()
+
 
