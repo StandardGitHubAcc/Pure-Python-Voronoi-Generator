@@ -43,7 +43,7 @@ corners = [[0, 0], [0, 200], [200, 0], [200, 200]] #[ [defaultBounds[0][0], defa
 
 cell = {}
 #activeSites = []
-#allVerts = []
+vertices = {}
 removeVerts = []
 finalCell = {}
 
@@ -460,18 +460,153 @@ def polarToRect(pt, origin):
     y = (pt[0] * math.sin(pt[1])) + origin[1]     
     return [x, y]                            
 
-for site in cell:
- 
-    for entry in cell[site]:    
-        point1 = entry["point1"]
-        point2 = entry["point2"]
-        point3 = entry["point3"]
+for site in cell: # Finds edges for cells  
+    for entry in cell[site]:
+        #at = entry["at"]
+        pt1 = entry["point1"]
+        pt2 = entry["point2"]
+        pt3 = entry["point3"]                           
+        #f"{str(point).replace(', ', '_')}"
+        #print(pt1, pt2, pt3)
+        try:
+            site2 = cell[f"{str(pt2).replace(', ', '_')}"]
+            for entry2 in site2:
+                if entry2["point1"] == pt1 or entry2["point2"] == pt1 or entry2["point3"] == pt1:# or entry2["point2"] == pt3 or entry2["point3"] == pt3:
+                    #finalCell[f"{str(pt2).replace(', ', '_')}"]["vertices"].append([entry["at"], entry2["at"]])
+                    if entry2["at"] != entry["at"] and [entry["at"], entry2["at"]] not in finalCell[site]["vertices"]:                    
+                        finalCell[site]["vertices"].append([entry["at"], entry2["at"]])
+                        #print(site, [pt1, pt2, pt3], [entry2["point1"], entry2["point2"], entry2["point3"]])
 
-        temp = [point1, point2, point3]
-        sortByY(temp)
+                        atName = f"{str(entry['at']).replace(', ', '_')}"
 
-        x = xAtY(temp[0], temp[1], defaultBounds[1][1]) #works for a majority of cases, broken by [[59, 55], [30, 88], [1, 93]] and [[21, 12], [27, 43], [174, 79]]
-        plt.plot([x, entry["at"][0]], [0, entry["at"][1]], "m")
+                        if atName not in vertices:
+                            vertices.update({atName : {"sites":[pt1, pt2, pt3], "with":[], "at":[]}})                            
+                        
+                        if entry2["point1"] in [pt2, pt3] and [pt1, entry2["point1"]] not in vertices[atName]["with"] and [entry2["point1"], pt1] not in vertices[atName]["with"]:
+                            vertices[atName]["with"].append([pt1, entry2["point1"]])
+                            vertices[atName]["at"].append(entry2["at"])                                                        
+                        elif entry2["point2"] in [pt2, pt3] and [pt1, entry2["point2"]] not in vertices[atName]["with"] and [entry2["point2"], pt1] not in vertices[atName]["with"]:
+                            vertices[atName]["with"].append([pt1, entry2["point2"]])
+                            vertices[atName]["at"].append(entry2["at"])                            
+                        elif entry2["point3"] in [pt2, pt3] and [pt1, entry2["point3"]] not in vertices[atName]["with"] and [entry2["point3"], pt1] not in vertices[atName]["with"]:
+                            vertices[atName]["with"].append([pt1, entry2["point3"]])
+                            vertices[atName]["at"].append(entry2["at"])                                                                                    
+                        #if entry2["point1"] in [pt1, pt2, pt3] and entry2["point1"] != pt1 and [pt1, entry2["point1"]] not in vertices[atName]["with"] and [entry2["point1"], pt1] not in vertices[atName]["with"]:
+                        #    vertices[atName]["with"].append([pt1, entry2["point1"]])
+                        #elif entry2["point1"] in [pt1, pt2, pt3] and entry2["point2"] != pt1 and [pt1, entry2["point2"]] not in vertices[atName]["with"] and [entry2["point2"], pt1] not in vertices[atName]["with"]:
+                        #    vertices[atName]["with"].append([pt1, entry2["point2"]])
+                        #elif entry2["point1"] in [pt1, pt2, pt3] and entry2["point3"] != pt1 and [pt1, entry2["point3"]] not in vertices[atName]["with"] and [entry2["point3"], pt1] not in vertices[atName]["with"]:                                                                                            
+                        #    vertices[atName]["with"].append([pt1, entry2["point3"]])                                                                                                                                         
+                    #print(str(entry["at"]))                    
+                    #if f"{str(entry['at']).replace(', ', '_')}" not in vertices and pt1 != entry2["point2"] and entry2["point2"] in [pt1, pt2, pt3]:
+                    #    vertices.update({f"{str(entry['at']).replace(', ', '_')}" : {"sites":[pt1, pt2, pt3], "with":[[pt1, entry2["point2"]]]}})
+                    #elif [pt1, entry2["point2"]] not in vertices[f"{str(entry['at']).replace(', ', '_')}"]["with"] and [entry2["point2"], pt1] not in vertices[f"{str(entry['at']).replace(', ', '_')}"]["with"] and pt1 != entry2["point2"]:
+                    #    vertices[f"{str(entry['at']).replace(', ', '_')}"]["with"].append([pt1, entry2["point2"]])
+                                                                       
+        except Exception as e:
+            print(f"site2: {e} not in cell") 
+
+def nearestBoundry(startPt, throughPt):
+    m = slope(startPt, throughPt)
+    topX = (defaultBounds[1][0] - startPt[1] + (m * startPt[0])) / m
+    bottomX = (defaultBounds[1][1] - startPt[1] + (m * startPt[0])) / m
+    leftY = m * (defaultBounds[0][0] - startPt[0]) + startPt[1]
+    rightY = m * (defaultBounds[0][1] - startPt[0]) + startPt[1]
+    choice = []
+
+    if throughPt[1] > startPt[1] and throughPt[0] > startPt[0]:
+        print('a')        
+        choice = [[topX, defaultBounds[1][0]], [defaultBounds[0][1], rightY]] #top and right
+        distanceTargetSort(startPt, choice)
+        #return choice[0]
+    elif throughPt[1] < startPt[1] and throughPt[0] > startPt[0]:
+        print('b')                                                        
+        choice = [[bottomX, defaultBounds[1][1]], [defaultBounds[0][1], rightY]] #bottom and right
+        distanceTargetSort(startPt, choice)
+        #return choice[0]
+    elif throughPt[1] > startPt[1] and throughPt[0] < startPt[0]:
+        print('c')        
+        choice = [[topX, defaultBounds[1][0]], [defaultBounds[0][0], leftY]] #top and left
+        distanceTargetSort(startPt, choice)
+        #return choice[0]
+    elif throughPt[1] < startPt[1] and throughPt[0] < startPt[0]:
+        print('d')                                                        
+        choice = [[bottomX, defaultBounds[1][1]], [defaultBounds[0][0], leftY]] #bottom and left
+        distanceTargetSort(startPt, choice)
+        #return choice[0]        
+    
+    return choice[0]    
+for vert in vertices: #need to figure out how to loop through all of the intersection points and see how many edges they are a part of, might be able to use a "match: case:" statement
+    
+
+    numEdges = vertices[vert]["with"].__len__()
+    aSites = vertices[vert]["sites"]
+    #possible = [sortByY([aSites[0], aSites[1]]), sortByY([aSites[0], aSites[2]]), sortByY([aSites[1], aSites[2]])]
+    #possible = []
+    a = [aSites[0], aSites[1]]
+    b = [aSites[0], aSites[2]]
+    c = [aSites[1], aSites[2]]
+    sortByY(a)
+    sortByY(b)
+    sortByY(c)
+    possible = [a, b, c]                               
+    #withCopy = vertices[vert]["with"].copy()
+    at = list(map(float, vert.replace("[", "").replace("]", "").split("_")))    
+                
+    print(vert, vertices[vert], numEdges)
+
+    for i in range(0, numEdges):
+        try:
+            possible.remove(vertices[vert]["with"][i])
+        except Exception:
+            continue                                        
+    print("possible:",possible)
+
+    match numEdges:
+        case 2:               
+            #point1, point2, point3 = aSites[0], aSites[1], aSites[2]
+
+            #temp = [point1, point2, point3]
+            temp = possible[0] 
+            angle1 = angle(temp[0], temp[1], at)
+            #newPoint = rotate(temp[0], entry["at"], angle1/2) #works perfectly for most points, positive angles make counterclockwise rotations
+            # ^ some times work when the point is temp[0], other times it works when the point is temp[1]
+            #print(angle1)
+            #if at[1] < temp[0][1]:
+            #    angle1 = (2 * math.pi) - angle1       
+
+            angle1 = (2 * math.pi) - angle1
+
+            #print(f"angle1 degrees {(angle1) * (180/math.pi)} for {temp[0]} {temp[1]} {at}")
+            #print(angle1)            
+            newPoint = []
+            #if temp[0][0] < temp[1][0]:
+            if at[1] < temp[0][1]:            
+                newPoint = rotate(temp[0], at, angle1/2)
+            else:                    
+                newPoint = rotate(temp[1], at, angle1/2)
+
+            boundry = nearestBoundry(at, newPoint)
+            #print("bound",boundry)            
+
+            #plt.plot([newPoint[0], at[0]], [newPoint[1], at[1]], "r")
+            #plt.plot([boundry[0], at[0]], [boundry[1], at[1]], "m")            
+            finalCell[f"{str(temp[0]).replace(', ', '_')}"]["vertices"].append([at, boundry])
+            finalCell[f"{str(temp[1]).replace(', ', '_')}"]["vertices"].append([at, boundry])            
+
+
+                            
+# for site in cell:
+#     for entry in cell[site]:    
+#         point1 = entry["point1"]
+#         point2 = entry["point2"]
+#         point3 = entry["point3"]
+
+#         temp = [point1, point2, point3]
+#         sortByY(temp)
+
+#         x = xAtY(temp[0], temp[1], defaultBounds[1][1]) #works for a majority of cases, broken by [[59, 55], [30, 88], [1, 93]] and [[21, 12], [27, 43], [174, 79]]
+#         plt.plot([x, entry["at"][0]], [0, entry["at"][1]], "m")
 
         #x = xAtY(temp[1], temp[2], defaultBounds[1][1])
         #plt.plot([x, entry["at"][0]], [0, entry["at"][1]], "m")        
@@ -487,56 +622,56 @@ for site in cell:
 
         
 
-        start1x = find2IntersectAtTime(temp[0], temp[1], temp[1][1])
-        start2x = find2IntersectAtTime(temp[0], temp[2], temp[2][1])
-        start3x = find2IntersectAtTime(temp[1], temp[2], temp[2][1])
+#         start1x = find2IntersectAtTime(temp[0], temp[1], temp[1][1])
+#         start2x = find2IntersectAtTime(temp[0], temp[2], temp[2][1])
+#         start3x = find2IntersectAtTime(temp[1], temp[2], temp[2][1])
         
-        start1y = yAtX(temp[0], temp[1], start1x)
-        start2y = yAtX(temp[0], temp[2], start2x)
-        start3y = yAtX(temp[1], temp[2], start3x)
+#         start1y = yAtX(temp[0], temp[1], start1x)
+#         start2y = yAtX(temp[0], temp[2], start2x)
+#         start3y = yAtX(temp[1], temp[2], start3x)
 
         #plt.plot([start1x, start2x, start3x], [start1y, start2y, start3y], "yo")
         #plt.plot([temp[0][0], start1x, temp[1][0]], [temp[0][1], start1y, temp[1][1]], "y")
         #plt.plot([temp[0][0], start2x, temp[2][0]], [temp[0][1], start2y, temp[2][1]], "y")
         #plt.plot([temp[1][0], start3x, temp[2][0]], [temp[1][1], start3y, temp[2][1]], "y")
 
-        slope1 = slope(entry["at"], [start1x, start1y])
+#         slope1 = slope(entry["at"], [start1x, start1y])
 
 #         #x = (0 - start1y + (slope1 * start1x)) / slope1
 #         #plt.plot([x, entry["at"][0]], [0, entry["at"][1]], "k") 
         
 #         #x = (0 - start1y + (slope1 * start1x)) / slope1
-        plt.plot([start1x, entry["at"][0]], [start1y, entry["at"][1]], "k")
+#         plt.plot([start1x, entry["at"][0]], [start1y, entry["at"][1]], "k")
 
         #print(temp[0], temp[1], entry["at"])
         #angle1 = math.atan(distance(entry["at"][0], entry["at"][1], temp[1][0], temp[1][1])/distance(entry["at"][0], entry["at"][1], temp[0][0], temp[0][1]))
-        angle1 = angle(temp[0], temp[1], entry["at"])
+#         angle1 = angle(temp[0], temp[1], entry["at"])
         #newPoint = rotate(temp[0], entry["at"], angle1/2) #works perfectly for most points, positive angles make counterclockwise rotations
         # ^ some times work when the point is temp[0], other times it works when the point is temp[1]
 
-        if entry["at"][1] < temp[0][1]:
-            angle1 = (2 * math.pi) - angle1       
+#         if entry["at"][1] < temp[0][1]:
+#             angle1 = (2 * math.pi) - angle1       
 
-        print(f"angle1 degrees {(angle1) * (180/math.pi)} for {temp[0]} {temp[1]} {entry['at']}")
-        newPoint = []
-        if temp[0][0] < temp[1][0]:
-            newPoint = rotate(temp[0], entry["at"], angle1/2)
-        else:                    
-            newPoint = rotate(temp[1], entry["at"], angle1/2)
+#         print(f"angle1 degrees {(angle1) * (180/math.pi)} for {temp[0]} {temp[1]} {entry['at']}")
+#         newPoint = []
+#         if temp[0][0] < temp[1][0]:
+#             newPoint = rotate(temp[0], entry["at"], angle1/2)
+#         else:                    
+#             newPoint = rotate(temp[1], entry["at"], angle1/2)
         
         
                         
 
-        #angle2 = angle(temp[0], [entry["at"][0] + 10, entry["at"][1]], entry["at"])        
-        #print(temp[0], entry["at"], angle1, angle2)
-        a = rectToPolar(temp[0], entry["at"])        
-        #print("polar and rect test", temp[0], rectToPolar(temp[0], entry["at"]), polarToRect(rectToPolar(temp[0], entry["at"]), entry["at"]))                        
-        print("polar and rect test", temp[0], a, polarToRect(a, entry["at"]))  
+#         #angle2 = angle(temp[0], [entry["at"][0] + 10, entry["at"][1]], entry["at"])        
+#         #print(temp[0], entry["at"], angle1, angle2)
+#         a = rectToPolar(temp[0], entry["at"])        
+#         #print("polar and rect test", temp[0], rectToPolar(temp[0], entry["at"]), polarToRect(rectToPolar(temp[0], entry["at"]), entry["at"]))                        
+#         print("polar and rect test", temp[0], a, polarToRect(a, entry["at"]))  
 
-        polarTemp = [rectToPolar(temp[0], entry["at"]), rectToPolar(temp[1], entry["at"])]
-        sortByY(polarTemp)
-        print("polartemp",polarTemp)
-        #print("polar vs rect pts", temp, polarToRect(polarTemp[0], entry["at"]), polarToRect(polarTemp[1], entry["at"]))
+#         polarTemp = [rectToPolar(temp[0], entry["at"]), rectToPolar(temp[1], entry["at"])]
+#         sortByY(polarTemp)
+#         print("polartemp",polarTemp)
+#         #print("polar vs rect pts", temp, polarToRect(polarTemp[0], entry["at"]), polarToRect(polarTemp[1], entry["at"]))
         
         #angle3 = ((polarTemp[1][1] - polarTemp[0][1])/2) + polarTemp[0][1]
         #newPoint = rotate(polarToRect(polarTemp[0], entry["at"]), entry["at"], angle1/2)
@@ -548,27 +683,27 @@ for site in cell:
 
         #newPoint = rotate(temp[0], entry["at"], math.pi /2)
 
-        polarTemp = [[10, math.pi/4], [10, math.pi/2]]
+#         polarTemp = [[10, math.pi/4], [10, math.pi/2]]
 
-        #https://www.youtube.com/watch?v=EbAxIDGFF28
-        a = polarTemp[0]
-        b = polarTemp[1]                
-        newR = (a[0]**2) + (b[0]**2) - (2 * a[0] * b[0] * math.cos(b[1] - a[1]))
-        #angle3 = math.asin( (b[0] * math.sin(b[1] - a[1])) / newR ) + b[1]
-        angle3 = (math.asin( (b[0] * math.sin(b[1] - a[1])) / newR )/2) + b[1]       
+#         #https://www.youtube.com/watch?v=EbAxIDGFF28
+#         a = polarTemp[0]
+#         b = polarTemp[1]                
+#         newR = (a[0]**2) + (b[0]**2) - (2 * a[0] * b[0] * math.cos(b[1] - a[1]))
+#         #angle3 = math.asin( (b[0] * math.sin(b[1] - a[1])) / newR ) + b[1]
+#         angle3 = (math.asin( (b[0] * math.sin(b[1] - a[1])) / newR )/2) + b[1]       
 
-        print(temp[0], entry["at"], angle1/2, angle3)
-        #print("pts", newPoint, polarToRect([polarTemp[1][0], angle3], entry["at"]))
-        print("pts", newPoint, polarToRect([newR, angle3], entry["at"]))          
+#         print(temp[0], entry["at"], angle1/2, angle3)
+#         #print("pts", newPoint, polarToRect([polarTemp[1][0], angle3], entry["at"]))
+#         print("pts", newPoint, polarToRect([newR, angle3], entry["at"]))          
 
-        angle2 = angle(temp[0], [entry["at"][0] + 10, entry["at"][1]], entry["at"])
-        print(angle2, rectToPolar([entry["at"][0] + 10, entry["at"][1]], entry["at"]))
-        print(angle([entry["at"][0] + 10, entry["at"][1]], [entry["at"][0] + 10, entry["at"][1]], entry["at"]))
+#         angle2 = angle(temp[0], [entry["at"][0] + 10, entry["at"][1]], entry["at"])
+#         print(angle2, rectToPolar([entry["at"][0] + 10, entry["at"][1]], entry["at"]))
+#         print(angle([entry["at"][0] + 10, entry["at"][1]], [entry["at"][0] + 10, entry["at"][1]], entry["at"]))
 
         #newPoint = polarToRect([newR, angle3], entry["at"])
 
-        plt.plot([newPoint[0], entry["at"][0]], [newPoint[1], entry["at"][1]], "r")
-        print()   
+#         plt.plot([newPoint[0], entry["at"][0]], [newPoint[1], entry["at"][1]], "r")
+#         print()   
         
 #         continue        
 
@@ -597,23 +732,23 @@ for site in cell:
 
 #print(finalCell)
 
-for site in cell:
+# for site in cell:
         
-    for entry in cell[site]:
-        at = entry["at"]
-        pt1 = entry["point1"]
-        pt2 = entry["point2"]
-        pt3 = entry["point3"]                           
-        #f"{str(point).replace(', ', '_')}"
-        #print(pt1, pt2, pt3)
-        try:
-            site2 = cell[f"{str(pt2).replace(', ', '_')}"]
-            for entry2 in site2:
-                if entry2["point2"] == pt1 or entry2["point3"] == pt1:# or entry2["point2"] == pt3 or entry2["point3"] == pt3:
-                    #finalCell[f"{str(pt2).replace(', ', '_')}"]["vertices"].append([entry["at"], entry2["at"]])
-                    finalCell[site]["vertices"].append([entry["at"], entry2["at"]])
-        except Exception as e:
-            print(f"site2: {e} not in cell")                                
+#     for entry in cell[site]:
+#         at = entry["at"]
+#         pt1 = entry["point1"]
+#         pt2 = entry["point2"]
+#         pt3 = entry["point3"]                           
+#         #f"{str(point).replace(', ', '_')}"
+#         #print(pt1, pt2, pt3)
+#         try:
+#             site2 = cell[f"{str(pt2).replace(', ', '_')}"]
+#             for entry2 in site2:
+#                 if entry2["point2"] == pt1 or entry2["point3"] == pt1:# or entry2["point2"] == pt3 or entry2["point3"] == pt3:
+#                     #finalCell[f"{str(pt2).replace(', ', '_')}"]["vertices"].append([entry["at"], entry2["at"]])
+#                     finalCell[site]["vertices"].append([entry["at"], entry2["at"]])
+#         except Exception as e:
+#             print(f"site2: {e} not in cell")                                
 
         #site3 = cell[f"{str(pt2).replace(', ', '_')}"]
         #print()
@@ -658,9 +793,11 @@ for cell in finalCell:
         #print(pairs[0][0], pairs[1][0], pairs[0][1], pairs[1][1])
         #x1 = [pairs[0][0], pairs[1][0]]
         #y1 = [pairs[0][1], pairs[1][1]]
-        #plt.plot(x1, y1, "b")                        
+        #plt.plot(x1, y1, "b")
+        #print(pairs)                        
         
 plt.show()
+
 
 
 
