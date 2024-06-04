@@ -1,3 +1,4 @@
+from ast import NotIn
 from decimal import DivisionByZero
 from re import S
 import matplotlib.pyplot as plt
@@ -42,14 +43,17 @@ for i in range(1, 8):
 #points = [[25, 17], [109, 37], [68, 45], [35, 85], [2, 124], [138, 138], [190, 145]]
 #[[159, 3], [193, 10], [140, 34], [151, 84], [93, 107], [64, 155], [57, 195]]
 #points = [[147, 1], [35, 16], [52, 25], [79, 70], [152, 91], [151, 97], [60, 139]] # all vertices are connected to exactly 2 other vertices
-#points = [[41, 27], [40, 27], [52, 44], [116, 60], [28, 67], [182, 118], [64, 129]]
+#points = [[41, 27], [40, 27], [52, 44], [116, 60], [28, 67], [182, 118], [64, 129]] #breaks neighboring cells
 
-#[[140, 7], [29, 12], [13, 12], [120, 24], [13, 32], [68, 62], [141, 86]] #breaks neighboring cells
+#[[140, 7], [29, 12], [13, 12], [120, 24], [13, 32], [68, 62], [141, 86]] 
 #[[165, 25], [18, 33], [176, 41], [85, 102], [113, 128], [72, 153], [49, 162]] #looks like something is broken since a vertice with a higher y value than its connections does not have the highest time out of the 3
 
 #points = [[144, 2], [143, 11], [71, 34], [68, 133], [104, 139], [108, 182], [135, 187]] #breaks finding second line
-points = [[21, 25], [45, 31], [162, 44], [132, 75], [109, 97], [7, 157], [31, 185]]
-      
+#points = [[21, 25], [45, 31], [162, 44], [132, 75], [109, 97], [7, 157], [31, 185]]
+#[[27, 59], [150, 90], [79, 90], [101, 124], [94, 136], [178, 186], [157, 200]]      
+
+points = [[175, 23], [78, 24], [160, 108], [161, 141], [157, 159], [59, 188], [66, 188]]
+
 #		bottomleft, topleft, bottomright, topright
 corners = [[0, 0], [0, 200], [200, 0], [200, 200]] #[ [defaultBounds[0][0], defaultBounds[1][1]], [defaultBounds[0][0], defaultBounds[0][1]], [defaultBounds[1][0], defaultBounds[1][1]], [defaultBounds[0][1], defaultBounds[1][0]] ]
 
@@ -157,7 +161,7 @@ def find3Intersect(pt1, pt2, pt3): # division by zero happens with the points (5
         #return 0
         return defaultBounds[0][0] - 5       
 
-def find2IntersectAtTime(pt1, pt2, t): # finds x-value of intersection of two parabolas at given time
+def find2IntersectAtTime(pt1, pt2, t): # finds x-value of intersection of two parabolas at given time, imaginary if it doesn't exist (this is diff than getTimeAtX(?))
     try:    
         a, b, c, d, = pt1[0], pt1[1], pt2[0], pt2[1]
         n = (2 * ((-1 * c * b) + (c * t) + (a * d) - (a * t))) / (b-d)
@@ -168,7 +172,7 @@ def find2IntersectAtTime(pt1, pt2, t): # finds x-value of intersection of two pa
         print(f"zero division error in find2IntersectAtTime with {pt1} {pt2} {pt3} t={t}")        
         return defaultBounds[1][1] -5                    
 
-def getTimeAtX(pt1, pt2, pt3, x): # finds time when parabola pt1 has given x value
+def getTimeAtX(pt1, pt2, pt3, x): # finds time when parabola pt1 has given x value, (pt1, pt2, pt3) = (pt1, pt3, pt2)
     try:    
         a, b, c, d, e, f = pt1[0], pt1[1], pt2[0], pt2[1], pt3[0], pt3[1]
         j = b-d
@@ -267,16 +271,16 @@ for site1 in points:
                     y = getYAtTimeAndX(sites[0], t, x)                                        
                     
                     #print(f"-- ({site1[0]}, {site1[1]}) ({site2[0]}, {site2[1]}) ({site3[0]}, {site3[1]}) time: {t} at ({x}, {y})")
-                    if site1 == [72, 122] or site1 == [182, 111] or site2 == [72, 122] or site2 == [182, 111] or site3 == [72, 122] or site3 == [182, 111]:                                                                    
-                        print(f"    ({site1[0]}, {site1[1]}) ({site2[0]}, {site2[1]}) ({site3[0]}, {site3[1]}) time: {t} at ({x}, {y})")                    
+#                     if site1 == [72, 122] or site1 == [182, 111] or site2 == [72, 122] or site2 == [182, 111] or site3 == [72, 122] or site3 == [182, 111]:                                                                    
+#                         print(f"    ({site1[0]}, {site1[1]}) ({site2[0]}, {site2[1]}) ({site3[0]}, {site3[1]}) time: {t} at ({x}, {y})")                    
                     #if t > defaultBounds[1][1] and t < defaultBounds[1][0] and t < boundLt: #having the t < boundLt fixes some issues but seems like it will cause some later on
                     #if t > defaultBounds[1][1] and t < defaultBounds[1][0] and x >= defaultBounds[0][0] and x <= defaultBounds[0][1]:
                     #if t > points[0][1] and t < defaultBounds[1][0] and x >= defaultBounds[0][0] and x <= defaultBounds[0][1] and y >= defaultBounds[1][1] and y <= defaultBounds[1][0]:                    
                     #print(site1, points[0][1])
                     #if t > points[0][1] and x >= defaultBounds[0][0] and x <= defaultBounds[0][1] and y >= defaultBounds[1][1] and y <= defaultBounds[1][0]:
                     if t > site1[1] and t > site2[1] and t > site3[1] and x >= defaultBounds[0][0] and x <= defaultBounds[0][1] and y >= defaultBounds[1][1] and y <= defaultBounds[1][0]:                    
-                        if site1 == [72, 122] or site1 == [182, 111]:                                                                    
-                            print(f"({site1[0]}, {site1[1]}) ({site2[0]}, {site2[1]}) ({site3[0]}, {site3[1]}) time: {t} at ({x}, {y})")
+#                         if site1 == [72, 122] or site1 == [182, 111]:                                                                    
+#                             print(f"({site1[0]}, {site1[1]}) ({site2[0]}, {site2[1]}) ({site3[0]}, {site3[1]}) time: {t} at ({x}, {y})")
         
                         if f"{str(site1).replace(', ', '_')}" in cell:
                             cell[f"{str(site1).replace(', ', '_')}"].append({"point1":site1, "point2":site2, "point3":site3, "time":float("%.10f" % t), "at":[float("%.10f" % x), float("%.10f" % y)]})
@@ -585,21 +589,49 @@ for vert in vertices:
     #print("vert",vert, vertices[vert])
     print()
     if vertices[vert]["at"].__len__() == 1:
-        #print("vert",vert, vertices[vert])
+        print("vert",vert, vertices[vert])
         tempVertPt = str(vert).removeprefix("[").removesuffix("]").split("_")
         vertPt = [float(tempVertPt[0]), float(tempVertPt[1])]
         
         tempSites = vertices[vert]["sites"].copy()
         sortByY(tempSites)
-        pickedSites = [tempSites[0], tempSites[1]]
-        if pickedSites in vertices[vert]["with"]:
-            pickedSites[1] = tempSites[2]                                     
-             
+        #pickedSites = [tempSites[0], tempSites[1]]
+        #if pickedSites in vertices[vert]["with"]:
+        #    pickedSites[1] = tempSites[2]                                     
+#         pickedSites = [tempSites[1], tempSites[2]] #solved some issues
+#         if pickedSites in vertices[vert]["with"]:
+#             pickedSites[0] = tempSites[0]                         
 
         #site1 = vertices[vert]["sites"][-2]
         #site2 = vertices[vert]["sites"][-1]
         #print(site1, site2)        
-                        
+                                  
+
+        pickedSites = [[tempSites[0], tempSites[1]], [tempSites[0], tempSites[2]], [tempSites[1], tempSites[2]]]
+        pickedSites.remove(vertices[vert]["with"][0])
+        
+        dist1 = distancePt(pickedSites[0][0], pickedSites[0][1])
+        dist2 = distancePt(pickedSites[1][0], pickedSites[1][1])
+
+        if dist1 < dist2:
+            pickedSites = pickedSites[0]
+        else:
+            pickedSites = pickedSites[1]                                                            
+        
+
+        pair1 = vertices[vert]["with"][0]
+        at1 = vertices[vert]["at"][0]
+        notInPair = vertices[vert]["sites"].copy()
+        notInPair.remove(pair1[0])
+        notInPair.remove(pair1[1])
+        notInPair = notInPair[0]                                        
+
+        print("picked",pickedSites)
+        print(getTimeAtX(vertices[vert]["sites"][0], vertices[vert]["sites"][1], vertices[vert]["sites"][2], vertPt[0]))
+        #print(getTimeAtX(vertices[vert]["sites"][1], vertices[vert]["sites"][0], vertices[vert]["sites"][2], vertPt[0]))
+        #print(getTimeAtX(vertices[vert]["sites"][0], vertices[vert]["sites"][2], vertices[vert]["sites"][1], vertPt[0]))
+        print(tAtXandY(vertices[vert]["sites"][0], vertPt[0], vertPt[1]))                        
+
         #nearestBound = makeEdge(site1, site2, vertPt, midPoint(site1, site2))
         #print(pickedSites[0], pickedSites[1])            
         nearestBound = make2ndEdge(pickedSites[0], pickedSites[1], vertPt, midPoint(pickedSites[0], pickedSites[1]))
@@ -610,7 +642,7 @@ for vert in vertices:
         finalCell[f"{str(pickedSites[1]).replace(', ', '_')}"]["vertices"].append([vertPt, nearestBound])
 
     if vertices[vert]["at"].__len__() == 2:
-        print("fullvert",vert, vertices[vert])        
+        #print("fullvert",vert, vertices[vert])        
         tempVertPt = str(vert).removeprefix("[").removesuffix("]").split("_")
         vertPt = [float(tempVertPt[0]), float(tempVertPt[1])]
 
@@ -625,8 +657,8 @@ for vert in vertices:
         midPt2 = midPoint(pair2[0], pair2[1])
 
         angle1 = angle(midPt1, midPt2, vertPt)
-        print("vert", vertPt)        
-        print("info",pair1,pair2,angle1)
+#         print("vert", vertPt)        
+#         print("info",pair1,pair2,angle1)
         #simpleAngle(midPt1, midPt2, vertPt)        
 #         print("polarS1",site1, rectToPolar(site1, vertPt), angle(site1, [vertPt[0] + 5, vertPt[1]], vertPt))#, normalTheta(site1, vertPt) + angle(site1, [vertPt[0] + 5, vertPt[1]], vertPt) == (2 * math.pi))
 #         print("polarS2",site2, rectToPolar(site2, vertPt), angle(site2, [vertPt[0] + 5, vertPt[1]], vertPt))
@@ -697,10 +729,10 @@ for vert in vertices:
         notInPair.remove(pair3[0])
         notInPair.remove(pair3[1])                
         
-        print(pair3, "x",vertPt[0], "t",tAtXandY(pair3[0], vertPt[0], vertPt[1]))
-        print(pair3, "x",vertPt[0] + 5, "t",getTimeAtX(pair3[0], pair3[1], notInPair[0], vertPt[0] + 5))
-        print(pair3, "x",vertPt[0] - 5, "t",getTimeAtX(pair3[0], pair3[1], notInPair[0], vertPt[0] - 5))
-        print("slope", slope(vertPt, midPt3))       
+#         print(pair3, "x",vertPt[0], "t",tAtXandY(pair3[0], vertPt[0], vertPt[1]))
+#         print(pair3, "x",vertPt[0] + 5, "t",getTimeAtX(pair3[0], pair3[1], notInPair[0], vertPt[0] + 5))
+#         print(pair3, "x",vertPt[0] - 5, "t",getTimeAtX(pair3[0], pair3[1], notInPair[0], vertPt[0] - 5))
+#         print("slope", slope(vertPt, midPt3))       
 
         #print(tAtXandY(pair3[0], vertPt[0] + 0.1, vertPt[1] + (0.1 * slope(vertPt, midPt3))))
         #print(tAtXandY(pair3[0], vertPt[0] + 0.1, pointSlope(vertPt, slope(vertPt, midPt3), vertPt[0] + 0.1)))
@@ -710,10 +742,10 @@ for vert in vertices:
         ptSlp2 = pointSlope(vertPt, slope(vertPt, midPt2), vertPt[0] + 0.1)
         ptSlp3 = pointSlope(vertPt, slope(vertPt, midPt3), vertPt[0] + 0.1)                
         
-        print(tAtXandY(site1, vertPt[0], vertPt[1]))#, tAtXandY(site2, vertPt[0], vertPt[1]), tAtXandY(site3, vertPt[0], vertPt[1]))
-        print(tAtXandY(site1, vertPt[0] + 0.1, ptSlp1), tAtXandY(site1, vertPt[0] + 0.1, ptSlp2), tAtXandY(site1, vertPt[0] + 0.1, ptSlp3))
-        print(tAtXandY(site2, vertPt[0] + 0.1, ptSlp1), tAtXandY(site2, vertPt[0] + 0.1, ptSlp2), tAtXandY(site2, vertPt[0] + 0.1, ptSlp3))
-        print(tAtXandY(site3, vertPt[0] + 0.1, ptSlp1), tAtXandY(site3, vertPt[0] + 0.1, ptSlp2), tAtXandY(site3, vertPt[0] + 0.1, ptSlp3))
+#         print(tAtXandY(site1, vertPt[0], vertPt[1]))#, tAtXandY(site2, vertPt[0], vertPt[1]), tAtXandY(site3, vertPt[0], vertPt[1]))
+#         print(tAtXandY(site1, vertPt[0] + 0.1, ptSlp1), tAtXandY(site1, vertPt[0] + 0.1, ptSlp2), tAtXandY(site1, vertPt[0] + 0.1, ptSlp3))
+#         print(tAtXandY(site2, vertPt[0] + 0.1, ptSlp1), tAtXandY(site2, vertPt[0] + 0.1, ptSlp2), tAtXandY(site2, vertPt[0] + 0.1, ptSlp3))
+#         print(tAtXandY(site3, vertPt[0] + 0.1, ptSlp1), tAtXandY(site3, vertPt[0] + 0.1, ptSlp2), tAtXandY(site3, vertPt[0] + 0.1, ptSlp3))
                                
 
         tVertPt = tAtXandY(pair3[0], vertPt[0], vertPt[1])
@@ -727,14 +759,14 @@ for vert in vertices:
 #         print(find2IntersectAtTime(pair2[0], pair2[1], tVertPt + 0.5))         
 #         print(find2IntersectAtTime(pair3[0], pair3[1], tVertPt - 0.5))
 #         print(find2IntersectAtTime(pair3[0], pair3[1], tVertPt + 0.5)) 
-        print("---")
-        print(tAtXandY(site1, vertPt[0], vertPt[1]))        
-        print(tAtXandY(notInPair[0], midPt1[0], midPt1[1]))
-        print(tAtXandY(notInPair[0], midPt2[0], midPt2[1]))
-        print(tAtXandY(pair3[0], midPt3[0], midPt3[1]))
-        print(tAtXandY(pair3[1], vertPt[0] + 0.5, yAtX(pair3[0], pair3[1], vertPt[0] + 0.5))) 
-        print(tAtXandY(pair3[1], vertPt[0] - 0.5, yAtX(pair3[0], pair3[1], vertPt[0] - 0.5)))                
-        print("---")
+#         print("---")
+#         print(tAtXandY(site1, vertPt[0], vertPt[1]))        
+#         print(tAtXandY(notInPair[0], midPt1[0], midPt1[1]))
+#         print(tAtXandY(notInPair[0], midPt2[0], midPt2[1]))
+#         print(tAtXandY(pair3[0], midPt3[0], midPt3[1]))
+#         print(tAtXandY(pair3[1], vertPt[0] + 0.5, yAtX(pair3[0], pair3[1], vertPt[0] + 0.5))) 
+#         print(tAtXandY(pair3[1], vertPt[0] - 0.5, yAtX(pair3[0], pair3[1], vertPt[0] - 0.5)))                
+#         print("---")
         at1 = vertices[vert]["at"][0]
         at2 = vertices[vert]["at"][1]
 #         atMid = midPoint(at1, at2)
@@ -810,9 +842,9 @@ for vert in vertices:
 #             throughPt = [vertPt[0] - 0.5, yAtX(pair3[0], pair3[1], vertPt[0] - 0.5)]                 
 
         # works perfectly? There are deffinately problems with the method for finding the second line
-        print(theta1, theta2)
-        print(normalTheta(testPt1, vertPt), normalTheta(testPt2, vertPt))
-        print(abs(theta1 - theta2) > math.pi)                
+#         print(theta1, theta2)
+#         print(normalTheta(testPt1, vertPt), normalTheta(testPt2, vertPt))
+#         print(abs(theta1 - theta2) > math.pi)                
 
         if abs(theta1 - theta2) > math.pi:
             if normalTheta(testPt1, vertPt) > min(theta1, theta2) and normalTheta(testPt1, vertPt) < max(theta1, theta2):
@@ -825,7 +857,7 @@ for vert in vertices:
             else:
                 throughPt = testPt2            
 
-        #throughPt = []
+        throughPt = []
 
         if throughPt != []:                                                        
 
@@ -923,4 +955,5 @@ for cell in finalCell:
         #print(pairs)                        
         
 plt.show()
+
 
