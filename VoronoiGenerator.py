@@ -1,4 +1,5 @@
 from decimal import DivisionByZero
+from re import S
 import matplotlib.pyplot as plt
 import random
 import math
@@ -13,9 +14,9 @@ defaultBounds = [[0, 200], [200, 0]]
 #points = [[30, 30], [40, 40], [10, 50]]
 #points = [[90,81],[48,121],[163,120],[83,23]]
 
-points = []
-for i in range(1, 8):
-      points.append([random.randint(0, 200), random.randint(0, 200)])  
+#points = []
+#for i in range(1, 8):
+#      points.append([random.randint(0, 200), random.randint(0, 200)])  
 
 #points = [[59, 55], [30, 88], [1, 93]] #[[186, 15], [162, 127], [25, 144]] this is pretty much just a bigger version of the first set
 #points = [[186, 15], [162, 127], [25, 144]]
@@ -28,7 +29,7 @@ for i in range(1, 8):
 
 #points = [[106, 6], [88, 11], [9, 18], [2, 105], [20, 105], [115, 140], [52, 168]] #causes division by zero in getTimeAtX
 #points = [[13, 23], [181, 40], [129, 55], [93, 100], [59, 127], [12, 160], [156, 163]] #---
-# points = [[76, 30], [196, 40], [165, 47], [104, 66], [128, 120], [88, 159], [166, 180]] #easy to see graph. In a previous, more broken version of the program, another line and intersection point near the one on the far right existed, which is necessary to correctly complete the graph
+points = [[76, 30], [196, 40], [165, 47], [104, 66], [128, 120], [88, 159], [166, 180]] #easy to see graph. In a previous, more broken version of the program, another line and intersection point near the one on the far right existed, which is necessary to correctly complete the graph
 # ^there is an issue with the plot for the line above
 
 #points = [[194, 2], [94, 30], [11, 91], [88, 92], [57, 143], [43, 190], [6, 198]]
@@ -38,7 +39,11 @@ for i in range(1, 8):
 
 #[[95, 52], [68, 62], [137, 79], [127, 132], [42, 155], [90, 182], [179, 183]] #might be messed up?
 
-#[[25, 17], [109, 37], [68, 45], [35, 85], [2, 124], [138, 138], [190, 145]]
+#points = [[25, 17], [109, 37], [68, 45], [35, 85], [2, 124], [138, 138], [190, 145]]
+#[[159, 3], [193, 10], [140, 34], [151, 84], [93, 107], [64, 155], [57, 195]]
+#points = [[147, 1], [35, 16], [52, 25], [79, 70], [152, 91], [151, 97], [60, 139]] # all vertices are connected to exactly 2 other vertices
+#points = [[41, 27], [40, 27], [52, 44], [116, 60], [28, 67], [182, 118], [64, 129]]
+
 
 #		bottomleft, topleft, bottomright, topright
 corners = [[0, 0], [0, 200], [200, 0], [200, 200]] #[ [defaultBounds[0][0], defaultBounds[1][1]], [defaultBounds[0][0], defaultBounds[0][1]], [defaultBounds[1][0], defaultBounds[1][1]], [defaultBounds[0][1], defaultBounds[1][0]] ]
@@ -198,8 +203,8 @@ def xAtY(pt1, pt2, y):
         print(f"zero division error in xAtY with {pt1} {pt2} y={y}")
         return defaultBounds[0][0] -5    
 
-def tAtXandY(pt1, pt2, x, y):   
-    a, b, c, d, = pt1[0], pt1[1], pt2[0], pt2[1]
+def tAtXandY(pt1, x, y):   
+    a, b, = pt1[0], pt1[1]
     t = ((2 * y) + (( (4 * (y**2)) + 4*( ((x-a)**2) - (2 * y * b) + (b**2 ) ) ) ** 0.5)) / 2
     return t    
 
@@ -362,14 +367,14 @@ for i in range(points.__len__()):
         
         #print(point, site2)
         boundLy = yAtX(point, site2, defaultBounds[0][0])
-        boundLt = tAtXandY(point, site2, defaultBounds[0][0], boundLy)
+        boundLt = tAtXandY(point,  defaultBounds[0][0], boundLy)
         boundRy = yAtX(point, site2, defaultBounds[0][1])
-        boundRt = tAtXandY(point, site2, defaultBounds[0][1], boundRy)
+        boundRt = tAtXandY(point,  defaultBounds[0][1], boundRy)
 
         boundTx = xAtY(point, site2, defaultBounds[1][0])
-        boundTt = tAtXandY(point, site2, boundTx, defaultBounds[1][0])
+        boundTt = tAtXandY(point,  boundTx, defaultBounds[1][0])
         boundBx = xAtY(point, site2, defaultBounds[1][1])
-        boundBt = tAtXandY(point, site2, boundBx, defaultBounds[1][1])
+        boundBt = tAtXandY(point,  boundBx, defaultBounds[1][1])
 
         pts = [[defaultBounds[0][0], boundLy], [defaultBounds[0][1], boundRy], [boundTx, defaultBounds[1][0]], [boundBx, defaultBounds[1][1]]]                
         #print(pts)
@@ -384,6 +389,7 @@ for i in range(points.__len__()):
             finalCell.update({f"{str(point).replace(', ', '_')}":{"site":point, "vertices":[ #I should add onto this list so that the list of verticies will also include the corner
             [pts[0], pts[1]]
             ]}})
+        print("line388",pts[0], pts[1])            
         #relative = points.copy()
         #distanceTargetSort(point, points)
         #distanceTargetSort(point, relative)        
@@ -467,21 +473,47 @@ def rotate(pt, origin, amount):
     y += origin[1]        
     return [x, y]           
 
-def angle(pt1, pt2, origin):
+#normalTheta + angle == 2pi most of the time
+def normalTheta(pt, origin): #gets the exterior/larger angle (basically)
+    a, b, c, d = pt[0], pt[1], origin[0], origin[1]
+    x = a-c
+    y = b-d
+    #print("line477",x,y)
+    theta = math.atan(y/x)
+    #print("line479",theta)
+    if y < 0 and x > 0:
+        theta += (2 * math.pi)
+    elif y < 0 or x < 0:
+        theta += math.pi
+    return theta                                                        
+            
+
+def angle(pt1, pt2, origin): #gets the interior/smaller angle
     a, b, c, d, e, f = origin[0], origin[1], pt1[0], pt1[1], pt2[0], pt2[1]
     #theta = math.acos( ( ((e -a) * (c-a)) + ((f-b) * (d-b)) ) / ( ( ( ((e-a)**2) + ((f-b)**2) ) * ( ((c-a)**2) + ((b-d)**2) ) ) ** 0.5 ) )
     theta = math.acos( ( ((e -a) * (c-a)) + ((f-b) * (d-b)) ) / ( ( (( ((e-a)**2) + ((f-b)**2) ) ** 0.5) * (( ((c-a)**2) + ((b-d)**2) ) ** 0.5) ) ) )    
     return theta           
 
-#converting from rectangular to polar to rectangular works for some points but not for others, idk why
+#def simpleAngle(pt1, pt2, origin): #same as normalTheta somehow
+    #a, b, c, d, e, f = pt1[0], pt1[1], pt2[0], pt2[1], origin[0], origin[1] 
+
+#     theta1 = normalTheta(pt1, origin)
+#     theta2 = normalTheta(pt2, origin)
+#     theta = max(theta1, theta2) - min(theta1, theta2) 
+#     print(theta1, theta2)
+#     return theta       
+        
+
+#since arctan is from -pi/2 to pi/2 and I want values in the range 0 to 2pi, I need to code for that seperately, which is what is in normalTheta
 def rectToPolar(pt, origin):
     a, b, c, d = pt[0], pt[1], origin[0], origin[1]
     #theta = math.atan(b/a)
     #r = ( (a**2) + (b**2) ) ** 0.5
-    theta = math.atan((b-d)/(a-c))
+    #theta = math.atan((b-d)/(a-c))
+    theta = normalTheta(pt, origin)    
     r = ( ((a-c)**2) + ((b-d)**2) ) ** 0.5
-    if (theta < 0):
-        theta = (2 * math.pi) + theta                   
+    #if (theta < 0):
+    #    theta = (2 * math.pi) + theta                   
     return [r, theta]
 
 def polarToRect(pt, origin):
@@ -542,7 +574,7 @@ for vert in vertices:
     #print("vert",vert, vertices[vert])
     print()
     if vertices[vert]["at"].__len__() == 1:
-        #print("vert",vert, vertices[vert])
+        print("vert",vert, vertices[vert])
         tempVertPt = str(vert).removeprefix("[").removesuffix("]").split("_")
         vertPt = [float(tempVertPt[0]), float(tempVertPt[1])]
         
@@ -567,45 +599,82 @@ for vert in vertices:
         finalCell[f"{str(pickedSites[1]).replace(', ', '_')}"]["vertices"].append([vertPt, nearestBound])
 
     if vertices[vert]["at"].__len__() == 2:
-        print("vert",vert, vertices[vert])        
+        #print("vert",vert, vertices[vert])        
         tempVertPt = str(vert).removeprefix("[").removesuffix("]").split("_")
         vertPt = [float(tempVertPt[0]), float(tempVertPt[1])]
-        
-#         pair1 = vertices[vert]["with"][0]
-#         pair2 = vertices[vert]["with"][1]        
-        
-#         midPt1 = midPoint(pair1[0], pair1[1])
-#         midPt2 = midPoint(pair2[0], pair2[1])
 
- #        angle1 = angle(midPt1, midPt2, vertPt)
- #        print("info",pair1,pair2,angle1)
- #        print("polar",midPt1, rectToPolar(midPt1,vertPt))
- #        print("polar",midPt2, rectToPolar(midPt2,vertPt))
+        site1 = vertices[vert]["sites"][0]
+        site2 = vertices[vert]["sites"][1]
+        site3 = vertices[vert]["sites"][2]        
+        
+        pair1 = vertices[vert]["with"][0]
+        pair2 = vertices[vert]["with"][1]        
+        
+        midPt1 = midPoint(pair1[0], pair1[1])
+        midPt2 = midPoint(pair2[0], pair2[1])
+
+        angle1 = angle(midPt1, midPt2, vertPt)
+        print("vert", vertPt)        
+        print("info",pair1,pair2,angle1)
+        #simpleAngle(midPt1, midPt2, vertPt)        
+        print("polarS1",site1, rectToPolar(site1, vertPt), angle(site1, [vertPt[0] + 5, vertPt[1]], vertPt))#, normalTheta(site1, vertPt) + angle(site1, [vertPt[0] + 5, vertPt[1]], vertPt) == (2 * math.pi))
+        print("polarS2",site2, rectToPolar(site2, vertPt), angle(site2, [vertPt[0] + 5, vertPt[1]], vertPt))
+        print("polarS3",site3, rectToPolar(site3, vertPt), angle(site3, [vertPt[0] + 5, vertPt[1]], vertPt))                        
+        print("polarM1",midPt1, rectToPolar(midPt1,vertPt))
+        print("polarM2",midPt2, rectToPolar(midPt2,vertPt))
         
 
         pair3 = []
-        site1 = vertices[vert]["sites"][0]
-        site2 = vertices[vert]["sites"][1]
-        site3 = vertices[vert]["sites"][2]                        
-        if [site1, site2] not in vertices[vert]["with"]:
-            pair3 = [site1, site2]
-        elif [site1, site3] not in vertices[vert]["with"]:
-            pair3 = [site1, site3]
-        else:                                            
-            pair3 = [site2, site3]
+                                
+#         if [site1, site2] not in vertices[vert]["with"]:
+#             pair3 = [site1, site2]
+#         elif [site1, site3] not in vertices[vert]["with"]:
+#             pair3 = [site1, site3]
+#         else:                                            
+#             pair3 = [site2, site3]
+
+        sortSites = vertices[vert]["sites"].copy()
+        sortByY(sortSites)
+        
+        if [sortSites[0], sortSites[1]] not in vertices[vert]["with"]:
+            pair3 = [sortSites[0], sortSites[1]]
+        elif [sortSites[1], sortSites[2]] not in vertices[vert]["with"]:
+            pair3 = [sortSites[1], sortSites[2]]
+        else:
+            pair3 = [sortSites[0], sortSites[2]]                                                                           
 
         midPt3 = midPoint(pair3[0], pair3[1])
+        print("polarM3",midPt3, rectToPolar(midPt3,vertPt))        
         
-        distp1a1 = distance(vertices[vert]["at"][0][0], vertices[vert]["at"][0][1], vertPt[0] + 5, yAtX(pair3[0], pair3[1], vertPt[0] + 5))
-        distp1a2 = distance(vertices[vert]["at"][1][0], vertices[vert]["at"][1][1], vertPt[0] + 5, yAtX(pair3[0], pair3[1], vertPt[0] + 5))
-        distp2a1 = distance(vertices[vert]["at"][0][0], vertices[vert]["at"][0][1], vertPt[0] - 5, yAtX(pair3[0], pair3[1], vertPt[0] - 5))
-        distp2a2 = distance(vertices[vert]["at"][1][0], vertices[vert]["at"][1][1], vertPt[0] - 5, yAtX(pair3[0], pair3[1], vertPt[0] - 5))
+#         distp1a1 = distance(vertices[vert]["at"][0][0], vertices[vert]["at"][0][1], vertPt[0] + 5, yAtX(pair3[0], pair3[1], vertPt[0] + 5))
+#         distp1a2 = distance(vertices[vert]["at"][1][0], vertices[vert]["at"][1][1], vertPt[0] + 5, yAtX(pair3[0], pair3[1], vertPt[0] + 5))
+#         distp2a1 = distance(vertices[vert]["at"][0][0], vertices[vert]["at"][0][1], vertPt[0] - 5, yAtX(pair3[0], pair3[1], vertPt[0] - 5))
+#         distp2a2 = distance(vertices[vert]["at"][1][0], vertices[vert]["at"][1][1], vertPt[0] - 5, yAtX(pair3[0], pair3[1], vertPt[0] - 5))
 
+#         throughPt = []
+#         if distp1a1 > distp2a1 and distp1a2 > distp2a2:
+#            throughPt = [vertPt[0] + 5, yAtX(pair3[0], pair3[1], vertPt[0] + 5)]
+#         else:
+#             throughPt = [vertPt[0] - 5, yAtX(pair3[0], pair3[1], vertPt[0] - 5)]
+
+        angle1 = angle(pair3[0], pair3[1], [vertPt[0] + 0.5, yAtX(pair3[0], pair3[1], vertPt[0] + 0.5)])#angle(site1, site2, [midPt3[0] + 0.5, midPt3[1] + (0.5 * slope(midPt3, vertPt))])#angle(site1, site2, [vertPt[0] + 0.5, yAtX(pair3[0], pair3[1], vertPt[0] + 0.5)])#angle(site1, site2, [midPt3[0] + 0.5, yAtX(pair3[0], pair3[1], midPt3[0] + 0.5)])#angle(midPt1, midPt2, [vertPt[0] + 0.5, yAtX(pair3[0], pair3[1], vertPt[0] + 0.5)])
+        angle2 = angle(pair3[0], pair3[1], [vertPt[0] - 0.5, yAtX(pair3[0], pair3[1], vertPt[0] - 0.5)])#angle(site1, site2, [midPt3[0] - 0.5, midPt3[1] - (0.5 * slope(midPt3, vertPt))])#angle(site1, site2, [vertPt[0] + 0.5, yAtX(pair3[0], pair3[1], vertPt[0] + 0.5)])#angle(site1, site2, [midPt3[0] - 0.5, yAtX(pair3[0], pair3[1], midPt3[0] - 0.5)])#angle(midPt1, midPt2, [vertPt[0] - 0.5, yAtX(pair3[0], pair3[1], vertPt[0] - 0.5)])
+        print("angles",angle1,angle2)
+        #print(midPt3[1] + (0.5 * slope(midPt3, vertPt)))
+        #print(yAtX(pair3[0], pair3[1], midPt3[0] + 0.5))                
         throughPt = []
-        if distp1a1 < distp2a1 and distp1a2 < distp2a2:
-           throughPt = [vertPt[0] + 5, yAtX(pair3[0], pair3[1], vertPt[0] + 5)]
+        if angle1 < angle2:
+            throughPt = [vertPt[0] + 5, yAtX(pair3[0], pair3[1], vertPt[0] + 5)]#[midPt3[0] + 5, yAtX(pair3[0], pair3[1], midPt3[0] + 5)]
         else:
-            throughPt = [vertPt[0] - 5, yAtX(pair3[0], pair3[1], vertPt[0] - 5)]
+            throughPt = [vertPt[0] - 5, yAtX(pair3[0], pair3[1], vertPt[0] - 5)]#[midPt3[0] - 5, yAtX(pair3[0], pair3[1], midPt3[0] - 5)]                                                            
+
+        print("throughPt",throughPt)
+        nearestBound = nearestBoundry(vertPt, throughPt)
+        
+        vertices[vert]["with"].append(pair3)
+        vertices[vert]["at"].append(nearestBound)        
+        finalCell[f"{str(pair3[0]).replace(', ', '_')}"]["vertices"].append([vertPt, nearestBound])
+        finalCell[f"{str(pair3[1]).replace(', ', '_')}"]["vertices"].append([vertPt, nearestBound])
 
         #nearestBound = makeEdge(pair3[0], pair3[1], vertPt, midPt3)    
 
@@ -722,4 +791,5 @@ for cell in finalCell:
         #print(pairs)                        
         
 plt.show()
+
 
