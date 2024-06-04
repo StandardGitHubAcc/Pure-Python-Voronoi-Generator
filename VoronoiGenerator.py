@@ -441,6 +441,8 @@ def slope(pt1, pt2):
 def midPoint(pt1, pt2):
     return [ (pt1[0] + pt2[0]) / 2,  (pt1[1] + pt2[1]) / 2]        
 
+def pointSlope(pt, slope, x):
+    return (slope * (x - pt[0])) + pt[1]  
 
 def makePerpLine(p1, p2):
     m = slope(p1, p2)
@@ -646,64 +648,97 @@ for vert in vertices:
         midPt3 = midPoint(pair3[0], pair3[1])
         print("polarM3",midPt3, rectToPolar(midPt3,vertPt))        
         
-#         distp1a1 = distance(vertices[vert]["at"][0][0], vertices[vert]["at"][0][1], vertPt[0] + 5, yAtX(pair3[0], pair3[1], vertPt[0] + 5))
-#         distp1a2 = distance(vertices[vert]["at"][1][0], vertices[vert]["at"][1][1], vertPt[0] + 5, yAtX(pair3[0], pair3[1], vertPt[0] + 5))
-#         distp2a1 = distance(vertices[vert]["at"][0][0], vertices[vert]["at"][0][1], vertPt[0] - 5, yAtX(pair3[0], pair3[1], vertPt[0] - 5))
-#         distp2a2 = distance(vertices[vert]["at"][1][0], vertices[vert]["at"][1][1], vertPt[0] - 5, yAtX(pair3[0], pair3[1], vertPt[0] - 5))
+# #         distp1a1 = distance(vertices[vert]["at"][0][0], vertices[vert]["at"][0][1], vertPt[0] + 5, yAtX(pair3[0], pair3[1], vertPt[0] + 5))
+# #         distp1a2 = distance(vertices[vert]["at"][1][0], vertices[vert]["at"][1][1], vertPt[0] + 5, yAtX(pair3[0], pair3[1], vertPt[0] + 5))
+# #         distp2a1 = distance(vertices[vert]["at"][0][0], vertices[vert]["at"][0][1], vertPt[0] - 5, yAtX(pair3[0], pair3[1], vertPt[0] - 5))
+# #         distp2a2 = distance(vertices[vert]["at"][1][0], vertices[vert]["at"][1][1], vertPt[0] - 5, yAtX(pair3[0], pair3[1], vertPt[0] - 5))
 
+# #         throughPt = []
+# #         if distp1a1 > distp2a1 and distp1a2 > distp2a2:
+# #            throughPt = [vertPt[0] + 5, yAtX(pair3[0], pair3[1], vertPt[0] + 5)]
+# #         else:
+# #             throughPt = [vertPt[0] - 5, yAtX(pair3[0], pair3[1], vertPt[0] - 5)]
+
+#         angle1 = angle(pair3[0], pair3[1], [vertPt[0] + 0.5, yAtX(pair3[0], pair3[1], vertPt[0] + 0.5)])#angle(site1, site2, [midPt3[0] + 0.5, midPt3[1] + (0.5 * slope(midPt3, vertPt))])#angle(site1, site2, [vertPt[0] + 0.5, yAtX(pair3[0], pair3[1], vertPt[0] + 0.5)])#angle(site1, site2, [midPt3[0] + 0.5, yAtX(pair3[0], pair3[1], midPt3[0] + 0.5)])#angle(midPt1, midPt2, [vertPt[0] + 0.5, yAtX(pair3[0], pair3[1], vertPt[0] + 0.5)])
+#         angle2 = angle(pair3[0], pair3[1], [vertPt[0] - 0.5, yAtX(pair3[0], pair3[1], vertPt[0] - 0.5)])#angle(site1, site2, [midPt3[0] - 0.5, midPt3[1] - (0.5 * slope(midPt3, vertPt))])#angle(site1, site2, [vertPt[0] + 0.5, yAtX(pair3[0], pair3[1], vertPt[0] + 0.5)])#angle(site1, site2, [midPt3[0] - 0.5, yAtX(pair3[0], pair3[1], midPt3[0] - 0.5)])#angle(midPt1, midPt2, [vertPt[0] - 0.5, yAtX(pair3[0], pair3[1], vertPt[0] - 0.5)])
+#         print("angles",angle1,angle2)
+#         #print(midPt3[1] + (0.5 * slope(midPt3, vertPt)))
+#         #print(yAtX(pair3[0], pair3[1], midPt3[0] + 0.5))                
 #         throughPt = []
-#         if distp1a1 > distp2a1 and distp1a2 > distp2a2:
-#            throughPt = [vertPt[0] + 5, yAtX(pair3[0], pair3[1], vertPt[0] + 5)]
+#         if angle1 < angle2:
+#             throughPt = [vertPt[0] + 5, yAtX(pair3[0], pair3[1], vertPt[0] + 5)]#[midPt3[0] + 5, yAtX(pair3[0], pair3[1], midPt3[0] + 5)]
 #         else:
-#             throughPt = [vertPt[0] - 5, yAtX(pair3[0], pair3[1], vertPt[0] - 5)]
+#             throughPt = [vertPt[0] - 5, yAtX(pair3[0], pair3[1], vertPt[0] - 5)]#[midPt3[0] - 5, yAtX(pair3[0], pair3[1], midPt3[0] - 5)]                                                            
 
-        angle1 = angle(pair3[0], pair3[1], [vertPt[0] + 0.5, yAtX(pair3[0], pair3[1], vertPt[0] + 0.5)])#angle(site1, site2, [midPt3[0] + 0.5, midPt3[1] + (0.5 * slope(midPt3, vertPt))])#angle(site1, site2, [vertPt[0] + 0.5, yAtX(pair3[0], pair3[1], vertPt[0] + 0.5)])#angle(site1, site2, [midPt3[0] + 0.5, yAtX(pair3[0], pair3[1], midPt3[0] + 0.5)])#angle(midPt1, midPt2, [vertPt[0] + 0.5, yAtX(pair3[0], pair3[1], vertPt[0] + 0.5)])
-        angle2 = angle(pair3[0], pair3[1], [vertPt[0] - 0.5, yAtX(pair3[0], pair3[1], vertPt[0] - 0.5)])#angle(site1, site2, [midPt3[0] - 0.5, midPt3[1] - (0.5 * slope(midPt3, vertPt))])#angle(site1, site2, [vertPt[0] + 0.5, yAtX(pair3[0], pair3[1], vertPt[0] + 0.5)])#angle(site1, site2, [midPt3[0] - 0.5, yAtX(pair3[0], pair3[1], midPt3[0] - 0.5)])#angle(midPt1, midPt2, [vertPt[0] - 0.5, yAtX(pair3[0], pair3[1], vertPt[0] - 0.5)])
-        print("angles",angle1,angle2)
-        #print(midPt3[1] + (0.5 * slope(midPt3, vertPt)))
-        #print(yAtX(pair3[0], pair3[1], midPt3[0] + 0.5))                
-        throughPt = []
-        if angle1 < angle2:
-            throughPt = [vertPt[0] + 5, yAtX(pair3[0], pair3[1], vertPt[0] + 5)]#[midPt3[0] + 5, yAtX(pair3[0], pair3[1], midPt3[0] + 5)]
-        else:
-            throughPt = [vertPt[0] - 5, yAtX(pair3[0], pair3[1], vertPt[0] - 5)]#[midPt3[0] - 5, yAtX(pair3[0], pair3[1], midPt3[0] - 5)]                                                            
-
-        print("throughPt",throughPt)
-        nearestBound = nearestBoundry(vertPt, throughPt)
-        
-        vertices[vert]["with"].append(pair3)
-        vertices[vert]["at"].append(nearestBound)        
-        finalCell[f"{str(pair3[0]).replace(', ', '_')}"]["vertices"].append([vertPt, nearestBound])
-        finalCell[f"{str(pair3[1]).replace(', ', '_')}"]["vertices"].append([vertPt, nearestBound])
-
-        #nearestBound = makeEdge(pair3[0], pair3[1], vertPt, midPt3)    
-
-        #finalCell[f"{str(pair3[0]).replace(', ', '_')}"]["vertices"].append([vertPt, nearestBound])
-        #finalCell[f"{str(pair3[1]).replace(', ', '_')}"]["vertices"].append([vertPt, nearestBound])                                                                            
-
-        #if distancePt(midPt3, vertices[vert]["at"][0]) < distancePt(midPt3, vertPt) or distancePt(midPt3, vertices[vert]["at"][1]) < distancePt(midPt3, vertPt):
-#         print(pair3, "x",vertPt[0], "t",tAtXandY(pair3[0], pair3[1], vertPt[0], vertPt[1]))
-#         print(pair3, "x",vertPt[0] + 5, "t",getTimeAtX(site1, site2, site3, vertPt[0] + 5))
-#         print(pair3, "x",vertPt[0] - 5, "t",getTimeAtX(site1, site2, site3, vertPt[0] - 5))
-#         print("slope", slope(vertPt, midPt3))
-
-#         tVertPt = tAtXandY(pair3[0], pair3[1], vertPt[0], vertPt[1])
-#         tXBeforeVert = getTimeAtX(site1, site2, site3, vertPt[0] + 5)
-#         #tXAfterVert = getTimeAtX(site1, site2, site3, vertPt[0] - 5)
-
-#         throughPt = []
-#         if (tXBeforeVert > tVertPt):
-#             throughPt = [vertPt[0] + 5, yAtX(pair3[0], pair3[1], vertPt[0] + 5)]
-#         else:
-#             throughPt = [vertPt[0] - 5, yAtX(pair3[0], pair3[1], vertPt[0] - 5)]
-
+#         print("throughPt",throughPt)
 #         nearestBound = nearestBoundry(vertPt, throughPt)
-#         print(nearestBound)
-
+        
 #         vertices[vert]["with"].append(pair3)
-#         vertices[vert]["at"].append(nearestBound)
+#         vertices[vert]["at"].append(nearestBound)        
 #         finalCell[f"{str(pair3[0]).replace(', ', '_')}"]["vertices"].append([vertPt, nearestBound])
-#         finalCell[f"{str(pair3[1]).replace(', ', '_')}"]["vertices"].append([vertPt, nearestBound]) 
+#         finalCell[f"{str(pair3[1]).replace(', ', '_')}"]["vertices"].append([vertPt, nearestBound])
+
+#         #nearestBound = makeEdge(pair3[0], pair3[1], vertPt, midPt3)    
+
+#         #finalCell[f"{str(pair3[0]).replace(', ', '_')}"]["vertices"].append([vertPt, nearestBound])
+#         #finalCell[f"{str(pair3[1]).replace(', ', '_')}"]["vertices"].append([vertPt, nearestBound])                                                                            
+
+#         #if distancePt(midPt3, vertices[vert]["at"][0]) < distancePt(midPt3, vertPt) or distancePt(midPt3, vertices[vert]["at"][1]) < distancePt(midPt3, vertPt):
+        notInPair = vertices[vert]["sites"].copy()
+        notInPair.remove(pair3[0])
+        notInPair.remove(pair3[1])                
+        
+        print(pair3, "x",vertPt[0], "t",tAtXandY(pair3[0], vertPt[0], vertPt[1]))
+        print(pair3, "x",vertPt[0] + 5, "t",getTimeAtX(pair3[0], pair3[1], notInPair[0], vertPt[0] + 5))
+        print(pair3, "x",vertPt[0] - 5, "t",getTimeAtX(pair3[0], pair3[1], notInPair[0], vertPt[0] - 5))
+        print("slope", slope(vertPt, midPt3))       
+
+        #print(tAtXandY(pair3[0], vertPt[0] + 0.1, vertPt[1] + (0.1 * slope(vertPt, midPt3))))
+        #print(tAtXandY(pair3[0], vertPt[0] + 0.1, pointSlope(vertPt, slope(vertPt, midPt3), vertPt[0] + 0.1)))
+        #print(pair3[0], vertPt, pointSlope(vertPt, slope(vertPt, midPt3), vertPt[0] + 0.1))
+        
+        ptSlp1 = pointSlope(vertPt, slope(vertPt, midPt1), vertPt[0] + 0.1)
+        ptSlp2 = pointSlope(vertPt, slope(vertPt, midPt2), vertPt[0] + 0.1)
+        ptSlp3 = pointSlope(vertPt, slope(vertPt, midPt3), vertPt[0] + 0.1)                
+        
+        print(tAtXandY(site1, vertPt[0], vertPt[1]))
+        print(tAtXandY(site1, vertPt[0] + 0.1, ptSlp1), tAtXandY(site1, vertPt[0] + 0.1, ptSlp2), tAtXandY(site1, vertPt[0] + 0.1, ptSlp3))
+        print(tAtXandY(site2, vertPt[0] + 0.1, ptSlp1), tAtXandY(site2, vertPt[0] + 0.1, ptSlp2), tAtXandY(site2, vertPt[0] + 0.1, ptSlp3))
+        print(tAtXandY(site3, vertPt[0] + 0.1, ptSlp1), tAtXandY(site3, vertPt[0] + 0.1, ptSlp2), tAtXandY(site3, vertPt[0] + 0.1, ptSlp3))
+                               
+
+        tVertPt = tAtXandY(pair3[0], vertPt[0], vertPt[1])
+        tXAfterVert = getTimeAtX(pair3[0], pair3[1], notInPair[0], vertPt[0] + 5)
+        #tXBeforeVert = getTimeAtX(site1, site2, site3, vertPt[0] - 5)
+
+        print("---")
+        print(find2IntersectAtTime(pair1[0], pair1[1], tVertPt - 0.5))
+        print(find2IntersectAtTime(pair1[0], pair1[1], tVertPt + 0.5)) 
+        print(find2IntersectAtTime(pair2[0], pair2[1], tVertPt - 0.5))
+        print(find2IntersectAtTime(pair2[0], pair2[1], tVertPt + 0.5))         
+        print(find2IntersectAtTime(pair3[0], pair3[1], tVertPt - 0.5))
+        print(find2IntersectAtTime(pair3[0], pair3[1], tVertPt + 0.5))                
+
+        throughPt = []
+        if (tXAfterVert > tVertPt):
+            if notInPair[0][1] > pair3[0][1] and notInPair[0][1] > pair3[1][1]:
+                throughPt = [vertPt[0] - 5, yAtX(pair3[0], pair3[1], vertPt[0] - 5)]
+            else:                            
+                throughPt = [vertPt[0] + 5, yAtX(pair3[0], pair3[1], vertPt[0] + 5)]
+        else:
+            if notInPair[0][1] > pair3[0][1] and notInPair[0][1] > pair3[1][1]:
+                throughPt = [vertPt[0] + 5, yAtX(pair3[0], pair3[1], vertPt[0] + 5)]
+            else:                            
+                throughPt = [vertPt[0] - 5, yAtX(pair3[0], pair3[1], vertPt[0] - 5)]
+            #throughPt = [0,0]            
+
+        nearestBound = nearestBoundry(vertPt, throughPt)
+        print(nearestBound)
+
+        vertices[vert]["with"].append(pair3)
+        vertices[vert]["at"].append(nearestBound)
+        finalCell[f"{str(pair3[0]).replace(', ', '_')}"]["vertices"].append([vertPt, nearestBound])
+        finalCell[f"{str(pair3[1]).replace(', ', '_')}"]["vertices"].append([vertPt, nearestBound]) 
 
 # for vert in vertices: #need to figure out how to loop through all of the intersection points and see how many edges they are a part of, might be able to use a "match: case:" statement
 #     numEdges = vertices[vert]["with"].__len__()
@@ -791,5 +826,6 @@ for cell in finalCell:
         #print(pairs)                        
         
 plt.show()
+
 
 
