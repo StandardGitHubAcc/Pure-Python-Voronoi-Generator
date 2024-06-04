@@ -29,7 +29,7 @@ defaultBounds = [[0, 200], [200, 0]]
 
 #points = [[106, 6], [88, 11], [9, 18], [2, 105], [20, 105], [115, 140], [52, 168]] #causes division by zero in getTimeAtX
 #points = [[13, 23], [181, 40], [129, 55], [93, 100], [59, 127], [12, 160], [156, 163]] #---
-points = [[76, 30], [196, 40], [165, 47], [104, 66], [128, 120], [88, 159], [166, 180]] #easy to see graph. In a previous, more broken version of the program, another line and intersection point near the one on the far right existed, which is necessary to correctly complete the graph
+# points = [[76, 30], [196, 40], [165, 47], [104, 66], [128, 120], [88, 159], [166, 180]] #easy to see graph. In a previous, more broken version of the program, another line and intersection point near the one on the far right existed, which is necessary to correctly complete the graph
 # ^there is an issue with the plot for the line above
 
 #points = [[194, 2], [94, 30], [11, 91], [88, 92], [57, 143], [43, 190], [6, 198]]
@@ -41,7 +41,7 @@ points = [[76, 30], [196, 40], [165, 47], [104, 66], [128, 120], [88, 159], [166
 
 #points = [[25, 17], [109, 37], [68, 45], [35, 85], [2, 124], [138, 138], [190, 145]]
 #[[159, 3], [193, 10], [140, 34], [151, 84], [93, 107], [64, 155], [57, 195]]
-#points = [[147, 1], [35, 16], [52, 25], [79, 70], [152, 91], [151, 97], [60, 139]] # all vertices are connected to exactly 2 other vertices
+points = [[147, 1], [35, 16], [52, 25], [79, 70], [152, 91], [151, 97], [60, 139]] # all vertices are connected to exactly 2 other vertices
 #points = [[41, 27], [40, 27], [52, 44], [116, 60], [28, 67], [182, 118], [64, 129]]
 
 
@@ -571,6 +571,21 @@ for site in cell: # Finds edges for cells
         except Exception as e:
             print(f"site2: {e} not in cell") 
 
+avgX = 0
+avgY = 0
+for vert in vertices:
+    tempVertPt = str(vert).removeprefix("[").removesuffix("]").split("_")
+    vertPt = [float(tempVertPt[0]), float(tempVertPt[1])]
+    avgX += vertPt[0]
+    avgY += vertPt[1]
+    print(vertPt)    
+print("averge",avgX, avgY)
+print("len", vertices.keys().__len__())
+avgX = avgX/vertices.keys().__len__()
+avgY = avgY/vertices.keys().__len__()
+centerPt = [avgX, avgY]            
+plt.plot(centerPt[0], centerPt[1], "yo")
+print(centerPt)
 
 for vert in vertices:
     #print("vert",vert, vertices[vert])
@@ -701,44 +716,65 @@ for vert in vertices:
         ptSlp2 = pointSlope(vertPt, slope(vertPt, midPt2), vertPt[0] + 0.1)
         ptSlp3 = pointSlope(vertPt, slope(vertPt, midPt3), vertPt[0] + 0.1)                
         
-        print(tAtXandY(site1, vertPt[0], vertPt[1]))
-        print(tAtXandY(site1, vertPt[0] + 0.1, ptSlp1), tAtXandY(site1, vertPt[0] + 0.1, ptSlp2), tAtXandY(site1, vertPt[0] + 0.1, ptSlp3))
-        print(tAtXandY(site2, vertPt[0] + 0.1, ptSlp1), tAtXandY(site2, vertPt[0] + 0.1, ptSlp2), tAtXandY(site2, vertPt[0] + 0.1, ptSlp3))
-        print(tAtXandY(site3, vertPt[0] + 0.1, ptSlp1), tAtXandY(site3, vertPt[0] + 0.1, ptSlp2), tAtXandY(site3, vertPt[0] + 0.1, ptSlp3))
+#         print(tAtXandY(site1, vertPt[0], vertPt[1]))
+#         print(tAtXandY(site1, vertPt[0] + 0.1, ptSlp1), tAtXandY(site1, vertPt[0] + 0.1, ptSlp2), tAtXandY(site1, vertPt[0] + 0.1, ptSlp3))
+#         print(tAtXandY(site2, vertPt[0] + 0.1, ptSlp1), tAtXandY(site2, vertPt[0] + 0.1, ptSlp2), tAtXandY(site2, vertPt[0] + 0.1, ptSlp3))
+#         print(tAtXandY(site3, vertPt[0] + 0.1, ptSlp1), tAtXandY(site3, vertPt[0] + 0.1, ptSlp2), tAtXandY(site3, vertPt[0] + 0.1, ptSlp3))
                                
 
         tVertPt = tAtXandY(pair3[0], vertPt[0], vertPt[1])
         tXAfterVert = getTimeAtX(pair3[0], pair3[1], notInPair[0], vertPt[0] + 5)
         #tXBeforeVert = getTimeAtX(site1, site2, site3, vertPt[0] - 5)
 
-        print("---")
-        print(find2IntersectAtTime(pair1[0], pair1[1], tVertPt - 0.5))
-        print(find2IntersectAtTime(pair1[0], pair1[1], tVertPt + 0.5)) 
-        print(find2IntersectAtTime(pair2[0], pair2[1], tVertPt - 0.5))
-        print(find2IntersectAtTime(pair2[0], pair2[1], tVertPt + 0.5))         
-        print(find2IntersectAtTime(pair3[0], pair3[1], tVertPt - 0.5))
-        print(find2IntersectAtTime(pair3[0], pair3[1], tVertPt + 0.5))                
+#         print("---")
+#         print(find2IntersectAtTime(pair1[0], pair1[1], tVertPt - 0.5))
+#         print(find2IntersectAtTime(pair1[0], pair1[1], tVertPt + 0.5)) 
+#         print(find2IntersectAtTime(pair2[0], pair2[1], tVertPt - 0.5))
+#         print(find2IntersectAtTime(pair2[0], pair2[1], tVertPt + 0.5))         
+#         print(find2IntersectAtTime(pair3[0], pair3[1], tVertPt - 0.5))
+#         print(find2IntersectAtTime(pair3[0], pair3[1], tVertPt + 0.5))                
 
         throughPt = []
-        if (tXAfterVert > tVertPt):
-            if notInPair[0][1] > pair3[0][1] and notInPair[0][1] > pair3[1][1]:
-                throughPt = [vertPt[0] - 5, yAtX(pair3[0], pair3[1], vertPt[0] - 5)]
-            else:                            
-                throughPt = [vertPt[0] + 5, yAtX(pair3[0], pair3[1], vertPt[0] + 5)]
-        else:
-            if notInPair[0][1] > pair3[0][1] and notInPair[0][1] > pair3[1][1]:
-                throughPt = [vertPt[0] + 5, yAtX(pair3[0], pair3[1], vertPt[0] + 5)]
-            else:                            
-                throughPt = [vertPt[0] - 5, yAtX(pair3[0], pair3[1], vertPt[0] - 5)]
-            #throughPt = [0,0]            
+        #if (tXAfterVert > tVertPt):
+        #    if notInPair[0][1] > pair3[0][1] and notInPair[0][1] > pair3[1][1]:
+        #        throughPt = [vertPt[0] - 5, yAtX(pair3[0], pair3[1], vertPt[0] - 5)]
+        #    else:                            
+        #        throughPt = [vertPt[0] + 5, yAtX(pair3[0], pair3[1], vertPt[0] + 5)]
+        #else:
+        #    if notInPair[0][1] > pair3[0][1] and notInPair[0][1] > pair3[1][1]:
+        #        throughPt = [vertPt[0] + 5, yAtX(pair3[0], pair3[1], vertPt[0] + 5)]
+        #    else:                            
+        #        throughPt = [vertPt[0] - 5, yAtX(pair3[0], pair3[1], vertPt[0] - 5)]
+        #    #throughPt = [0,0]            
 
-        nearestBound = nearestBoundry(vertPt, throughPt)
-        print(nearestBound)
+        dist1 = distancePt(vertPt, centerPt)
+        slp = slope(vertPt, midPt3)        
+        testPt1 = [vertPt[0] + 0.5, pointSlope(vertPt, slp, vertPt[0] + 0.5)]
+        testPt2 = [vertPt[0] - 0.5, pointSlope(vertPt, slp, vertPt[0] - 0.5)]
+        
+        testDist1 = distancePt(testPt1, centerPt)
+        testDist2 = distancePt(testPt2, centerPt)
+    
+        testDist3 = distance(testPt1[0], testPt1[1], centerPt[0], centerPt[1])
+        testDist4 = distance(testPt2[0], testPt2[1], centerPt[0], centerPt[1])        
 
-        vertices[vert]["with"].append(pair3)
-        vertices[vert]["at"].append(nearestBound)
-        finalCell[f"{str(pair3[0]).replace(', ', '_')}"]["vertices"].append([vertPt, nearestBound])
-        finalCell[f"{str(pair3[1]).replace(', ', '_')}"]["vertices"].append([vertPt, nearestBound]) 
+        print("pt1",testPt1,"pt2",testPt2)
+        print("dist1",testDist1,"dist2",testDist2,"dist3",testDist3,"dist4",testDist4)
+
+        if testDist1 > testDist2:
+            throughPt = testPt1
+        elif testDist1 < testDist2:
+            throughPt = testPt2                                                                            
+
+        if throughPt != []:
+
+            nearestBound = nearestBoundry(vertPt, throughPt)
+            print(nearestBound)
+
+            vertices[vert]["with"].append(pair3)
+            vertices[vert]["at"].append(nearestBound)
+            finalCell[f"{str(pair3[0]).replace(', ', '_')}"]["vertices"].append([vertPt, nearestBound])
+            finalCell[f"{str(pair3[1]).replace(', ', '_')}"]["vertices"].append([vertPt, nearestBound]) 
 
 # for vert in vertices: #need to figure out how to loop through all of the intersection points and see how many edges they are a part of, might be able to use a "match: case:" statement
 #     numEdges = vertices[vert]["with"].__len__()
@@ -826,6 +862,7 @@ for cell in finalCell:
         #print(pairs)                        
         
 plt.show()
+
 
 
 
