@@ -137,7 +137,7 @@ def sortByY(array):
             if array[j][1] > array[j + 1][1]:
                 array[j], array[j + 1] = array[j + 1], array[j]
                 
-def find3Intersect(pt1, pt2, pt3): # division by zero happens with the points (50, 50) (25, 25) (75, 75)
+def find3Intersect(pt1, pt2, pt3): # division by zero happens with the points (50, 50) (25, 25) (75, 75) # finds x-value of intersection of 3 parabolas
     a, b, c, d, e, f = pt1[0], pt1[1], pt2[0], pt2[1], pt3[0], pt3[1]
     if (2 * ( ((a-e)*(b-d)) - ((a-c)*(b-f))) ) != 0:
         x = ( ( ((a**2) - (e**2))*(b-d) ) - ( ((a**2) - (c**2)) * (b-f) ) - ( (d-f)*(b-f)*(b-d) )) / (2 * ( ((a-e)*(b-d)) - ((a-c)*(b-f))) )
@@ -152,7 +152,7 @@ def find3Intersect(pt1, pt2, pt3): # division by zero happens with the points (5
         #return 0
         return defaultBounds[0][0] - 5       
 
-def find2IntersectAtTime(pt1, pt2, t):
+def find2IntersectAtTime(pt1, pt2, t): # finds x-value of intersection of two parabolas at given time
     try:    
         a, b, c, d, = pt1[0], pt1[1], pt2[0], pt2[1]
         n = (2 * ((-1 * c * b) + (c * t) + (a * d) - (a * t))) / (b-d)
@@ -163,7 +163,7 @@ def find2IntersectAtTime(pt1, pt2, t):
         print(f"zero division error in find2IntersectAtTime with {pt1} {pt2} {pt3} t={t}")        
         return defaultBounds[1][1] -5                    
 
-def getTimeAtX(pt1, pt2, pt3, x):
+def getTimeAtX(pt1, pt2, pt3, x): # finds time when parabola pt1 has given x value
     try:    
         a, b, c, d, e, f = pt1[0], pt1[1], pt2[0], pt2[1], pt3[0], pt3[1]
         j = b-d
@@ -185,7 +185,7 @@ def getYAtTimeAndX(pt1, t, x):
         print(f"zero division error in getYAtTimeAndX with {pt1} t={t} x={x}")
         return defaultBounds[1][1] -5                       
 
-def yAtX(pt1, pt2, x):
+def yAtX(pt1, pt2, x): # gives y value of bisector between two parabolas at given x value
     try:    
         a, b, c, d, = pt1[0], pt1[1], pt2[0], pt2[1]
         y = ((c-a) / (b-d)) * (x - ( (a+c)/2) ) + ((b+d)/2)
@@ -194,7 +194,7 @@ def yAtX(pt1, pt2, x):
         print(f"zero division error in yAtX with {pt1} {pt2} x={x}")
         return defaultBounds[1][1] -5                    
     
-def xAtY(pt1, pt2, y):
+def xAtY(pt1, pt2, y): # gives x value of bisector between two parabolas at given y value
     try:    
         a, b, c, d, = pt1[0], pt1[1], pt2[0], pt2[1]
         x = ( (2 * y * (d-b)) - ((d**2) - (b**2)) + ((a**2) - (c**2)) ) / (2 * (a-c))
@@ -571,27 +571,12 @@ for site in cell: # Finds edges for cells
         except Exception as e:
             print(f"site2: {e} not in cell") 
 
-avgX = 0
-avgY = 0
-for vert in vertices:
-    tempVertPt = str(vert).removeprefix("[").removesuffix("]").split("_")
-    vertPt = [float(tempVertPt[0]), float(tempVertPt[1])]
-    avgX += vertPt[0]
-    avgY += vertPt[1]
-    print(vertPt)    
-print("averge",avgX, avgY)
-print("len", vertices.keys().__len__())
-avgX = avgX/vertices.keys().__len__()
-avgY = avgY/vertices.keys().__len__()
-centerPt = [avgX, avgY]            
-plt.plot(centerPt[0], centerPt[1], "yo")
-print(centerPt)
 
 for vert in vertices:
     #print("vert",vert, vertices[vert])
     print()
     if vertices[vert]["at"].__len__() == 1:
-        print("vert",vert, vertices[vert])
+        #print("vert",vert, vertices[vert])
         tempVertPt = str(vert).removeprefix("[").removesuffix("]").split("_")
         vertPt = [float(tempVertPt[0]), float(tempVertPt[1])]
         
@@ -616,7 +601,7 @@ for vert in vertices:
         finalCell[f"{str(pickedSites[1]).replace(', ', '_')}"]["vertices"].append([vertPt, nearestBound])
 
     if vertices[vert]["at"].__len__() == 2:
-        #print("vert",vert, vertices[vert])        
+        print("fullvert",vert, vertices[vert])        
         tempVertPt = str(vert).removeprefix("[").removesuffix("]").split("_")
         vertPt = [float(tempVertPt[0]), float(tempVertPt[1])]
 
@@ -634,11 +619,11 @@ for vert in vertices:
         print("vert", vertPt)        
         print("info",pair1,pair2,angle1)
         #simpleAngle(midPt1, midPt2, vertPt)        
-        print("polarS1",site1, rectToPolar(site1, vertPt), angle(site1, [vertPt[0] + 5, vertPt[1]], vertPt))#, normalTheta(site1, vertPt) + angle(site1, [vertPt[0] + 5, vertPt[1]], vertPt) == (2 * math.pi))
-        print("polarS2",site2, rectToPolar(site2, vertPt), angle(site2, [vertPt[0] + 5, vertPt[1]], vertPt))
-        print("polarS3",site3, rectToPolar(site3, vertPt), angle(site3, [vertPt[0] + 5, vertPt[1]], vertPt))                        
-        print("polarM1",midPt1, rectToPolar(midPt1,vertPt))
-        print("polarM2",midPt2, rectToPolar(midPt2,vertPt))
+#         print("polarS1",site1, rectToPolar(site1, vertPt), angle(site1, [vertPt[0] + 5, vertPt[1]], vertPt))#, normalTheta(site1, vertPt) + angle(site1, [vertPt[0] + 5, vertPt[1]], vertPt) == (2 * math.pi))
+#         print("polarS2",site2, rectToPolar(site2, vertPt), angle(site2, [vertPt[0] + 5, vertPt[1]], vertPt))
+#         print("polarS3",site3, rectToPolar(site3, vertPt), angle(site3, [vertPt[0] + 5, vertPt[1]], vertPt))                        
+#         print("polarM1",midPt1, rectToPolar(midPt1,vertPt))
+#         print("polarM2",midPt2, rectToPolar(midPt2,vertPt))
         
 
         pair3 = []
@@ -661,7 +646,7 @@ for vert in vertices:
             pair3 = [sortSites[0], sortSites[2]]                                                                           
 
         midPt3 = midPoint(pair3[0], pair3[1])
-        print("polarM3",midPt3, rectToPolar(midPt3,vertPt))        
+#         print("polarM3",midPt3, rectToPolar(midPt3,vertPt))        
         
 # #         distp1a1 = distance(vertices[vert]["at"][0][0], vertices[vert]["at"][0][1], vertPt[0] + 5, yAtX(pair3[0], pair3[1], vertPt[0] + 5))
 # #         distp1a2 = distance(vertices[vert]["at"][1][0], vertices[vert]["at"][1][1], vertPt[0] + 5, yAtX(pair3[0], pair3[1], vertPt[0] + 5))
@@ -716,65 +701,84 @@ for vert in vertices:
         ptSlp2 = pointSlope(vertPt, slope(vertPt, midPt2), vertPt[0] + 0.1)
         ptSlp3 = pointSlope(vertPt, slope(vertPt, midPt3), vertPt[0] + 0.1)                
         
-#         print(tAtXandY(site1, vertPt[0], vertPt[1]))
-#         print(tAtXandY(site1, vertPt[0] + 0.1, ptSlp1), tAtXandY(site1, vertPt[0] + 0.1, ptSlp2), tAtXandY(site1, vertPt[0] + 0.1, ptSlp3))
-#         print(tAtXandY(site2, vertPt[0] + 0.1, ptSlp1), tAtXandY(site2, vertPt[0] + 0.1, ptSlp2), tAtXandY(site2, vertPt[0] + 0.1, ptSlp3))
-#         print(tAtXandY(site3, vertPt[0] + 0.1, ptSlp1), tAtXandY(site3, vertPt[0] + 0.1, ptSlp2), tAtXandY(site3, vertPt[0] + 0.1, ptSlp3))
+        print(tAtXandY(site1, vertPt[0], vertPt[1]))#, tAtXandY(site2, vertPt[0], vertPt[1]), tAtXandY(site3, vertPt[0], vertPt[1]))
+        print(tAtXandY(site1, vertPt[0] + 0.1, ptSlp1), tAtXandY(site1, vertPt[0] + 0.1, ptSlp2), tAtXandY(site1, vertPt[0] + 0.1, ptSlp3))
+        print(tAtXandY(site2, vertPt[0] + 0.1, ptSlp1), tAtXandY(site2, vertPt[0] + 0.1, ptSlp2), tAtXandY(site2, vertPt[0] + 0.1, ptSlp3))
+        print(tAtXandY(site3, vertPt[0] + 0.1, ptSlp1), tAtXandY(site3, vertPt[0] + 0.1, ptSlp2), tAtXandY(site3, vertPt[0] + 0.1, ptSlp3))
                                
 
         tVertPt = tAtXandY(pair3[0], vertPt[0], vertPt[1])
         tXAfterVert = getTimeAtX(pair3[0], pair3[1], notInPair[0], vertPt[0] + 5)
         #tXBeforeVert = getTimeAtX(site1, site2, site3, vertPt[0] - 5)
 
-#         print("---")
-#         print(find2IntersectAtTime(pair1[0], pair1[1], tVertPt - 0.5))
-#         print(find2IntersectAtTime(pair1[0], pair1[1], tVertPt + 0.5)) 
-#         print(find2IntersectAtTime(pair2[0], pair2[1], tVertPt - 0.5))
-#         print(find2IntersectAtTime(pair2[0], pair2[1], tVertPt + 0.5))         
-#         print(find2IntersectAtTime(pair3[0], pair3[1], tVertPt - 0.5))
-#         print(find2IntersectAtTime(pair3[0], pair3[1], tVertPt + 0.5))                
+        print("---")
+        print(find2IntersectAtTime(pair1[0], pair1[1], tVertPt - 0.5))
+        print(find2IntersectAtTime(pair1[0], pair1[1], tVertPt + 0.5)) 
+        print(find2IntersectAtTime(pair2[0], pair2[1], tVertPt - 0.5))
+        print(find2IntersectAtTime(pair2[0], pair2[1], tVertPt + 0.5))         
+        print(find2IntersectAtTime(pair3[0], pair3[1], tVertPt - 0.5))
+        print(find2IntersectAtTime(pair3[0], pair3[1], tVertPt + 0.5)) 
+        print("---")
+        print(tAtXandY(site1, vertPt[0], vertPt[1]))        
+        print(tAtXandY(notInPair[0], midPt1[0], midPt1[1]))
+        print(tAtXandY(notInPair[0], midPt2[0], midPt2[1]))
+        print(tAtXandY(pair3[0], midPt3[0], midPt3[1]))
+        print(tAtXandY(pair3[1], vertPt[0] + 0.5, yAtX(pair3[0], pair3[1], vertPt[0] + 0.5))) 
+        print(tAtXandY(pair3[1], vertPt[0] - 0.5, yAtX(pair3[0], pair3[1], vertPt[0] - 0.5)))                
+        print("---")
+        at1 = vertices[vert]["at"][0]
+        at2 = vertices[vert]["at"][1]
+        atMid = midPoint(at1, at2)
+        #plt.plot([at1[0],atMid[0], at2[0]], [at1[1],atMid[1], at2[1]], "m")
+        #plt.plot(atMid[0], atMid[1], "mo")                                         
+        #print(angle(at1, midPoint(at1, at2), vertPt))
+        #print(angle(at2, midPoint(at1, at2), vertPt))
+        theta1 = normalTheta(at1, vertPt)
+        theta2 = normalTheta(at2, vertPt)        
+        print(theta1, theta2)
+        #print(normalTheta(midPoint(at1, at2), vertPt))
+        print((theta1 + theta2)/2)
+        #print(((max(theta1, theta2) - min(theta1, theta2))/2) + min(theta1, theta2)) # == (theta1 + theta2)/2
+        newPt = rotate([vertPt[0] + 5, vertPt[1]], vertPt, (theta1 + theta2)/2)
+        print(angle(at1, newPt, vertPt))
+        print(angle(at2, newPt, vertPt))
+        testPt1 = [vertPt[0] + 0.5, yAtX(pair3[0], pair3[1], vertPt[0] + 0.5)]
+        testPt2 = [vertPt[0] - 0.5, yAtX(pair3[0], pair3[1], vertPt[0] - 0.5)]                                                        
+        print(angle(testPt1, newPt, vertPt))
+        print(angle(testPt2, newPt, vertPt))
+        #plt.plot(newPt[0], newPt[1], "yo")                                                                        
 
         throughPt = []
-        #if (tXAfterVert > tVertPt):
-        #    if notInPair[0][1] > pair3[0][1] and notInPair[0][1] > pair3[1][1]:
-        #        throughPt = [vertPt[0] - 5, yAtX(pair3[0], pair3[1], vertPt[0] - 5)]
-        #    else:                            
-        #        throughPt = [vertPt[0] + 5, yAtX(pair3[0], pair3[1], vertPt[0] + 5)]
-        #else:
-        #    if notInPair[0][1] > pair3[0][1] and notInPair[0][1] > pair3[1][1]:
-        #        throughPt = [vertPt[0] + 5, yAtX(pair3[0], pair3[1], vertPt[0] + 5)]
-        #    else:                            
-        #        throughPt = [vertPt[0] - 5, yAtX(pair3[0], pair3[1], vertPt[0] - 5)]
-        #    #throughPt = [0,0]            
+#         if (tXAfterVert > tVertPt):
+#             if notInPair[0][1] > pair3[0][1] and notInPair[0][1] > pair3[1][1]:
+#                 throughPt = [vertPt[0] - 5, yAtX(pair3[0], pair3[1], vertPt[0] - 5)]
+#             else:                            
+#                 throughPt = [vertPt[0] + 5, yAtX(pair3[0], pair3[1], vertPt[0] + 5)]
+#         else:
+#             if notInPair[0][1] > pair3[0][1] and notInPair[0][1] > pair3[1][1]:
+#                 throughPt = [vertPt[0] + 5, yAtX(pair3[0], pair3[1], vertPt[0] + 5)]
+#             else:                            
+#                 throughPt = [vertPt[0] - 5, yAtX(pair3[0], pair3[1], vertPt[0] - 5)]
+#             #throughPt = [0,0]            
 
-        dist1 = distancePt(vertPt, centerPt)
-        slp = slope(vertPt, midPt3)        
-        testPt1 = [vertPt[0] + 0.5, pointSlope(vertPt, slp, vertPt[0] + 0.5)]
-        testPt2 = [vertPt[0] - 0.5, pointSlope(vertPt, slp, vertPt[0] - 0.5)]
-        
-        testDist1 = distancePt(testPt1, centerPt)
-        testDist2 = distancePt(testPt2, centerPt)
-    
-        testDist3 = distance(testPt1[0], testPt1[1], centerPt[0], centerPt[1])
-        testDist4 = distance(testPt2[0], testPt2[1], centerPt[0], centerPt[1])        
+#         if angle(testPt1, newPt, vertPt) > angle(at1, newPt, vertPt):#min(angle(at1, newPt, vertPt), angle(at2, newPt, vertPt)):
+#             throughPt = testPt1
+#         else:
+#             throughPt = testPt2                        
 
-        print("pt1",testPt1,"pt2",testPt2)
-        print("dist1",testDist1,"dist2",testDist2,"dist3",testDist3,"dist4",testDist4)
+        if abs(theta1 - theta2) > math.pi:
+            throughPt = rotate([vertPt[0] + 5, vertPt[1]], vertPt, (theta1 + theta2)/2) 
+        else:
+            newTheta = (((2 * math.pi) - angle(at1, at2, vertPt))/2) - ((2 * math.pi) - max(theta1, theta2))
+            throughPt = rotate([vertPt[0] + 5, vertPt[1]], vertPt, newTheta)                                              
 
-        if testDist1 > testDist2:
-            throughPt = testPt1
-        elif testDist1 < testDist2:
-            throughPt = testPt2                                                                            
+        nearestBound = nearestBoundry(vertPt, throughPt)
+        print(nearestBound)
 
-        if throughPt != []:
-
-            nearestBound = nearestBoundry(vertPt, throughPt)
-            print(nearestBound)
-
-            vertices[vert]["with"].append(pair3)
-            vertices[vert]["at"].append(nearestBound)
-            finalCell[f"{str(pair3[0]).replace(', ', '_')}"]["vertices"].append([vertPt, nearestBound])
-            finalCell[f"{str(pair3[1]).replace(', ', '_')}"]["vertices"].append([vertPt, nearestBound]) 
+        vertices[vert]["with"].append(pair3)
+        vertices[vert]["at"].append(nearestBound)
+        finalCell[f"{str(pair3[0]).replace(', ', '_')}"]["vertices"].append([vertPt, nearestBound])
+        finalCell[f"{str(pair3[1]).replace(', ', '_')}"]["vertices"].append([vertPt, nearestBound]) 
 
 # for vert in vertices: #need to figure out how to loop through all of the intersection points and see how many edges they are a part of, might be able to use a "match: case:" statement
 #     numEdges = vertices[vert]["with"].__len__()
@@ -862,7 +866,6 @@ for cell in finalCell:
         #print(pairs)                        
         
 plt.show()
-
 
 
 
