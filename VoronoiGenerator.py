@@ -47,8 +47,9 @@ for i in range(1, 8):
 #[[140, 7], [29, 12], [13, 12], [120, 24], [13, 32], [68, 62], [141, 86]] #breaks neighboring cells
 #[[165, 25], [18, 33], [176, 41], [85, 102], [113, 128], [72, 153], [49, 162]] #looks like something is broken since a vertice with a higher y value than its connections does not have the highest time out of the 3
 
-points = [[144, 2], [143, 11], [71, 34], [68, 133], [104, 139], [108, 182], [135, 187]]
-
+#points = [[144, 2], [143, 11], [71, 34], [68, 133], [104, 139], [108, 182], [135, 187]] #breaks finding second line
+points = [[21, 25], [45, 31], [162, 44], [132, 75], [109, 97], [7, 157], [31, 185]]
+      
 #		bottomleft, topleft, bottomright, topright
 corners = [[0, 0], [0, 200], [200, 0], [200, 200]] #[ [defaultBounds[0][0], defaultBounds[1][1]], [defaultBounds[0][0], defaultBounds[0][1]], [defaultBounds[1][0], defaultBounds[1][1]], [defaultBounds[0][1], defaultBounds[1][0]] ]
 
@@ -719,13 +720,13 @@ for vert in vertices:
         tXAfterVert = getTimeAtX(pair3[0], pair3[1], notInPair[0], vertPt[0] + 5)
         #tXBeforeVert = getTimeAtX(site1, site2, site3, vertPt[0] - 5)
 
-        print("---")
-        print(find2IntersectAtTime(pair1[0], pair1[1], tVertPt - 0.5))
-        print(find2IntersectAtTime(pair1[0], pair1[1], tVertPt + 0.5)) 
-        print(find2IntersectAtTime(pair2[0], pair2[1], tVertPt - 0.5))
-        print(find2IntersectAtTime(pair2[0], pair2[1], tVertPt + 0.5))         
-        print(find2IntersectAtTime(pair3[0], pair3[1], tVertPt - 0.5))
-        print(find2IntersectAtTime(pair3[0], pair3[1], tVertPt + 0.5)) 
+#         print("---")
+#         print(find2IntersectAtTime(pair1[0], pair1[1], tVertPt - 0.5))
+#         print(find2IntersectAtTime(pair1[0], pair1[1], tVertPt + 0.5)) 
+#         print(find2IntersectAtTime(pair2[0], pair2[1], tVertPt - 0.5))
+#         print(find2IntersectAtTime(pair2[0], pair2[1], tVertPt + 0.5))         
+#         print(find2IntersectAtTime(pair3[0], pair3[1], tVertPt - 0.5))
+#         print(find2IntersectAtTime(pair3[0], pair3[1], tVertPt + 0.5)) 
         print("---")
         print(tAtXandY(site1, vertPt[0], vertPt[1]))        
         print(tAtXandY(notInPair[0], midPt1[0], midPt1[1]))
@@ -741,8 +742,8 @@ for vert in vertices:
 #         #plt.plot(atMid[0], atMid[1], "mo")                                         
 #         #print(angle(at1, midPoint(at1, at2), vertPt))
 #         #print(angle(at2, midPoint(at1, at2), vertPt))
-#         theta1 = normalTheta(at1, vertPt)
-#         theta2 = normalTheta(at2, vertPt)        
+        theta1 = normalTheta(at1, vertPt)
+        theta2 = normalTheta(at2, vertPt)        
 #         print(theta1, theta2)
 #         #print(normalTheta(midPoint(at1, at2), vertPt))
 #         print((theta1 + theta2)/2)
@@ -750,8 +751,8 @@ for vert in vertices:
 #         newPt = rotate([vertPt[0] + 5, vertPt[1]], vertPt, (theta1 + theta2)/2)
 #         print(angle(at1, newPt, vertPt))
 #         print(angle(at2, newPt, vertPt))
-#         testPt1 = [vertPt[0] + 0.5, yAtX(pair3[0], pair3[1], vertPt[0] + 0.5)]
-#         testPt2 = [vertPt[0] - 0.5, yAtX(pair3[0], pair3[1], vertPt[0] - 0.5)]                                                        
+        testPt1 = [vertPt[0] + 0.5, yAtX(pair3[0], pair3[1], vertPt[0] + 0.5)]
+        testPt2 = [vertPt[0] - 0.5, yAtX(pair3[0], pair3[1], vertPt[0] - 0.5)]                                                        
 #         print(angle(testPt1, newPt, vertPt))
 #         print(angle(testPt2, newPt, vertPt))
 #         #plt.plot(newPt[0], newPt[1], "yo")                                                                        
@@ -782,11 +783,11 @@ for vert in vertices:
 
         #tMidPt1 = tAtXandY(notInPair[0], midPt1[0], midPt1[1])
         #tMidPt2 = tAtXandY(notInPair[0], midPt2[0], midPt2[1])
-        tMidPt1 = tAtXandY(notInPair[0], at1[0], at1[1])
-        tMidPt2 = tAtXandY(notInPair[0], at2[0], at2[1])        
+#         tMidPt1 = tAtXandY(notInPair[0], at1[0], at1[1])
+#         tMidPt2 = tAtXandY(notInPair[0], at2[0], at2[1])        
         
-        tTest1 = tAtXandY(pair3[1], vertPt[0] + 0.5, yAtX(pair3[0], pair3[1], vertPt[0] + 0.5))
-        tTest2 = tAtXandY(pair3[1], vertPt[0] - 0.5, yAtX(pair3[0], pair3[1], vertPt[0] - 0.5))
+#         tTest1 = tAtXandY(pair3[1], vertPt[0] + 0.5, yAtX(pair3[0], pair3[1], vertPt[0] + 0.5))
+#         tTest2 = tAtXandY(pair3[1], vertPt[0] - 0.5, yAtX(pair3[0], pair3[1], vertPt[0] - 0.5))
 
 #         if tMidPt1 > tVertPt and tMidPt2 > tVertPt and tTest1 < tVertPt:
 #             throughPt = [vertPt[0] + 0.5, yAtX(pair3[0], pair3[1], vertPt[0] + 0.5)]
@@ -796,17 +797,35 @@ for vert in vertices:
 #         if tMidPt1 < tVertPt and tMidPt2 < tVertPt and tTest2 > tVertPt:
 #             throughPt = [vertPt[0] + 0.5, yAtX(pair3[0], pair3[1], vertPt[0] + 0.5)] 
 
-        print(tVertPt, tMidPt1, tMidPt2)
-        print(tTest1, tTest2)
+#         print(tVertPt, tMidPt1, tMidPt2)
+#         print(tTest1, tTest2)
 
-        if tMidPt1 < tVertPt and tMidPt2 < tVertPt and tTest1 > tVertPt:
-            throughPt = [vertPt[0] + 0.5, yAtX(pair3[0], pair3[1], vertPt[0] + 0.5)]                           
-        if tMidPt1 < tVertPt and tMidPt2 < tVertPt and tTest2 > tVertPt:
-            throughPt = [vertPt[0] - 0.5, yAtX(pair3[0], pair3[1], vertPt[0] - 0.5)]              
-        if tMidPt1 > tVertPt and tMidPt2 > tVertPt and tTest1 < tVertPt:
-            throughPt = [vertPt[0] + 0.5, yAtX(pair3[0], pair3[1], vertPt[0] + 0.5)]            
-        if tMidPt1 > tVertPt and tMidPt2 > tVertPt and tTest2 < tVertPt:
-            throughPt = [vertPt[0] - 0.5, yAtX(pair3[0], pair3[1], vertPt[0] - 0.5)]                 
+#         if tMidPt1 < tVertPt and tMidPt2 < tVertPt and tTest1 > tVertPt:
+#             throughPt = [vertPt[0] + 0.5, yAtX(pair3[0], pair3[1], vertPt[0] + 0.5)]                           
+#         if tMidPt1 < tVertPt and tMidPt2 < tVertPt and tTest2 > tVertPt:
+#             throughPt = [vertPt[0] - 0.5, yAtX(pair3[0], pair3[1], vertPt[0] - 0.5)]              
+#         if tMidPt1 > tVertPt and tMidPt2 > tVertPt and tTest1 < tVertPt:
+#             throughPt = [vertPt[0] + 0.5, yAtX(pair3[0], pair3[1], vertPt[0] + 0.5)]            
+#         if tMidPt1 > tVertPt and tMidPt2 > tVertPt and tTest2 < tVertPt:
+#             throughPt = [vertPt[0] - 0.5, yAtX(pair3[0], pair3[1], vertPt[0] - 0.5)]                 
+
+        # works perfectly? There are deffinately problems with the method for finding the second line
+        print(theta1, theta2)
+        print(normalTheta(testPt1, vertPt), normalTheta(testPt2, vertPt))
+        print(abs(theta1 - theta2) > math.pi)                
+
+        if abs(theta1 - theta2) > math.pi:
+            if normalTheta(testPt1, vertPt) > min(theta1, theta2) and normalTheta(testPt1, vertPt) < max(theta1, theta2):
+                throughPt = testPt1
+            else:
+                throughPt = testPt2
+        else:            
+            if normalTheta(testPt1, vertPt) > max(theta1, theta2) or normalTheta(testPt1, vertPt) < min(theta1, theta2):
+                throughPt = testPt1
+            else:
+                throughPt = testPt2            
+
+        #throughPt = []
 
         if throughPt != []:                                                        
 
@@ -904,3 +923,4 @@ for cell in finalCell:
         #print(pairs)                        
         
 plt.show()
+
