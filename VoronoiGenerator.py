@@ -14,9 +14,9 @@ defaultBounds = [[0, 200], [200, 0]]
 #points = [[30, 30], [40, 40], [10, 50]]
 #points = [[90,81],[48,121],[163,120],[83,23]]
 
-#points = []
-#for i in range(1, 8):
-#      points.append([random.randint(0, 200), random.randint(0, 200)])  
+points = []
+for i in range(1, 8):
+      points.append([random.randint(0, 200), random.randint(0, 200)])  
 
 #points = [[59, 55], [30, 88], [1, 93]] #[[186, 15], [162, 127], [25, 144]] this is pretty much just a bigger version of the first set
 #points = [[186, 15], [162, 127], [25, 144]]
@@ -29,7 +29,7 @@ defaultBounds = [[0, 200], [200, 0]]
 
 #points = [[106, 6], [88, 11], [9, 18], [2, 105], [20, 105], [115, 140], [52, 168]] #causes division by zero in getTimeAtX
 #points = [[13, 23], [181, 40], [129, 55], [93, 100], [59, 127], [12, 160], [156, 163]] #---
-# points = [[76, 30], [196, 40], [165, 47], [104, 66], [128, 120], [88, 159], [166, 180]] #easy to see graph. In a previous, more broken version of the program, another line and intersection point near the one on the far right existed, which is necessary to correctly complete the graph
+#points = [[76, 30], [196, 40], [165, 47], [104, 66], [128, 120], [88, 159], [166, 180]] #easy to see graph. In a previous, more broken version of the program, another line and intersection point near the one on the far right existed, which is necessary to correctly complete the graph
 # ^there is an issue with the plot for the line above
 
 #points = [[194, 2], [94, 30], [11, 91], [88, 92], [57, 143], [43, 190], [6, 198]]
@@ -41,9 +41,13 @@ defaultBounds = [[0, 200], [200, 0]]
 
 #points = [[25, 17], [109, 37], [68, 45], [35, 85], [2, 124], [138, 138], [190, 145]]
 #[[159, 3], [193, 10], [140, 34], [151, 84], [93, 107], [64, 155], [57, 195]]
-points = [[147, 1], [35, 16], [52, 25], [79, 70], [152, 91], [151, 97], [60, 139]] # all vertices are connected to exactly 2 other vertices
+#points = [[147, 1], [35, 16], [52, 25], [79, 70], [152, 91], [151, 97], [60, 139]] # all vertices are connected to exactly 2 other vertices
 #points = [[41, 27], [40, 27], [52, 44], [116, 60], [28, 67], [182, 118], [64, 129]]
 
+#[[140, 7], [29, 12], [13, 12], [120, 24], [13, 32], [68, 62], [141, 86]] #breaks neighboring cells
+#[[165, 25], [18, 33], [176, 41], [85, 102], [113, 128], [72, 153], [49, 162]] #looks like something is broken since a vertice with a higher y value than its connections does not have the highest time out of the 3
+
+points = [[144, 2], [143, 11], [71, 34], [68, 133], [104, 139], [108, 182], [135, 187]]
 
 #		bottomleft, topleft, bottomright, topright
 corners = [[0, 0], [0, 200], [200, 0], [200, 200]] #[ [defaultBounds[0][0], defaultBounds[1][1]], [defaultBounds[0][0], defaultBounds[0][1]], [defaultBounds[1][0], defaultBounds[1][1]], [defaultBounds[0][1], defaultBounds[1][0]] ]
@@ -436,7 +440,11 @@ def nearestBoundry(startPt, throughPt):
     return choice[0]    
 
 def slope(pt1, pt2):
-    return (pt1[1] - pt2[1]) / (pt1[0] - pt2[0])
+    try:    
+        return (pt1[1] - pt2[1]) / (pt1[0] - pt2[0])
+    except ZeroDivisionError:
+        print(f"zero division error in slope with {pt1} {pt2}")        
+        return 0.00000000001   
 
 def midPoint(pt1, pt2):
     return [ (pt1[0] + pt2[0]) / 2,  (pt1[1] + pt2[1]) / 2]        
@@ -728,25 +736,25 @@ for vert in vertices:
         print("---")
         at1 = vertices[vert]["at"][0]
         at2 = vertices[vert]["at"][1]
-        atMid = midPoint(at1, at2)
-        #plt.plot([at1[0],atMid[0], at2[0]], [at1[1],atMid[1], at2[1]], "m")
-        #plt.plot(atMid[0], atMid[1], "mo")                                         
-        #print(angle(at1, midPoint(at1, at2), vertPt))
-        #print(angle(at2, midPoint(at1, at2), vertPt))
-        theta1 = normalTheta(at1, vertPt)
-        theta2 = normalTheta(at2, vertPt)        
-        print(theta1, theta2)
-        #print(normalTheta(midPoint(at1, at2), vertPt))
-        print((theta1 + theta2)/2)
-        #print(((max(theta1, theta2) - min(theta1, theta2))/2) + min(theta1, theta2)) # == (theta1 + theta2)/2
-        newPt = rotate([vertPt[0] + 5, vertPt[1]], vertPt, (theta1 + theta2)/2)
-        print(angle(at1, newPt, vertPt))
-        print(angle(at2, newPt, vertPt))
-        testPt1 = [vertPt[0] + 0.5, yAtX(pair3[0], pair3[1], vertPt[0] + 0.5)]
-        testPt2 = [vertPt[0] - 0.5, yAtX(pair3[0], pair3[1], vertPt[0] - 0.5)]                                                        
-        print(angle(testPt1, newPt, vertPt))
-        print(angle(testPt2, newPt, vertPt))
-        #plt.plot(newPt[0], newPt[1], "yo")                                                                        
+#         atMid = midPoint(at1, at2)
+#         #plt.plot([at1[0],atMid[0], at2[0]], [at1[1],atMid[1], at2[1]], "m")
+#         #plt.plot(atMid[0], atMid[1], "mo")                                         
+#         #print(angle(at1, midPoint(at1, at2), vertPt))
+#         #print(angle(at2, midPoint(at1, at2), vertPt))
+#         theta1 = normalTheta(at1, vertPt)
+#         theta2 = normalTheta(at2, vertPt)        
+#         print(theta1, theta2)
+#         #print(normalTheta(midPoint(at1, at2), vertPt))
+#         print((theta1 + theta2)/2)
+#         #print(((max(theta1, theta2) - min(theta1, theta2))/2) + min(theta1, theta2)) # == (theta1 + theta2)/2
+#         newPt = rotate([vertPt[0] + 5, vertPt[1]], vertPt, (theta1 + theta2)/2)
+#         print(angle(at1, newPt, vertPt))
+#         print(angle(at2, newPt, vertPt))
+#         testPt1 = [vertPt[0] + 0.5, yAtX(pair3[0], pair3[1], vertPt[0] + 0.5)]
+#         testPt2 = [vertPt[0] - 0.5, yAtX(pair3[0], pair3[1], vertPt[0] - 0.5)]                                                        
+#         print(angle(testPt1, newPt, vertPt))
+#         print(angle(testPt2, newPt, vertPt))
+#         #plt.plot(newPt[0], newPt[1], "yo")                                                                        
 
         throughPt = []
 #         if (tXAfterVert > tVertPt):
@@ -766,19 +774,49 @@ for vert in vertices:
 #         else:
 #             throughPt = testPt2                        
 
-        if abs(theta1 - theta2) > math.pi:
-            throughPt = rotate([vertPt[0] + 5, vertPt[1]], vertPt, (theta1 + theta2)/2) 
-        else:
-            newTheta = (((2 * math.pi) - angle(at1, at2, vertPt))/2) - ((2 * math.pi) - max(theta1, theta2))
-            throughPt = rotate([vertPt[0] + 5, vertPt[1]], vertPt, newTheta)                                              
+#         if abs(theta1 - theta2) > math.pi:
+#             throughPt = rotate([vertPt[0] + 5, vertPt[1]], vertPt, (theta1 + theta2)/2) 
+#         else:
+#             newTheta = (((2 * math.pi) - angle(at1, at2, vertPt))/2) - ((2 * math.pi) - max(theta1, theta2))
+#             throughPt = rotate([vertPt[0] + 5, vertPt[1]], vertPt, newTheta)                                              
 
-        nearestBound = nearestBoundry(vertPt, throughPt)
-        print(nearestBound)
+        #tMidPt1 = tAtXandY(notInPair[0], midPt1[0], midPt1[1])
+        #tMidPt2 = tAtXandY(notInPair[0], midPt2[0], midPt2[1])
+        tMidPt1 = tAtXandY(notInPair[0], at1[0], at1[1])
+        tMidPt2 = tAtXandY(notInPair[0], at2[0], at2[1])        
+        
+        tTest1 = tAtXandY(pair3[1], vertPt[0] + 0.5, yAtX(pair3[0], pair3[1], vertPt[0] + 0.5))
+        tTest2 = tAtXandY(pair3[1], vertPt[0] - 0.5, yAtX(pair3[0], pair3[1], vertPt[0] - 0.5))
 
-        vertices[vert]["with"].append(pair3)
-        vertices[vert]["at"].append(nearestBound)
-        finalCell[f"{str(pair3[0]).replace(', ', '_')}"]["vertices"].append([vertPt, nearestBound])
-        finalCell[f"{str(pair3[1]).replace(', ', '_')}"]["vertices"].append([vertPt, nearestBound]) 
+#         if tMidPt1 > tVertPt and tMidPt2 > tVertPt and tTest1 < tVertPt:
+#             throughPt = [vertPt[0] + 0.5, yAtX(pair3[0], pair3[1], vertPt[0] + 0.5)]
+#         elif tMidPt1 < tVertPt and tMidPt2 < tVertPt and tTest2 > tVertPt:
+#             throughPt = [vertPt[0] - 0.5, yAtX(pair3[0], pair3[1], vertPt[0] - 0.5)]        
+
+#         if tMidPt1 < tVertPt and tMidPt2 < tVertPt and tTest2 > tVertPt:
+#             throughPt = [vertPt[0] + 0.5, yAtX(pair3[0], pair3[1], vertPt[0] + 0.5)] 
+
+        print(tVertPt, tMidPt1, tMidPt2)
+        print(tTest1, tTest2)
+
+        if tMidPt1 < tVertPt and tMidPt2 < tVertPt and tTest1 > tVertPt:
+            throughPt = [vertPt[0] + 0.5, yAtX(pair3[0], pair3[1], vertPt[0] + 0.5)]                           
+        if tMidPt1 < tVertPt and tMidPt2 < tVertPt and tTest2 > tVertPt:
+            throughPt = [vertPt[0] - 0.5, yAtX(pair3[0], pair3[1], vertPt[0] - 0.5)]              
+        if tMidPt1 > tVertPt and tMidPt2 > tVertPt and tTest1 < tVertPt:
+            throughPt = [vertPt[0] + 0.5, yAtX(pair3[0], pair3[1], vertPt[0] + 0.5)]            
+        if tMidPt1 > tVertPt and tMidPt2 > tVertPt and tTest2 < tVertPt:
+            throughPt = [vertPt[0] - 0.5, yAtX(pair3[0], pair3[1], vertPt[0] - 0.5)]                 
+
+        if throughPt != []:                                                        
+
+            nearestBound = nearestBoundry(vertPt, throughPt)
+            #print(nearestBound)
+
+            vertices[vert]["with"].append(pair3)
+            vertices[vert]["at"].append(nearestBound)
+            finalCell[f"{str(pair3[0]).replace(', ', '_')}"]["vertices"].append([vertPt, nearestBound])
+            finalCell[f"{str(pair3[1]).replace(', ', '_')}"]["vertices"].append([vertPt, nearestBound]) 
 
 # for vert in vertices: #need to figure out how to loop through all of the intersection points and see how many edges they are a part of, might be able to use a "match: case:" statement
 #     numEdges = vertices[vert]["with"].__len__()
@@ -866,6 +904,3 @@ for cell in finalCell:
         #print(pairs)                        
         
 plt.show()
-
-
-
