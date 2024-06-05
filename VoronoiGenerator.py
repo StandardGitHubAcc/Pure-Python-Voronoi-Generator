@@ -36,7 +36,7 @@ for i in range(1, 8):
 #points = [[194, 2], [94, 30], [11, 91], [88, 92], [57, 143], [43, 190], [6, 198]]
 #points = [[12, 1], [97, 12], [168, 24], [98, 58], [182, 111], [102, 111], [72, 122]]
 
-#[[159, 12], [197, 12], [123, 38], [145, 92], [56, 123], [85, 160], [44, 166]] #causes a division by zero in yAtX
+points = [[159, 12], [197, 12], [123, 38], [145, 92], [56, 123], [85, 160], [44, 166]] #causes a division by zero in yAtX
 
 #[[95, 52], [68, 62], [137, 79], [127, 132], [42, 155], [90, 182], [179, 183]] #might be messed up?
 
@@ -52,7 +52,7 @@ for i in range(1, 8):
 #points = [[21, 25], [45, 31], [162, 44], [132, 75], [109, 97], [7, 157], [31, 185]]
 #[[27, 59], [150, 90], [79, 90], [101, 124], [94, 136], [178, 186], [157, 200]]      
 
-points = [[175, 23], [78, 24], [160, 108], [161, 141], [157, 159], [59, 188], [66, 188]]
+#points = [[175, 23], [78, 24], [160, 108], [161, 141], [157, 159], [59, 188], [66, 188]]
 
 #		bottomleft, topleft, bottomright, topright
 corners = [[0, 0], [0, 200], [200, 0], [200, 200]] #[ [defaultBounds[0][0], defaultBounds[1][1]], [defaultBounds[0][0], defaultBounds[0][1]], [defaultBounds[1][0], defaultBounds[1][1]], [defaultBounds[0][1], defaultBounds[1][0]] ]
@@ -163,7 +163,7 @@ def find3Intersect(pt1, pt2, pt3): # division by zero happens with the points (5
 
 def find2IntersectAtTime(pt1, pt2, t): # finds x-value of intersection of two parabolas at given time, imaginary if it doesn't exist (this is diff than getTimeAtX(?))
     try:    
-        a, b, c, d, = pt1[0], pt1[1], pt2[0], pt2[1]
+        a, b, c, d = pt1[0], pt1[1], pt2[0], pt2[1]
         n = (2 * ((-1 * c * b) + (c * t) + (a * d) - (a * t))) / (b-d)
         m = (-1 * (b-t) * (d-t)) + (( (c**2) * (b-t) ) + ( (a**2) * (d-t) )) / (b-d)
         x = ((-1 * n) - ( (n**2) - (4 * m))**0.5) / 2
@@ -178,17 +178,17 @@ def getTimeAtX(pt1, pt2, pt3, x): # finds time when parabola pt1 has given x val
         j = b-d
         k = -( (a**2) + (b**2) ) + (c**2) + (d**2) + (2 * x * (a-c))
         L = f*( (a**2) - (c**2) + (b**2) - (d**2) - (2 * x * (a-c)) ) - (( ((x-e)**2) + (f**2) )*(b-d))
-        t = ((-1 * k) - ( (k**2) - (4 * j * L))**0.5) / (2 * j)
+        t = ((-1 * k) - ( (k**2) - (4 * j * L))**0.5) / (2 * j) # division by 0 if j = 0, j = 0 if b-d = 0, so if the first 2 points have the same y value
         return t        
     except ZeroDivisionError:
         print(f"zero division error in getTimeAtX with {pt1} {pt2} {pt3} x={x} j={j} k={k} L={L}")        
-        return defaultBounds[1][1] -5            
+        return pt1[1]#defaultBounds[1][1] -5            
     
 
 def getYAtTimeAndX(pt1, t, x):
     try:    
         a, b = pt1[0], pt1[1]
-        y = (((x-a)**2) / (2 * (b-t))) + (0.5 * (b+t))
+        y = (((x-a)**2) / (2 * (b-t))) + (0.5 * (b+t)) # divides by 0 if b+t = 0 and b-t = 0, which is not possible
         return y
     except ZeroDivisionError:
         print(f"zero division error in getYAtTimeAndX with {pt1} t={t} x={x}")
@@ -196,24 +196,24 @@ def getYAtTimeAndX(pt1, t, x):
 
 def yAtX(pt1, pt2, x): # gives y value of bisector between two parabolas at given x value
     try:    
-        a, b, c, d, = pt1[0], pt1[1], pt2[0], pt2[1]
-        y = ((c-a) / (b-d)) * (x - ( (a+c)/2) ) + ((b+d)/2)
+        a, b, c, d = pt1[0], pt1[1], pt2[0], pt2[1]
+        y = ((c-a) / (b-d)) * (x - ( (a+c)/2) ) + ((b+d)/2) # divides by 0 if b-d = 0 (points have same y value), so the valid y value would also be the same
         return y
     except ZeroDivisionError:
         print(f"zero division error in yAtX with {pt1} {pt2} x={x}")
-        return defaultBounds[1][1] -5                    
+        return pt1[1]#defaultBounds[1][1] -5                    
     
 def xAtY(pt1, pt2, y): # gives x value of bisector between two parabolas at given y value
     try:    
-        a, b, c, d, = pt1[0], pt1[1], pt2[0], pt2[1]
-        x = ( (2 * y * (d-b)) - ((d**2) - (b**2)) + ((a**2) - (c**2)) ) / (2 * (a-c))
+        a, b, c, d = pt1[0], pt1[1], pt2[0], pt2[1]
+        x = ( (2 * y * (d-b)) - ((d**2) - (b**2)) + ((a**2) - (c**2)) ) / (2 * (a-c)) # divides by 0 uf a-c = 0 (points have the same x value), so the correct x value would be the same as well
         return x
     except ZeroDivisionError:
         print(f"zero division error in xAtY with {pt1} {pt2} y={y}")
-        return defaultBounds[0][0] -5    
+        return pt1[0]#defaultBounds[0][0] -5    
 
 def tAtXandY(pt1, x, y):   
-    a, b, = pt1[0], pt1[1]
+    a, b = pt1[0], pt1[1]
     t = ((2 * y) + (( (4 * (y**2)) + 4*( ((x-a)**2) - (2 * y * b) + (b**2 ) ) ) ** 0.5)) / 2
     return t    
 
@@ -448,8 +448,11 @@ def slope(pt1, pt2):
     try:    
         return (pt1[1] - pt2[1]) / (pt1[0] - pt2[0])
     except ZeroDivisionError:
-        print(f"zero division error in slope with {pt1} {pt2}")        
-        return 0.00000000001   
+        print(f"zero division error in slope with {pt1} {pt2}")
+        if pt1[1] - pt2[1] < 0:                
+            return -100000#-0.00000000001
+        else:
+            return 100000#0.00000000001                       
 
 def midPoint(pt1, pt2):
     return [ (pt1[0] + pt2[0]) / 2,  (pt1[1] + pt2[1]) / 2]        
@@ -462,20 +465,33 @@ def makePerpLine(p1, p2):
     if m != 0:
         m = -1/m
     else:
-        m = 1000
+        m = 100000
 
     midPt = midPoint(p1, p2)
     return [[midPt[0], midPt[1]], [midPt[0] + 5, yAtX(p1, p2, midPt[0] + 5)]]
 
 def make2ndEdge(p1, p2, intersect, midPt):                            
-    T1 = [intersect[0] - 5, yAtX(p1, p2, intersect[0] - 5)]
-    T2 = [intersect[0] + 5, yAtX(p1, p2, intersect[0] + 5)]
+#     T1 = [intersect[0] - 5, yAtX(p1, p2, intersect[0] - 5)]
+#     T2 = [intersect[0] + 5, yAtX(p1, p2, intersect[0] + 5)]
+    m = slope(intersect, midPt)
+    T1 = [intersect[0] - 5, pointSlope(intersect, m, intersect[0] - 5)] 
+    T2 = [intersect[0] + 5, pointSlope(intersect, m, intersect[0] + 5)]    
     newPoint = []
+    print("T1", T1, "T2",T2)    
+    print("line474", distancePt(T1, midPt), distancePt(T2, midPt))
 
-    if distance(T1[0], T1[1], midPt[0], midPt[1]) < distance(T2[0], T2[1], midPt[0], midPt[1]):
+ #    if T1[1] == T2[1]:
+ #        m = slope(intersect, midPt)
+ #        T1 = [intersect[0] - 5, pointSlope(intersect, m, intersect[0] - 5)] 
+ #        T2 = [intersect[0] + 5, pointSlope(intersect, m, intersect[0] + 5)]
+
+           
+    if distancePt(T1, midPt) < distancePt(T2, midPt):#distance(T1[0], T1[1], midPt[0], midPt[1]) < distance(T2[0], T2[1], midPt[0], midPt[1]):
         newPoint = T1
     else:
         newPoint = T2
+
+    print("newPt",newPoint)        
 
     nearestBound = nearestBoundry(intersect, newPoint)
     #print("nearestBound",nearestBound)
@@ -846,18 +862,29 @@ for vert in vertices:
 #         print(normalTheta(testPt1, vertPt), normalTheta(testPt2, vertPt))
 #         print(abs(theta1 - theta2) > math.pi)                
 
+        test1Theta = normalTheta(testPt1, vertPt)
+        test2Theta = normalTheta(testPt2, vertPt)
+        minTheta = min(theta1, theta2)
+        maxTheta = max(theta1, theta2)        
+
         if abs(theta1 - theta2) > math.pi:
-            if normalTheta(testPt1, vertPt) > min(theta1, theta2) and normalTheta(testPt1, vertPt) < max(theta1, theta2):
+#             if test1Theta > minTheta and test1Theta < maxTheta and test2Theta > minTheta and test2Theta < maxTheta:
+#                 pass
+#             elif test1Theta > minTheta and test1Theta < maxTheta:
+#                 throughPt = testPt1
+#             else:
+#                 throughPt = testPt2                                
+            if test1Theta > min(theta1, theta2) and test1Theta < max(theta1, theta2):
                 throughPt = testPt1
             else:
                 throughPt = testPt2
         else:            
-            if normalTheta(testPt1, vertPt) > max(theta1, theta2) or normalTheta(testPt1, vertPt) < min(theta1, theta2):
+            if test1Theta > max(theta1, theta2) or test1Theta < min(theta1, theta2):
                 throughPt = testPt1
             else:
                 throughPt = testPt2            
 
-        throughPt = []
+        #throughPt = []
 
         if throughPt != []:                                                        
 
@@ -955,5 +982,6 @@ for cell in finalCell:
         #print(pairs)                        
         
 plt.show()
+
 
 
