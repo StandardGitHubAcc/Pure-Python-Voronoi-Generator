@@ -168,12 +168,31 @@ def find3IntersectX(pt1, pt2, pt3): # division by zero happens with the points (
 def find2IntersectAtTime(pt1, pt2, t): # finds x-value of intersection of two parabolas at given time, imaginary if it doesn't exist (this is diff than getTimeAtX(?))
     try:    
         a, b, c, d = pt1[0], pt1[1], pt2[0], pt2[1]
-        n = ( 2 * ( (c * (t-b)) + (a * (d-t)) ) ) / (b-d)#(2 * ((-1 * c * b) + (c * t) + (a * d) - (a * t))) / (b-d)
-        m = (-1 * (b-t) * (d-t) ) + ( (( (c**2) * (b-t) ) + ( (a**2) * (t-d) )) / (b-d) )#-1 * ( ( (b - t) * (d - t) ) - ( ( (c * c * b) - (c * c * t) - (a * a * d) + (a * a * t) ) / (b - d) ) ) #(-1 * (b-t) * (d-t)) + (( (c**2) * (b-t) ) + ( (a**2) * (d-t) )) / (b-d)
-        x = ((-1 * n) + ( (n**2) - (4 * m))**0.5) / 2#((-1 * n) - ( (n**2) - (4 * m))**0.5) / 2
+        # n = ( 2 * ( (c * (t-b)) + (a * (d-t)) ) ) / (b-d)#(2 * ((-1 * c * b) + (c * t) + (a * d) - (a * t))) / (b-d)
+        # m = (-1 * (b-t) * (d-t) ) + ( (( (c**2) * (b-t) ) + ( (a**2) * (t-d) )) / (b-d) )#-1 * ( ( (b - t) * (d - t) ) - ( ( (c * c * b) - (c * c * t) - (a * a * d) + (a * a * t) ) / (b - d) ) ) #(-1 * (b-t) * (d-t)) + (( (c**2) * (b-t) ) + ( (a**2) * (d-t) )) / (b-d)
+        # x = ((-1 * n) + ( (n**2) - (4 * m))**0.5) / 2#((-1 * n) - ( (n**2) - (4 * m))**0.5) / 2
+        # Math is the same as otherXOnBisectorAtT except e is replaced with a and f is replaced with b        
+        m = d-b
+        n = 2 * ( ( (a-c) * (t-b) ) + (a * (b-d)) )        
+        o = -1 * ( ( (b-d) * ( (a**2) + (b**2) - (t**2) ) ) - ( (t-b) * ( (d**2) - (b**2) - (a**2) + (c**2) ) ) )
+        x = ( (-1 * n) + ( ( (n**2) - (4 * m * o) )**0.5 ) ) / (2 * m)                
+        
         return x
     except ZeroDivisionError:
         print(f"zero division error in find2IntersectAtTime with {pt1} {pt2} {pt3} t={t}")        
+        return defaultBounds[1][1] -5                    
+
+def otherXOnBisectorAtT(pt1, pt2, pt3, t): # pt1 and pt2 form the bisector and pt3 makes the parabola that it intersects with
+    try:
+        a, b, c, d, e, f = pt1[0], pt1[1], pt2[0], pt2[1], pt3[0], pt3[1]
+        
+        m = d-b
+        n = 2 * ( ( (a-c) * (t-f) ) + (e * (b-d)) )        
+        o = -1 * ( ( (b-d) * ( (e**2) + (f**2) - (t**2) ) ) - ( (t-f) * ( (d**2) - (b**2) - (a**2) + (c**2) ) ) )
+        x = ( (-1 * n) + ( ( (n**2) - (4 * m * o) )**0.5 ) ) / (2 * m) 
+        return x        
+    except ZeroDivisionError:
+        print(f"zero division error in otherXOnBisectorAtT with {pt1} {pt2} {pt3} t={t}")        
         return defaultBounds[1][1] -5                    
 
 def getTimeAtX(pt1, pt2, pt3, x): # finds time when parabola pt1 has given x value, (pt1, pt2, pt3) = (pt1, pt3, pt2)
@@ -1047,5 +1066,4 @@ for cell in finalCell:
         #print(pairs)                        
         
 plt.show()
-
 
