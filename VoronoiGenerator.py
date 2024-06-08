@@ -49,10 +49,10 @@ for i in range(1, 8):
 #[[165, 25], [18, 33], [176, 41], [85, 102], [113, 128], [72, 153], [49, 162]] #looks like something is broken since a vertice with a higher y value than its connections does not have the highest time out of the 3
 
 #points = [[144, 2], [143, 11], [71, 34], [68, 133], [104, 139], [108, 182], [135, 187]] #breaks finding second line
-#points = [[21, 25], [45, 31], [162, 44], [132, 75], [109, 97], [7, 157], [31, 185]]
+points = [[21, 25], [45, 31], [162, 44], [132, 75], [109, 97], [7, 157], [31, 185]]
 #[[27, 59], [150, 90], [79, 90], [101, 124], [94, 136], [178, 186], [157, 200]]      
 
-points = [[175, 23], [78, 24], [160, 108], [161, 141], [157, 159], [59, 188], [66, 188]]
+#points = [[175, 23], [78, 24], [160, 108], [161, 141], [157, 159], [59, 188], [66, 188]]
 
 #		bottomleft, topleft, bottomright, topright
 corners = [[0, 0], [0, 200], [200, 0], [200, 200]] #[ [defaultBounds[0][0], defaultBounds[1][1]], [defaultBounds[0][0], defaultBounds[0][1]], [defaultBounds[1][0], defaultBounds[1][1]], [defaultBounds[0][1], defaultBounds[1][0]] ]
@@ -175,7 +175,12 @@ def find2IntersectAtTime(pt1, pt2, t): # finds x-value of intersection of two pa
         m = d-b
         n = 2 * ( ( (a-c) * (t-b) ) + (a * (b-d)) )        
         o = -1 * ( ( (b-d) * ( (a**2) + (b**2) - (t**2) ) ) - ( (t-b) * ( (d**2) - (b**2) - (a**2) + (c**2) ) ) )
-        x = ( (-1 * n) + ( ( (n**2) - (4 * m * o) )**0.5 ) ) / (2 * m)                
+        x = ( (-1 * n) + ( ( (n**2) - (4 * m * o) )**0.5 ) ) / (2 * m)
+#         x = 0
+#         if pt1[0] < pt2[0]:
+#             x = ( (-1 * n) - ( ( (n**2) - (4 * m * o) )**0.5 ) ) / (2 * m)
+#         else:
+#             x = ( (-1 * n) + ( ( (n**2) - (4 * m * o) )**0.5 ) ) / (2 * m)                                                            
         
         return x
     except ZeroDivisionError:
@@ -189,7 +194,13 @@ def otherXOnBisectorAtT(pt1, pt2, pt3, t): # pt1 and pt2 form the bisector and p
         m = d-b
         n = 2 * ( ( (a-c) * (t-f) ) + (e * (b-d)) )        
         o = -1 * ( ( (b-d) * ( (e**2) + (f**2) - (t**2) ) ) - ( (t-f) * ( (d**2) - (b**2) - (a**2) + (c**2) ) ) )
-        x = ( (-1 * n) + ( ( (n**2) - (4 * m * o) )**0.5 ) ) / (2 * m) 
+
+#         x = 0
+#         if pt1[0] < pt2[0]:
+#             x = ( (-1 * n) - ( ( (n**2) - (4 * m * o) )**0.5 ) ) / (2 * m)
+#         else:
+#             x = ( (-1 * n) + ( ( (n**2) - (4 * m * o) )**0.5 ) ) / (2 * m)                        
+        x = ( (-1 * n) - ( ( (n**2) - (4 * m * o) )**0.5 ) ) / (2 * m)#( (-1 * n) + ( ( (n**2) - (4 * m * o) )**0.5 ) ) / (2 * m) 
         return x        
     except ZeroDivisionError:
         print(f"zero division error in otherXOnBisectorAtT with {pt1} {pt2} {pt3} t={t}")        
@@ -347,7 +358,7 @@ for site1 in points: # Sets sites of cells
                                        
     
 print("b")
-for site1 in cell:
+for site1 in cell: # Finds invalid intersects
     #for others in points:
      for entry in cell[site1]:
 #        if cell[site1]["point1"] != others and cell[site1]["point2"] != others and cell[site1]["point3"] != others:
@@ -663,7 +674,7 @@ for vert in vertices:
     #print("vert",vert, vertices[vert])
     print()
     if vertices[vert]["at"].__len__() == 1:
-#         print("vert",vert, vertices[vert])
+        print("vert",vert, vertices[vert])
         tempVertPt = str(vert).removeprefix("[").removesuffix("]").split("_")
         vertPt = [float(tempVertPt[0]), float(tempVertPt[1])]
         
@@ -683,7 +694,7 @@ for vert in vertices:
 
         #site1 = vertices[vert]["sites"][-2]
         #site2 = vertices[vert]["sites"][-1]
-        #print(site1, site2)        
+        #print(site1, site2, site3)        
                                   
 
         pickedSites = [[site1, site2], [site1, site3], [site2, site3]]
@@ -697,6 +708,7 @@ for vert in vertices:
         else:
             pickedSites = pickedSites[1]                                                            
         
+        print("pickedSites",pickedSites)
 
         pair1 = vertices[vert]["with"][0]
         at1 = vertices[vert]["at"][0]
@@ -712,6 +724,7 @@ for vert in vertices:
 #         print(tAtXandY(vertices[vert]["sites"][0], vertPt[0], vertPt[1]))             
 
         bottomMidPt = midPoint(vertices[vert]["sites"][0], vertices[vert]["sites"][1])
+        #bottomMidPt = midPoint(pickedSites[0], pickedSites[1])        
 
 #         print(tAtXandY(vertices[vert]["sites"][0], bottomMidPt[0], bottomMidPt[1]))
 #         print(vertices[vert]["sites"][0], vertices[vert]["sites"][1], pair1)        
@@ -722,10 +735,13 @@ for vert in vertices:
 
         if throughPt != []:
             nearestBound = nearestBoundry(vertPt, throughPt)
-            vertices[vert]["with"].append([pickedSites[0], pickedSites[1]])
+            #vertices[vert]["with"].append([pickedSites[0], pickedSites[1]])
+            vertices[vert]["with"].append([vertices[vert]["sites"][0], vertices[vert]["sites"][1]])            
             vertices[vert]["at"].append(nearestBound)
-            finalCell[f"{str(pickedSites[0]).replace(', ', '_')}"]["vertices"].append([vertPt, nearestBound])
-            finalCell[f"{str(pickedSites[1]).replace(', ', '_')}"]["vertices"].append([vertPt, nearestBound])                        
+            #finalCell[f"{str(pickedSites[0]).replace(', ', '_')}"]["vertices"].append([vertPt, nearestBound])
+            #finalCell[f"{str(pickedSites[1]).replace(', ', '_')}"]["vertices"].append([vertPt, nearestBound])
+            finalCell[f"{str(vertices[vert]['sites'][0]).replace(', ', '_')}"]["vertices"].append([vertPt, nearestBound]) # need to decide what to do with this. I do I always try to use the bottom sites or the ones clossest together?
+            finalCell[f"{str(vertices[vert]['sites'][1]).replace(', ', '_')}"]["vertices"].append([vertPt, nearestBound])                         
 
         #nearestBound = makeEdge(site1, site2, vertPt, midPoint(site1, site2))
         #print(pickedSites[0], pickedSites[1])            
@@ -771,8 +787,9 @@ for vert in vertices:
 #         else:                                            
 #             pair3 = [site2, site3]
 
-        sortSites = vertices[vert]["sites"].copy()
-        sortByY(sortSites)
+        #sortSites = vertices[vert]["sites"].copy()
+        #sortByY(sortSites)
+        sortSites = vertices[vert]["sites"]        
         
         if [sortSites[0], sortSites[1]] not in vertices[vert]["with"]:
             pair3 = [sortSites[0], sortSites[1]]
@@ -833,15 +850,18 @@ for vert in vertices:
         #print(tAtXandY(pair3[0], vertPt[0] + 0.1, pointSlope(vertPt, slope(vertPt, midPt3), vertPt[0] + 0.1)))
         #print(pair3[0], vertPt, pointSlope(vertPt, slope(vertPt, midPt3), vertPt[0] + 0.1))
         
-        ptSlp1 = pointSlope(vertPt, slope(vertPt, midPt1), vertPt[0] + 0.1)
-        ptSlp2 = pointSlope(vertPt, slope(vertPt, midPt2), vertPt[0] + 0.1)
-        ptSlp3 = pointSlope(vertPt, slope(vertPt, midPt3), vertPt[0] + 0.1)                
+        ptSlp1 = pointSlope(vertPt, slope(vertPt, midPt1), vertPt[0] + 0.5)
+        ptSlp2 = pointSlope(vertPt, slope(vertPt, midPt2), vertPt[0] + 0.5)
+        ptSlp3 = pointSlope(vertPt, slope(vertPt, midPt3), vertPt[0] + 0.5)                
         
 #         print(tAtXandY(site1, vertPt[0], vertPt[1]))#, tAtXandY(site2, vertPt[0], vertPt[1]), tAtXandY(site3, vertPt[0], vertPt[1]))
 #         print(tAtXandY(site1, vertPt[0] + 0.1, ptSlp1), tAtXandY(site1, vertPt[0] + 0.1, ptSlp2), tAtXandY(site1, vertPt[0] + 0.1, ptSlp3))
 #         print(tAtXandY(site2, vertPt[0] + 0.1, ptSlp1), tAtXandY(site2, vertPt[0] + 0.1, ptSlp2), tAtXandY(site2, vertPt[0] + 0.1, ptSlp3))
-#         print(tAtXandY(site3, vertPt[0] + 0.1, ptSlp1), tAtXandY(site3, vertPt[0] + 0.1, ptSlp2), tAtXandY(site3, vertPt[0] + 0.1, ptSlp3))
-                               
+#         print(tAtXandY(site3, vertPt[0] + 0.5, ptSlp1), tAtXandY(site3, vertPt[0] + 0.5, ptSlp2), tAtXandY(site3, vertPt[0] + 0.5, ptSlp3))
+            
+        print(tAtXandY(site1, vertPt[0] + 0.5, ptSlp1))
+        print(tAtXandY(site2, vertPt[0] + 0.5, ptSlp2))                   
+        print(tAtXandY(site3, vertPt[0] + 0.5, ptSlp3))
 
         tVertPt = tAtXandY(pair3[0], vertPt[0], vertPt[1])
         #tXAfterVert = getTimeAtX(pair3[0], pair3[1], notInPair[0], vertPt[0] + 5)
@@ -970,6 +990,68 @@ for vert in vertices:
 
         throughPt = []
 
+#         testTimes = []
+#         testTimes.append([{"pair":pair1, "x":find2IntersectAtTime(pair1[0], pair1[1], tVertPt)}, {"pair":[pair1[1], pair1[0]], "x":find2IntersectAtTime(pair1[1], pair1[0], tVertPt)}])
+#         testTimes.append([{"pair":pair2, "x":find2IntersectAtTime(pair2[0], pair2[1], tVertPt)}, {"pair":[pair2[1], pair2[0]], "x":find2IntersectAtTime(pair2[1], pair2[0], tVertPt)}])
+#         testTimes.append([{"pair":pair3, "x":find2IntersectAtTime(pair3[0], pair3[1], tVertPt)}, {"pair":[pair3[1], pair3[0]], "x":find2IntersectAtTime(pair3[1], pair3[0], tVertPt)}])                        
+
+#         for i in range(0, testTimes.__len__()):
+                        
+        testTime = [{"pair":pair3, "x":find2IntersectAtTime(pair3[0], pair3[1], tVertPt)}, {"pair":[pair3[1], pair3[0]], "x":find2IntersectAtTime(pair3[1], pair3[0], tVertPt)}]      
+        dist1 = abs(vertPt[0] - testTime[0]["x"])#distancePt(vertPt, [testTime[0]["x"], yAtX(testTime[0]["pair"][0], testTime[0]["pair"][1], testTime[0]["x"])])
+        dist2 = abs(vertPt[0] - testTime[1]["x"])
+
+        if dist1 > dist2:
+            del testTime[0]
+        else:
+            del testTime[1]
+
+        testTime = testTime[0]
+        print("testTime",testTime)
+        print(find2IntersectAtTime(testTime["pair"][0], testTime["pair"][1], tVertPt + 0.5), yAtX(testTime["pair"][0], testTime["pair"][1], find2IntersectAtTime(testTime["pair"][0], testTime["pair"][1], tVertPt + 0.5)))                                                                       
+
+        x1 = find2IntersectAtTime(testTime["pair"][0], testTime["pair"][1], tVertPt + 0.5)
+        x2 = find2IntersectAtTime(testTime["pair"][0], testTime["pair"][1], tVertPt - 0.5)
+
+        testPt1 = [x1, yAtX(pair3[0], pair3[1], x1)]
+        testPt2 = [x2, yAtX(pair3[0], pair3[1], x2)]
+
+        print(vertPt, testPt1, testPt2)
+
+        #y1 = yAtX(vertices[vert]["with"][0][0], vertices[vert]["with"][0][1], vertices[vert]["at"][0][0])
+        #y2 = yAtX(vertices[vert]["with"][1][0], vertices[vert]["with"][1][1], vertices[vert]["at"][1][0])
+       
+        print(tAtXandY(vertices[vert]["at"][0], vertices[vert]["at"][0][0], vertices[vert]["at"][0][1]))
+        print(tAtXandY(vertices[vert]["at"][1], vertices[vert]["at"][1][0], vertices[vert]["at"][1][1]))
+
+        t1 = tAtXandY(vertices[vert]["at"][0], vertices[vert]["at"][0][0], vertices[vert]["at"][0][1])
+        t2 = tAtXandY(vertices[vert]["at"][1], vertices[vert]["at"][1][0], vertices[vert]["at"][1][1])
+
+#         if t1 < tVertPt and t2 < tVertPt:
+#             throughPt = testPt1
+#         else:
+#             pass            
+#             #throughPt = testPt2                                                                            
+
+#         if pair3[1][1] >= site3[1] and vertPt[1] >= site1[1]:
+#             throughPt = testPt1
+#         else:                                                            
+#             throughPt = testPt2
+        #throughPt = []#midPoint(pair3[0], pair3[1])#[find2IntersectAtTime(testTime["pair"][0], testTime["pair"][1], tVertPt + 0.5), yAtX(testTime["pair"][0], testTime["pair"][1], find2IntersectAtTime(testTime["pair"][0], testTime["pair"][1], tVertPt + 0.5))]
+
+        throughPt = []
+    
+        temp = pair3.copy()
+        if temp[0][0] > temp[1][0]:
+            temp[0], temp[1] = temp[1], temp[0]
+
+        print("temp",temp)
+        print(notInPair)
+        if notInPair[0][0] < temp[0][0] or notInPair[0][0] > temp[1][0]:
+            throughPt = midPoint(pair3[0], pair3[1])                                                    
+
+
+        #throughPt = []
         if throughPt != []:                                                        
 
             nearestBound = nearestBoundry(vertPt, throughPt)
@@ -1066,4 +1148,5 @@ for cell in finalCell:
         #print(pairs)                        
         
 plt.show()
+
 
