@@ -168,8 +168,8 @@ def find3IntersectX(pt1, pt2, pt3): # division by zero happens with the points (
 def find2IntersectAtTime(pt1, pt2, t): # finds x-value of intersection of two parabolas at given time, imaginary if it doesn't exist (this is diff than getTimeAtX(?))
     try:    
         a, b, c, d = pt1[0], pt1[1], pt2[0], pt2[1]
-        n = (2 * ((-1 * c * b) + (c * t) + (a * d) - (a * t))) / (b-d)
-        m = -1 * ( ( (b - t) * (d - t) ) - ( ( (c * c * b) - (c * c * t) - (a * a * d) + (a * a * t) ) / (b - d) ) ) #(-1 * (b-t) * (d-t)) + (( (c**2) * (b-t) ) + ( (a**2) * (d-t) )) / (b-d)
+        n = ( 2 * ( (c * (t-b)) + (a * (d-t)) ) ) / (b-d)#(2 * ((-1 * c * b) + (c * t) + (a * d) - (a * t))) / (b-d)
+        m = (-1 * (b-t) * (d-t) ) + ( (( (c**2) * (b-t) ) + ( (a**2) * (t-d) )) / (b-d) )#-1 * ( ( (b - t) * (d - t) ) - ( ( (c * c * b) - (c * c * t) - (a * a * d) + (a * a * t) ) / (b - d) ) ) #(-1 * (b-t) * (d-t)) + (( (c**2) * (b-t) ) + ( (a**2) * (d-t) )) / (b-d)
         x = ((-1 * n) + ( (n**2) - (4 * m))**0.5) / 2#((-1 * n) - ( (n**2) - (4 * m))**0.5) / 2
         return x
     except ZeroDivisionError:
@@ -825,22 +825,26 @@ for vert in vertices:
                                
 
         tVertPt = tAtXandY(pair3[0], vertPt[0], vertPt[1])
-        tXAfterVert = getTimeAtX(pair3[0], pair3[1], notInPair[0], vertPt[0] + 5)
+        #tXAfterVert = getTimeAtX(pair3[0], pair3[1], notInPair[0], vertPt[0] + 5)
         #tXBeforeVert = getTimeAtX(site1, site2, site3, vertPt[0] - 5)
 
         print("---")
         print(vertPt, tVertPt)        
-        print(find2IntersectAtTime(pair1[0], pair1[1], tVertPt - 0.5))
-        print(find2IntersectAtTime(pair1[0], pair1[1], tVertPt + 0.5)) 
-        print(find2IntersectAtTime(pair2[0], pair2[1], tVertPt - 0.5))
-        print(find2IntersectAtTime(pair2[0], pair2[1], tVertPt + 0.5))         
-        print(find2IntersectAtTime(pair3[0], pair3[1], tVertPt - 0.5))
-        print(find2IntersectAtTime(pair3[0], pair3[1], tVertPt + 0.5)) 
+        print(find2IntersectAtTime(pair1[0], pair1[1], tVertPt - 0.5), pair1)
+        print(find2IntersectAtTime(pair1[0], pair1[1], tVertPt + 0.5), pair1) 
+        print(find2IntersectAtTime(pair2[0], pair2[1], tVertPt - 0.5), pair2)
+        print(find2IntersectAtTime(pair2[0], pair2[1], tVertPt + 0.5), pair2)         
+        print(find2IntersectAtTime(pair3[0], pair3[1], tVertPt - 0.5), pair3)
+        print(find2IntersectAtTime(pair3[0], pair3[1], tVertPt + 0.5), pair3)
+        print("---")
+        print(find2IntersectAtTime(pair1[0], pair1[1], tVertPt), find2IntersectAtTime(pair1[1], pair1[0], tVertPt))
+        print(find2IntersectAtTime(pair2[0], pair2[1], tVertPt), find2IntersectAtTime(pair2[1], pair2[0], tVertPt)) 
+        print(find2IntersectAtTime(pair3[0], pair3[1], tVertPt), find2IntersectAtTime(pair3[1], pair3[0], tVertPt))                                  
 #         print("---")
 #         print(tAtXandY(site1, vertPt[0], vertPt[1]))        
 #         print(tAtXandY(notInPair[0], midPt1[0], midPt1[1]))
 #         print(tAtXandY(notInPair[0], midPt2[0], midPt2[1]))
-#         print(tAtXandY(pair3[0], midPt3[0], midPt3[1]))
+#         #print(tAtXandY(pair3[0], midPt3[0], midPt3[1]))
 #         print(tAtXandY(pair3[1], vertPt[0] + 0.5, yAtX(pair3[0], pair3[1], vertPt[0] + 0.5))) 
 #         print(tAtXandY(pair3[1], vertPt[0] - 0.5, yAtX(pair3[0], pair3[1], vertPt[0] - 0.5)))                
 #         print("---")
@@ -1043,4 +1047,5 @@ for cell in finalCell:
         #print(pairs)                        
         
 plt.show()
+
 
