@@ -8,6 +8,12 @@ from math import *
 
 #                 width     height
 defaultBounds = [[0, 200], [200, 0]]
+
+
+points = []
+for i in range(1, 8):
+      points.append([random.randint(0, 200), random.randint(0, 200)])  
+
 #points = [(50, 50), (25, 25), (75, 75), (98, 70)]
 #points = [(50, 50), (25, 20), (75, 75), (98, 70)]
 #points = [(30, 40), (25, 60), (80, 97)]
@@ -15,9 +21,7 @@ defaultBounds = [[0, 200], [200, 0]]
 #points = [[30, 30], [40, 40], [10, 50]]
 #points = [[90,81],[48,121],[163,120],[83,23]]
 
-points = []
-for i in range(1, 8):
-      points.append([random.randint(0, 200), random.randint(0, 200)])  
+      
 
 #points = [[59, 55], [30, 88], [1, 93]] #[[186, 15], [162, 127], [25, 144]] this is pretty much just a bigger version of the first set
 #points = [[186, 15], [162, 127], [25, 144]]
@@ -58,6 +62,12 @@ for i in range(1, 8):
 #points = [[153, 24], [74, 52], [197, 54], [169, 69], [88, 143], [57, 169], [18, 188]]
 
 #points = [[5, 19], [5, 43], [140, 56], [93, 87], [37, 117], [117, 179], [188, 199]] # causes division by 0 in nearestBoundry
+
+#[[90, 22], [164, 23], [9, 118], [91, 120], [200, 179], [29, 195], [138, 199]] # neat
+
+#points = [[146, 15], [189, 55], [44, 75], [90, 95], [52, 138], [111, 157], [117, 181]]
+
+points = [[159, 14], [49, 18], [63, 32], [87, 48], [191, 60], [131, 99], [150, 183]]
 
 #		bottomleft, topleft, bottomright, topright
 corners = [[0, 0], [0, 200], [200, 0], [200, 200]] #[ [defaultBounds[0][0], defaultBounds[1][1]], [defaultBounds[0][0], defaultBounds[0][1]], [defaultBounds[1][0], defaultBounds[1][1]], [defaultBounds[0][1], defaultBounds[1][0]] ]
@@ -395,38 +405,38 @@ for site1 in points: # Sets sites of cells
                     halfHeight = (defaultBounds[1][1] + defaultBounds[1][0])/2                                       
                     if t > site1[1] and t > site2[1] and t > site3[1] and x >= defaultBounds[0][0] - (halfWidth/2) and x <= defaultBounds[0][1] + (halfWidth/2) and y >= defaultBounds[1][1] - (halfHeight/2) and y <= defaultBounds[1][0] + (halfHeight/2):                     
 
-                        if x >= defaultBounds[0][0] and x <= defaultBounds[0][1] and y >= defaultBounds[1][1] and y <= defaultBounds[1][0]: # If it is within the normal bounds
-                            if f"{str(site1).replace(', ', '_')}" in cell:
-                                cell[f"{str(site1).replace(', ', '_')}"].append({"point1":site1, "point2":site2, "point3":site3, "time":float("%.10f" % t), "at":[float("%.10f" % x), float("%.10f" % y)]})
-                            else:                            
-                                cell.update({f"{str(site1).replace(', ', '_')}" : [{"point1":site1, "point2":site2, "point3":site3, "time":float("%.10f" % t), "at":[float("%.10f" % x), float("%.10f" % y)]}]})      
-                        
-                        else: # if it is outside the normal bounds but within the buffer bounds
-                            print("line354",[float("%.10f" % x), float("%.10f" % y)])
+#                         if x >= defaultBounds[0][0] and x <= defaultBounds[0][1] and y >= defaultBounds[1][1] and y <= defaultBounds[1][0]: # If it is within the normal bounds
+#                             if f"{str(site1).replace(', ', '_')}" in cell:
+#                                 cell[f"{str(site1).replace(', ', '_')}"].append({"point1":site1, "point2":site2, "point3":site3, "time":float("%.10f" % t), "at":[float("%.10f" % x), float("%.10f" % y)]})
+#                             else:                            
+#                                 cell.update({f"{str(site1).replace(', ', '_')}" : [{"point1":site1, "point2":site2, "point3":site3, "time":float("%.10f" % t), "at":[float("%.10f" % x), float("%.10f" % y)]}]})      
+#                         
+#                         else: # if it is outside the normal bounds but within the buffer bounds
+#                             #print("line354",[float("%.10f" % x), float("%.10f" % y)])
+# 
+# #                             midPt1 = midPoint(site1, site2)
+# #                             midPt2 = midPoint(site1, site3)
+# 
+#                             #bound1 = nearestBoundry([x, y], midPt1)
+#                             #bound2 = nearestBoundry([x, y], midPt2)
+# 
+# #                             slope1 = slope([x, y], midPt1)
+# #                             slope2 = slope([x, y], midPt2)                            
+# 
+# #                             bound1 = nearestOutsideBoundry([x, y], midPt1)
+# #                             bound2 = nearestOutsideBoundry([x, y], midPt2)
+# 
+# #                             print("bounds",bound1,bound2)                                                        
+#                                                                                                            
+#                             if f"{str(site1).replace(', ', '_')}" in cell:
+#                                 cell[f"{str(site1).replace(', ', '_')}"].append({"point1":site1, "point2":site2, "point3":site3, "time":float("%.10f" % t), "at":[float("%.10f" % x), float("%.10f" % y)]})
+#                             else:                            
+#                                 cell.update({f"{str(site1).replace(', ', '_')}" : [{"point1":site1, "point2":site2, "point3":site3, "time":float("%.10f" % t), "at":[float("%.10f" % x), float("%.10f" % y)]}]})
 
-#                             midPt1 = midPoint(site1, site2)
-#                             midPt2 = midPoint(site1, site3)
-
-                            #bound1 = nearestBoundry([x, y], midPt1)
-                            #bound2 = nearestBoundry([x, y], midPt2)
-
-#                             slope1 = slope([x, y], midPt1)
-#                             slope2 = slope([x, y], midPt2)                            
-
-#                             bound1 = nearestOutsideBoundry([x, y], midPt1)
-#                             bound2 = nearestOutsideBoundry([x, y], midPt2)
-
-#                             print("bounds",bound1,bound2)                                                        
-                                                                                                           
-                            if f"{str(site1).replace(', ', '_')}" in cell:
-                                cell[f"{str(site1).replace(', ', '_')}"].append({"point1":site1, "point2":site2, "point3":site3, "time":float("%.10f" % t), "at":[float("%.10f" % x), float("%.10f" % y)]})
-                            else:                            
-                                cell.update({f"{str(site1).replace(', ', '_')}" : [{"point1":site1, "point2":site2, "point3":site3, "time":float("%.10f" % t), "at":[float("%.10f" % x), float("%.10f" % y)]}]})
-
-#                         if f"{str(site1).replace(', ', '_')}" in cell:
-#                             cell[f"{str(site1).replace(', ', '_')}"].append({"point1":site1, "point2":site2, "point3":site3, "time":float("%.10f" % t), "at":[float("%.10f" % x), float("%.10f" % y)]})
-#                         else:                            
-#                             cell.update({f"{str(site1).replace(', ', '_')}" : [{"point1":site1, "point2":site2, "point3":site3, "time":float("%.10f" % t), "at":[float("%.10f" % x), float("%.10f" % y)]}]})
+                        if f"{str(site1).replace(', ', '_')}" in cell:
+                            cell[f"{str(site1).replace(', ', '_')}"].append({"point1":site1, "point2":site2, "point3":site3, "time":float("%.10f" % t), "at":[float("%.10f" % x), float("%.10f" % y)]})
+                        else:                            
+                            cell.update({f"{str(site1).replace(', ', '_')}" : [{"point1":site1, "point2":site2, "point3":site3, "time":float("%.10f" % t), "at":[float("%.10f" % x), float("%.10f" % y)]}]})
 
 
                                 
@@ -469,7 +479,7 @@ for entry in cell:
         if vert["point3"] not in usedPoints:
             usedPoints.append(vert["point3"])                                                    
 
-#print(usedPoints)                
+#print("used",usedPoints)                
 
 for i in range(points.__len__()):   
     point = points[i]    
@@ -501,7 +511,7 @@ for i in range(points.__len__()):
         #    [pts[0], pts[1]]
         #    ]}})
         #finalCell[f"{str(point).replace(', ', '_')}"]["vertices"].append([pts[0], pts[1]])
-
+        print("line508",pts[0], pts[1])
         if not f"{str(point).replace(', ', '_')}" in finalCell:        
             finalCell.update({f"{str(point).replace(', ', '_')}":{"site":point, "vertices":[ #I should add onto this list so that the list of verticies will also include the corner
             [pts[0], pts[1]]
@@ -515,7 +525,7 @@ for i in range(points.__len__()):
 #         elif tempPair not in finalCell[f"{str(relative[1]).replace(', ', '_')}"]["vertices"]:
 #             finalCell[f"{str(point).replace(', ', '_')}"]["vertices"].append(tempPair)
 #             #pass                        
-        print("line388",sortByY)            
+        #print("line388",sortByY)            
         #relative = points.copy()
         #distanceTargetSort(point, points)
         #distanceTargetSort(point, relative)        
@@ -649,7 +659,7 @@ for site in cell: # Finds edges for cells
                                             
                         finalCell[site]["vertices"].append([entry["at"], entry2["at"]])
                         #print(site, [pt1, pt2, pt3], [entry2["point1"], entry2["point2"], entry2["point3"]])
-
+                        print("line656",entry["at"],entry2["at"])
                         atName = f"{str(entry['at']).replace(', ', '_')}"
 
                         if atName not in vertices:
@@ -709,6 +719,7 @@ for vert in vertices:
 
         if throughPt != []:
             nearestBound = nearestBoundry(vertPt, throughPt)
+            print("line716bounds",nearestBound)            
             vertices[vert]["with"].append([pickedSites[0], pickedSites[1]])
             vertices[vert]["at"].append(nearestBound)
             finalCell[f"{str(pickedSites[0]).replace(', ', '_')}"]["vertices"].append([vertPt, nearestBound])            
@@ -724,7 +735,7 @@ for vert in vertices:
 #                 pass                
 
     if vertices[vert]["at"].__len__() == 2:
-        print("vert",vert, vertices[vert])
+        #print("vert",vert, vertices[vert])
         tempVertPt = str(vert).removeprefix("[").removesuffix("]").split("_")
         vertPt = [float(tempVertPt[0]), float(tempVertPt[1])]
 
@@ -838,12 +849,18 @@ for vert in vertices:
                 newBound1 = nearestOutsideBoundry(vertPt, throughPt)
                 newBound2 = nearestOutsideBoundry(vertPt, vertices[vert]["at"][0])
                 newBound3 = nearestOutsideBoundry(vertPt, vertices[vert]["at"][1])
-                #print(newBound1, newBound2, newBound3)
+                print('vertPt',vertPt)                
+                print("bounds",newBound1, newBound2, newBound3)
 
-                finalCell[f"{str(vertices[vert]['with'][0][0]).replace(', ', '_')}"]["vertices"].append([vertPt, newBound2])
-                finalCell[f"{str(vertices[vert]['with'][0][1]).replace(', ', '_')}"]["vertices"].append([vertPt, newBound2])
-                finalCell[f"{str(vertices[vert]['with'][1][0]).replace(', ', '_')}"]["vertices"].append([vertPt, newBound3])
-                finalCell[f"{str(vertices[vert]['with'][1][1]).replace(', ', '_')}"]["vertices"].append([vertPt, newBound3])                                                                                                                        
+                # finalCell[f"{str(vertices[vert]['with'][0][0]).replace(', ', '_')}"]["vertices"].append([vertPt, newBound2])
+                # finalCell[f"{str(vertices[vert]['with'][0][1]).replace(', ', '_')}"]["vertices"].append([vertPt, newBound2])
+                # finalCell[f"{str(vertices[vert]['with'][1][0]).replace(', ', '_')}"]["vertices"].append([vertPt, newBound3])
+                # finalCell[f"{str(vertices[vert]['with'][1][1]).replace(', ', '_')}"]["vertices"].append([vertPt, newBound3])
+
+                finalCell[f"{str(vertices[vert]['with'][0][0]).replace(', ', '_')}"]["vertices"].append([vertices[vert]["at"][0], newBound2])
+                finalCell[f"{str(vertices[vert]['with'][0][1]).replace(', ', '_')}"]["vertices"].append([vertices[vert]["at"][0], newBound2])
+                finalCell[f"{str(vertices[vert]['with'][1][0]).replace(', ', '_')}"]["vertices"].append([vertices[vert]["at"][1], newBound3])
+                finalCell[f"{str(vertices[vert]['with'][1][1]).replace(', ', '_')}"]["vertices"].append([vertices[vert]["at"][1], newBound3])                                                                                                                                         
                         
                 if (nearestBound[0] == defaultBounds[0][0] or nearestBound[0] == defaultBounds[0][1]) and (nearestBound[1] <= defaultBounds[1][0] and nearestBound[1] >= defaultBounds[1][1]):
                     finalCell[f"{str(pair3[0]).replace(', ', '_')}"]["vertices"].append([newBound1, nearestBound])
@@ -858,17 +875,18 @@ for vert in vertices:
 #                 vertices[vert]["with"].append([pair3[0], pair3[1]])
 #                 vertices[vert]["at"].append(nearestBound)
 
-                if (nearestBound[0] == defaultBounds[0][0] or nearestBound[0] == defaultBounds[0][1]) and (nearestBound[1] <= defaultBounds[1][0] and nearestBound[1] >= defaultBounds[1][1]):
-                    finalCell[f"{str(pair3[0]).replace(', ', '_')}"]["vertices"].append([vertPt, nearestBound])
-                    finalCell[f"{str(pair3[1]).replace(', ', '_')}"]["vertices"].append([vertPt, nearestBound])                    
-                elif (nearestBound[1] == defaultBounds[1][0] or nearestBound[1] == defaultBounds[1][1]) and (nearestBound[0] >= defaultBounds[0][0] and nearestBound[0] <= defaultBounds[0][1]):                    
-                    finalCell[f"{str(pair3[0]).replace(', ', '_')}"]["vertices"].append([vertPt, nearestBound])
-                    finalCell[f"{str(pair3[1]).replace(', ', '_')}"]["vertices"].append([vertPt, nearestBound])
+#                 if (nearestBound[0] == defaultBounds[0][0] or nearestBound[0] == defaultBounds[0][1]) and (nearestBound[1] <= defaultBounds[1][0] and nearestBound[1] >= defaultBounds[1][1]):
+#                     finalCell[f"{str(pair3[0]).replace(', ', '_')}"]["vertices"].append([vertPt, nearestBound])
+#                     finalCell[f"{str(pair3[1]).replace(', ', '_')}"]["vertices"].append([vertPt, nearestBound])                    
+#                 elif (nearestBound[1] == defaultBounds[1][0] or nearestBound[1] == defaultBounds[1][1]) and (nearestBound[0] >= defaultBounds[0][0] and nearestBound[0] <= defaultBounds[0][1]):                    
+#                     finalCell[f"{str(pair3[0]).replace(', ', '_')}"]["vertices"].append([vertPt, nearestBound])
+#                     finalCell[f"{str(pair3[1]).replace(', ', '_')}"]["vertices"].append([vertPt, nearestBound])
                 #finalCell[f"{str(pair3[0]).replace(', ', '_')}"]["vertices"].append([vertPt, nearestBound])
                 #finalCell[f"{str(pair3[1]).replace(', ', '_')}"]["vertices"].append([vertPt, nearestBound])
                 #print("nearestBound", nearestBound, "through", throughPt)                
             else:                            
                 nearestBound = nearestBoundry(vertPt, throughPt)
+                print("nearestBound",nearestBound)                
                 vertices[vert]["with"].append([pair3[0], pair3[1]])
                 vertices[vert]["at"].append(nearestBound)
                 finalCell[f"{str(pair3[0]).replace(', ', '_')}"]["vertices"].append([vertPt, nearestBound])
@@ -880,9 +898,29 @@ for vert in vertices:
 #                 if tempPair not in finalCell[f"{str(pair3[1]).replace(', ', '_')}"]["vertices"]:                    
 #                     finalCell[f"{str(pair3[1]).replace(', ', '_')}"]["vertices"].append(tempPair)            
 
-for cell2 in finalCell:
-    print(finalCell[cell2])    
+for cell3 in finalCell:
+    tempVerts = finalCell[cell3]["vertices"].copy()
+    sortByY(tempVerts)
+    for vert in tempVerts:
+        sortByY(vert)
+    unique = []
+    #print("site",cell3)
+    for vert in tempVerts:
+        #print("vert",vert)        
+        if vert not in unique and vert[0] != vert[1]:
+            if vert[0][0] >= defaultBounds[0][0] and vert[0][0] <= defaultBounds[0][1] and vert[0][1] >= defaultBounds[1][1] and vert[0][1] <= defaultBounds[1][0]:            
+                if vert[1][0] >= defaultBounds[0][0] and vert[1][0] <= defaultBounds[0][1] and vert[1][1] >= defaultBounds[1][1] and vert[1][1] <= defaultBounds[1][0]:             
+                    unique.append(vert)                       
+                    
 
+    print(tempVerts)
+    print(unique)
+    print()
+
+    finalCell[cell3]["vertices"] = unique                        
+
+#for cell2 in finalCell:
+#    print(finalCell[cell2])    
 
 for pt in points:
     plt.plot(pt[0], pt[1], "ro")
@@ -917,6 +955,7 @@ for cell in finalCell:
         #print(pairs)                        
         
 plt.show()
+
 
 
 
