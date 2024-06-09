@@ -16,9 +16,9 @@ for i in range(1, 8):
 
 #points = [[50, 50], [25, 25], [75, 75], [98, 70]]
 #points = [[50, 50], [25, 20], [75, 75], [98, 70]]
-#points = [[30, 40], [25, 60], [80, 97]]
+points = [[30, 40], [25, 60], [80, 97]]
 #points = [[50, 50], [75, 75]]  
-# points = [[50, 50]]    
+#points = [[50, 50]]    
 
 #points = [[30, 30], [40, 40], [10, 50]]
 #points = [[90,81],[48,121],[163,120],[83,23]]
@@ -68,8 +68,6 @@ for i in range(1, 8):
 #[[90, 22], [164, 23], [9, 118], [91, 120], [200, 179], [29, 195], [138, 199]] # neat
 
 #points = [[146, 15], [189, 55], [44, 75], [90, 95], [52, 138], [111, 157], [117, 181]]
-
-points = [[159, 14], [49, 18], [63, 32], [87, 48], [191, 60], [131, 99], [150, 183]]
 
 #		bottomleft, topleft, bottomright, topright
 corners = [[0, 0], [0, 200], [200, 0], [200, 200]] #[ [defaultBounds[0][0], defaultBounds[1][1]], [defaultBounds[0][0], defaultBounds[0][1]], [defaultBounds[1][0], defaultBounds[1][1]], [defaultBounds[0][1], defaultBounds[1][0]] ]
@@ -471,7 +469,7 @@ if removeVerts.__len__() > 0:
         except Exception:
             pass                                            
 
-print(cell)
+#print(cell)
 if points.__len__() == 3:
     kys = list(cell.keys())
     #print("line475",cell[kys[0]][0])
@@ -506,7 +504,6 @@ else:
             distanceTargetSort(point, relative)
         
             site2 = relative[1]
-        
         
             #print(point, site2)
             boundLy = yAtX(point, site2, defaultBounds[0][0])
@@ -704,21 +701,21 @@ for site in cell: # Finds edges for cells
         except Exception as e:
             print(f"site2: {e} not in cell") 
 
-for a in finalCell:
-    print("finalCell",a,finalCell[a])
-print()    
-for b in vertices:
-    print("vertices",b,vertices[b])
-print()    
-for c in cell:
-    print("cell",c,cell[c])                    
+#for a in finalCell:
+#    print("finalCell",a,finalCell[a])
+#print()    
+#for b in vertices:
+#    print("vertices",b,vertices[b])
+#print()    
+#for c in cell:
+#    print("cell",c,cell[c])                    
 
-print()
+#print()
 for vert in vertices:
     #print("vert",vert, vertices[vert])
     #print()
     if vertices[vert]["at"].__len__() == 1:
-        print("vert",vert, vertices[vert])
+        #print("vert",vert, vertices[vert])
         tempVertPt = str(vert).removeprefix("[").removesuffix("]").split("_")
         vertPt = [float(tempVertPt[0]), float(tempVertPt[1])]
 
@@ -741,7 +738,7 @@ for vert in vertices:
 
         if throughPt != []:
             nearestBound = nearestBoundry(vertPt, throughPt)
-            print("line716bounds",nearestBound)            
+            #print("line716bounds",nearestBound)            
             vertices[vert]["with"].append([pickedSites[0], pickedSites[1]])
             vertices[vert]["at"].append(nearestBound)
             finalCell[f"{str(pickedSites[0]).replace(', ', '_')}"]["vertices"].append([vertPt, nearestBound])            
@@ -851,7 +848,7 @@ for vert in vertices:
                   
             else:                            
                 nearestBound = nearestBoundry(vertPt, throughPt)
-                print("nearestBound",nearestBound)                
+                #print("nearestBound",nearestBound)                
                 vertices[vert]["with"].append([pair3[0], pair3[1]])
                 vertices[vert]["at"].append(nearestBound)
                 finalCell[f"{str(pair3[0]).replace(', ', '_')}"]["vertices"].append([vertPt, nearestBound])
@@ -863,9 +860,9 @@ for cell3 in finalCell:
     for vert in tempVerts:
         sortByY(vert)
     unique = []
-    print("site",cell3)
+    #print("site",cell3)
     for vert in tempVerts:
-        print("vert",vert)        
+        #print("vert",vert)        
         if vert not in unique and vert[0] != vert[1]:
             if vert[0][0] >= defaultBounds[0][0] and vert[0][0] <= defaultBounds[0][1] and vert[0][1] >= defaultBounds[1][1] and vert[0][1] <= defaultBounds[1][0]:            
                 if vert[1][0] >= defaultBounds[0][0] and vert[1][0] <= defaultBounds[0][1] and vert[1][1] >= defaultBounds[1][1] and vert[1][1] <= defaultBounds[1][0]:             
@@ -893,14 +890,64 @@ for cell3 in finalCell:
         unique = [[bound1, bound2]]
         sortByY(unique[0])                                                                              
 
-    #print(tempVerts)
-    #print(unique)
-    #print()
     if points.__len__() > 1:
         finalCell[cell3]["vertices"] = unique                        
 
-#for cell2 in finalCell:
-#    print(finalCell[cell2])    
+boundryEdges = []
+center = midPoint(defaultBounds[0], defaultBounds[1])    
+for cell2 in finalCell:
+    #print(finalCell[cell2]["vertices"])
+#     for vert1 in finalCell[cell2]["vertices"]:
+#         for vert2 in finalCell[cell2]["vertices"]:
+#             if vert1 != vert2:
+#                 if vert1[0] == vert2[0] or vert1[0] == vert2[0] or vert1[1] == vert2[0] or vert1[1] == vert2[1]:                 
+#                     if vert1[0][0] == defaultBounds[0][0] or vert1[0][0] == defaultBounds[0][1]: 
+#                         boundryEdges.append({"cell":cell2, "vert1":vert1, "vert2":vert2})
+    onBoundry = []
+    for vert in finalCell[cell2]["vertices"]:
+        boundSize = [defaultBounds[0][0], defaultBounds[0][1], defaultBounds[1][0] ,defaultBounds[1][1]]        
+        if vert[0][0] in boundSize or vert[0][1] in boundSize:
+            onBoundry.append([vert[0], normalTheta(vert[0], center)])
+        elif vert[1][0] in boundSize or vert[1][1] in boundSize:
+            onBoundry.append([vert[1], normalTheta(vert[1], center)])            
+
+    #print(onBoundry)
+    if onBoundry != []:
+        #print(nearestBoundry(onBoundry[0], onBoundry[1]))
+        withCorners = onBoundry.copy()        
+        withCorners.append([corners[0], normalTheta(corners[0], center)])
+        withCorners.append([corners[1], normalTheta(corners[1], center)])
+        withCorners.append([corners[2], normalTheta(corners[2], center)])
+        withCorners.append([corners[3], normalTheta(corners[3], center)])
+                                
+        sortByY(onBoundry)
+        sortByY(withCorners)                
+
+        indexes = []
+        within = []
+        boundries = []        
+        print("withCorners",withCorners)    
+        for point in onBoundry:
+            #print(normalTheta(point, center))
+            #print(withCorners.index(point))
+            indexes.append(withCorners.index(point))
+
+        for i in range(0, indexes.__len__(), 2):
+            #print(indexes[i], indexes[i+1])
+            #print(withCorners[indexes[i]:indexes[i+1]+1])
+            print(indexes[i], indexes[i+1]+1)
+            print(withCorners[indexes[i]:indexes[i+1]+1])                        
+            within.append(withCorners[indexes[i]:indexes[i+1]+1])                                                
+                                    
+        #print(within[0])
+        for i in range(0, within.__len__()-1):
+            #print(within[i])            
+            boundries.append([[within[i][0]], [within[i+1][0]]])
+
+        #print(boundries)
+        print()        
+                                                                                                                                                           
+
 
 for pt in points:
     plt.plot(pt[0], pt[1], "ro")
@@ -935,9 +982,3 @@ for cell in finalCell:
         #print(pairs)                        
         
 plt.show()
-
-
-
-
-
-
