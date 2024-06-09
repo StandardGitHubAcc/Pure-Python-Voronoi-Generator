@@ -14,9 +14,11 @@ points = []
 for i in range(1, 8):
       points.append([random.randint(0, 200), random.randint(0, 200)])  
 
-#points = [(50, 50), (25, 25), (75, 75), (98, 70)]
-#points = [(50, 50), (25, 20), (75, 75), (98, 70)]
-#points = [(30, 40), (25, 60), (80, 97)]
+#points = [[50, 50], [25, 25], [75, 75], [98, 70]]
+#points = [[50, 50], [25, 20], [75, 75], [98, 70]]
+#points = [[30, 40], [25, 60], [80, 97]]
+#points = [[50, 50], [75, 75]]  
+points = [[50, 50]]    
 
 #points = [[30, 30], [40, 40], [10, 50]]
 #points = [[90,81],[48,121],[163,120],[83,23]]
@@ -66,8 +68,6 @@ for i in range(1, 8):
 #[[90, 22], [164, 23], [9, 118], [91, 120], [200, 179], [29, 195], [138, 199]] # neat
 
 #points = [[146, 15], [189, 55], [44, 75], [90, 95], [52, 138], [111, 157], [117, 181]]
-
-points = [[159, 14], [49, 18], [63, 32], [87, 48], [191, 60], [131, 99], [150, 183]]
 
 #		bottomleft, topleft, bottomright, topright
 corners = [[0, 0], [0, 200], [200, 0], [200, 200]] #[ [defaultBounds[0][0], defaultBounds[1][1]], [defaultBounds[0][0], defaultBounds[0][1]], [defaultBounds[1][0], defaultBounds[1][1]], [defaultBounds[0][1], defaultBounds[1][0]] ]
@@ -380,7 +380,7 @@ for site1 in points: # Sets sites of cells
                 if site3 != site2 and site3 != site1:
                     sites = [site1, site2, site3]
                     sortByY(sites)                    
-                    
+                    #print(site1)
                     #x = find3IntersectX(site1, site2, site3) # the order of the points put in matters (?)
                     #t = getTimeAtX(site1, site2, site3, x) # the order of the points put in matters
                     #y = getYAtTimeAndX(site1, t, x)
@@ -540,7 +540,7 @@ for i in range(points.__len__()):
 
 #print(cell)
                 
-    
+
 
 
 
@@ -659,7 +659,7 @@ for site in cell: # Finds edges for cells
                                             
                         finalCell[site]["vertices"].append([entry["at"], entry2["at"]])
                         #print(site, [pt1, pt2, pt3], [entry2["point1"], entry2["point2"], entry2["point3"]])
-                        print("line656",entry["at"],entry2["at"])
+                        #print("line656",entry["at"],entry2["at"])
                         atName = f"{str(entry['at']).replace(', ', '_')}"
 
                         if atName not in vertices:
@@ -691,12 +691,24 @@ for site in cell: # Finds edges for cells
         except Exception as e:
             print(f"site2: {e} not in cell") 
 
-updateVertices = []
+for a in finalCell:
+    print("finalCell",a,finalCell[a])
+print()    
+for b in vertices:
+    print("vertices",b,vertices[b])
+print()    
+for c in cell:
+    print("cell",c,cell[c])                    
+
+#print("finalCell",finalCell)
+#print("vetices",vertices)
+#print("cell",cell)
+print()
 for vert in vertices:
     #print("vert",vert, vertices[vert])
     #print()
     if vertices[vert]["at"].__len__() == 1:
-        #print("vert",vert, vertices[vert])
+        print("vert",vert, vertices[vert])
         tempVertPt = str(vert).removeprefix("[").removesuffix("]").split("_")
         vertPt = [float(tempVertPt[0]), float(tempVertPt[1])]
 
@@ -904,14 +916,35 @@ for cell3 in finalCell:
     for vert in tempVerts:
         sortByY(vert)
     unique = []
-    #print("site",cell3)
+    print("site",cell3)
     for vert in tempVerts:
-        #print("vert",vert)        
+        print("vert",vert)        
         if vert not in unique and vert[0] != vert[1]:
             if vert[0][0] >= defaultBounds[0][0] and vert[0][0] <= defaultBounds[0][1] and vert[0][1] >= defaultBounds[1][1] and vert[0][1] <= defaultBounds[1][0]:            
                 if vert[1][0] >= defaultBounds[0][0] and vert[1][0] <= defaultBounds[0][1] and vert[1][1] >= defaultBounds[1][1] and vert[1][1] <= defaultBounds[1][0]:             
                     unique.append(vert)                       
-                    
+    
+    if unique == []:
+        curSite = cell3.replace("[","").replace("]","").split("_")
+        curSite = [float(curSite[0]), float(curSite[1])]
+
+        i = points.index(curSite)
+
+        other = []
+        if i == points.__len__()-1:
+            other = points[i - 1]
+        else:                    
+            other = points[i + 1]
+
+        midPt = midPoint(curSite, other)
+        before = [midPt[0]-0.5, yAtX(curSite, other, midPt[0]-0.5)]
+        after = [midPt[0]+0.5, yAtX(curSite, other, midPt[0]+0.5)]
+
+        bound1 = nearestBoundry(midPt, before)
+        bound2 = nearestBoundry(midPt, after)
+
+        unique = [[bound1, bound2]]
+        sortByY(unique[0])                                                                              
 
     print(tempVerts)
     print(unique)
@@ -955,6 +988,7 @@ for cell in finalCell:
         #print(pairs)                        
         
 plt.show()
+
 
 
 
