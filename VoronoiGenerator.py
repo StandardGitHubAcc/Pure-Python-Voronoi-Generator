@@ -56,8 +56,9 @@ for i in range(1, 8):
 #[[63, 50], [35, 72], [31, 79], [107, 125], [22, 153], [187, 172], [5, 175]]
 
 #points = [[153, 24], [74, 52], [197, 54], [169, 69], [88, 143], [57, 169], [18, 188]]
+points = [[63, 50], [35, 72], [31, 79], [107, 125], [22, 153], [187, 172], [5, 175]]      
 
-points = [[5, 19], [5, 43], [140, 56], [93, 87], [37, 117], [117, 179], [188, 199]] # causes division by 0 in nearestBoundry
+#points = [[5, 19], [5, 43], [140, 56], [93, 87], [37, 117], [117, 179], [188, 199]] # causes division by 0 in nearestBoundry
 
 #		bottomleft, topleft, bottomright, topright
 corners = [[0, 0], [0, 200], [200, 0], [200, 200]] #[ [defaultBounds[0][0], defaultBounds[1][1]], [defaultBounds[0][0], defaultBounds[0][1]], [defaultBounds[1][0], defaultBounds[1][1]], [defaultBounds[0][1], defaultBounds[1][0]] ]
@@ -498,9 +499,9 @@ for i in range(points.__len__()):
 def nearestBoundry(startPt, throughPt):
     m = slope(startPt, throughPt)
         
-    topX = (defaultBounds[1][0] - startPt[1] + (m * startPt[0])) / m
+    topX = (defaultBounds[1][0] - startPt[1] + (m * startPt[0])) / m # the x-coordinate of the line when its y equals the top y
     bottomX = (defaultBounds[1][1] - startPt[1] + (m * startPt[0])) / m
-    leftY = m * (defaultBounds[0][0] - startPt[0]) + startPt[1]
+    leftY = m * (defaultBounds[0][0] - startPt[0]) + startPt[1] # the y-coordinate of the line when its x equals the left x
     rightY = m * (defaultBounds[0][1] - startPt[0]) + startPt[1]
     choice = []
 
@@ -524,7 +525,9 @@ def nearestBoundry(startPt, throughPt):
         choice = [[bottomX, defaultBounds[1][1]], [defaultBounds[0][0], leftY]] #bottom and left
         distanceTargetSort(startPt, choice)
         #return choice[0]
-            
+    else: # throughPt and startPt have the same y
+        choice = [[defaultBounds[0][0], throughPt[1]], [defaultBounds[0][1], throughPt[1]]]
+        distanceTargetSort(startPt, choice)        
     
     return choice[0]    
 
@@ -882,6 +885,7 @@ for cell in finalCell:
         #print(pairs)                        
         
 plt.show()
+
 
 
 
