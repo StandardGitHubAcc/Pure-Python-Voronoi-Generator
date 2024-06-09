@@ -502,15 +502,19 @@ for i in range(points.__len__()):
         #    ]}})
         #finalCell[f"{str(point).replace(', ', '_')}"]["vertices"].append([pts[0], pts[1]])
 
-        tempPair = [pts[0], pts[1]]
-        sortByY(tempPair)                     
+        if not f"{str(point).replace(', ', '_')}" in finalCell:        
+            finalCell.update({f"{str(point).replace(', ', '_')}":{"site":point, "vertices":[ #I should add onto this list so that the list of verticies will also include the corner
+            [pts[0], pts[1]]
+            ]}})
+#         tempPair = [pts[0], pts[1]]
+#         sortByY(tempPair)                     
         
-        if f"{str(point).replace(', ', '_')}" not in finalCell:    #I should add onto this list so that the list of verticies will also include the corner     
-            finalCell.update({f"{str(point).replace(', ', '_')}":{"site":point, "vertices":[tempPair]}})
-            #pass            
-        elif tempPair not in finalCell[f"{str(relative[1]).replace(', ', '_')}"]["vertices"]:
-            finalCell[f"{str(point).replace(', ', '_')}"]["vertices"].append(tempPair)
-            #pass                        
+#         if f"{str(point).replace(', ', '_')}" not in finalCell:    #I should add onto this list so that the list of verticies will also include the corner     
+#             finalCell.update({f"{str(point).replace(', ', '_')}":{"site":point, "vertices":[tempPair]}})
+#             #pass            
+#         elif tempPair not in finalCell[f"{str(relative[1]).replace(', ', '_')}"]["vertices"]:
+#             finalCell[f"{str(point).replace(', ', '_')}"]["vertices"].append(tempPair)
+#             #pass                        
         print("line388",sortByY)            
         #relative = points.copy()
         #distanceTargetSort(point, points)
@@ -522,7 +526,7 @@ for i in range(points.__len__()):
         #    finalCell.update({f"{str(relative[1]).replace(', ', '_')}":{"site":relative[1], "vertices":[
         #    [pts[0], pts[1]]
         #    ]}})                                          
-        #finalCell[f"{str(relative[1]).replace(', ', '_')}"]["vertices"].append([pts[0], pts[1]])
+        finalCell[f"{str(relative[1]).replace(', ', '_')}"]["vertices"].append([pts[0], pts[1]])
 
 #print(cell)
                 
@@ -638,12 +642,12 @@ for site in cell: # Finds edges for cells
                 if entry2["point1"] == pt1 or entry2["point2"] == pt1 or entry2["point3"] == pt1:# or entry2["point2"] == pt3 or entry2["point3"] == pt3:
                     #finalCell[f"{str(pt2).replace(', ', '_')}"]["vertices"].append([entry["at"], entry2["at"]])
                     if entry2["at"] != entry["at"] and [entry["at"], entry2["at"]] not in finalCell[site]["vertices"]:
-                        tempPair = [entry["at"], entry2["at"]]
-                        sortByY(tempPair)
-                        if tempPair not in finalCell[site]["vertices"]:                        
-                            finalCell[site]["vertices"].append(tempPair)                                                
+#                         tempPair = [entry["at"], entry2["at"]]
+#                         sortByY(tempPair)
+#                         if tempPair not in finalCell[site]["vertices"]:                        
+#                             finalCell[site]["vertices"].append(tempPair)                                                
                                             
-                        #finalCell[site]["vertices"].append([entry["at"], entry2["at"]])
+                        finalCell[site]["vertices"].append([entry["at"], entry2["at"]])
                         #print(site, [pt1, pt2, pt3], [entry2["point1"], entry2["point2"], entry2["point3"]])
 
                         atName = f"{str(entry['at']).replace(', ', '_')}"
@@ -707,15 +711,17 @@ for vert in vertices:
             nearestBound = nearestBoundry(vertPt, throughPt)
             vertices[vert]["with"].append([pickedSites[0], pickedSites[1]])
             vertices[vert]["at"].append(nearestBound)
-            tempPair = [vertPt, nearestBound]
-            sortByY(tempPair)            
-            if tempPair not in finalCell[f"{str(pickedSites[0]).replace(', ', '_')}"]["vertices"]:   #somehow fixing all of the finalCell vertice entries so that there are not duplicates ended up messing up things         
-                finalCell[f"{str(pickedSites[0]).replace(', ', '_')}"]["vertices"].append(tempPair)
-                print("line714",tempPair)                
-                #pass                
-            if tempPair not in finalCell[f"{str(pickedSites[1]).replace(', ', '_')}"]["vertices"]:                
-                #finalCell[f"{str(pickedSites[1]).replace(', ', '_')}"]["vertices"].append(tempPair)
-                pass                
+            finalCell[f"{str(pickedSites[0]).replace(', ', '_')}"]["vertices"].append([vertPt, nearestBound])            
+            finalCell[f"{str(pickedSites[1]).replace(', ', '_')}"]["vertices"].append([vertPt, nearestBound])            
+#             tempPair = [vertPt, nearestBound]
+#             sortByY(tempPair)            
+#             if tempPair not in finalCell[f"{str(pickedSites[0]).replace(', ', '_')}"]["vertices"]:   #somehow fixing all of the finalCell vertice entries so that there are not duplicates ended up messing up things         
+#                 finalCell[f"{str(pickedSites[0]).replace(', ', '_')}"]["vertices"].append(tempPair)
+#                 print("line714",tempPair)                
+#                 #pass                
+#             if tempPair not in finalCell[f"{str(pickedSites[1]).replace(', ', '_')}"]["vertices"]:                
+#                 #finalCell[f"{str(pickedSites[1]).replace(', ', '_')}"]["vertices"].append(tempPair)
+#                 pass                
 
     if vertices[vert]["at"].__len__() == 2:
         print("vert",vert, vertices[vert])
@@ -827,35 +833,81 @@ for vert in vertices:
                 nearestBound = nearestBoundry(vertPt, throughPt)
 
                 if throughPt[0] > nearestBound[0]:
-                    testX = pointSlope(throughPt, slope(throughPt, nearestBound), nearestBound[0] + 0.5)
-                    if testX > defaultBounds[0][1]:
-                        newNearest1 = nearestOutsideBoundry(vertPt, vertices[vert]["at"][0])#nearestBoundry(vertPt, vertices[vert]["at"][0])
-                        #finalCell[f"{str(pair3[0]).replace(', ', '_')}"]["vertices"].append([vertPt, newNearest1])
-                        #finalCell[f"{str(notInPair).replace(', ', '_')}"]["vertices"].append([vertPt, newNearest1])
-                        #finalCell[f"{str(pair3[0]).replace(', ', '_')}"]["vertices"].pop(-1)                        
-                        print("line892",finalCell[f"{str(pair3[0]).replace(', ', '_')}"]["vertices"])
-                        #newNearest2 = nearestBoundry(vertPt, vertices[vert]["at"][1])                                               
-                        #finalCell[f"{str(pair3[0]).replace(', ', '_')}"]["vertices"].append([vertPt, newNearest1])
-                        #finalCell[f"{str(pair3[1]).replace(', ', '_')}"]["vertices"].append([vertPt, newNearest1])
-                        print(newNearest1)                                                 
+                    if throughPt[0] > defaultBounds[0][1]:
+                        print(vertPt, throughPt, nearestBound, nearestOutsideBoundry(vertPt, throughPt))
+                        newBound1 = nearestOutsideBoundry(vertPt, throughPt)
+                        newBound2 = nearestOutsideBoundry(vertPt, vertices[vert]["at"][0])
+                        newBound3 = nearestOutsideBoundry(vertPt, vertices[vert]["at"][1])
+                        print(newBound1, newBound2, newBound3)
+
+                        finalCell[f"{str(vertices[vert]['with'][0][0]).replace(', ', '_')}"]["vertices"].append([vertPt, newBound2])
+                        finalCell[f"{str(vertices[vert]['with'][0][1]).replace(', ', '_')}"]["vertices"].append([vertPt, newBound2])
+                        finalCell[f"{str(vertices[vert]['with'][1][0]).replace(', ', '_')}"]["vertices"].append([vertPt, newBound3])
+                        finalCell[f"{str(vertices[vert]['with'][1][1]).replace(', ', '_')}"]["vertices"].append([vertPt, newBound3])                                                                                                                        
+                        
+                        if (nearestBound[0] == defaultBounds[0][0] or nearestBound[0] == defaultBounds[0][1]) and (nearestBound[1] <= defaultBounds[1][0] and nearestBound[1] >= defaultBounds[1][1]):
+                            finalCell[f"{str(pair3[0]).replace(', ', '_')}"]["vertices"].append([newBound1, nearestBound])
+                            finalCell[f"{str(pair3[1]).replace(', ', '_')}"]["vertices"].append([newBound1, nearestBound])                    
+                        elif (nearestBound[1] == defaultBounds[1][0] or nearestBound[1] == defaultBounds[1][1]) and (nearestBound[0] >= defaultBounds[0][0] and nearestBound[0] <= defaultBounds[0][1]):                    
+                            finalCell[f"{str(pair3[0]).replace(', ', '_')}"]["vertices"].append([newBound1, nearestBound])
+                            finalCell[f"{str(pair3[1]).replace(', ', '_')}"]["vertices"].append([newBound1, nearestBound])
+
+                        #slope1 = slope(vertPt, newBound1)
+
+                        #slopeTest1 = slope(vertPt, vertices[vert]["at"][0])
+                        #slopeTest2 = slope(vertPt, vertices[vert]["at"][1])
+
+                        #print(slope1, slopeTest1, slopeTest2)                                                                        
+
+                        #test1 = pointSlope(vertPt, slope1, vertices[vert]["at"][0][0])
+                        #test2 = pointSlope(vertPt, slope1, vertices[vert]["at"][0][0])                                                                                                                        
+                    
+#                     testX = pointSlope(throughPt, slope(throughPt, nearestBound), nearestBound[0] + 0.5)
+#                     if testX > defaultBounds[0][1]:
+#                         newNearest1 = nearestOutsideBoundry(vertPt, vertices[vert]["at"][0])#nearestBoundry(vertPt, vertices[vert]["at"][0])
+#                         #finalCell[f"{str(pair3[0]).replace(', ', '_')}"]["vertices"].append([vertPt, newNearest1])
+#                         #finalCell[f"{str(notInPair).replace(', ', '_')}"]["vertices"].append([vertPt, newNearest1])
+#                         #finalCell[f"{str(pair3[0]).replace(', ', '_')}"]["vertices"].pop(-1)                        
+#                         print("line892",finalCell[f"{str(pair3[0]).replace(', ', '_')}"]["vertices"])
+#                         #newNearest2 = nearestBoundry(vertPt, vertices[vert]["at"][1])                                               
+#                         #finalCell[f"{str(pair3[0]).replace(', ', '_')}"]["vertices"].append([vertPt, newNearest1])
+#                         #finalCell[f"{str(pair3[1]).replace(', ', '_')}"]["vertices"].append([vertPt, newNearest1])
+
+#                         finalCell[f"{str(vertices[vert]['with'][0][0]).replace(', ', '_')}"]["vertices"].append([vertPt, newNearest1])
+#                         finalCell[f"{str(vertices[vert]['with'][0][1]).replace(', ', '_')}"]["vertices"].append([vertPt, newNearest1])                        
+                        
+#                         print(newNearest1)                                                 
                     
                 print("outsideNearest",nearestOutsideBoundry(vertPt, throughPt))                                        
                 
 #                 vertices[vert]["with"].append([pair3[0], pair3[1]])
 #                 vertices[vert]["at"].append(nearestBound)
-#                 finalCell[f"{str(pair3[0]).replace(', ', '_')}"]["vertices"].append([vertPt, nearestBound])
-#                 finalCell[f"{str(pair3[1]).replace(', ', '_')}"]["vertices"].append([vertPt, nearestBound])
+
+                if (nearestBound[0] == defaultBounds[0][0] or nearestBound[0] == defaultBounds[0][1]) and (nearestBound[1] <= defaultBounds[1][0] and nearestBound[1] >= defaultBounds[1][1]):
+                    finalCell[f"{str(pair3[0]).replace(', ', '_')}"]["vertices"].append([vertPt, nearestBound])
+                    finalCell[f"{str(pair3[1]).replace(', ', '_')}"]["vertices"].append([vertPt, nearestBound])                    
+                elif (nearestBound[1] == defaultBounds[1][0] or nearestBound[1] == defaultBounds[1][1]) and (nearestBound[0] >= defaultBounds[0][0] and nearestBound[0] <= defaultBounds[0][1]):                    
+                    finalCell[f"{str(pair3[0]).replace(', ', '_')}"]["vertices"].append([vertPt, nearestBound])
+                    finalCell[f"{str(pair3[1]).replace(', ', '_')}"]["vertices"].append([vertPt, nearestBound])
+                #finalCell[f"{str(pair3[0]).replace(', ', '_')}"]["vertices"].append([vertPt, nearestBound])
+                #finalCell[f"{str(pair3[1]).replace(', ', '_')}"]["vertices"].append([vertPt, nearestBound])
                 print("nearestBound", nearestBound, "through", throughPt)                
             else:                            
                 nearestBound = nearestBoundry(vertPt, throughPt)
                 vertices[vert]["with"].append([pair3[0], pair3[1]])
                 vertices[vert]["at"].append(nearestBound)
-                tempPair = [vertPt, nearestBound]
-                sortByY(tempPair)
-                if tempPair not in finalCell[f"{str(pair3[0]).replace(', ', '_')}"]["vertices"]:                
-                   finalCell[f"{str(pair3[0]).replace(', ', '_')}"]["vertices"].append(tempPair)
-                if tempPair not in finalCell[f"{str(pair3[1]).replace(', ', '_')}"]["vertices"]:                    
-                    finalCell[f"{str(pair3[1]).replace(', ', '_')}"]["vertices"].append(tempPair)            
+                finalCell[f"{str(pair3[0]).replace(', ', '_')}"]["vertices"].append([vertPt, nearestBound])
+                finalCell[f"{str(pair3[1]).replace(', ', '_')}"]["vertices"].append([vertPt, nearestBound])                
+#                 tempPair = [vertPt, nearestBound]
+#                 sortByY(tempPair)
+#                 if tempPair not in finalCell[f"{str(pair3[0]).replace(', ', '_')}"]["vertices"]:                
+#                    finalCell[f"{str(pair3[0]).replace(', ', '_')}"]["vertices"].append(tempPair)
+#                 if tempPair not in finalCell[f"{str(pair3[1]).replace(', ', '_')}"]["vertices"]:                    
+#                     finalCell[f"{str(pair3[1]).replace(', ', '_')}"]["vertices"].append(tempPair)            
+
+for cell2 in finalCell:
+    print(finalCell[cell2])    
+
 
 for pt in points:
     plt.plot(pt[0], pt[1], "ro")
@@ -881,7 +933,8 @@ for cell in finalCell:
     for pairs in finalCell[cell]["vertices"]:    
         #plt.plot([finalCell[cell]["vertices"][pairs][0][0], finalCell[cell]["vertices"][pairs][1][0]], [finalCell[cell]["vertices"][pairs][0][1], finalCell[cell]["vertices"][pairs][1][1]], "bo")
         #plt.plot([pairs[0][0], pairs[1][0]], [pairs[0][1], pairs[1][1]], "bo")
-        plt.plot([pairs[0][0], pairs[1][0]], [pairs[0][1], pairs[1][1]], "b")        
+        plt.plot([pairs[0][0], pairs[1][0]], [pairs[0][1], pairs[1][1]], "b")
+        plt.plot([pairs[0][0], pairs[1][0]], [pairs[0][1], pairs[1][1]], "bo")                
         #print(pairs[0][0], pairs[1][0], pairs[0][1], pairs[1][1])
         #x1 = [pairs[0][0], pairs[1][0]]
         #y1 = [pairs[0][1], pairs[1][1]]
@@ -889,4 +942,5 @@ for cell in finalCell:
         #print(pairs)                        
         
 plt.show()
+
 
