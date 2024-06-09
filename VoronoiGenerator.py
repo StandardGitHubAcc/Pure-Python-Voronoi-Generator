@@ -53,7 +53,7 @@ for i in range(1, 8):
 #[[27, 59], [150, 90], [79, 90], [101, 124], [94, 136], [178, 186], [157, 200]]      
 
 #points = [[175, 23], [78, 24], [160, 108], [161, 141], [157, 159], [59, 188], [66, 188]]
-points = [[63, 50], [35, 72], [31, 79], [107, 125], [22, 153], [187, 172], [5, 175]]
+#points = [[63, 50], [35, 72], [31, 79], [107, 125], [22, 153], [187, 172], [5, 175]]
 
 #points = [[153, 24], [74, 52], [197, 54], [169, 69], [88, 143], [57, 169], [18, 188]]
 
@@ -832,53 +832,28 @@ for vert in vertices:
             if vertPt[0] < defaultBounds[0][0] or vertPt[0] > defaultBounds[0][1] or vertPt[1] < defaultBounds[1][1] or vertPt[1] > defaultBounds[1][0]:
                 nearestBound = nearestBoundry(vertPt, throughPt)
 
-                if throughPt[0] > nearestBound[0]:
-                    if throughPt[0] > defaultBounds[0][1]:
-                        print(vertPt, throughPt, nearestBound, nearestOutsideBoundry(vertPt, throughPt))
-                        newBound1 = nearestOutsideBoundry(vertPt, throughPt)
-                        newBound2 = nearestOutsideBoundry(vertPt, vertices[vert]["at"][0])
-                        newBound3 = nearestOutsideBoundry(vertPt, vertices[vert]["at"][1])
-                        print(newBound1, newBound2, newBound3)
+                #if throughPt[0] > nearestBound[0]:
 
-                        finalCell[f"{str(vertices[vert]['with'][0][0]).replace(', ', '_')}"]["vertices"].append([vertPt, newBound2])
-                        finalCell[f"{str(vertices[vert]['with'][0][1]).replace(', ', '_')}"]["vertices"].append([vertPt, newBound2])
-                        finalCell[f"{str(vertices[vert]['with'][1][0]).replace(', ', '_')}"]["vertices"].append([vertPt, newBound3])
-                        finalCell[f"{str(vertices[vert]['with'][1][1]).replace(', ', '_')}"]["vertices"].append([vertPt, newBound3])                                                                                                                        
+                #print(vertPt, throughPt, nearestBound, nearestOutsideBoundry(vertPt, throughPt))
+                newBound1 = nearestOutsideBoundry(vertPt, throughPt)
+                newBound2 = nearestOutsideBoundry(vertPt, vertices[vert]["at"][0])
+                newBound3 = nearestOutsideBoundry(vertPt, vertices[vert]["at"][1])
+                #print(newBound1, newBound2, newBound3)
+
+                finalCell[f"{str(vertices[vert]['with'][0][0]).replace(', ', '_')}"]["vertices"].append([vertPt, newBound2])
+                finalCell[f"{str(vertices[vert]['with'][0][1]).replace(', ', '_')}"]["vertices"].append([vertPt, newBound2])
+                finalCell[f"{str(vertices[vert]['with'][1][0]).replace(', ', '_')}"]["vertices"].append([vertPt, newBound3])
+                finalCell[f"{str(vertices[vert]['with'][1][1]).replace(', ', '_')}"]["vertices"].append([vertPt, newBound3])                                                                                                                        
                         
-                        if (nearestBound[0] == defaultBounds[0][0] or nearestBound[0] == defaultBounds[0][1]) and (nearestBound[1] <= defaultBounds[1][0] and nearestBound[1] >= defaultBounds[1][1]):
-                            finalCell[f"{str(pair3[0]).replace(', ', '_')}"]["vertices"].append([newBound1, nearestBound])
-                            finalCell[f"{str(pair3[1]).replace(', ', '_')}"]["vertices"].append([newBound1, nearestBound])                    
-                        elif (nearestBound[1] == defaultBounds[1][0] or nearestBound[1] == defaultBounds[1][1]) and (nearestBound[0] >= defaultBounds[0][0] and nearestBound[0] <= defaultBounds[0][1]):                    
-                            finalCell[f"{str(pair3[0]).replace(', ', '_')}"]["vertices"].append([newBound1, nearestBound])
-                            finalCell[f"{str(pair3[1]).replace(', ', '_')}"]["vertices"].append([newBound1, nearestBound])
-
-                        #slope1 = slope(vertPt, newBound1)
-
-                        #slopeTest1 = slope(vertPt, vertices[vert]["at"][0])
-                        #slopeTest2 = slope(vertPt, vertices[vert]["at"][1])
-
-                        #print(slope1, slopeTest1, slopeTest2)                                                                        
-
-                        #test1 = pointSlope(vertPt, slope1, vertices[vert]["at"][0][0])
-                        #test2 = pointSlope(vertPt, slope1, vertices[vert]["at"][0][0])                                                                                                                        
+                if (nearestBound[0] == defaultBounds[0][0] or nearestBound[0] == defaultBounds[0][1]) and (nearestBound[1] <= defaultBounds[1][0] and nearestBound[1] >= defaultBounds[1][1]):
+                    finalCell[f"{str(pair3[0]).replace(', ', '_')}"]["vertices"].append([newBound1, nearestBound])
+                    finalCell[f"{str(pair3[1]).replace(', ', '_')}"]["vertices"].append([newBound1, nearestBound])                    
+                elif (nearestBound[1] == defaultBounds[1][0] or nearestBound[1] == defaultBounds[1][1]) and (nearestBound[0] >= defaultBounds[0][0] and nearestBound[0] <= defaultBounds[0][1]):                    
+                    finalCell[f"{str(pair3[0]).replace(', ', '_')}"]["vertices"].append([newBound1, nearestBound])
+                    finalCell[f"{str(pair3[1]).replace(', ', '_')}"]["vertices"].append([newBound1, nearestBound])
+                                              
                     
-#                     testX = pointSlope(throughPt, slope(throughPt, nearestBound), nearestBound[0] + 0.5)
-#                     if testX > defaultBounds[0][1]:
-#                         newNearest1 = nearestOutsideBoundry(vertPt, vertices[vert]["at"][0])#nearestBoundry(vertPt, vertices[vert]["at"][0])
-#                         #finalCell[f"{str(pair3[0]).replace(', ', '_')}"]["vertices"].append([vertPt, newNearest1])
-#                         #finalCell[f"{str(notInPair).replace(', ', '_')}"]["vertices"].append([vertPt, newNearest1])
-#                         #finalCell[f"{str(pair3[0]).replace(', ', '_')}"]["vertices"].pop(-1)                        
-#                         print("line892",finalCell[f"{str(pair3[0]).replace(', ', '_')}"]["vertices"])
-#                         #newNearest2 = nearestBoundry(vertPt, vertices[vert]["at"][1])                                               
-#                         #finalCell[f"{str(pair3[0]).replace(', ', '_')}"]["vertices"].append([vertPt, newNearest1])
-#                         #finalCell[f"{str(pair3[1]).replace(', ', '_')}"]["vertices"].append([vertPt, newNearest1])
-
-#                         finalCell[f"{str(vertices[vert]['with'][0][0]).replace(', ', '_')}"]["vertices"].append([vertPt, newNearest1])
-#                         finalCell[f"{str(vertices[vert]['with'][0][1]).replace(', ', '_')}"]["vertices"].append([vertPt, newNearest1])                        
-                        
-#                         print(newNearest1)                                                 
-                    
-                print("outsideNearest",nearestOutsideBoundry(vertPt, throughPt))                                        
+                #print("outsideNearest",nearestOutsideBoundry(vertPt, throughPt))                                        
                 
 #                 vertices[vert]["with"].append([pair3[0], pair3[1]])
 #                 vertices[vert]["at"].append(nearestBound)
@@ -891,7 +866,7 @@ for vert in vertices:
                     finalCell[f"{str(pair3[1]).replace(', ', '_')}"]["vertices"].append([vertPt, nearestBound])
                 #finalCell[f"{str(pair3[0]).replace(', ', '_')}"]["vertices"].append([vertPt, nearestBound])
                 #finalCell[f"{str(pair3[1]).replace(', ', '_')}"]["vertices"].append([vertPt, nearestBound])
-                print("nearestBound", nearestBound, "through", throughPt)                
+                #print("nearestBound", nearestBound, "through", throughPt)                
             else:                            
                 nearestBound = nearestBoundry(vertPt, throughPt)
                 vertices[vert]["with"].append([pair3[0], pair3[1]])
@@ -942,5 +917,6 @@ for cell in finalCell:
         #print(pairs)                        
         
 plt.show()
+
 
 
