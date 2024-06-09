@@ -903,6 +903,7 @@ for cell2 in finalCell:
 #                 if vert1[0] == vert2[0] or vert1[0] == vert2[0] or vert1[1] == vert2[0] or vert1[1] == vert2[1]:                 
 #                     if vert1[0][0] == defaultBounds[0][0] or vert1[0][0] == defaultBounds[0][1]: 
 #                         boundryEdges.append({"cell":cell2, "vert1":vert1, "vert2":vert2})
+    print("info",cell2,finalCell[cell2]["vertices"])    
     onBoundry = []
     for vert in finalCell[cell2]["vertices"]:
         boundSize = [defaultBounds[0][0], defaultBounds[0][1], defaultBounds[1][0] ,defaultBounds[1][1]]        
@@ -925,26 +926,38 @@ for cell2 in finalCell:
 
         indexes = []
         within = []
-        boundries = []        
-        print("withCorners",withCorners)    
-        for point in onBoundry:
-            #print(normalTheta(point, center))
-            #print(withCorners.index(point))
-            indexes.append(withCorners.index(point))
+        boundries = []
+        
+        curSite = cell2.replace("[","").replace("]","").split("_")
+        curSite = [float(curSite[0]), float(curSite[1])]
+        print(curSite)        
+        siteTheta = normalTheta(curSite, center)
+        print("line933",onBoundry[0][1])
+        print("line935",onBoundry)
+        print("siteTheta",siteTheta)                
+        if siteTheta > onBoundry[0][1]:
+            print("withCorners",withCorners)    
+            for point in onBoundry:
+                #print(normalTheta(point, center))
+                #print(withCorners.index(point))
+                indexes.append(withCorners.index(point))
 
-        for i in range(0, indexes.__len__(), 2):
-            #print(indexes[i], indexes[i+1])
-            #print(withCorners[indexes[i]:indexes[i+1]+1])
-            print(indexes[i], indexes[i+1]+1)
-            print(withCorners[indexes[i]:indexes[i+1]+1])                        
-            within.append(withCorners[indexes[i]:indexes[i+1]+1])                                                
+            for i in range(0, indexes.__len__(), 2):
+                #print(indexes[i], indexes[i+1])
+                #print(withCorners[indexes[i]:indexes[i+1]+1])
+                #print(indexes[i], indexes[i+1]+1)
+                #print(withCorners[indexes[i]:indexes[i+1]+1])                        
+                within.extend(withCorners[indexes[i]:indexes[i+1]+1])                                                
                                     
-        #print(within[0])
-        for i in range(0, within.__len__()-1):
-            #print(within[i])            
-            boundries.append([[within[i][0]], [within[i+1][0]]])
+            print("within",within[0])
+            for i in range(0, within.__len__()-1):
+                #print(within[i])            
+                boundries.append([within[i][0], within[i+1][0]])
 
-        #print(boundries)
+            print("boundries",boundries)
+        else:                    
+             pass   
+        
         print()        
                                                                                                                                                            
 
@@ -982,3 +995,4 @@ for cell in finalCell:
         #print(pairs)                        
         
 plt.show()
+
