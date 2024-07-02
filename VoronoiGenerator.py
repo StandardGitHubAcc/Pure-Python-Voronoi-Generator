@@ -855,9 +855,100 @@ for vert in vertices:
                 vertices[vert]["at"].append(nearestBound)
                 finalCell[f"{str(pair3[0]).replace(', ', '_')}"]["vertices"].append([vertPt, nearestBound])
                 finalCell[f"{str(pair3[1]).replace(', ', '_')}"]["vertices"].append([vertPt, nearestBound])
+        
+        #print("throughPt",throughPt)
+        #plt.plot(throughPt[0], throughPt[1], "yo")
+
+        
+
+                
+        #continue
+        boundryEdges = []
+        center = vertPt#midPoint(defaultBounds[0], defaultBounds[1])    
+        #for cell2 in finalCell:
+            #print(finalCell[cell2]["vertices"])
+        #     for vert1 in finalCell[cell2]["vertices"]:
+        #         for vert2 in finalCell[cell2]["vertices"]:
+        #             if vert1 != vert2:
+        #                 if vert1[0] == vert2[0] or vert1[0] == vert2[0] or vert1[1] == vert2[0] or vert1[1] == vert2[1]:                 
+        #                     if vert1[0][0] == defaultBounds[0][0] or vert1[0][0] == defaultBounds[0][1]: 
+        #                         boundryEdges.append({"cell":cell2, "vert1":vert1, "vert2":vert2})
+            #continue    
+        #print("info",cell2,"-",finalCell[cell2]["vertices"])    
+        onBoundry = []
+        for vert in finalCell[f"{str(pair3[0]).replace(', ', '_')}"]["vertices"]:
+            boundSize = [defaultBounds[0][0], defaultBounds[0][1], defaultBounds[1][0] ,defaultBounds[1][1]]        
+            if vert[0][0] in boundSize or vert[0][1] in boundSize:
+                onBoundry.append([vert[0], normalTheta(vert[0], center)])
+            elif vert[1][0] in boundSize or vert[1][1] in boundSize:
+                onBoundry.append([vert[1], normalTheta(vert[1], center)])            
+
+        print("onBoundry",onBoundry)
+        print("site", pair3[0])        
+        if onBoundry != []:
+            #print(nearestBoundry(onBoundry[0], onBoundry[1]))
+            withCorners = onBoundry.copy()        
+            withCorners.append([corners[0], normalTheta(corners[0], center)])
+            withCorners.append([corners[1], normalTheta(corners[1], center)])
+            withCorners.append([corners[2], normalTheta(corners[2], center)])
+            withCorners.append([corners[3], normalTheta(corners[3], center)])
+                                
+            sortByY(onBoundry)
+            sortByY(withCorners)                
+
+            indexes = []
+            within = []
+            boundries = []
+        
+            curSite = pair3[0]#cell2.replace("[","").replace("]","").split("_")
+            curSite = [float(curSite[0]), float(curSite[1])]
+            print(curSite)        
+            siteTheta = normalTheta(curSite, center)
+            print("line907",onBoundry[0][1])
+            print("line908",onBoundry)
+            print("siteTheta",siteTheta)                
+            if siteTheta > onBoundry[0][1]:
+                print("withCorners",withCorners)    
+                for point in onBoundry:
+                    #print(normalTheta(point, center))
+                    #print(withCorners.index(point))
+                    indexes.append(withCorners.index(point))
+
+                print("indexes",indexes)
+
+                #for i in range(0, indexes.__len__(), 2):
+                    #print(indexes[i], indexes[i+1])
+                    #print(withCorners[indexes[i]:indexes[i+1]+1])
+                    #print(indexes[i], indexes[i+1]+1)
+                    #print(withCorners[indexes[i]:indexes[i+1]+1])                        
+                #    within.extend(withCorners[indexes[i]:indexes[i+1]+1])                                                
+                
+                if indexes.__len__() > 1:
+                    for i in range(0, indexes.__len__()-1):
+                        #print(i)
+                        #print(indexes[i])
+                        startI = indexes[i]
+                        endI = indexes[i+1] + 1                                        
+                        within.extend(withCorners[startI:endI])
+                else:
+                    within.append(withCorners[indexes[0]])                                                                                                        
+                    
+                
+                print("within",within)
+                continue                
+                for i in range(0, within.__len__()-1):
+                    #print(within[i])            
+                    boundries.append([within[i][0], within[i+1][0]])
+
+                print("boundries",boundries)
+            else:                    
+                    pass   
+        
+            print()        
+                                                                                                                                                           
 
                                                        
-
+# removes duplicate information
 for cell3 in finalCell:
     tempVerts = finalCell[cell3]["vertices"].copy()
     sortByY(tempVerts)
@@ -897,74 +988,6 @@ for cell3 in finalCell:
     if points.__len__() > 1:
         finalCell[cell3]["vertices"] = unique                        
 
-boundryEdges = []
-center = midPoint(defaultBounds[0], defaultBounds[1])    
-for cell2 in finalCell:
-    #print(finalCell[cell2]["vertices"])
-#     for vert1 in finalCell[cell2]["vertices"]:
-#         for vert2 in finalCell[cell2]["vertices"]:
-#             if vert1 != vert2:
-#                 if vert1[0] == vert2[0] or vert1[0] == vert2[0] or vert1[1] == vert2[0] or vert1[1] == vert2[1]:                 
-#                     if vert1[0][0] == defaultBounds[0][0] or vert1[0][0] == defaultBounds[0][1]: 
-#                         boundryEdges.append({"cell":cell2, "vert1":vert1, "vert2":vert2})
-    #continue    
-    print("info",cell2,"-",finalCell[cell2]["vertices"])    
-    onBoundry = []
-    for vert in finalCell[cell2]["vertices"]:
-        boundSize = [defaultBounds[0][0], defaultBounds[0][1], defaultBounds[1][0] ,defaultBounds[1][1]]        
-        if vert[0][0] in boundSize or vert[0][1] in boundSize:
-            onBoundry.append([vert[0], normalTheta(vert[0], center)])
-        elif vert[1][0] in boundSize or vert[1][1] in boundSize:
-            onBoundry.append([vert[1], normalTheta(vert[1], center)])            
-
-    #print(onBoundry)
-    if onBoundry != []:
-        #print(nearestBoundry(onBoundry[0], onBoundry[1]))
-        withCorners = onBoundry.copy()        
-        withCorners.append([corners[0], normalTheta(corners[0], center)])
-        withCorners.append([corners[1], normalTheta(corners[1], center)])
-        withCorners.append([corners[2], normalTheta(corners[2], center)])
-        withCorners.append([corners[3], normalTheta(corners[3], center)])
-                                
-        sortByY(onBoundry)
-        sortByY(withCorners)                
-
-        indexes = []
-        within = []
-        boundries = []
-        
-        curSite = cell2.replace("[","").replace("]","").split("_")
-        curSite = [float(curSite[0]), float(curSite[1])]
-        print(curSite)        
-        siteTheta = normalTheta(curSite, center)
-        print("line933",onBoundry[0][1])
-        print("line935",onBoundry)
-        print("siteTheta",siteTheta)                
-        if siteTheta > onBoundry[0][1]:
-            print("withCorners",withCorners)    
-            for point in onBoundry:
-                #print(normalTheta(point, center))
-                #print(withCorners.index(point))
-                indexes.append(withCorners.index(point))
-
-            for i in range(0, indexes.__len__(), 2):
-                #print(indexes[i], indexes[i+1])
-                #print(withCorners[indexes[i]:indexes[i+1]+1])
-                #print(indexes[i], indexes[i+1]+1)
-                #print(withCorners[indexes[i]:indexes[i+1]+1])                        
-                within.extend(withCorners[indexes[i]:indexes[i+1]+1])                                                
-                                    
-            print("within",within[0])
-            for i in range(0, within.__len__()-1):
-                #print(within[i])            
-                boundries.append([within[i][0], within[i+1][0]])
-
-            print("boundries",boundries)
-        else:                    
-             pass   
-        
-        print()        
-                                                                                                                                                           
 
 
 for pt in points:
@@ -1000,5 +1023,6 @@ for cell in finalCell:
         #print(pairs)                        
         
 plt.show()
+
 
 
