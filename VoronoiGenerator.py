@@ -35,7 +35,7 @@ for i in range(1, 8):
 #points = [[159, 66], [100, 166], [73, 197]]
 
 #points = [[106, 6], [88, 11], [9, 18], [2, 105], [20, 105], [115, 140], [52, 168]] #causes division by zero in getTimeAtX
-points = [[13, 23], [181, 40], [129, 55], [93, 100], [59, 127], [12, 160], [156, 163]] #---edge finding issue
+# points = [[13, 23], [181, 40], [129, 55], [93, 100], [59, 127], [12, 160], [156, 163]] #---edge finding issue
 #points = [[76, 30], [196, 40], [165, 47], [104, 66], [128, 120], [88, 159], [166, 180]] #easy to see graph. In a previous, more broken version of the program, another line and intersection point near the one on the far right existed, which is necessary to correctly complete the graph
 # ^there is an issue with the plot for the line above
 
@@ -75,7 +75,7 @@ points = [[13, 23], [181, 40], [129, 55], [93, 100], [59, 127], [12, 160], [156,
 #points = [[25, 25], [175, 175], [25, 175], [175, 25], [100, 100]]
 #points = [[50, 50], [75, 75], [195, 195]]	  
 
-#points = [[43, 20], [10, 32], [91, 55], [136, 72], [123, 79], [52, 99], [0, 174]]
+points = [[43, 20], [10, 32], [91, 55], [136, 72], [123, 79], [52, 99], [0, 174]]
 
 #		bottomleft, topleft, bottomright, topright
 corners = [[0, 0], [0, 200], [200, 0], [200, 200]] #[ [defaultBounds[0][0], defaultBounds[1][1]], [defaultBounds[0][0], defaultBounds[0][1]], [defaultBounds[1][0], defaultBounds[1][1]], [defaultBounds[0][1], defaultBounds[1][0]] ]
@@ -592,17 +592,17 @@ for site in cell: # Finds edges for cells
 #                         if tempPair not in finalCell[site]["vertices"]:
 #                             finalCell[site]["vertices"].append(tempPair)
 											
-						tempPair = [entry["at"], entry2["at"]]
-						sortByY(tempPair)
+						#tempPair = [entry["at"], entry2["at"]]
+						#sortByY(tempPair)
 						
 						#midPt = midPoint(entry["at"], entry2["at"])
 						#bound1 = nearestBoundry(midPt, tempPair[0])
 						#bound2 = nearestBoundry(midPt, tempPair[1])
 						
 						#finalCell[site]["vertices"].append([bound1, bound2])
-						finalCell[site]["vertices"].append(tempPair)
+						#finalCell[site]["vertices"].append(tempPair)
 
-						#finalCell[site]["vertices"].append([entry["at"], entry2["at"]])
+						finalCell[site]["vertices"].append([entry["at"], entry2["at"]]) # for some reason sorting it by y here messes something up
 						print(site, [pt1, pt2, pt3], [entry2["point1"], entry2["point2"], entry2["point3"]])
 						#print("line594",entry["at"],entry2["at"])
 						#print(site, entry["at"])
@@ -779,7 +779,7 @@ for vert in vertices: # modifies convex hull so that it has edges extending to t
 
 													   
 #print("-----",finalCell["[52_99]"]["vertices"])
-#print("-----",finalCell["[0_174]"]["vertices"])				
+print("-----",finalCell["[0_174]"]["vertices"])				
 # removes duplicate information
 for cell3 in finalCell:
 	tempVerts = finalCell[cell3]["vertices"].copy()
@@ -826,8 +826,8 @@ for cell3 in finalCell:
 		
 
 print()
-#print("-----",finalCell["[52_99]"]["vertices"])
-#print("-----",finalCell["[0_174]"]["vertices"])
+print("-----",finalCell["[52_99]"]["vertices"])
+print("-----",finalCell["[0_174]"]["vertices"])
 print()
 def makeEdges(onBoundry, curSite):
 	inside = False
@@ -1009,6 +1009,7 @@ for cell in finalCell:
 	plt.fill(vertsX, vertsY, color=(random.random(), random.random(), random.random(), 0.5))																								                        
 		
 plt.show()
+
 
 
 
