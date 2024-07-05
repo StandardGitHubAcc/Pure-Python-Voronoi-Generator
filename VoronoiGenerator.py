@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 import random
 import math
 from math import *
-
+#from sklearn.neighbors import NearestNeighbors
 #                 width     height
 defaultBounds = [[0, 200], [200, 0]]
 
@@ -49,7 +49,7 @@ for i in range(1, 8):
 #points = [[25, 17], [109, 37], [68, 45], [35, 85], [2, 124], [138, 138], [190, 145]]
 #[[159, 3], [193, 10], [140, 34], [151, 84], [93, 107], [64, 155], [57, 195]]
 #points = [[147, 1], [35, 16], [52, 25], [79, 70], [152, 91], [151, 97], [60, 139]] # all vertices are connected to exactly 2 other vertices
-#points = [[41, 27], [40, 27], [52, 44], [116, 60], [28, 67], [182, 118], [64, 129]] #breaks neighboring cells
+points = [[41, 27], [40, 27], [52, 44], [116, 60], [28, 67], [182, 118], [64, 129]] #breaks neighboring cells
 
 #[[140, 7], [29, 12], [13, 12], [120, 24], [13, 32], [68, 62], [141, 86]] 
 #points = [[165, 25], [18, 33], [176, 41], [85, 102], [113, 128], [72, 153], [49, 162]] #looks like something is broken since a vertice with a higher y value than its connections does not have the highest time out of the 3
@@ -72,7 +72,7 @@ for i in range(1, 8):
 #points = [[159, 14], [49, 18], [63, 32], [87, 48], [191, 60], [131, 99], [150, 183]] # breaks stuff, not sure what exactly
 #points = [[59, 65], [194, 108], [134, 152], [147, 155], [75, 166], [64, 172], [180, 195]] # breaks stuff, not sure what exactly
 
-points = [[25, 25], [175, 175], [25, 175], [175, 25], [100, 100]]
+#points = [[25, 25], [175, 175], [25, 175], [175, 25], [100, 100]]
 
 #		bottomleft, topleft, bottomright, topright
 corners = [[0, 0], [0, 200], [200, 0], [200, 200]] #[ [defaultBounds[0][0], defaultBounds[1][1]], [defaultBounds[0][0], defaultBounds[0][1]], [defaultBounds[1][0], defaultBounds[1][1]], [defaultBounds[0][1], defaultBounds[1][0]] ]
@@ -1025,7 +1025,7 @@ for cell2 in finalCell:
 	
 	
 	  
-	print("info",cell2,"-",finalCell[cell2]["vertices"])    
+	#print("info",cell2,"-",finalCell[cell2]["vertices"])    
 	onBoundry = []
 	for vert in finalCell[cell2]["vertices"]:
 		boundSize = [defaultBounds[0][0], defaultBounds[0][1], defaultBounds[1][0] ,defaultBounds[1][1]]
@@ -1051,10 +1051,10 @@ for cell2 in finalCell:
 
 		#print("onboundry", onBoundry)
 		sortByY(onBoundry)
-		print("length", onBoundry.__len__())        
+		#print("length", onBoundry.__len__())        
 		if onBoundry.__len__() == 2:
 			if onBoundry[0][0] == onBoundry[1][0] or onBoundry[0][1] == onBoundry[1][1]:
-				print("line1016",onBoundry)                
+				#print("line1016",onBoundry)                
 				finalCell[cell2]["vertices"].append([onBoundry[0], onBoundry[1]])
 			else: # if the two vertices are not on the same edge
 #                 center = [(onBoundry[0][0] + onBoundry[1][0] + curSite[0])/3, (onBoundry[0][1] + onBoundry[1][1] + curSite[1])/3]#midPoint(onBoundry[0], onBoundry[1])
@@ -1088,11 +1088,11 @@ for cell2 in finalCell:
 				inside = False
 				vert1Theta = normalTheta(onBoundry[0], curSite)
 				vert2Theta = normalTheta(onBoundry[1], curSite)
-				print("theta", vert1Theta, vert2Theta)
+				#print("theta", vert1Theta, vert2Theta)
 				for pt in points:
 					if pt != curSite:
 						ptTheta = normalTheta(pt, curSite)
-						print("-------",pt, ptTheta)                        
+						#print("-------",pt, ptTheta)                        
 						if ptTheta > vert2Theta and ptTheta < vert1Theta:
 							inside = True
 							break
@@ -1130,7 +1130,7 @@ for cell2 in finalCell:
 
 					sortByY(withCorners)
 
-					print("rangeIn", withCorners)
+					#print("rangeIn", withCorners)
 					
 					for i in range(0, withCorners.__len__()-1):
 						finalCell[cell2]["vertices"].append([withCorners[i][0], withCorners[i+1][0]])
@@ -1153,7 +1153,7 @@ for cell2 in finalCell:
 						#print("cornerTheta",corners[i],cornerTheta)
 						if cornerTheta < vert2Theta or cornerTheta > vert1Theta:
 							#withCorners.append([corners[i], cornerTheta])
-							print(vert1Theta, cornerTheta, vert2Theta)
+							#print(vert1Theta, cornerTheta, vert2Theta)
 							#print(angle(onBoundry[0], corners[i], curSite))
 							withCorners.append([corners[i], angle(onBoundry[0], corners[i], curSite)])
 
@@ -1163,7 +1163,7 @@ for cell2 in finalCell:
 
 					sortByY(withCorners)
 
-					print("rangeOut", withCorners)
+					#print("rangeOut", withCorners)
 					
 					for i in range(0, withCorners.__len__()-1):
 						finalCell[cell2]["vertices"].append([withCorners[i][0], withCorners[i+1][0]])
@@ -1236,9 +1236,10 @@ for site in cell:
 	#print(clr1, clr2, clr3)        
 	
 for cell in finalCell:
-	vertsX = []
-	vertsY = []
-	used = []			
+#	vertsX = []
+#	vertsY = []
+	used = []
+	print("line1242", finalCell[cell]["vertices"])				
 	for pairs in finalCell[cell]["vertices"]:    
 		#plt.plot([finalCell[cell]["vertices"][pairs][0][0], finalCell[cell]["vertices"][pairs][1][0]], [finalCell[cell]["vertices"][pairs][0][1], finalCell[cell]["vertices"][pairs][1][1]], "bo")
 		#plt.plot([pairs[0][0], pairs[1][0]], [pairs[0][1], pairs[1][1]], "bo")
@@ -1250,17 +1251,60 @@ for cell in finalCell:
 		#plt.plot(x1, y1, "b")
 		#print(pairs)
 		
+#		if pairs[0] not in used:
+#			vertsX.append(pairs[0][0])
+#			vertsY.append(pairs[0][1])
+#			used.append(pairs[0])
+#		if pairs[1] not in used:
+#			vertsX.append(pairs[1][0])
+#			vertsY.append(pairs[1][1])
+#			used.append(pairs[1])
+		
 		if pairs[0] not in used:
-			vertsX.append(pairs[0][0])
-			vertsY.append(pairs[0][1])
 			used.append(pairs[0])
 		if pairs[1] not in used:
-			vertsX.append(pairs[1][0])
-			vertsY.append(pairs[1][1])
-			used.append(pairs[1])												
+			used.append(pairs[1])									
 			
-	plt.fill(vertsX, vertsY, color=(random.random(), random.random(), random.random(), 0.5))															                        
+	#plt.fill(vertsX, vertsY, color=(random.random(), random.random(), random.random(), 0.5))
+	print(used)
+	temp = used.copy()
+	temp2 = []
+	curSite = cell.replace("[","").replace("]","").split("_")
+	curSite = [float(curSite[0]), float(curSite[1])]
+	for i in range(0, temp.__len__()):
+		temp2.append([temp[i], normalTheta(temp[i],curSite)])
+		
+	sortByY(temp2)
+	print(temp2)
+
+	vertsX = []
+	vertsY = []	
+
+	for point in temp2:
+		vertsX.append(point[0][0])
+		vertsY.append(point[0][1])		
+	
+	plt.fill(vertsX, vertsY, color=(random.random(), random.random(), random.random(), 0.5))	
+
+#	nbrs = NearestNeighbors(n_neighbors=2, algorithm='ball_tree').fit(used)
+#	distances, indices = nbrs.kneighbors(used)	
+#	#print("line1264",distances, indices)
+#	reorder = []
+#	vertsX = []
+#	vertsY = []		
+#	for pair in indices:
+#		reorder.append([used[pair[0]], used[pair[1]]])
+#		vertsX.append(used[pair[0]][0])
+#		vertsY.append(used[pair[0]][1])
+#		vertsX.append(used[pair[1]][0])
+#		vertsY.append(used[pair[1]][1])
+#		print(pair)
+													
+#	print(reorder)
+#	plt.fill(vertsX, vertsY, color=(random.random(), random.random(), random.random(), 0.5))
+	print()																								                        
 		
 plt.show()
+
 
 
