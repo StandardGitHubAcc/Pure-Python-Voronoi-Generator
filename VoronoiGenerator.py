@@ -35,7 +35,7 @@ for i in range(1, 8):
 #points = [[159, 66], [100, 166], [73, 197]]
 
 #points = [[106, 6], [88, 11], [9, 18], [2, 105], [20, 105], [115, 140], [52, 168]] #causes division by zero in getTimeAtX
-# points = [[13, 23], [181, 40], [129, 55], [93, 100], [59, 127], [12, 160], [156, 163]] #---edge finding issue
+#points = [[13, 23], [181, 40], [129, 55], [93, 100], [59, 127], [12, 160], [156, 163]] #---edge finding issue
 #points = [[76, 30], [196, 40], [165, 47], [104, 66], [128, 120], [88, 159], [166, 180]] #easy to see graph. In a previous, more broken version of the program, another line and intersection point near the one on the far right existed, which is necessary to correctly complete the graph
 # ^there is an issue with the plot for the line above
 
@@ -69,13 +69,13 @@ for i in range(1, 8):
 
 #points = [[146, 15], [189, 55], [44, 75], [90, 95], [52, 138], [111, 157], [117, 181]]
 
-#points = [[159, 14], [49, 18], [63, 32], [87, 48], [191, 60], [131, 99], [150, 183]] # breaks stuff, not sure what exactly
+points = [[159, 14], [49, 18], [63, 32], [87, 48], [191, 60], [131, 99], [150, 183]] # breaks stuff, not sure what exactly
 #points = [[59, 65], [194, 108], [134, 152], [147, 155], [75, 166], [64, 172], [180, 195]] # breaks stuff, not sure what exactly
 
 #points = [[25, 25], [175, 175], [25, 175], [175, 25], [100, 100]]
 #points = [[50, 50], [75, 75], [195, 195]]	  
 
-points = [[43, 20], [10, 32], [91, 55], [136, 72], [123, 79], [52, 99], [0, 174]]
+#points = [[43, 20], [10, 32], [91, 55], [136, 72], [123, 79], [52, 99], [0, 174]]
 
 #		bottomleft, topleft, bottomright, topright
 corners = [[0, 0], [0, 200], [200, 0], [200, 200]] #[ [defaultBounds[0][0], defaultBounds[1][1]], [defaultBounds[0][0], defaultBounds[0][1]], [defaultBounds[1][0], defaultBounds[1][1]], [defaultBounds[0][1], defaultBounds[1][0]] ]
@@ -635,6 +635,7 @@ for site in cell: # Finds edges for cells
 for vert in vertices: # modifies convex hull so that it has edges extending to the boundries of the specified area
 	#print("vert",vert, vertices[vert])
 	#print()
+		
 	if vertices[vert]["at"].__len__() == 1:
 		#print("vert",vert, vertices[vert])
 		tempVertPt = str(vert).removeprefix("[").removesuffix("]").split("_")
@@ -779,7 +780,7 @@ for vert in vertices: # modifies convex hull so that it has edges extending to t
 
 													   
 #print("-----",finalCell["[52_99]"]["vertices"])
-print("-----",finalCell["[0_174]"]["vertices"])				
+#print("-----",finalCell["[0_174]"]["vertices"])				
 # removes duplicate information
 for cell3 in finalCell:
 	tempVerts = finalCell[cell3]["vertices"].copy()
@@ -789,24 +790,29 @@ for cell3 in finalCell:
 	unique = []
 	#print("site",cell3)
 	for vert in tempVerts:
-		print("vert",vert)        
+		#print("vert",vert)        
 		if vert not in unique and vert[0] != vert[1]:
 			if vert[0][0] >= defaultBounds[0][0] and vert[0][0] <= defaultBounds[0][1] and vert[0][1] >= defaultBounds[1][1] and vert[0][1] <= defaultBounds[1][0]:
 				if vert[1][0] >= defaultBounds[0][0] and vert[1][0] <= defaultBounds[0][1] and vert[1][1] >= defaultBounds[1][1] and vert[1][1] <= defaultBounds[1][0]:
-					print("								unique",vert)
+					#print("								unique",vert)
 					unique.append(vert)
 	
 	if unique == []:
 		curSite = cell3.replace("[","").replace("]","").split("_")
 		curSite = [float(curSite[0]), float(curSite[1])]
 
-		i = points.index(curSite)
+		pts = points.copy()
+		distanceTargetSort(curSite, pts)
 
-		other = []
-		if i == points.__len__()-1:
-			other = points[i - 1]
-		else:                    
-			other = points[i + 1]
+		#i = points.index(curSite)
+
+		#other = []
+		#if i == points.__len__()-1:
+		#	other = points[i - 1]
+		#else:                    
+		#	other = points[i + 1]
+
+		other = pts[1]
 
 		midPt = midPoint(curSite, other)
 		before = [midPt[0]-0.5, yAtX(curSite, other, midPt[0]-0.5)]
@@ -826,8 +832,8 @@ for cell3 in finalCell:
 		
 
 print()
-print("-----",finalCell["[52_99]"]["vertices"])
-print("-----",finalCell["[0_174]"]["vertices"])
+#print("-----",finalCell["[52_99]"]["vertices"])
+#print("-----",finalCell["[0_174]"]["vertices"])
 print()
 def makeEdges(onBoundry, curSite):
 	inside = False
@@ -1009,8 +1015,4 @@ for cell in finalCell:
 	plt.fill(vertsX, vertsY, color=(random.random(), random.random(), random.random(), 0.5))																								                        
 		
 plt.show()
-
-
-
-
 
