@@ -35,7 +35,7 @@ for i in range(1, 8):
 #points = [[159, 66], [100, 166], [73, 197]]
 
 #points = [[106, 6], [88, 11], [9, 18], [2, 105], [20, 105], [115, 140], [52, 168]] #causes division by zero in getTimeAtX
-#points = [[13, 23], [181, 40], [129, 55], [93, 100], [59, 127], [12, 160], [156, 163]] #---
+# points = [[13, 23], [181, 40], [129, 55], [93, 100], [59, 127], [12, 160], [156, 163]] #---edge finding issue
 #points = [[76, 30], [196, 40], [165, 47], [104, 66], [128, 120], [88, 159], [166, 180]] #easy to see graph. In a previous, more broken version of the program, another line and intersection point near the one on the far right existed, which is necessary to correctly complete the graph
 # ^there is an issue with the plot for the line above
 
@@ -49,7 +49,7 @@ for i in range(1, 8):
 #points = [[25, 17], [109, 37], [68, 45], [35, 85], [2, 124], [138, 138], [190, 145]]
 #[[159, 3], [193, 10], [140, 34], [151, 84], [93, 107], [64, 155], [57, 195]]
 #points = [[147, 1], [35, 16], [52, 25], [79, 70], [152, 91], [151, 97], [60, 139]] # all vertices are connected to exactly 2 other vertices
-points = [[41, 27], [40, 27], [52, 44], [116, 60], [28, 67], [182, 118], [64, 129]] #breaks neighboring cells
+#points = [[41, 27], [40, 27], [52, 44], [116, 60], [28, 67], [182, 118], [64, 129]] #breaks neighboring cells
 
 #[[140, 7], [29, 12], [13, 12], [120, 24], [13, 32], [68, 62], [141, 86]] 
 #points = [[165, 25], [18, 33], [176, 41], [85, 102], [113, 128], [72, 153], [49, 162]] #looks like something is broken since a vertice with a higher y value than its connections does not have the highest time out of the 3
@@ -1011,207 +1011,93 @@ for cell3 in finalCell:
 		finalCell[cell3]["vertices"] = unique                        
 
 
-boundryEdges = []
-#center = midPoint(defaultBounds[0], defaultBounds[1])    
+boundryEdges = [] 
 for cell2 in finalCell:
-	#print(finalCell[cell2]["vertices"])
-#     for vert1 in finalCell[cell2]["vertices"]:
-#         for vert2 in finalCell[cell2]["vertices"]:
-#             if vert1 != vert2:
-#                 if vert1[0] == vert2[0] or vert1[0] == vert2[0] or vert1[1] == vert2[0] or vert1[1] == vert2[1]:                 
-#                     if vert1[0][0] == defaultBounds[0][0] or vert1[0][0] == defaultBounds[0][1]: 
-#                         boundryEdges.append({"cell":cell2, "vert1":vert1, "vert2":vert2})
-	#continue  
-	
-	
 	  
 	#print("info",cell2,"-",finalCell[cell2]["vertices"])    
 	onBoundry = []
 	for vert in finalCell[cell2]["vertices"]:
-		boundSize = [defaultBounds[0][0], defaultBounds[0][1], defaultBounds[1][0] ,defaultBounds[1][1]]
-		#print("boundsize",boundSize)
-		#print(vert)                        
+		boundSize = [defaultBounds[0][0], defaultBounds[0][1], defaultBounds[1][0] ,defaultBounds[1][1]]                   
 		if (vert[0][0] in boundSize or vert[0][1] in boundSize) and vert[0] not in onBoundry:
 			onBoundry.append(vert[0])
 		if (vert[1][0] in boundSize or vert[1][1] in boundSize) and vert[1] not in onBoundry:
 			onBoundry.append(vert[1])            
 
 	#print(onBoundry)
-	if onBoundry != []:
-		#print(nearestBoundry(onBoundry[0], onBoundry[1]))
-		#withCorners = onBoundry.copy()        
-		#withCorners.append([corners[0], normalTheta(corners[0], center)])
-		#withCorners.append([corners[1], normalTheta(corners[1], center)])
-		#withCorners.append([corners[2], normalTheta(corners[2], center)])
-		#withCorners.append([corners[3], normalTheta(corners[3], center)])
-		#withCorners.extend(corners[0], corners[1], corners[2], corners[3])        
-		
+				
+	if onBoundry != []:     
+		print("info",cell2,"-",finalCell[cell2]["vertices"])
 		curSite = cell2.replace("[","").replace("]","").split("_")
 		curSite = [float(curSite[0]), float(curSite[1])]
 
-		#print("onboundry", onBoundry)
 		sortByY(onBoundry)
-		#print("length", onBoundry.__len__())        
+      
 		if onBoundry.__len__() == 2:
-			if onBoundry[0][0] == onBoundry[1][0] or onBoundry[0][1] == onBoundry[1][1]:
-				#print("line1016",onBoundry)                
+			if onBoundry[0][0] == onBoundry[1][0] or onBoundry[0][1] == onBoundry[1][1]:              
 				finalCell[cell2]["vertices"].append([onBoundry[0], onBoundry[1]])
+				
 			else: # if the two vertices are not on the same edge
-#                 center = [(onBoundry[0][0] + onBoundry[1][0] + curSite[0])/3, (onBoundry[0][1] + onBoundry[1][1] + curSite[1])/3]#midPoint(onBoundry[0], onBoundry[1])
-#                 vert1Test = []
-#                 vert2Test = []
 
-#                 if onBoundry[0][0] == defaultBounds[0][0] or onBoundry[0][0] == defaultBounds[0][1]:
-#                     vert1Test = [[onBoundry[0][0], onBoundry[0][1] - 0.5], [onBoundry[0][0], onBoundry[0][1] + 0.5]]
-#                 else:                                    
-#                     vert1Test = [[onBoundry[0][0] - 0.5, onBoundry[0][1]], [onBoundry[0][0] + 0.5, onBoundry[0][1]]]
-
-#                 if onBoundry[0][0] == defaultBounds[0][0] or onBoundry[0][0] == defaultBounds[0][1]:
-#                     vert1Test = [[onBoundry[0][0], onBoundry[0][1] - 0.5], [onBoundry[0][0], onBoundry[0][1] + 0.5]]
-#                 else:                                    
-#                     vert1Test = [[onBoundry[0][0] - 0.5, onBoundry[0][1]], [onBoundry[0][0] + 0.5, onBoundry[0][1]]]
-
-#                 vert1 = []
-#                 vert2 = []                
-#                 if distancePt(vert1Test[0], center) < distancePt(vert1Test[1], center):
-#                     vert1 = vert1Test[0]
-#                 else:
-#                     vert1 = vert1Test[1]
-#                     
-#                 if distancePt(vert2Test[0], center) < distancePt(vert2Test[1], center):
-#                     vert2 = vert2Test[0]
-#                 else:
-#                     vert2 = vert2Test[1]
-
-				
-				
 				inside = False
 				vert1Theta = normalTheta(onBoundry[0], curSite)
 				vert2Theta = normalTheta(onBoundry[1], curSite)
-				#print("theta", vert1Theta, vert2Theta)
+				
+				minTheta = min(vert1Theta, vert2Theta)
+				maxTheta = max(vert1Theta, vert2Theta)
+				
+				print("theta",vert1Theta,vert2Theta)
 				for pt in points:
 					if pt != curSite:
-						ptTheta = normalTheta(pt, curSite)
-						#print("-------",pt, ptTheta)                        
-						if ptTheta > vert2Theta and ptTheta < vert1Theta:
+						ptTheta = normalTheta(pt, curSite)                    
+						#if ptTheta > vert2Theta and ptTheta < vert1Theta:
+						if ptTheta > minTheta and ptTheta < maxTheta:
 							inside = True
 							break
-	
-#                 withCorners = onBoundry.copy()
-#                 withCorners.extend([corners[0], corners[1], corners[2], corners[3]])
-
-#                 for i in range(0, withCorners.__len__()):
-#                     withCorners[i] = [withCorners[i], normalTheta(withCorners[i], curSite)]
-	
-#                 sortByY(withCorners)
-
-#                 for i in range(0, withCorners.__len__()-1):
-#                     if withCorners[i][1] == withCorners[i+1][1]:
-#                         if withCorners[i][0] > withCorners[i+1][0]:
-#                             withCorners[i], withCorners[i+1] = withCorners[i+1], withCorners[i]
-				
-				#print(withCorners)
+						
 				if inside == False:
-					#index1 = withCorners.index([onBoundry[0], vert1Theta])
-					#index2 = withCorners.index([onBoundry[1], vert2Theta])
-					#if index1 > index2:
-					#    index1, index2 = index2, index1
-					#vertSet = withCorners[index1:index2+1]
-					#print("rangeIn",index1, index2, vertSet)
-					#for i in range(0, vertSet.__len__()-1):
-					#    finalCell[cell2]["vertices"].append([vertSet[i][0], vertSet[i+1][0]])
 
 					withCorners = [[onBoundry[1], vert2Theta], [onBoundry[0], vert1Theta]]
 
 					for i in range(0, corners.__len__()):
 						cornerTheta = normalTheta(corners[i], curSite)
-						if cornerTheta > vert2Theta and cornerTheta < vert1Theta:
+						print("line1058",corners[i],cornerTheta)
+						#if cornerTheta > vert2Theta and cornerTheta < vert1Theta:
+						if cornerTheta > minTheta and cornerTheta < maxTheta:
 							withCorners.append([corners[i], cornerTheta])
 
 					sortByY(withCorners)
 
-					#print("rangeIn", withCorners)
+					print("rangeIn", withCorners)
 					
 					for i in range(0, withCorners.__len__()-1):
 						finalCell[cell2]["vertices"].append([withCorners[i][0], withCorners[i+1][0]])
 
 				else:
-#                     index1 = withCorners.index([onBoundry[0], vert1Theta])
-#                     index2 = withCorners.index([onBoundry[1], vert2Theta])
-#                     if index1 > index2:
-#                         index1, index2 = index2, index1
-#                     vertSet = withCorners[index2:]
-#                     vertSet.extend(withCorners[:index1+1])
-#                     print("rangeOut",index1, index2, vertSet)
-#                     for i in range(0, vertSet.__len__()-1):
-#                         finalCell[cell2]["vertices"].append([vertSet[i][0], vertSet[i+1][0]])
 					
 					withCorners = [[onBoundry[0], vert1Theta], [onBoundry[1], vert2Theta]]
 
 					for i in range(0, corners.__len__()):
 						cornerTheta = normalTheta(corners[i], curSite)
-						#print("cornerTheta",corners[i],cornerTheta)
-						if cornerTheta < vert2Theta or cornerTheta > vert1Theta:
-							#withCorners.append([corners[i], cornerTheta])
-							#print(vert1Theta, cornerTheta, vert2Theta)
-							#print(angle(onBoundry[0], corners[i], curSite))
+						#if cornerTheta < vert2Theta or cornerTheta > vert1Theta:
+						if cornerTheta < minTheta or cornerTheta > maxTheta:
 							withCorners.append([corners[i], angle(onBoundry[0], corners[i], curSite)])
 
-						#cornerAngle = angle(onBoundry[0], corners[i], curSite)
 					withCorners[0] = [onBoundry[0], 0]
 					withCorners[1] = [onBoundry[1], ((2 * math.pi) - vert1Theta) + vert2Theta]
 
 					sortByY(withCorners)
 
-					#print("rangeOut", withCorners)
+					print("rangeOut", withCorners)
 					
 					for i in range(0, withCorners.__len__()-1):
 						finalCell[cell2]["vertices"].append([withCorners[i][0], withCorners[i+1][0]])
 
-				print()
+			print()
 		else: # if it greater than 2, it would ALMOST have to be a multiple of 2, with verts on different edges
-			pass
+			print("greater than 2")
+			print()
 		
-		continue
-						
-		sortByY(onBoundry)
-		sortByY(withCorners)
 
-		indexes = []
-		within = []
-		boundries = []
-		
-		curSite = cell2.replace("[","").replace("]","").split("_")
-		curSite = [float(curSite[0]), float(curSite[1])]
-		print(curSite)
-		siteTheta = normalTheta(curSite, center)
-		print("line933",onBoundry[0][1])
-		print("line935",onBoundry)
-		print("siteTheta",siteTheta)                
-		if siteTheta > onBoundry[0][1]:
-			print("withCorners",withCorners)    
-			for point in onBoundry:
-				#print(normalTheta(point, center))
-				#print(withCorners.index(point))
-				indexes.append(withCorners.index(point))
-
-			for i in range(0, indexes.__len__(), 2):
-				#print(indexes[i], indexes[i+1])
-				#print(withCorners[indexes[i]:indexes[i+1]+1])
-				#print(indexes[i], indexes[i+1]+1)
-				#print(withCorners[indexes[i]:indexes[i+1]+1])
-				within.extend(withCorners[indexes[i]:indexes[i+1]+1])
-									
-			print("within",within[0])
-			for i in range(0, within.__len__()-1):
-				#print(within[i])            
-				boundries.append([within[i][0], within[i+1][0]])
-
-			print("boundries",boundries)
-		else:                    
-			pass   
-		
-		print() 
 
 
 for pt in points:
@@ -1239,7 +1125,7 @@ for cell in finalCell:
 #	vertsX = []
 #	vertsY = []
 	used = []
-	print("line1242", finalCell[cell]["vertices"])				
+	#print("line1242", finalCell[cell]["vertices"])				
 	for pairs in finalCell[cell]["vertices"]:    
 		#plt.plot([finalCell[cell]["vertices"][pairs][0][0], finalCell[cell]["vertices"][pairs][1][0]], [finalCell[cell]["vertices"][pairs][0][1], finalCell[cell]["vertices"][pairs][1][1]], "bo")
 		#plt.plot([pairs[0][0], pairs[1][0]], [pairs[0][1], pairs[1][1]], "bo")
@@ -1266,7 +1152,7 @@ for cell in finalCell:
 			used.append(pairs[1])									
 			
 	#plt.fill(vertsX, vertsY, color=(random.random(), random.random(), random.random(), 0.5))
-	print(used)
+	#print(used)
 	temp = used.copy()
 	temp2 = []
 	curSite = cell.replace("[","").replace("]","").split("_")
@@ -1275,7 +1161,7 @@ for cell in finalCell:
 		temp2.append([temp[i], normalTheta(temp[i],curSite)])
 		
 	sortByY(temp2)
-	print(temp2)
+	#print(temp2)
 
 	vertsX = []
 	vertsY = []	
@@ -1302,9 +1188,10 @@ for cell in finalCell:
 													
 #	print(reorder)
 #	plt.fill(vertsX, vertsY, color=(random.random(), random.random(), random.random(), 0.5))
-	print()																								                        
+	#print()																								                        
 		
 plt.show()
+
 
 
 
