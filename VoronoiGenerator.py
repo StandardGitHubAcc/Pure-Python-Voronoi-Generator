@@ -36,7 +36,7 @@ for i in range(1, 8):
 
 #points = [[106, 6], [88, 11], [9, 18], [2, 105], [20, 105], [115, 140], [52, 168]] #causes division by zero in getTimeAtX
 # points = [[13, 23], [181, 40], [129, 55], [93, 100], [59, 127], [12, 160], [156, 163]] #---edge finding issue
-points = [[76, 30], [196, 40], [165, 47], [104, 66], [128, 120], [88, 159], [166, 180]] #easy to see graph. In a previous, more broken version of the program, another line and intersection point near the one on the far right existed, which is necessary to correctly complete the graph
+#points = [[76, 30], [196, 40], [165, 47], [104, 66], [128, 120], [88, 159], [166, 180]] #easy to see graph. In a previous, more broken version of the program, another line and intersection point near the one on the far right existed, which is necessary to correctly complete the graph
 # ^there is an issue with the plot for the line above
 
 #points = [[194, 2], [94, 30], [11, 91], [88, 92], [57, 143], [43, 190], [6, 198]]
@@ -73,7 +73,7 @@ points = [[76, 30], [196, 40], [165, 47], [104, 66], [128, 120], [88, 159], [166
 #points = [[59, 65], [194, 108], [134, 152], [147, 155], [75, 166], [64, 172], [180, 195]] # breaks stuff, not sure what exactly
 
 #points = [[25, 25], [175, 175], [25, 175], [175, 25], [100, 100]]
-#points = [[50, 50], [75, 75], [195, 195]]	  
+points = [[50, 50], [75, 75], [195, 195]]	  
 
 #		bottomleft, topleft, bottomright, topright
 corners = [[0, 0], [0, 200], [200, 0], [200, 200]] #[ [defaultBounds[0][0], defaultBounds[1][1]], [defaultBounds[0][0], defaultBounds[0][1]], [defaultBounds[1][0], defaultBounds[1][1]], [defaultBounds[0][1], defaultBounds[1][0]] ]
@@ -166,12 +166,20 @@ def sortByY(array):
 			
 			if array[j][1] > array[j + 1][1]:
 				array[j], array[j + 1] = array[j + 1], array[j]
-				
+
+def sortByX(array):
+	n = len(array)
+ 
+	for i in range(n):
+		for j in range(0, n - i - 1):
+			
+			if array[j][0] > array[j + 1][0]:
+				array[j], array[j + 1] = array[j + 1], array[j]
+
 def find3IntersectX(pt1, pt2, pt3): # division by zero happens with the points (50, 50) (25, 25) (75, 75) # finds x-value of intersection of 3 parabolas
 	a, b, c, d, e, f = pt1[0], pt1[1], pt2[0], pt2[1], pt3[0], pt3[1]
 	if (2 * ( ((a-e)*(b-d)) - ((a-c)*(b-f))) ) != 0:
 		x = ( ( ((a**2) - (e**2))*(b-d) ) - ( ((a**2) - (c**2)) * (b-f) ) - ( (d-f)*(b-f)*(b-d) )) / (2 * ( ((a-e)*(b-d)) - ((a-c)*(b-f))) )
-		#print("a",x)        
 		return x
 	else: # i need to have it return the midpoint between the site and nearest site if there is division by zero, because that means that the two lines are parallel and the farther site will not be valid
 		#print(( ( ((a**2) - (e**2))*(b-d) ) - ( ((a**2) - (c**2)) * (b-f) ) - ( (d-f)*(b-f)*(b-d) )), (2 * ( ((a-e)*(b-d)) - ((a-c)*(b-f))) ))
@@ -181,6 +189,7 @@ def find3IntersectX(pt1, pt2, pt3): # division by zero happens with the points (
 		#return (a - c)/2   #returning (a-c)/2 or 0 doesn't seem to make a difference
 		#return 0
 		return defaultBounds[0][0] - 5       
+		#return midPoint(pt1, pt2)
 
 #def find3IntersectY(pt1)
 
@@ -1034,7 +1043,7 @@ for cell2 in finalCell:
 		sortByY(onBoundry)
       
 		if onBoundry.__len__() == 2:
-			if onBoundry[0][0] == onBoundry[1][0] or onBoundry[0][1] == onBoundry[1][1]:              
+			if onBoundry[0][0] == onBoundry[1][0] or onBoundry[0][1] == onBoundry[1][1]:
 				finalCell[cell2]["vertices"].append([onBoundry[0], onBoundry[1]])
 				
 			else: # if the two vertices are not on the same edge
@@ -1055,9 +1064,11 @@ for cell2 in finalCell:
 							inside = True
 							break
 						
+				withCorners = [[onBoundry[0], vert1Theta], [onBoundry[1], vert2Theta]]
+
 				if inside == False:
 
-					withCorners = [[onBoundry[1], vert2Theta], [onBoundry[0], vert1Theta]]
+					#withCorners = [[onBoundry[1], vert2Theta], [onBoundry[0], vert1Theta]]
 
 					for i in range(0, corners.__len__()):
 						cornerTheta = normalTheta(corners[i], curSite)
@@ -1075,7 +1086,7 @@ for cell2 in finalCell:
 
 				else:
 					
-					withCorners = [[onBoundry[0], vert1Theta], [onBoundry[1], vert2Theta]]
+					#withCorners = [[onBoundry[0], vert1Theta], [onBoundry[1], vert2Theta]]
 
 					for i in range(0, corners.__len__()):
 						cornerTheta = normalTheta(corners[i], curSite)
@@ -1098,11 +1109,106 @@ for cell2 in finalCell:
 					for i in range(0, withCorners.__len__()-1):
 						finalCell[cell2]["vertices"].append([withCorners[i][0], withCorners[i+1][0]])
 
-			print()
+			#print()
 		else: # if it greater than 2, it would ALMOST have to be a multiple of 2, with verts on different edges
 			print("greater than 2")
-			print()
-		
+			
+#			verts = []
+#			for pair in onBoundry:
+#				verts.append(pair)
+
+#			sortByY(verts)
+#			print(verts)
+
+			if onBoundry.__len__() % 2 == 0: # might be redundant, not sure if it is possible for a site to have more than 2 boundry edges
+				#		left, right, top, bottom
+				sides = [[], [], [], []]
+				for point in onBoundry:
+					if point[0] == defaultBounds[0][0]:
+						sides[0].append(point)
+					elif point[0] == defaultBounds[0][1]:
+						sides[1].append(point)
+					elif point[1] == defaultBounds[1][0]:
+						sides[2].append(point)
+					else:
+						sides[3].append(point)
+
+				#used = []
+				single = []
+
+				for edge in sides:
+					if edge.__len__() == 2:
+						finalCell[cell2]["vertices"].append([edge[0], edge[1]])
+						#used.extend(edge)
+					elif edge.__len__() == 1:
+						single.append(edge[0])
+			
+				if single.__len__() > 0:
+					
+					print(single)
+					inside = False
+					vert1Theta = normalTheta(single[0], curSite)
+					vert2Theta = normalTheta(single[1], curSite)
+				
+					minTheta = min(vert1Theta, vert2Theta)
+					maxTheta = max(vert1Theta, vert2Theta)
+				
+					#print("theta",vert1Theta,vert2Theta)
+					for pt in points:
+						if pt != curSite:
+							ptTheta = normalTheta(pt, curSite)                    
+							#if ptTheta > vert2Theta and ptTheta < vert1Theta:
+							if ptTheta > minTheta and ptTheta < maxTheta:
+								inside = True
+								break
+						
+					withCorners = [[single[0], vert1Theta], [single[1], vert2Theta]]
+
+					if inside == False:
+
+						#withCorners = [[onBoundry[1], vert2Theta], [onBoundry[0], vert1Theta]]
+
+						for i in range(0, corners.__len__()):
+							cornerTheta = normalTheta(corners[i], curSite)
+							#print("line1058",corners[i],cornerTheta)
+							#if cornerTheta > vert2Theta and cornerTheta < vert1Theta:
+							if cornerTheta > minTheta and cornerTheta < maxTheta:
+								withCorners.append([corners[i], cornerTheta])
+
+						sortByY(withCorners)
+
+						print("rangeIn", withCorners)
+					
+						for i in range(0, withCorners.__len__()-1):
+							finalCell[cell2]["vertices"].append([withCorners[i][0], withCorners[i+1][0]])
+
+					else:
+					
+						#withCorners = [[onBoundry[0], vert1Theta], [onBoundry[1], vert2Theta]]
+
+						for i in range(0, corners.__len__()):
+							cornerTheta = normalTheta(corners[i], curSite)
+							#if cornerTheta < vert2Theta or cornerTheta > vert1Theta:
+							if cornerTheta < minTheta or cornerTheta > maxTheta:
+								tempAngle = cornerTheta - vert1Theta
+								if tempAngle < 0:
+									tempAngle += 2 * math.pi
+							
+								withCorners.append([corners[i], tempAngle])
+								#withCorners.append([corners[i], angle(onBoundry[0], corners[i], curSite)])
+
+						withCorners[0] = [single[0], 0]
+						withCorners[1] = [single[1], ((2 * math.pi) - vert1Theta) + vert2Theta]
+
+						sortByY(withCorners)
+
+						print("rangeOut", withCorners)
+					
+						for i in range(0, withCorners.__len__()-1):
+							finalCell[cell2]["vertices"].append([withCorners[i][0], withCorners[i+1][0]])
+		print()
+
+
 
 
 
@@ -1153,4 +1259,5 @@ for cell in finalCell:
 	plt.fill(vertsX, vertsY, color=(random.random(), random.random(), random.random(), 0.5))																								                        
 		
 plt.show()
+
 
