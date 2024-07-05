@@ -36,7 +36,7 @@ for i in range(1, 8):
 
 #points = [[106, 6], [88, 11], [9, 18], [2, 105], [20, 105], [115, 140], [52, 168]] #causes division by zero in getTimeAtX
 # points = [[13, 23], [181, 40], [129, 55], [93, 100], [59, 127], [12, 160], [156, 163]] #---edge finding issue
-#points = [[76, 30], [196, 40], [165, 47], [104, 66], [128, 120], [88, 159], [166, 180]] #easy to see graph. In a previous, more broken version of the program, another line and intersection point near the one on the far right existed, which is necessary to correctly complete the graph
+points = [[76, 30], [196, 40], [165, 47], [104, 66], [128, 120], [88, 159], [166, 180]] #easy to see graph. In a previous, more broken version of the program, another line and intersection point near the one on the far right existed, which is necessary to correctly complete the graph
 # ^there is an issue with the plot for the line above
 
 #points = [[194, 2], [94, 30], [11, 91], [88, 92], [57, 143], [43, 190], [6, 198]]
@@ -73,6 +73,7 @@ for i in range(1, 8):
 #points = [[59, 65], [194, 108], [134, 152], [147, 155], [75, 166], [64, 172], [180, 195]] # breaks stuff, not sure what exactly
 
 #points = [[25, 25], [175, 175], [25, 175], [175, 25], [100, 100]]
+#points = [[50, 50], [75, 75], [195, 195]]	  
 
 #		bottomleft, topleft, bottomright, topright
 corners = [[0, 0], [0, 200], [200, 0], [200, 200]] #[ [defaultBounds[0][0], defaultBounds[1][1]], [defaultBounds[0][0], defaultBounds[0][1]], [defaultBounds[1][0], defaultBounds[1][1]], [defaultBounds[0][1], defaultBounds[1][0]] ]
@@ -1080,7 +1081,12 @@ for cell2 in finalCell:
 						cornerTheta = normalTheta(corners[i], curSite)
 						#if cornerTheta < vert2Theta or cornerTheta > vert1Theta:
 						if cornerTheta < minTheta or cornerTheta > maxTheta:
-							withCorners.append([corners[i], angle(onBoundry[0], corners[i], curSite)])
+							tempAngle = cornerTheta - vert1Theta
+							if tempAngle < 0:
+								tempAngle += 2 * math.pi
+							
+							withCorners.append([corners[i], tempAngle])
+							#withCorners.append([corners[i], angle(onBoundry[0], corners[i], curSite)])
 
 					withCorners[0] = [onBoundry[0], 0]
 					withCorners[1] = [onBoundry[1], ((2 * math.pi) - vert1Theta) + vert2Theta]
@@ -1108,51 +1114,26 @@ for site in cell:
 	#print(cell[site])
 	#clr1, clr2, clr3 = random.random(), random.random(), random.random() 
 	for entry in cell[site]:
-		#if entry["at"][1] > 120 and entry["at"][1] < 130:       
-		#    print(entry)
-		#print(entry)
-		#print(site)                
+        
 		plt.plot(entry["at"][0], entry["at"][1], "go")#, color=(clr1, clr2, clr3))
-		#plt.plot(cell[site]["at"][0], cell[site]["at"][1], color=(0.5, 0.5, 0.5))
+
 		plt.plot([entry["point2"][0], entry["at"][0], entry["point3"][0], entry["at"][0], entry["point1"][0]], [entry["point2"][1], entry["at"][1], entry["point3"][1], entry["at"][1], entry["point1"][1]], "g") 
-		#print(clr1, clr2, clr3)
-	#plt.plot(cell[site]["at"][0], cell[site]["at"][1], "go")#, color=(clr1, clr2, clr3))
-	#plt.plot(cell[site]["at"][0], cell[site]["at"][1], color=(0.5, 0.5, 0.5))
-	#plt.plot([cell[site]["point2"][0], cell[site]["at"][0], cell[site]["point3"][0], cell[site]["at"][0], cell[site]["point1"][0]], [cell[site]["point2"][1], cell[site]["at"][1], cell[site]["point3"][1], cell[site]["at"][1], cell[site]["point1"][1]], "g") 
-	#print(clr1, clr2, clr3)        
+      
 	
 for cell in finalCell:
-#	vertsX = []
-#	vertsY = []
+
 	used = []
-	#print("line1242", finalCell[cell]["vertices"])				
+			
 	for pairs in finalCell[cell]["vertices"]:    
-		#plt.plot([finalCell[cell]["vertices"][pairs][0][0], finalCell[cell]["vertices"][pairs][1][0]], [finalCell[cell]["vertices"][pairs][0][1], finalCell[cell]["vertices"][pairs][1][1]], "bo")
-		#plt.plot([pairs[0][0], pairs[1][0]], [pairs[0][1], pairs[1][1]], "bo")
+
 		plt.plot([pairs[0][0], pairs[1][0]], [pairs[0][1], pairs[1][1]], "b")
 		plt.plot([pairs[0][0], pairs[1][0]], [pairs[0][1], pairs[1][1]], "bo")                
-		#print(pairs[0][0], pairs[1][0], pairs[0][1], pairs[1][1])
-		#x1 = [pairs[0][0], pairs[1][0]]
-		#y1 = [pairs[0][1], pairs[1][1]]
-		#plt.plot(x1, y1, "b")
-		#print(pairs)
-		
-#		if pairs[0] not in used:
-#			vertsX.append(pairs[0][0])
-#			vertsY.append(pairs[0][1])
-#			used.append(pairs[0])
-#		if pairs[1] not in used:
-#			vertsX.append(pairs[1][0])
-#			vertsY.append(pairs[1][1])
-#			used.append(pairs[1])
 		
 		if pairs[0] not in used:
 			used.append(pairs[0])
 		if pairs[1] not in used:
 			used.append(pairs[1])									
-			
-	#plt.fill(vertsX, vertsY, color=(random.random(), random.random(), random.random(), 0.5))
-	#print(used)
+
 	temp = used.copy()
 	temp2 = []
 	curSite = cell.replace("[","").replace("]","").split("_")
@@ -1161,7 +1142,6 @@ for cell in finalCell:
 		temp2.append([temp[i], normalTheta(temp[i],curSite)])
 		
 	sortByY(temp2)
-	#print(temp2)
 
 	vertsX = []
 	vertsY = []	
@@ -1170,28 +1150,7 @@ for cell in finalCell:
 		vertsX.append(point[0][0])
 		vertsY.append(point[0][1])		
 	
-	plt.fill(vertsX, vertsY, color=(random.random(), random.random(), random.random(), 0.5))	
-
-#	nbrs = NearestNeighbors(n_neighbors=2, algorithm='ball_tree').fit(used)
-#	distances, indices = nbrs.kneighbors(used)	
-#	#print("line1264",distances, indices)
-#	reorder = []
-#	vertsX = []
-#	vertsY = []		
-#	for pair in indices:
-#		reorder.append([used[pair[0]], used[pair[1]]])
-#		vertsX.append(used[pair[0]][0])
-#		vertsY.append(used[pair[0]][1])
-#		vertsX.append(used[pair[1]][0])
-#		vertsY.append(used[pair[1]][1])
-#		print(pair)
-													
-#	print(reorder)
-#	plt.fill(vertsX, vertsY, color=(random.random(), random.random(), random.random(), 0.5))
-	#print()																								                        
+	plt.fill(vertsX, vertsY, color=(random.random(), random.random(), random.random(), 0.5))																								                        
 		
 plt.show()
-
-
-
 
