@@ -35,8 +35,8 @@ for i in range(1, 8):
 #points = [[159, 66], [100, 166], [73, 197]]
 
 #points = [[106, 6], [88, 11], [9, 18], [2, 105], [20, 105], [115, 140], [52, 168]] #causes division by zero in getTimeAtX
-#points = [[13, 23], [181, 40], [129, 55], [93, 100], [59, 127], [12, 160], [156, 163]] #---edge finding issue
-points = [[76, 30], [196, 40], [165, 47], [104, 66], [128, 120], [88, 159], [166, 180]] #easy to see graph. In a previous, more broken version of the program, another line and intersection point near the one on the far right existed, which is necessary to correctly complete the graph
+points = [[13, 23], [181, 40], [129, 55], [93, 100], [59, 127], [12, 160], [156, 163]] #---edge finding issue
+#points = [[76, 30], [196, 40], [165, 47], [104, 66], [128, 120], [88, 159], [166, 180]] #easy to see graph. In a previous, more broken version of the program, another line and intersection point near the one on the far right existed, which is necessary to correctly complete the graph
 # ^there is an issue with the plot for the line above
 
 #points = [[194, 2], [94, 30], [11, 91], [88, 92], [57, 143], [43, 190], [6, 198]]
@@ -635,6 +635,36 @@ for vert in vertices: # modifies convex hull so that it has edges extending to t
 	#print("vert",vert, vertices[vert])
 	#print()
 
+	if vertices[vert]["at"].__len__() == 1:
+		#print("vert",vert, vertices[vert])
+		tempVertPt = str(vert).removeprefix("[").removesuffix("]").split("_")
+		vertPt = [float(tempVertPt[0]), float(tempVertPt[1])]
+
+		site1 = vertices[vert]["sites"][0]
+		site2 = vertices[vert]["sites"][1]
+		site3 = vertices[vert]["sites"][2]
+
+		pickedSites = [[site1, site2], [site1, site3], [site2, site3]]
+		pickedSites.remove(vertices[vert]["with"][0])
+		
+		dist1 = distancePt(pickedSites[0][0], pickedSites[0][1])
+		dist2 = distancePt(pickedSites[1][0], pickedSites[1][1])
+
+		if dist1 < dist2:
+			pickedSites = pickedSites[0]
+		else:
+			pickedSites = pickedSites[1]
+
+		throughPt = midPoint(pickedSites[0], pickedSites[1])
+
+		if throughPt != []:
+			nearestBound = nearestBoundry(vertPt, throughPt)
+			#print("line716bounds",nearestBound)            
+			vertices[vert]["with"].append([pickedSites[0], pickedSites[1]])
+			vertices[vert]["at"].append(nearestBound)
+			finalCell[f"{str(pickedSites[0]).replace(', ', '_')}"]["vertices"].append([vertPt, nearestBound])
+			finalCell[f"{str(pickedSites[1]).replace(', ', '_')}"]["vertices"].append([vertPt, nearestBound])
+
 	if vertices[vert]["at"].__len__() == 2:
 		tempVertPt = str(vert).removeprefix("[").removesuffix("]").split("_")
 		vertPt = [float(tempVertPt[0]), float(tempVertPt[1])]
@@ -728,10 +758,37 @@ for vert in vertices: # modifies convex hull so that it has edges extending to t
 			throughPt = [afterTx, afterTy1]
 
 		if throughPt != []:
-			nearestBound = nearestBoundry(vertPt, throughPt)
+			#nearestBound = nearestBoundry(vertPt, throughPt)
 			
-			finalCell[f"{str(pickedSites[0][0]).replace(', ', '_')}"]["vertices"].append([vertPt, nearestBound])
-			finalCell[f"{str(pickedSites[0][1]).replace(', ', '_')}"]["vertices"].append([vertPt, nearestBound])
+			#finalCell[f"{str(pickedSites[0][0]).replace(', ', '_')}"]["vertices"].append([vertPt, nearestBound])
+			#finalCell[f"{str(pickedSites[0][1]).replace(', ', '_')}"]["vertices"].append([vertPt, nearestBound])
+
+			if vertPt[0] < defaultBounds[0][0] or vertPt[0] > defaultBounds[0][1] or vertPt[1] < defaultBounds[1][1] or vertPt[1] > defaultBounds[1][0]:
+				nearestBound = nearestBoundry(vertPt, throughPt)
+
+				newBound1 = nearestOutsideBoundry(vertPt, throughPt)
+				newBound2 = nearestOutsideBoundry(vertPt, vertices[vert]["at"][0])
+				newBound3 = nearestOutsideBoundry(vertPt, vertices[vert]["at"][1])
+
+				finalCell[f"{str(vertices[vert]['with'][0][0]).replace(', ', '_')}"]["vertices"].append([vertices[vert]["at"][0], newBound2])
+				finalCell[f"{str(vertices[vert]['with'][0][1]).replace(', ', '_')}"]["vertices"].append([vertices[vert]["at"][0], newBound2])
+				finalCell[f"{str(vertices[vert]['with'][1][0]).replace(', ', '_')}"]["vertices"].append([vertices[vert]["at"][1], newBound3])
+				finalCell[f"{str(vertices[vert]['with'][1][1]).replace(', ', '_')}"]["vertices"].append([vertices[vert]["at"][1], newBound3])
+						
+				if (nearestBound[0] == defaultBounds[0][0] or nearestBound[0] == defaultBounds[0][1]) and (nearestBound[1] <= defaultBounds[1][0] and nearestBound[1] >= defaultBounds[1][1]):
+					finalCell[f"{str(pickedSites[0][0]).replace(', ', '_')}"]["vertices"].append([newBound1, nearestBound])
+					finalCell[f"{str(pickedSites[0][1]).replace(', ', '_')}"]["vertices"].append([newBound1, nearestBound])
+				elif (nearestBound[1] == defaultBounds[1][0] or nearestBound[1] == defaultBounds[1][1]) and (nearestBound[0] >= defaultBounds[0][0] and nearestBound[0] <= defaultBounds[0][1]):
+					finalCell[f"{str(pickedSites[0][0]).replace(', ', '_')}"]["vertices"].append([newBound1, nearestBound])
+					finalCell[f"{str(pickedSites[0][1]).replace(', ', '_')}"]["vertices"].append([newBound1, nearestBound])
+				  
+			else:                            
+				nearestBound = nearestBoundry(vertPt, throughPt)
+				#print("nearestBound",nearestBound)                
+				vertices[vert]["with"].append([pickedSites[0][0], pickedSites[0][1]])
+				vertices[vert]["at"].append(nearestBound)
+				finalCell[f"{str(pickedSites[0][0]).replace(', ', '_')}"]["vertices"].append([vertPt, nearestBound])
+				finalCell[f"{str(pickedSites[0][1]).replace(', ', '_')}"]["vertices"].append([vertPt, nearestBound])
 
 		print()
 
@@ -1117,6 +1174,7 @@ for cell in finalCell:
 	plt.fill(vertsX, vertsY, color=(random.random(), random.random(), random.random(), 0.5))																								                        
 		
 plt.show()
+
 
 
 
