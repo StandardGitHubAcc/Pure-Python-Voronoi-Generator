@@ -712,6 +712,27 @@ for vert in vertices: # modifies convex hull so that it has edges extending to t
 		test3x = getXAtTime(site1, site2, vertPtT - 0.5)
 		print(getYAtTimeAndX(site1, vertPtT - 0.5, test3x), getYAtTimeAndX(site2, vertPtT - 0.5, test3x), getYAtTimeAndX(site3, vertPtT - 0.5, test3x))
 		
+		beforeTx = getXAtTime(pickedSites[0][0], pickedSites[0][1], vertPtT - 0.5)
+		afterTx = getXAtTime(pickedSites[0][0], pickedSites[0][1], vertPtT + 0.5)
+
+		throughPt = []
+		
+		beforeTy1 = getYAtTimeAndX(pickedSites[0][0], vertPtT - 0.5, beforeTx)
+		beforeTy2 = getYAtTimeAndX(pickedSites[1][0], vertPtT - 0.5, beforeTx)
+		afterTy1 = getYAtTimeAndX(pickedSites[0][0], vertPtT + 0.5, afterTx)
+		afterTy2 = getYAtTimeAndX(pickedSites[1][0], vertPtT + 0.5, afterTx)
+
+		if beforeTy1 > beforeTy2:
+			throughPt = [beforeTx, beforeTy1]
+		elif afterTy1 > afterTy2: # could probably be an else
+			throughPt = [afterTx, afterTy1]
+
+		if throughPt != []:
+			nearestBound = nearestBoundry(vertPt, throughPt)
+			
+			finalCell[f"{str(pickedSites[0][0]).replace(', ', '_')}"]["vertices"].append([vertPt, nearestBound])
+			finalCell[f"{str(pickedSites[0][1]).replace(', ', '_')}"]["vertices"].append([vertPt, nearestBound])
+
 		print()
 
 	continue
@@ -1096,5 +1117,6 @@ for cell in finalCell:
 	plt.fill(vertsX, vertsY, color=(random.random(), random.random(), random.random(), 0.5))																								                        
 		
 plt.show()
+
 
 
