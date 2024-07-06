@@ -406,7 +406,7 @@ for site1 in points: # Sets sites of cells
 					y = getYAtTimeAndX(sites[0], t, x)
 					
 					halfWidth = (defaultBounds[0][0] + defaultBounds[0][1])/2
-					halfHeight = (defaultBounds[1][1] + defaultBounds[1][0])/2                                       
+					halfHeight = (defaultBounds[1][1] + defaultBounds[1][0])/2
 					if t > site1[1] and t > site2[1] and t > site3[1] and x >= defaultBounds[0][0] - (halfWidth/2) and x <= defaultBounds[0][1] + (halfWidth/2) and y >= defaultBounds[1][1] - (halfHeight/2) and y <= defaultBounds[1][0] + (halfHeight/2):                     
 
 						#if x < defaultBounds[0][0] or x > defaultBounds[0][1] or y < defaultBounds[1][1] or y > defaultBounds[1][0]:
@@ -742,6 +742,8 @@ for vert in vertices: # modifies convex hull so that it has edges extending to t
 		test3x = getXAtTime(site1, site2, vertPtT - 0.5)
 		print(getYAtTimeAndX(site1, vertPtT - 0.5, test3x), getYAtTimeAndX(site2, vertPtT - 0.5, test3x), getYAtTimeAndX(site3, vertPtT - 0.5, test3x))
 		
+
+
 		beforeTx = getXAtTime(pickedSites[0][0], pickedSites[0][1], vertPtT - 0.5)
 		afterTx = getXAtTime(pickedSites[0][0], pickedSites[0][1], vertPtT + 0.5)
 
@@ -754,7 +756,7 @@ for vert in vertices: # modifies convex hull so that it has edges extending to t
 
 		if beforeTy1 > beforeTy2:
 			throughPt = [beforeTx, beforeTy1]
-		elif afterTy1 > afterTy2: # could probably be an else
+		elif afterTy1 > afterTy2: # can't be an else
 			throughPt = [afterTx, afterTy1]
 
 		if throughPt != []:
@@ -935,28 +937,53 @@ for vert in vertices: # modifies convex hull so that it has edges extending to t
 				finalCell[f"{str(pair3[0]).replace(', ', '_')}"]["vertices"].append([vertPt, nearestBound])
 				finalCell[f"{str(pair3[1]).replace(', ', '_')}"]["vertices"].append([vertPt, nearestBound])
 
-													   
+def withinBounds(vert, bounds):
+	return vert[0] >= bounds[0][0] and vert[0] <= bounds[0][1] and vert[1] >= bounds[1][1] and vert[1] <= bounds[1][0]
+
 #print("-----",finalCell["[52_99]"]["vertices"])
-#print("-----",finalCell["[0_174]"]["vertices"])				
+#print("-----",finalCell["[0_174]"]["vertices"])
+#print("-----",finalCell["[13_23]"]["vertices"])
+print("-----",finalCell["[156_163]"]["vertices"])
 # removes duplicate information
 for cell3 in finalCell:
 	tempVerts = finalCell[cell3]["vertices"].copy()
 	sortByY(tempVerts)
 	for vert in tempVerts:
 		sortByY(vert)
+		
 	unique = []
+	outsideUnique = []
+	bufferWidth = (defaultBounds[0][0] + defaultBounds[0][1])/2
+	bufferHeight = (defaultBounds[1][1] + defaultBounds[1][0])/2
+	bufferWidth = bufferWidth/2
+	bufferHeight = bufferHeight/2
+	
+	curSite = cell3.replace("[","").replace("]","").split("_")
+	curSite = [float(curSite[0]), float(curSite[1])]
+	
 	#print("site",cell3)
 	for vert in tempVerts:
 		#print("vert",vert)        
-		if vert not in unique and vert[0] != vert[1]:
-			if vert[0][0] >= defaultBounds[0][0] and vert[0][0] <= defaultBounds[0][1] and vert[0][1] >= defaultBounds[1][1] and vert[0][1] <= defaultBounds[1][0]:
-				if vert[1][0] >= defaultBounds[0][0] and vert[1][0] <= defaultBounds[0][1] and vert[1][1] >= defaultBounds[1][1] and vert[1][1] <= defaultBounds[1][0]:
-					#print("								unique",vert)
-					unique.append(vert)
-	
+		if vert not in unique and vert[0] != vert[1] and vert not in outsideUnique:
+			# if vert[0][0] >= defaultBounds[0][0] and vert[0][0] <= defaultBounds[0][1] and vert[0][1] >= defaultBounds[1][1] and vert[0][1] <= defaultBounds[1][0]:
+			# 	if vert[1][0] >= defaultBounds[0][0] and vert[1][0] <= defaultBounds[0][1] and vert[1][1] >= defaultBounds[1][1] and vert[1][1] <= defaultBounds[1][0]:
+			# 		pass
+			# 	elif vert[1][0] >= defaultBounds[0][0] - halfWidth and vert[1][0] <= defaultBounds[0][1] + halfWidth and vert[1][1] >= defaultBounds[1][1] - halfHeight and vert[1][1] <= defaultBounds[1][0] + halfHeight:
+			# 		pass
+					
+			# elif vert[0][0] >= defaultBounds[0][0] - halfWidth and vert[0][0] <= defaultBounds[0][1] + halfWidth and vert[0][1] >= defaultBounds[1][1] - halfHeight and vert[0][1] <= defaultBounds[1][0] + halfHeight:
+			# 	#if vert[1][0] >= defaultBounds[0][0] and vert[1][0] <= defaultBounds[0][1] and vert[1][1] >= defaultBounds[1][1] and vert[1][1] <= defaultBounds[1][0]:
+			# 	if vert[1][0] >= defaultBounds[0][0] - halfWidth and vert[1][0] <= defaultBounds[0][1] + halfWidth and vert[1][1] >= defaultBounds[1][1] - halfHeight and vert[1][1] <= defaultBounds[1][0] + halfHeight:
+			# 		#print("								unique",vert)
+			# 		unique.append(vert)
+			boundsBuffer = [[defaultBounds[0][0] - bufferWidth, defaultBounds[0][1] + bufferWidth], [defaultBounds[1][0] + bufferHeight, defaultBounds[1][1] - bufferHeight]]
+
+			if withinBounds(vert[0], defaultBounds) and withinBounds(vert[1], defaultBounds):
+				unique.append(vert)
+			elif withinBounds(vert[0], boundsBuffer) and withinBounds(vert[1], boundsBuffer):
+				outsideUnique.append(vert)
+
 	if unique == []:
-		curSite = cell3.replace("[","").replace("]","").split("_")
-		curSite = [float(curSite[0]), float(curSite[1])]
 
 		pts = points.copy()
 		distanceTargetSort(curSite, pts)
@@ -984,13 +1011,35 @@ for cell3 in finalCell:
 		
 		finalCell[f"{str(other).replace(', ', '_')}"]["vertices"].append(unique[0])
 
+	elif outsideUnique != []: # This fixed some stuff and broke others
+		print("line1014",curSite, "-", outsideUnique[0])
+		outsideUnique = outsideUnique[0]
+		valid = []
+		if withinBounds(outsideUnique[0], defaultBounds):
+			valid = outsideUnique[0]
+		else:
+			valid = outsideUnique[1]
+
+		tmp = outsideUnique.copy()
+		tmp.remove(valid)
+		boundry = nearestBoundry(valid, tmp[0])
+
+		tempPair = [boundry, valid]
+		sortByY(tempPair)
+
+		if tempPair not in unique:
+			unique.append(tempPair)
+
 	if points.__len__() > 1:
 		finalCell[cell3]["vertices"] = unique
 		
 
-#print()
+print()
 #print("-----",finalCell["[52_99]"]["vertices"])
 #print("-----",finalCell["[0_174]"]["vertices"])
+#print("-----",finalCell["[13_23]"]["vertices"])
+#print("-----",finalCell["[12_160]"]["vertices"])
+print("-----",finalCell["[156_163]"]["vertices"])
 #print()
 
 def makeEdges(onBoundry, curSite):
@@ -1174,6 +1223,7 @@ for cell in finalCell:
 	plt.fill(vertsX, vertsY, color=(random.random(), random.random(), random.random(), 0.5))																								                        
 		
 plt.show()
+
 
 
 
