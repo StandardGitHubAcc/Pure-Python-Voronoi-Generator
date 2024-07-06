@@ -36,7 +36,7 @@ for i in range(1, 8):
 
 #points = [[106, 6], [88, 11], [9, 18], [2, 105], [20, 105], [115, 140], [52, 168]] #causes division by zero in getTimeAtX
 #points = [[13, 23], [181, 40], [129, 55], [93, 100], [59, 127], [12, 160], [156, 163]] #---edge finding issue
-#points = [[76, 30], [196, 40], [165, 47], [104, 66], [128, 120], [88, 159], [166, 180]] #easy to see graph. In a previous, more broken version of the program, another line and intersection point near the one on the far right existed, which is necessary to correctly complete the graph
+points = [[76, 30], [196, 40], [165, 47], [104, 66], [128, 120], [88, 159], [166, 180]] #easy to see graph. In a previous, more broken version of the program, another line and intersection point near the one on the far right existed, which is necessary to correctly complete the graph
 # ^there is an issue with the plot for the line above
 
 #points = [[194, 2], [94, 30], [11, 91], [88, 92], [57, 143], [43, 190], [6, 198]]
@@ -69,7 +69,7 @@ for i in range(1, 8):
 
 #points = [[146, 15], [189, 55], [44, 75], [90, 95], [52, 138], [111, 157], [117, 181]]
 
-points = [[159, 14], [49, 18], [63, 32], [87, 48], [191, 60], [131, 99], [150, 183]] # breaks stuff, not sure what exactly
+#points = [[159, 14], [49, 18], [63, 32], [87, 48], [191, 60], [131, 99], [150, 183]] # breaks stuff, not sure what exactly
 #points = [[59, 65], [194, 108], [134, 152], [147, 155], [75, 166], [64, 172], [180, 195]] # breaks stuff, not sure what exactly
 
 #points = [[25, 25], [175, 175], [25, 175], [175, 25], [100, 100]]
@@ -198,7 +198,26 @@ def find3IntersectX(pt1, pt2, pt3): # division by zero happens with the points (
 
 #def find3IntersectPt()
 
-def find2IntersectAtTime(pt1, pt2, t): # finds x-value of intersection of two parabolas at given time, imaginary if it doesn't exist (this is diff than getTimeAtX(?))
+def otherXOnBisectorAtT(pt1, pt2, pt3, t): # pt1 and pt2 form the bisector and pt3 makes the parabola that it intersects with
+	try:
+		a, b, c, d, e, f = pt1[0], pt1[1], pt2[0], pt2[1], pt3[0], pt3[1]
+		
+		m = d-b
+		n = 2 * ( ( (a-c) * (t-f) ) + (e * (b-d)) )        
+		o = -1 * ( ( (b-d) * ( (e**2) + (f**2) - (t**2) ) ) - ( (t-f) * ( (d**2) - (b**2) - (a**2) + (c**2) ) ) )
+
+#         x = 0
+#         if pt1[0] < pt2[0]:
+#             x = ( (-1 * n) - ( ( (n**2) - (4 * m * o) )**0.5 ) ) / (2 * m)
+#         else:
+#             x = ( (-1 * n) + ( ( (n**2) - (4 * m * o) )**0.5 ) ) / (2 * m)                        
+		x = ( (-1 * n) - ( ( (n**2) - (4 * m * o) )**0.5 ) ) / (2 * m)#( (-1 * n) + ( ( (n**2) - (4 * m * o) )**0.5 ) ) / (2 * m) 
+		return x        
+	except ZeroDivisionError:
+		print(f"zero division error in otherXOnBisectorAtT with {pt1} {pt2} {pt3} t={t}")        
+		return defaultBounds[1][1] -5  
+
+def getXAtTime(pt1, pt2, t): # finds x-value of intersection of two parabolas at given time, imaginary if it doesn't exist
 	try:    
 		a, b, c, d = pt1[0], pt1[1], pt2[0], pt2[1]
 		# n = ( 2 * ( (c * (t-b)) + (a * (d-t)) ) ) / (b-d)#(2 * ((-1 * c * b) + (c * t) + (a * d) - (a * t))) / (b-d)
@@ -230,25 +249,6 @@ def find2IntersectAtTime(pt1, pt2, t): # finds x-value of intersection of two pa
 		print(f"zero division error in find2IntersectAtTime with {pt1} {pt2} {pt3} t={t}")        
 		return defaultBounds[1][1] -5                    
 
-def otherXOnBisectorAtT(pt1, pt2, pt3, t): # pt1 and pt2 form the bisector and pt3 makes the parabola that it intersects with
-	try:
-		a, b, c, d, e, f = pt1[0], pt1[1], pt2[0], pt2[1], pt3[0], pt3[1]
-		
-		m = d-b
-		n = 2 * ( ( (a-c) * (t-f) ) + (e * (b-d)) )        
-		o = -1 * ( ( (b-d) * ( (e**2) + (f**2) - (t**2) ) ) - ( (t-f) * ( (d**2) - (b**2) - (a**2) + (c**2) ) ) )
-
-#         x = 0
-#         if pt1[0] < pt2[0]:
-#             x = ( (-1 * n) - ( ( (n**2) - (4 * m * o) )**0.5 ) ) / (2 * m)
-#         else:
-#             x = ( (-1 * n) + ( ( (n**2) - (4 * m * o) )**0.5 ) ) / (2 * m)                        
-		x = ( (-1 * n) - ( ( (n**2) - (4 * m * o) )**0.5 ) ) / (2 * m)#( (-1 * n) + ( ( (n**2) - (4 * m * o) )**0.5 ) ) / (2 * m) 
-		return x        
-	except ZeroDivisionError:
-		print(f"zero division error in otherXOnBisectorAtT with {pt1} {pt2} {pt3} t={t}")        
-		return defaultBounds[1][1] -5                    
-
 def getTimeAtX(pt1, pt2, pt3, x): # finds time when parabola pt1 has given x value, (pt1, pt2, pt3) = (pt1, pt3, pt2)
 	try:    
 		a, b, c, d, e, f = pt1[0], pt1[1], pt2[0], pt2[1], pt3[0], pt3[1]
@@ -260,7 +260,6 @@ def getTimeAtX(pt1, pt2, pt3, x): # finds time when parabola pt1 has given x val
 	except ZeroDivisionError:
 		print(f"zero division error in getTimeAtX with {pt1} {pt2} {pt3} x={x} j={j} k={k} L={L}")        
 		return pt1[1]#defaultBounds[1][1] -5            
-	
 
 def getYAtTimeAndX(pt1, t, x): # just the y-value of the parabola at the given t and x, which may different than yAtX since that is locked to the bisector
 	try:    
@@ -603,14 +602,14 @@ for site in cell: # Finds edges for cells
 						#finalCell[site]["vertices"].append(tempPair)
 
 						finalCell[site]["vertices"].append([entry["at"], entry2["at"]]) # for some reason sorting it by y here messes something up
-						print(site, [pt1, pt2, pt3], [entry2["point1"], entry2["point2"], entry2["point3"]])
+						#print(site, [pt1, pt2, pt3], [entry2["point1"], entry2["point2"], entry2["point3"]])
 						#print("line594",entry["at"],entry2["at"])
 						#print(site, entry["at"])
-						print(site, entry["at"], entry2["at"])
+						#print(site, entry["at"], entry2["at"])
 
 						
 						
-						print()
+						#print()
 						atName = f"{str(entry['at']).replace(', ', '_')}"
 
 						if atName not in vertices:
@@ -635,7 +634,87 @@ for site in cell: # Finds edges for cells
 for vert in vertices: # modifies convex hull so that it has edges extending to the boundries of the specified area
 	#print("vert",vert, vertices[vert])
 	#print()
+
+	if vertices[vert]["at"].__len__() == 2:
+		tempVertPt = str(vert).removeprefix("[").removesuffix("]").split("_")
+		vertPt = [float(tempVertPt[0]), float(tempVertPt[1])]
+
+		site1 = vertices[vert]["sites"][0]
+		site2 = vertices[vert]["sites"][1]
+		site3 = vertices[vert]["sites"][2]
+
+		vertPtT = tAtXandY(site1, vertPt[0], vertPt[1])
+
+		pickedSites = [[site1, site2], [site1, site3], [site2, site3]]
+		pickedSites.remove(vertices[vert]["with"][0])
+		pickedSites.remove(vertices[vert]["with"][1])
+		#pickedSites = pickedSites[0]
 		
+		sortByY(pickedSites)
+
+		if site1 != pickedSites[0][0] and site1 != pickedSites[0][1]:
+			pickedSites.append([site1, pickedSites[0][1]])
+		elif site2 != pickedSites[0][0] and site2 != pickedSites[0][1]:
+			pickedSites.append([site2, pickedSites[0][1]])
+		elif site3 != pickedSites[0][0] and site3 != pickedSites[0][1]:
+			pickedSites.append([site3, pickedSites[0][1]])
+			
+		print(pickedSites)
+		print(site1, site2, site3)
+		
+		#slope1 = slope(pickedSites[0][0], pickedSites[0][1])
+		#slope2 = slope(pickedSites[1][0], pickedSites[1][1])
+
+		# test1Y1 = getYAtTimeAndX(site1, vertPtT + 0.5, vertPt[0] + 0.5)
+		# test1Y2 = getYAtTimeAndX(site2, vertPtT + 0.5, vertPt[0] + 0.5)
+		# test1Y3 = getYAtTimeAndX(site3, vertPtT + 0.5, vertPt[0] + 0.5)
+		# test2Y1 = getYAtTimeAndX(site1, vertPtT - 0.5, vertPt[0] - 0.5)
+		# test2Y2 = getYAtTimeAndX(site2, vertPtT - 0.5, vertPt[0] - 0.5)
+		# test2Y3 = getYAtTimeAndX(site3, vertPtT - 0.5, vertPt[0] - 0.5)
+
+		# test1Time1 = getTimeAtX(site1, site2, site3, vertPt[0] + 0.5)
+		# test1Time2 = getTimeAtX(site2, site1, site3, vertPt[0] + 0.5)
+		# test1Time3 = getTimeAtX(site3, site1, site2, vertPt[0] + 0.5)
+		# test2Time1 = getTimeAtX(site1, site2, site3, vertPt[0] - 0.5)
+		# test2Time2 = getTimeAtX(site2, site1, site3, vertPt[0] - 0.5)
+		# test2Time3 = getTimeAtX(site3, site1, site2, vertPt[0] - 0.5)
+
+		# test1Y1 = getYAtTimeAndX(site1, test1Time1, vertPt[0] + 0.5)
+		# test1Y2 = getYAtTimeAndX(site2, test1Time2, vertPt[0] + 0.5)
+		# test1Y3 = getYAtTimeAndX(site3, test1Time3, vertPt[0] + 0.5)
+		# test2Y1 = getYAtTimeAndX(site1, test2Time1, vertPt[0] - 0.5)
+		# test2Y2 = getYAtTimeAndX(site2, test2Time2, vertPt[0] - 0.5)
+		# test2Y3 = getYAtTimeAndX(site3, test2Time3, vertPt[0] - 0.5)
+
+		# test3Y1 = yAtX(site1, site2, vertPt[0] + 0.5)
+		# test3Y2 = yAtX(site1, site3, vertPt[0] + 0.5)
+		# test3Y3 = yAtX(site2, site3, vertPt[0] + 0.5)
+		# test4Y1 = yAtX(site1, site2, vertPt[0] - 0.5)
+		# test4Y2 = yAtX(site1, site3, vertPt[0] - 0.5)
+		# test4Y3 = yAtX(site2, site3, vertPt[0] - 0.5)
+
+		# print(test1Y1, test1Y2, test1Y3)
+		# print(test2Y1, test2Y2, test2Y3)
+		# print(test3Y1, test3Y2, test3Y3)
+		# print(test4Y1, test4Y2, test4Y3)
+
+		test1x = getXAtTime(site1, site2, vertPtT)
+		test1y = getYAtTimeAndX(site1, vertPtT, test1x)
+
+		print(test1x, test1y, vertPt)
+
+		test2x = getXAtTime(site1, site2, vertPtT + 0.5)
+		#test2y = getYAtTimeAndX(site1, vertPtT + 0.5, test2x)
+		#print(test2x, test2y, yAtX(site1, site2, test2x))
+		#print(getYAtTimeAndX(site2, vertPtT + 0.5, test2x))
+		#print(getYAtTimeAndX(site3, vertPtT + 0.5, test2x))
+		print(getYAtTimeAndX(site1, vertPtT + 0.5, test2x), getYAtTimeAndX(site2, vertPtT + 0.5, test2x), getYAtTimeAndX(site3, vertPtT + 0.5, test2x))
+		test3x = getXAtTime(site1, site2, vertPtT - 0.5)
+		print(getYAtTimeAndX(site1, vertPtT - 0.5, test3x), getYAtTimeAndX(site2, vertPtT - 0.5, test3x), getYAtTimeAndX(site3, vertPtT - 0.5, test3x))
+		
+		print()
+
+	continue
 	if vertices[vert]["at"].__len__() == 1:
 		#print("vert",vert, vertices[vert])
 		tempVertPt = str(vert).removeprefix("[").removesuffix("]").split("_")
@@ -667,7 +746,7 @@ for vert in vertices: # modifies convex hull so that it has edges extending to t
 			finalCell[f"{str(pickedSites[1]).replace(', ', '_')}"]["vertices"].append([vertPt, nearestBound])
 
 			#outsideBoundry[f"{str(pickedSites[0]).replace(', ', '_')}"]["vertices"].append(nearestBound)
-
+	
 	if vertices[vert]["at"].__len__() == 2:
 		#print("vert",vert, vertices[vert])
 		tempVertPt = str(vert).removeprefix("[").removesuffix("]").split("_")
@@ -822,7 +901,7 @@ for cell3 in finalCell:
 		bound2 = nearestBoundry(midPt, after)
 
 		unique = [[bound1, bound2]]
-		print("line819 unique",unique)
+		#print("line819 unique",unique)
 		sortByY(unique[0])
 		
 		finalCell[f"{str(other).replace(', ', '_')}"]["vertices"].append(unique[0])
@@ -831,10 +910,11 @@ for cell3 in finalCell:
 		finalCell[cell3]["vertices"] = unique
 		
 
-print()
+#print()
 #print("-----",finalCell["[52_99]"]["vertices"])
 #print("-----",finalCell["[0_174]"]["vertices"])
-print()
+#print()
+
 def makeEdges(onBoundry, curSite):
 	inside = False
 	vert1Theta = normalTheta(onBoundry[0], curSite)
@@ -844,6 +924,7 @@ def makeEdges(onBoundry, curSite):
 	maxTheta = max(vert1Theta, vert2Theta)
 				
 	#print("theta",vert1Theta,vert2Theta)
+	# Checks if there is a site within the sector formed by the two boundry vertices
 	for pt in points:
 		if pt != curSite:
 			ptTheta = normalTheta(pt, curSite)                    
@@ -854,11 +935,11 @@ def makeEdges(onBoundry, curSite):
 						
 	withCorners = [[onBoundry[0], vert1Theta], [onBoundry[1], vert2Theta]]
 
-	if inside == False:
+	if inside == False: # If there is not a site between the angles of the two boundry vertices
 
 		#withCorners = [[onBoundry[1], vert2Theta], [onBoundry[0], vert1Theta]]
 
-		for i in range(0, corners.__len__()):
+		for i in range(0, corners.__len__()): # Finds corners that are within the area
 			cornerTheta = normalTheta(corners[i], curSite)
 			#print("line1058",corners[i],cornerTheta)
 			#if cornerTheta > vert2Theta and cornerTheta < vert1Theta:
@@ -875,20 +956,20 @@ def makeEdges(onBoundry, curSite):
 	else:
 					
 		#withCorners = [[onBoundry[0], vert1Theta], [onBoundry[1], vert2Theta]]
-
+		# If there is a site within the angle between the two boundry vertices, use the area between the upper angle and the lower angle (opposite of between lower angle and upper)
 		for i in range(0, corners.__len__()):
 			cornerTheta = normalTheta(corners[i], curSite)
 			#if cornerTheta < vert2Theta or cornerTheta > vert1Theta:
 			if cornerTheta < minTheta or cornerTheta > maxTheta:
-				tempAngle = cornerTheta - vert1Theta
+				tempAngle = cornerTheta - vert1Theta # Rotates the corner angle so that the upper boundry angle becomes 0 degrees
 				if tempAngle < 0:
 					tempAngle += 2 * math.pi
 							
 				withCorners.append([corners[i], tempAngle])
 				#withCorners.append([corners[i], angle(onBoundry[0], corners[i], curSite)])
 
-		withCorners[0] = [onBoundry[0], 0]
-		withCorners[1] = [onBoundry[1], ((2 * math.pi) - vert1Theta) + vert2Theta]
+		withCorners[0] = [onBoundry[0], 0] # Makes the upper boundry angle 0 degrees
+		withCorners[1] = [onBoundry[1], ((2 * math.pi) - vert1Theta) + vert2Theta] # Changes the lower boundry angle to be the new upper bound
 
 		sortByY(withCorners)
 
@@ -906,7 +987,7 @@ for cell2 in finalCell:
 	#print("info",cell2,"-",finalCell[cell2]["vertices"])    
 	onBoundry = []
 	for vert in finalCell[cell2]["vertices"]:
-		boundSize = [defaultBounds[0][0], defaultBounds[0][1], defaultBounds[1][0] ,defaultBounds[1][1]]                   
+		boundSize = [defaultBounds[0][0], defaultBounds[0][1], defaultBounds[1][0], defaultBounds[1][1]] # Flattened version of defaultBounds array
 		if (vert[0][0] in boundSize or vert[0][1] in boundSize) and vert[0] not in onBoundry:
 			onBoundry.append(vert[0])
 		if (vert[1][0] in boundSize or vert[1][1] in boundSize) and vert[1] not in onBoundry:
@@ -915,14 +996,14 @@ for cell2 in finalCell:
 	#print(onBoundry)
 				
 	if onBoundry != []:     
-		print("info",cell2,"-",finalCell[cell2]["vertices"])
+		#print("info",cell2,"-",finalCell[cell2]["vertices"])
 		curSite = cell2.replace("[","").replace("]","").split("_")
 		curSite = [float(curSite[0]), float(curSite[1])]
 
 		sortByY(onBoundry)
       
 		if onBoundry.__len__() == 2:
-			if onBoundry[0][0] == onBoundry[1][0] or onBoundry[0][1] == onBoundry[1][1]:
+			if onBoundry[0][0] == onBoundry[1][0] or onBoundry[0][1] == onBoundry[1][1]: # If the two vertices are on the same edge, they can just be added to finalCell without any extra work
 				finalCell[cell2]["vertices"].append([onBoundry[0], onBoundry[1]])
 				
 			else: # if the two vertices are not on the same edge
@@ -930,7 +1011,7 @@ for cell2 in finalCell:
 				makeEdges(onBoundry, curSite)
 
 		else: # if it greater than 2, it would ALMOST have to be a multiple of 2, with verts on different edges
-			print("greater than 2")
+			#print("greater than 2")
 
 			if onBoundry.__len__() % 2 == 0: # might be redundant, not sure if it is possible for a site to have more than 2 boundry edges
 				#		left, right, top, bottom
@@ -950,7 +1031,7 @@ for cell2 in finalCell:
 
 				for edge in sides:
 					if edge.__len__() == 2:
-						print(edge)
+						#print(edge)
 						finalCell[cell2]["vertices"].append([edge[0], edge[1]])
 						#used.extend(edge)
 					elif edge.__len__() == 1:
@@ -958,11 +1039,11 @@ for cell2 in finalCell:
 			
 				if single.__len__() > 0:
 					
-					print(single)
+					#print(single)
 					
 					makeEdges(single, curSite)
 
-		print()
+		#print()
 
 
 
@@ -1015,4 +1096,5 @@ for cell in finalCell:
 	plt.fill(vertsX, vertsY, color=(random.random(), random.random(), random.random(), 0.5))																								                        
 		
 plt.show()
+
 
