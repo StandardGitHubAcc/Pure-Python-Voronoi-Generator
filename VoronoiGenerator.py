@@ -69,13 +69,13 @@ for i in range(1, 8):
 
 #points = [[146, 15], [189, 55], [44, 75], [90, 95], [52, 138], [111, 157], [117, 181]]
 
-#points = [[159, 14], [49, 18], [63, 32], [87, 48], [191, 60], [131, 99], [150, 183]] # breaks stuff, not sure what exactly
+points = [[159, 14], [49, 18], [63, 32], [87, 48], [191, 60], [131, 99], [150, 183]] # breaks stuff, not sure what exactly
 #points = [[59, 65], [194, 108], [134, 152], [147, 155], [75, 166], [64, 172], [180, 195]] # breaks stuff, not sure what exactly
 
 #points = [[25, 25], [175, 175], [25, 175], [175, 25], [100, 100]]
 #points = [[50, 50], [75, 75], [195, 195]]	  
 
-points = [[43, 20], [10, 32], [91, 55], [136, 72], [123, 79], [52, 99], [0, 174]]
+#points = [[43, 20], [10, 32], [91, 55], [136, 72], [123, 79], [52, 99], [0, 174]]
 
 #		bottomleft, topleft, bottomright, topright
 corners = [[0, 0], [0, 200], [200, 0], [200, 200]] #[ [defaultBounds[0][0], defaultBounds[1][1]], [defaultBounds[0][0], defaultBounds[0][1]], [defaultBounds[1][0], defaultBounds[1][1]], [defaultBounds[0][1], defaultBounds[1][0]] ]
@@ -731,7 +731,7 @@ for vert in vertices: # modifies convex hull so that it has edges extending to t
 		test1x = getXAtTime(site1, site2, vertPtT)
 		test1y = getYAtTimeAndX(site1, vertPtT, test1x)
 
-		print(test1x, test1y, vertPt)
+		print(test1x, test1y, vertPt, vertPtT)
 
 		test2x = getXAtTime(site1, site2, vertPtT + 0.5)
 		#test2y = getYAtTimeAndX(site1, vertPtT + 0.5, test2x)
@@ -742,7 +742,8 @@ for vert in vertices: # modifies convex hull so that it has edges extending to t
 		test3x = getXAtTime(site1, site2, vertPtT - 0.5)
 		print(getYAtTimeAndX(site1, vertPtT - 0.5, test3x), getYAtTimeAndX(site2, vertPtT - 0.5, test3x), getYAtTimeAndX(site3, vertPtT - 0.5, test3x))
 		
-
+		#print()
+		#print(getXAtTime(pickedSites[0][0], pickedSites[0][1], vertPtT - 0.5), getXAtTime(pickedSites[0][1], pickedSites[0][0], vertPtT - 0.5))
 
 		beforeTx = getXAtTime(pickedSites[0][0], pickedSites[0][1], vertPtT - 0.5)
 		afterTx = getXAtTime(pickedSites[0][0], pickedSites[0][1], vertPtT + 0.5)
@@ -754,10 +755,18 @@ for vert in vertices: # modifies convex hull so that it has edges extending to t
 		afterTy1 = getYAtTimeAndX(pickedSites[0][0], vertPtT + 0.5, afterTx)
 		afterTy2 = getYAtTimeAndX(pickedSites[1][0], vertPtT + 0.5, afterTx)
 
-		if beforeTy1 > beforeTy2:
+		print(afterTy1, afterTy2)
+		print(beforeTy1, beforeTy2)
+		
+
+		if vertPtT - 0.5 < pickedSites[1][0][1]: # If the intersection point time - 0.5 is less than the 3rd point's y, so it should not be considered yet, just use that point
 			throughPt = [beforeTx, beforeTy1]
-		elif afterTy1 > afterTy2: # can't be an else
-			throughPt = [afterTx, afterTy1]
+			
+		else:
+			if beforeTy1 > beforeTy2:
+				throughPt = [beforeTx, beforeTy1]
+			elif afterTy1 > afterTy2: # can't be an else
+				throughPt = [afterTx, afterTy1]
 
 		if throughPt != []:
 			#nearestBound = nearestBoundry(vertPt, throughPt)
@@ -1027,7 +1036,7 @@ for cell3 in finalCell:
 		finalCell[f"{str(other).replace(', ', '_')}"]["vertices"].append(unique[0])
 
 	elif outsideUnique != []: # This fixed some stuff and broke others
-		print("line1014",curSite, "-", outsideUnique[0])
+		#print("line1014",curSite, "-", outsideUnique[0])
 		outsideUnique = outsideUnique[0]
 		valid = []
 		if withinBounds(outsideUnique[0], defaultBounds):
@@ -1239,4 +1248,5 @@ for cell in finalCell:
 	plt.fill(vertsX, vertsY, color=(random.random(), random.random(), random.random(), 0.5))																								                        
 		
 plt.show()
+
 
