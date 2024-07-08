@@ -375,6 +375,18 @@ def slope(pt1, pt2):
 def midPoint(pt1, pt2):
 	return [ (pt1[0] + pt2[0]) / 2,  (pt1[1] + pt2[1]) / 2]    
 
+def withinBounds(vert, bounds):
+	return vert[0] >= bounds[0][0] and vert[0] <= bounds[0][1] and vert[1] >= bounds[1][1] and vert[1] <= bounds[1][0]
+
+def formatVertex(vertices):
+	for i in range(0, vertices.__len__()):
+		for j in range(0, vertices[i].__len__()):
+			if type(vertices[i][j]) == list:
+				vertices[i][j][0] = float("%.10f" % vertices[i][j][0])
+				vertices[i][j][1] = float("%.10f" % vertices[i][j][1])
+			else:
+				vertices[i][j] = float("%.10f" % vertices[i][j])
+
 
 sortByY(points)
 print(points)
@@ -678,55 +690,24 @@ for vert in vertices: # modifies convex hull so that it has edges extending to t
 		pickedSites = [[site1, site2], [site1, site3], [site2, site3]]
 		pickedSites.remove(vertices[vert]["with"][0])
 		pickedSites.remove(vertices[vert]["with"][1])
-		#pickedSites = pickedSites[0]
+		pickedSites = pickedSites[0]
 		
 		sortByY(pickedSites)
+		notInPair = []
+		#print(pickedSites)
 
-		if site1 != pickedSites[0][0] and site1 != pickedSites[0][1]:
-			pickedSites.append([site1, pickedSites[0][1]])
-		elif site2 != pickedSites[0][0] and site2 != pickedSites[0][1]:
-			pickedSites.append([site2, pickedSites[0][1]])
-		elif site3 != pickedSites[0][0] and site3 != pickedSites[0][1]:
-			pickedSites.append([site3, pickedSites[0][1]])
+		if site1 != pickedSites[0] and site1 != pickedSites[1]:
+			#pickedSites.append([site1, pickedSites[0][1]])
+			notInPair = site1
+		elif site2 != pickedSites[0] and site2 != pickedSites[1]:
+			#pickedSites.append([site2, pickedSites[0][1]])
+			notInPair = site2
+		elif site3 != pickedSites[0] and site3 != pickedSites[1]:
+			#pickedSites.append([site3, pickedSites[0][1]])
+			notInPair = site3
 			
 		print(pickedSites)
 		print(site1, site2, site3)
-		
-		#slope1 = slope(pickedSites[0][0], pickedSites[0][1])
-		#slope2 = slope(pickedSites[1][0], pickedSites[1][1])
-
-		# test1Y1 = getYAtTimeAndX(site1, vertPtT + 0.5, vertPt[0] + 0.5)
-		# test1Y2 = getYAtTimeAndX(site2, vertPtT + 0.5, vertPt[0] + 0.5)
-		# test1Y3 = getYAtTimeAndX(site3, vertPtT + 0.5, vertPt[0] + 0.5)
-		# test2Y1 = getYAtTimeAndX(site1, vertPtT - 0.5, vertPt[0] - 0.5)
-		# test2Y2 = getYAtTimeAndX(site2, vertPtT - 0.5, vertPt[0] - 0.5)
-		# test2Y3 = getYAtTimeAndX(site3, vertPtT - 0.5, vertPt[0] - 0.5)
-
-		# test1Time1 = getTimeAtX(site1, site2, site3, vertPt[0] + 0.5)
-		# test1Time2 = getTimeAtX(site2, site1, site3, vertPt[0] + 0.5)
-		# test1Time3 = getTimeAtX(site3, site1, site2, vertPt[0] + 0.5)
-		# test2Time1 = getTimeAtX(site1, site2, site3, vertPt[0] - 0.5)
-		# test2Time2 = getTimeAtX(site2, site1, site3, vertPt[0] - 0.5)
-		# test2Time3 = getTimeAtX(site3, site1, site2, vertPt[0] - 0.5)
-
-		# test1Y1 = getYAtTimeAndX(site1, test1Time1, vertPt[0] + 0.5)
-		# test1Y2 = getYAtTimeAndX(site2, test1Time2, vertPt[0] + 0.5)
-		# test1Y3 = getYAtTimeAndX(site3, test1Time3, vertPt[0] + 0.5)
-		# test2Y1 = getYAtTimeAndX(site1, test2Time1, vertPt[0] - 0.5)
-		# test2Y2 = getYAtTimeAndX(site2, test2Time2, vertPt[0] - 0.5)
-		# test2Y3 = getYAtTimeAndX(site3, test2Time3, vertPt[0] - 0.5)
-
-		# test3Y1 = yAtX(site1, site2, vertPt[0] + 0.5)
-		# test3Y2 = yAtX(site1, site3, vertPt[0] + 0.5)
-		# test3Y3 = yAtX(site2, site3, vertPt[0] + 0.5)
-		# test4Y1 = yAtX(site1, site2, vertPt[0] - 0.5)
-		# test4Y2 = yAtX(site1, site3, vertPt[0] - 0.5)
-		# test4Y3 = yAtX(site2, site3, vertPt[0] - 0.5)
-
-		# print(test1Y1, test1Y2, test1Y3)
-		# print(test2Y1, test2Y2, test2Y3)
-		# print(test3Y1, test3Y2, test3Y3)
-		# print(test4Y1, test4Y2, test4Y3)
 
 		test1x = getXAtTime(site1, site2, vertPtT)
 		test1y = getYAtTimeAndX(site1, vertPtT, test1x)
@@ -734,10 +715,7 @@ for vert in vertices: # modifies convex hull so that it has edges extending to t
 		print(test1x, test1y, vertPt, vertPtT)
 
 		test2x = getXAtTime(site1, site2, vertPtT + 0.5)
-		#test2y = getYAtTimeAndX(site1, vertPtT + 0.5, test2x)
-		#print(test2x, test2y, yAtX(site1, site2, test2x))
-		#print(getYAtTimeAndX(site2, vertPtT + 0.5, test2x))
-		#print(getYAtTimeAndX(site3, vertPtT + 0.5, test2x))
+
 		print(getYAtTimeAndX(site1, vertPtT + 0.5, test2x), getYAtTimeAndX(site2, vertPtT + 0.5, test2x), getYAtTimeAndX(site3, vertPtT + 0.5, test2x))
 		test3x = getXAtTime(site1, site2, vertPtT - 0.5)
 		print(getYAtTimeAndX(site1, vertPtT - 0.5, test3x), getYAtTimeAndX(site2, vertPtT - 0.5, test3x), getYAtTimeAndX(site3, vertPtT - 0.5, test3x))
@@ -745,28 +723,31 @@ for vert in vertices: # modifies convex hull so that it has edges extending to t
 		#print()
 		#print(getXAtTime(pickedSites[0][0], pickedSites[0][1], vertPtT - 0.5), getXAtTime(pickedSites[0][1], pickedSites[0][0], vertPtT - 0.5))
 
-		beforeTx = getXAtTime(pickedSites[0][0], pickedSites[0][1], vertPtT - 0.5)
-		afterTx = getXAtTime(pickedSites[0][0], pickedSites[0][1], vertPtT + 0.5)
+		beforeTx = getXAtTime(pickedSites[0], pickedSites[1], vertPtT - 0.5)
+		afterTx = getXAtTime(pickedSites[0], pickedSites[1], vertPtT + 0.5)
 
 		throughPt = []
 		
-		beforeTy1 = getYAtTimeAndX(pickedSites[0][0], vertPtT - 0.5, beforeTx)
-		beforeTy2 = getYAtTimeAndX(pickedSites[1][0], vertPtT - 0.5, beforeTx)
-		afterTy1 = getYAtTimeAndX(pickedSites[0][0], vertPtT + 0.5, afterTx)
-		afterTy2 = getYAtTimeAndX(pickedSites[1][0], vertPtT + 0.5, afterTx)
+		beforeTy1 = getYAtTimeAndX(pickedSites[0], vertPtT - 0.5, beforeTx)
+		beforeTy2 = getYAtTimeAndX(notInPair, vertPtT - 0.5, beforeTx)
+		afterTy1 = getYAtTimeAndX(pickedSites[0], vertPtT + 0.5, afterTx)
+		afterTy2 = getYAtTimeAndX(notInPair, vertPtT + 0.5, afterTx)
 
 		print(afterTy1, afterTy2)
 		print(beforeTy1, beforeTy2)
 		
 
-		if vertPtT - 0.5 < pickedSites[1][0][1]: # If the intersection point time - 0.5 is less than the 3rd point's y, so it should not be considered yet, just use that point
+		if vertPtT - 0.5 < notInPair[1]: # If the intersection point time - 0.5 is less than the 3rd point's y, so it should not be considered yet, just use that point
 			throughPt = [beforeTx, beforeTy1]
+			print("throughA", beforeTx, beforeTy1)
 			
 		else:
 			if beforeTy1 > beforeTy2:
 				throughPt = [beforeTx, beforeTy1]
+				print("throughB", beforeTx, beforeTy1)
 			elif afterTy1 > afterTy2: # can't be an else
 				throughPt = [afterTx, afterTy1]
+				print("throughC", beforeTx, beforeTy1)
 
 		if throughPt != []:
 			#nearestBound = nearestBoundry(vertPt, throughPt)
@@ -775,11 +756,13 @@ for vert in vertices: # modifies convex hull so that it has edges extending to t
 			#finalCell[f"{str(pickedSites[0][1]).replace(', ', '_')}"]["vertices"].append([vertPt, nearestBound])
 
 			if vertPt[0] < defaultBounds[0][0] or vertPt[0] > defaultBounds[0][1] or vertPt[1] < defaultBounds[1][1] or vertPt[1] > defaultBounds[1][0]:
+			#if withinBounds(vertPt, defaultBounds):
 				nearestBound = nearestBoundry(vertPt, throughPt)
 
 				newBound1 = nearestOutsideBoundry(vertPt, throughPt)
 				newBound2 = nearestOutsideBoundry(vertPt, vertices[vert]["at"][0])
 				newBound3 = nearestOutsideBoundry(vertPt, vertices[vert]["at"][1])
+				print("line765", vertices[vert]["at"])
 
 				finalCell[f"{str(vertices[vert]['with'][0][0]).replace(', ', '_')}"]["vertices"].append([vertices[vert]["at"][0], newBound2])
 				finalCell[f"{str(vertices[vert]['with'][0][1]).replace(', ', '_')}"]["vertices"].append([vertices[vert]["at"][0], newBound2])
@@ -787,19 +770,19 @@ for vert in vertices: # modifies convex hull so that it has edges extending to t
 				finalCell[f"{str(vertices[vert]['with'][1][1]).replace(', ', '_')}"]["vertices"].append([vertices[vert]["at"][1], newBound3])
 						
 				if (nearestBound[0] == defaultBounds[0][0] or nearestBound[0] == defaultBounds[0][1]) and (nearestBound[1] <= defaultBounds[1][0] and nearestBound[1] >= defaultBounds[1][1]):
-					finalCell[f"{str(pickedSites[0][0]).replace(', ', '_')}"]["vertices"].append([newBound1, nearestBound])
-					finalCell[f"{str(pickedSites[0][1]).replace(', ', '_')}"]["vertices"].append([newBound1, nearestBound])
+					finalCell[f"{str(pickedSites[0]).replace(', ', '_')}"]["vertices"].append([newBound1, nearestBound])
+					finalCell[f"{str(pickedSites[1]).replace(', ', '_')}"]["vertices"].append([newBound1, nearestBound])
 				elif (nearestBound[1] == defaultBounds[1][0] or nearestBound[1] == defaultBounds[1][1]) and (nearestBound[0] >= defaultBounds[0][0] and nearestBound[0] <= defaultBounds[0][1]):
-					finalCell[f"{str(pickedSites[0][0]).replace(', ', '_')}"]["vertices"].append([newBound1, nearestBound])
-					finalCell[f"{str(pickedSites[0][1]).replace(', ', '_')}"]["vertices"].append([newBound1, nearestBound])
+					finalCell[f"{str(pickedSites[0]).replace(', ', '_')}"]["vertices"].append([newBound1, nearestBound])
+					finalCell[f"{str(pickedSites[1]).replace(', ', '_')}"]["vertices"].append([newBound1, nearestBound])
 				  
 			else:                            
 				nearestBound = nearestBoundry(vertPt, throughPt)
 				#print("nearestBound",nearestBound)                
-				vertices[vert]["with"].append([pickedSites[0][0], pickedSites[0][1]])
+				vertices[vert]["with"].append([pickedSites[0], pickedSites[1]])
 				vertices[vert]["at"].append(nearestBound)
-				finalCell[f"{str(pickedSites[0][0]).replace(', ', '_')}"]["vertices"].append([vertPt, nearestBound])
-				finalCell[f"{str(pickedSites[0][1]).replace(', ', '_')}"]["vertices"].append([vertPt, nearestBound])
+				finalCell[f"{str(pickedSites[0]).replace(', ', '_')}"]["vertices"].append([vertPt, nearestBound])
+				finalCell[f"{str(pickedSites[1]).replace(', ', '_')}"]["vertices"].append([vertPt, nearestBound])
 
 		print()
 
@@ -946,17 +929,7 @@ for vert in vertices: # modifies convex hull so that it has edges extending to t
 				finalCell[f"{str(pair3[0]).replace(', ', '_')}"]["vertices"].append([vertPt, nearestBound])
 				finalCell[f"{str(pair3[1]).replace(', ', '_')}"]["vertices"].append([vertPt, nearestBound])
 
-def withinBounds(vert, bounds):
-	return vert[0] >= bounds[0][0] and vert[0] <= bounds[0][1] and vert[1] >= bounds[1][1] and vert[1] <= bounds[1][0]
 
-def formatVertex(vertices):
-	for i in range(0, vertices.__len__()):
-		for j in range(0, vertices[i].__len__()):
-			if type(vertices[i][j]) == list:
-				vertices[i][j][0] = float("%.10f" % vertices[i][j][0])
-				vertices[i][j][1] = float("%.10f" % vertices[i][j][1])
-			else:
-				vertices[i][j] = float("%.10f" % vertices[i][j])
 				
 	#return [float("%.10f" % vert[0]), float("%.10f" % vert[1])]
 
@@ -1248,5 +1221,6 @@ for cell in finalCell:
 	plt.fill(vertsX, vertsY, color=(random.random(), random.random(), random.random(), 0.5))																								                        
 		
 plt.show()
+
 
 
