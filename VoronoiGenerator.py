@@ -182,7 +182,7 @@ def find3IntersectX(pt1, pt2, pt3): # division by zero happens with the points (
 	a, b, c, d, e, f = pt1[0], pt1[1], pt2[0], pt2[1], pt3[0], pt3[1]
 	if (2 * ( ((a-e)*(b-d)) - ((a-c)*(b-f))) ) != 0:
 		x = ( ( ((a**2) - (e**2))*(b-d) ) - ( ((a**2) - (c**2)) * (b-f) ) - ( (d-f)*(b-f)*(b-d) )) / (2 * ( ((a-e)*(b-d)) - ((a-c)*(b-f))) )
-		return x
+		return float("%.10f" % x)#x
 	else: # i need to have it return the midpoint between the site and nearest site if there is division by zero, because that means that the two lines are parallel and the farther site will not be valid
 		#print(( ( ((a**2) - (e**2))*(b-d) ) - ( ((a**2) - (c**2)) * (b-f) ) - ( (d-f)*(b-f)*(b-d) )), (2 * ( ((a-e)*(b-d)) - ((a-c)*(b-f))) ))
 		#print(f"({a}, {b}) ({c}, {d}) ({e}, {f})")
@@ -212,7 +212,7 @@ def otherXOnBisectorAtT(pt1, pt2, pt3, t): # pt1 and pt2 form the bisector and p
 #         else:
 #             x = ( (-1 * n) + ( ( (n**2) - (4 * m * o) )**0.5 ) ) / (2 * m)                        
 		x = ( (-1 * n) - ( ( (n**2) - (4 * m * o) )**0.5 ) ) / (2 * m)#( (-1 * n) + ( ( (n**2) - (4 * m * o) )**0.5 ) ) / (2 * m) 
-		return x        
+		return float("%.10f" % x)#x
 	except ZeroDivisionError:
 		print(f"zero division error in otherXOnBisectorAtT with {pt1} {pt2} {pt3} t={t}")        
 		return defaultBounds[1][1] -5  
@@ -240,9 +240,9 @@ def getXAtTime(pt1, pt2, t): # finds x-value of intersection of two parabolas at
 		dist1 = abs(mid[0] - x1)
 		dist2 = abs(mid[0] - x2)
 		if dist1 < dist2:
-			return x1
+			return float("%.10f" % x1)#x1
 		else:
-			return x2
+			return float("%.10f" % x2)#x2
 
 		#return x
 	except ZeroDivisionError:
@@ -256,7 +256,7 @@ def getTimeAtX(pt1, pt2, pt3, x): # finds time when parabola pt1 has given x val
 		k = -( (a**2) + (b**2) - (c**2) - (d**2) + (2 * x * (c-a)))#-1 * ( (a**2) + (-2 * x * a) + (b**2) - (d**2) + (b * d) - (c**2) + (2 * x * c) - (d * b) )#-( (a**2) + (b**2) ) + (c**2) + (d**2) + (2 * x * (a-c)) #this last one is incorrect
 		L = f * ( (a**2) + (b**2) - (c**2) - (d**2) - (2 * x * (a - c) ) ) - ( ( (x**2) + (e**2) + (f**2) - (2 * x * e) ) * j )#f * ( (a**2) + (b**2) - (c**2) - (d**2) - (2 * x * (a - c) ) ) - ( ( (x**2) + (e**2) + (f**2) - (2 * x * e) ) * (b - d) ) #f*( (a**2) - (c**2) + (b**2) - (d**2) - (2 * x * (a-c)) ) - (( ((x-e)**2) + (f**2) )*(b-d))
 		t = ((-1 * k) - ( (k**2) - (4 * j * L))**0.5) / (2 * j) # division by 0 if j = 0, j = 0 if b-d = 0, so if the first 2 points have the same y value
-		return t        
+		return float("%.10f" % t)#t
 	except ZeroDivisionError:
 		print(f"zero division error in getTimeAtX with {pt1} {pt2} {pt3} x={x} j={j} k={k} L={L}")        
 		return pt1[1]#defaultBounds[1][1] -5            
@@ -265,7 +265,7 @@ def getYAtTimeAndX(pt1, t, x): # just the y-value of the parabola at the given t
 	try:    
 		a, b = pt1[0], pt1[1]
 		y = (((x-a)**2) / (2 * (b-t))) + (0.5 * (b+t)) # divides by 0 if b+t = 0 and b-t = 0, which is not possible
-		return y
+		return float("%.10f" % y)#y
 	except ZeroDivisionError:
 		print(f"zero division error in getYAtTimeAndX with {pt1} t={t} x={x}")
 		return defaultBounds[1][1] -5                       
@@ -274,7 +274,7 @@ def yAtX(pt1, pt2, x): # gives y value of bisector between two parabolas at give
 	try:    
 		a, b, c, d = pt1[0], pt1[1], pt2[0], pt2[1]
 		y = ((c-a) / (b-d)) * (x - ( (a+c)/2) ) + ((b+d)/2) # divides by 0 if b-d = 0 (points have same y value), so the valid y value would also be the same
-		return y
+		return float("%.10f" % y)#y
 	except ZeroDivisionError:
 		print(f"zero division error in yAtX with {pt1} {pt2} x={x}")
 		return pt1[1]#defaultBounds[1][1] -5                    
@@ -283,7 +283,7 @@ def xAtY(pt1, pt2, y): # gives x value of bisector between two parabolas at give
 	try:    
 		a, b, c, d = pt1[0], pt1[1], pt2[0], pt2[1]
 		x = ( (2 * y * (d-b)) - ((d**2) - (b**2)) + ((a**2) - (c**2)) ) / (2 * (a-c)) # divides by 0 uf a-c = 0 (points have the same x value), so the correct x value would be the same as well
-		return x
+		return float("%.10f" % x)#x
 	except ZeroDivisionError:
 		print(f"zero division error in xAtY with {pt1} {pt2} y={y}")
 		return pt1[0]#defaultBounds[0][0] -5    
@@ -291,14 +291,14 @@ def xAtY(pt1, pt2, y): # gives x value of bisector between two parabolas at give
 def tAtXandY(pt1, x, y):   
 	a, b = pt1[0], pt1[1]
 	t = ((2 * y) + (( (4 * (y**2)) + 4*( ((x-a)**2) - (2 * y * b) + (b**2 ) ) ) ** 0.5)) / 2
-	return t    
+	return float("%.10f" % t)#t    
 
 
 def pointSlope(pt, slope, x):
-	return (slope * (x - pt[0])) + pt[1]
+	return float("%.10f" % ((slope * (x - pt[0])) + pt[1]) )#(slope * (x - pt[0])) + pt[1]
 
 def pointSlopeX(pt, slope, y):
-	return (y - pt[1] + (slope * pt[0])) / slope      
+	return float("%.10f" % ( (y - pt[1] + (slope * pt[0])) / slope) )#(y - pt[1] + (slope * pt[0])) / slope      
 
 def nearestBoundry(startPt, throughPt):
 	m = slope(startPt, throughPt)
@@ -380,6 +380,8 @@ def withinBounds(vert, bounds):
 
 def formatVertex(vertices):
 	for i in range(0, vertices.__len__()):
+		print("line383",vertices)
+		
 		for j in range(0, vertices[i].__len__()):
 			if type(vertices[i][j]) == list:
 				vertices[i][j][0] = float("%.10f" % vertices[i][j][0])
@@ -630,19 +632,22 @@ for site in cell: # Finds edges for cells
 							vertices.update({atName : {"sites":tempSites, "with":[], "at":[]}})
 						
 						if entry2["point1"] in [pt2, pt3] and [pt1, entry2["point1"]] not in vertices[atName]["with"] and [entry2["point1"], pt1] not in vertices[atName]["with"]:
-							vertices[atName]["with"].append([pt1, entry2["point1"]])
-							vertices[atName]["at"].append(entry2["at"])
+							vertices[atName]["with"].append([pt1, entry2["point1"]])#vertices[atName]["with"].append([pt1, entry2["point1"]])
+							vertices[atName]["at"].append(entry2["at"])#vertices[atName]["at"].append(entry2["at"])
+							
 						elif entry2["point2"] in [pt2, pt3] and [pt1, entry2["point2"]] not in vertices[atName]["with"] and [entry2["point2"], pt1] not in vertices[atName]["with"]:
-							vertices[atName]["with"].append([pt1, entry2["point2"]])
-							vertices[atName]["at"].append(entry2["at"])
+							vertices[atName]["with"].append([pt1, entry2["point2"]])#vertices[atName]["with"].append([pt1, entry2["point2"]])
+							vertices[atName]["at"].append(entry2["at"])#vertices[atName]["at"].append(entry2["at"])
+							
 						elif entry2["point3"] in [pt2, pt3] and [pt1, entry2["point3"]] not in vertices[atName]["with"] and [entry2["point3"], pt1] not in vertices[atName]["with"]:
-							vertices[atName]["with"].append([pt1, entry2["point3"]])
-							vertices[atName]["at"].append(entry2["at"])
+							vertices[atName]["with"].append([pt1, entry2["point3"]])#vertices[atName]["with"].append([pt1, entry2["point3"]])
+							vertices[atName]["at"].append(entry2["at"])#vertices[atName]["at"].append(entry2["at"])
 																	   
 		except Exception as e:
 			print(f"site2: {e} not in cell") 
 
-			
+#formatVertex(vertices)
+
 for vert in vertices: # modifies convex hull so that it has edges extending to the boundries of the specified area
 	#print("vert",vert, vertices[vert])
 	#print()
@@ -943,6 +948,24 @@ for cell3 in finalCell:
 	sortByY(tempVerts)
 	for vert in tempVerts:
 		sortByY(vert)
+
+	formatVertex(tempVerts)
+
+	unique = []
+
+	for vert in tempVerts:
+		if vert not in unique and vert[0] != vert[1]:
+			unique.append(vert)
+
+	finalCell[cell3]["vertices"] = unique
+	print("line956", unique)
+
+	
+	continue
+	tempVerts = finalCell[cell3]["vertices"].copy()
+	sortByY(tempVerts)
+	for vert in tempVerts:
+		sortByY(vert)
 	
 	formatVertex(tempVerts)
 
@@ -1039,6 +1062,14 @@ print()
 #print("-----",finalCell["[12_160]"]["vertices"])
 #print("-----",finalCell["[156_163]"]["vertices"])
 #print()
+print(vertices.keys())
+for cell4 in finalCell:
+	for vert in finalCell[cell4]["vertices"]:
+		print(vert)
+		print(f"{str(vert[0]).replace(', ', '_')}" in list(vertices.keys()), f"{str(vert[1]).replace(', ', '_')}" in list(vertices.keys()))
+		if not withinBounds(vert[0], defaultBounds):
+			if f"{str(vert[0]).replace(', ', '_')}" in list(vertices.keys()):
+				print(vertices[f"{str(vert[0]).replace(', ', '_')}"])
 
 def makeEdges(onBoundry, curSite):
 	inside = False
@@ -1106,6 +1137,7 @@ def makeEdges(onBoundry, curSite):
 	for i in range(0, withCorners.__len__()-1):
 		finalCell[cell2]["vertices"].append([withCorners[i][0], withCorners[i+1][0]])
 
+# Finds edges that are on the boundry of the target area
 boundryEdges = [] 
 for cell2 in finalCell:
 	  
