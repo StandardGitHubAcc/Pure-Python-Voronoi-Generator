@@ -69,13 +69,14 @@ for i in range(1, 8):
 
 #points = [[146, 15], [189, 55], [44, 75], [90, 95], [52, 138], [111, 157], [117, 181]]
 
-points = [[159, 14], [49, 18], [63, 32], [87, 48], [191, 60], [131, 99], [150, 183]] # breaks stuff, not sure what exactly
+#points = [[159, 14], [49, 18], [63, 32], [87, 48], [191, 60], [131, 99], [150, 183]] # breaks stuff, not sure what exactly
 #points = [[59, 65], [194, 108], [134, 152], [147, 155], [75, 166], [64, 172], [180, 195]] # breaks stuff, not sure what exactly
 
 #points = [[25, 25], [175, 175], [25, 175], [175, 25], [100, 100]]
 #points = [[50, 50], [75, 75], [195, 195]]	  
 
 #points = [[43, 20], [10, 32], [91, 55], [136, 72], [123, 79], [52, 99], [0, 174]]
+points = [[200, 41], [81, 57], [167, 95], [142, 136], [109, 163], [42, 174], [188, 191]]
 
 #		bottomleft, topleft, bottomright, topright
 corners = [[0, 0], [0, 200], [200, 0], [200, 200]] #[ [defaultBounds[0][0], defaultBounds[1][1]], [defaultBounds[0][0], defaultBounds[0][1]], [defaultBounds[1][0], defaultBounds[1][1]], [defaultBounds[0][1], defaultBounds[1][0]] ]
@@ -240,7 +241,7 @@ def getXAtTime(pt1, pt2, t): # finds x-value of intersection of two parabolas at
 		dist1 = abs(mid[0] - x1)
 		dist2 = abs(mid[0] - x2)
 
-		print("-----------line243",x1, x2, x1.imag)
+		#print("-----------line243",x1, x2, x1.imag)
 		
 		if x1.imag != 0.0 or x2.imag != 0.0:
 			return None
@@ -1075,12 +1076,12 @@ print()
 #print("-----",finalCell["[12_160]"]["vertices"])
 #print("-----",finalCell["[156_163]"]["vertices"])
 #print()
-#print(vertices.keys())
+print(vertices.keys())
 for cell4 in finalCell:
-	#print("cell4",cell4)
+	print("cell4",cell4)
 	verts = finalCell[cell4]["vertices"].copy()
 	for vert in verts:#finalCell[cell4]["vertices"]:
-		#print(vert)
+		print(vert)
 		print(f"{str(vert[0]).replace(', ', '_')}" in list(vertices.keys()), f"{str(vert[1]).replace(', ', '_')}" in list(vertices.keys()))
 		# if not withinBounds(vert[0], defaultBounds):
 		# 	if f"{str(vert[0]).replace(', ', '_')}" in list(vertices.keys()):
@@ -1094,10 +1095,10 @@ for cell4 in finalCell:
 		# print(vertices[f"{str(vert[0]).replace(', ', '_')}"])
 		# print(vertices[f"{str(vert[1]).replace(', ', '_')}"])
 
-		# if f"{str(vert[0]).replace(', ', '_')}" in list(vertices.keys()):
-		# 	print("a",vertices[f"{str(vert[0]).replace(', ', '_')}"])
-		# if f"{str(vert[1]).replace(', ', '_')}" in list(vertices.keys()):
-		# 	print("b",vertices[f"{str(vert[1]).replace(', ', '_')}"])
+		if f"{str(vert[0]).replace(', ', '_')}" in list(vertices.keys()):
+			print("a",vertices[f"{str(vert[0]).replace(', ', '_')}"])
+		if f"{str(vert[1]).replace(', ', '_')}" in list(vertices.keys()):
+			print("b",vertices[f"{str(vert[1]).replace(', ', '_')}"])
 
 		startPt = []
 		throughPt = []
@@ -1129,13 +1130,19 @@ for cell4 in finalCell:
 				
 		elif not validVert1 and not validVert2: # might be able to be an else:
 			midPt = midPoint(vert[0], vert[1])
-			print(nearestOutsideBoundry(midPt, vert[0]))
-			print(nearestOutsideBoundry(midPt, vert[1]))
+			boundry1 = nearestOutsideBoundry(midPt, vert[0])
+			boundry2 = nearestOutsideBoundry(midPt, vert[1])
+			#print("line1134",boundry1, boundry2)
+			
+			if boundry1[0] == boundry2[0] and boundry1[1] == boundry2[1]:
+				#print(finalCell[cell4]["vertices"].index(vert))
+				#i = finalCell[cell4]["vertices"].index(vert)
+				finalCell[cell4]["vertices"].remove(vert)
 
 		print()
 
-#print("------",finalCell["[87_48]"]["vertices"])
-#print("------",finalCell["[150_183]"]["vertices"])
+#print("------[87_48]",finalCell["[87_48]"]["vertices"])
+#print("------[150_183]",finalCell["[150_183]"]["vertices"])
 
 def makeEdges(onBoundry, curSite):
 	inside = False
@@ -1319,6 +1326,7 @@ for cell in finalCell:
 	plt.fill(vertsX, vertsY, color=(random.random(), random.random(), random.random(), 0.5))																								                        
 		
 plt.show()
+
 
 
 
