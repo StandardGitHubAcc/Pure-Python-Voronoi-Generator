@@ -386,7 +386,7 @@ def withinBounds(vert, bounds):
 
 def formatVertex(vertices):
 	for i in range(0, vertices.__len__()):
-		print("line383",vertices)
+		#print("line383",vertices)
 		
 		for j in range(0, vertices[i].__len__()):
 			if type(vertices[i][j]) == list:
@@ -739,11 +739,12 @@ for vert in vertices: # modifies convex hull so that it has edges extending to t
 
 		throughPt = []
 		
-		#print(vertPt, vertPtT)
+		print("vertPt",vertPt, "vertPtT",vertPtT)
 
 		if vertPtT - 0.5 < pickedSites[1][1]:
 			diffTempT = vertPtT - pickedSites[1][1]
 			diffTempT = diffTempT / 2
+			print("line747 diffTempT",diffTempT)
 			beforeTx = getXAtTime(pickedSites[0], pickedSites[1], vertPtT - diffTempT)
 			afterTx = getXAtTime(pickedSites[0], pickedSites[1], vertPtT + diffTempT)
 
@@ -752,8 +753,8 @@ for vert in vertices: # modifies convex hull so that it has edges extending to t
 		afterTy1 = getYAtTimeAndX(pickedSites[0], vertPtT + 0.5, afterTx)
 		afterTy2 = getYAtTimeAndX(notInPair, vertPtT + 0.5, afterTx)
 
-		print(afterTy1, afterTy2)
-		print(beforeTy1, beforeTy2)
+		print(pickedSites[0], beforeTy1, notInPair, beforeTy2)
+		print(pickedSites[0], afterTy1, notInPair, afterTy2)
 		
 
 		if vertPtT - 0.5 < notInPair[1]: # If the intersection point time - 0.5 is less than the 3rd point's y, so it should not be considered yet, just use that point
@@ -766,7 +767,13 @@ for vert in vertices: # modifies convex hull so that it has edges extending to t
 				print("throughB", beforeTx, beforeTy1)
 			elif afterTy1 > afterTy2: # can't be an else
 				throughPt = [afterTx, afterTy1]
-				print("throughC", beforeTx, beforeTy1)
+				print("throughC", afterTx, afterTy1)
+			# elif beforeTy1 < beforeTy2:
+			# 	throughPt = [beforeTx, beforeTy2]
+			# 	print("throughD", beforeTx, beforeTy2)
+			# elif afterTy1 < afterTy2:
+			# 	throughPt = [afterTx, afterTy2]
+			# 	print("throughE", afterTx, afterTy2)
 
 		if throughPt != []:
 			#nearestBound = nearestBoundry(vertPt, throughPt)
@@ -795,9 +802,9 @@ for vert in vertices: # modifies convex hull so that it has edges extending to t
 					finalCell[f"{str(pickedSites[0]).replace(', ', '_')}"]["vertices"].append([newBound1, nearestBound])
 					finalCell[f"{str(pickedSites[1]).replace(', ', '_')}"]["vertices"].append([newBound1, nearestBound])
 				  
-			else:                            
+			else:
 				nearestBound = nearestBoundry(vertPt, throughPt)
-				#print("nearestBound",nearestBound)                
+				#print("nearestBound",nearestBound)
 				vertices[vert]["with"].append([pickedSites[0], pickedSites[1]])
 				vertices[vert]["at"].append(nearestBound)
 				finalCell[f"{str(pickedSites[0]).replace(', ', '_')}"]["vertices"].append([vertPt, nearestBound])
@@ -972,7 +979,7 @@ for cell3 in finalCell:
 			unique.append(vert)
 
 	finalCell[cell3]["vertices"] = unique
-	print("line956", unique)
+	print("line956", cell3, unique)
 
 	
 	continue
@@ -1326,8 +1333,4 @@ for cell in finalCell:
 	plt.fill(vertsX, vertsY, color=(random.random(), random.random(), random.random(), 0.5))																								                        
 		
 plt.show()
-
-
-
-
 
