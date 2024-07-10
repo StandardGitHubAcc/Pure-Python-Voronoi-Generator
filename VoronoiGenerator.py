@@ -18,7 +18,7 @@ for i in range(1, 8):
 #points = [[50, 50], [25, 20], [75, 75], [98, 70]]
 #points = [[30, 40], [25, 60], [80, 97]]
 #points = [[50, 50], [75, 75]]  
-#points = [[50, 50]]    
+#points = [[50, 50]]
 
 #points = [[30, 30], [40, 40], [10, 50]]
 #points = [[90,81],[48,121],[163,120],[83,23]]
@@ -239,6 +239,11 @@ def getXAtTime(pt1, pt2, t): # finds x-value of intersection of two parabolas at
 		x2 = ( (-1 * n) - ( ( (n**2) - (4 * m * o) )**0.5 ) ) / (2 * m)                
 		dist1 = abs(mid[0] - x1)
 		dist2 = abs(mid[0] - x2)
+
+		print("-----------line243",x1, x2, x1.imag)
+		
+		if x1.imag != 0.0 or x2.imag != 0.0:
+			return None
 		if dist1 < dist2:
 			return float("%.10f" % x1)#x1
 		else:
@@ -714,16 +719,16 @@ for vert in vertices: # modifies convex hull so that it has edges extending to t
 		print(pickedSites)
 		print(site1, site2, site3)
 
-		test1x = getXAtTime(site1, site2, vertPtT)
-		test1y = getYAtTimeAndX(site1, vertPtT, test1x)
+		# test1x = getXAtTime(site1, site2, vertPtT)
+		# test1y = getYAtTimeAndX(site1, vertPtT, test1x)
 
-		print(test1x, test1y, vertPt, vertPtT)
+		# print(test1x, test1y, vertPt, vertPtT)
 
-		test2x = getXAtTime(site1, site2, vertPtT + 0.5)
+		# test2x = getXAtTime(site1, site2, vertPtT + 0.5)
 
-		print(getYAtTimeAndX(site1, vertPtT + 0.5, test2x), getYAtTimeAndX(site2, vertPtT + 0.5, test2x), getYAtTimeAndX(site3, vertPtT + 0.5, test2x))
-		test3x = getXAtTime(site1, site2, vertPtT - 0.5)
-		print(getYAtTimeAndX(site1, vertPtT - 0.5, test3x), getYAtTimeAndX(site2, vertPtT - 0.5, test3x), getYAtTimeAndX(site3, vertPtT - 0.5, test3x))
+		# print(getYAtTimeAndX(site1, vertPtT + 0.5, test2x), getYAtTimeAndX(site2, vertPtT + 0.5, test2x), getYAtTimeAndX(site3, vertPtT + 0.5, test2x))
+		# test3x = getXAtTime(site1, site2, vertPtT - 0.5)
+		# print(getYAtTimeAndX(site1, vertPtT - 0.5, test3x), getYAtTimeAndX(site2, vertPtT - 0.5, test3x), getYAtTimeAndX(site3, vertPtT - 0.5, test3x))
 		
 		#print()
 		#print(getXAtTime(pickedSites[0][0], pickedSites[0][1], vertPtT - 0.5), getXAtTime(pickedSites[0][1], pickedSites[0][0], vertPtT - 0.5))
@@ -733,6 +738,14 @@ for vert in vertices: # modifies convex hull so that it has edges extending to t
 
 		throughPt = []
 		
+		#print(vertPt, vertPtT)
+
+		if vertPtT - 0.5 < pickedSites[1][1]:
+			diffTempT = vertPtT - pickedSites[1][1]
+			diffTempT = diffTempT / 2
+			beforeTx = getXAtTime(pickedSites[0], pickedSites[1], vertPtT - diffTempT)
+			afterTx = getXAtTime(pickedSites[0], pickedSites[1], vertPtT + diffTempT)
+
 		beforeTy1 = getYAtTimeAndX(pickedSites[0], vertPtT - 0.5, beforeTx)
 		beforeTy2 = getYAtTimeAndX(notInPair, vertPtT - 0.5, beforeTx)
 		afterTy1 = getYAtTimeAndX(pickedSites[0], vertPtT + 0.5, afterTx)
@@ -1062,14 +1075,67 @@ print()
 #print("-----",finalCell["[12_160]"]["vertices"])
 #print("-----",finalCell["[156_163]"]["vertices"])
 #print()
-print(vertices.keys())
+#print(vertices.keys())
 for cell4 in finalCell:
-	for vert in finalCell[cell4]["vertices"]:
-		print(vert)
+	#print("cell4",cell4)
+	verts = finalCell[cell4]["vertices"].copy()
+	for vert in verts:#finalCell[cell4]["vertices"]:
+		#print(vert)
 		print(f"{str(vert[0]).replace(', ', '_')}" in list(vertices.keys()), f"{str(vert[1]).replace(', ', '_')}" in list(vertices.keys()))
-		if not withinBounds(vert[0], defaultBounds):
-			if f"{str(vert[0]).replace(', ', '_')}" in list(vertices.keys()):
-				print(vertices[f"{str(vert[0]).replace(', ', '_')}"])
+		# if not withinBounds(vert[0], defaultBounds):
+		# 	if f"{str(vert[0]).replace(', ', '_')}" in list(vertices.keys()):
+		# 		print("a")
+		# 		#print("a",vertices[f"{str(vert[0]).replace(', ', '_')}"])
+		# if not withinBounds(vert[1], defaultBounds):
+		# 	if f"{str(vert[1]).replace(', ', '_')}" in list(vertices.keys()):
+		# 		print("b")
+		# 		#print("b",vertices[f"{str(vert[1]).replace(', ', '_')}"])
+
+		# print(vertices[f"{str(vert[0]).replace(', ', '_')}"])
+		# print(vertices[f"{str(vert[1]).replace(', ', '_')}"])
+
+		# if f"{str(vert[0]).replace(', ', '_')}" in list(vertices.keys()):
+		# 	print("a",vertices[f"{str(vert[0]).replace(', ', '_')}"])
+		# if f"{str(vert[1]).replace(', ', '_')}" in list(vertices.keys()):
+		# 	print("b",vertices[f"{str(vert[1]).replace(', ', '_')}"])
+
+		startPt = []
+		throughPt = []
+		validVert1 = withinBounds(vert[0], defaultBounds)
+		validVert2 = withinBounds(vert[1], defaultBounds)
+		
+		if validVert1 and not validVert2:
+			startPt = vert[0]
+			throughPt = vert[1]
+		elif not validVert1 and validVert2:
+			startPt = vert[1]
+			throughPt = vert[0]
+		#elif not validVert1 and not validVert2:
+		
+		if startPt != []:
+			boundry = nearestBoundry(startPt, throughPt)
+			print("startPt",startPt,"throughPt",throughPt,"boundry",boundry)
+				
+			if boundry[0] == startPt[0] and boundry[1] == startPt[1]:
+				finalCell[cell4]["vertices"].remove(vert)
+			else:
+				pair1 = [startPt, throughPt]
+				sortByY(pair1)
+				i = finalCell[cell4]["vertices"].index(pair1)
+				#print(i)
+				pair2 = [startPt, boundry]
+				sortByY(pair2)
+				finalCell[cell4]["vertices"][i] = pair2
+				
+		elif not validVert1 and not validVert2: # might be able to be an else:
+			midPt = midPoint(vert[0], vert[1])
+			print(nearestOutsideBoundry(midPt, vert[0]))
+			print(nearestOutsideBoundry(midPt, vert[1]))
+
+		print()
+
+#print("------",finalCell["[87_48]"]["vertices"])
+#print("------",finalCell["[150_183]"]["vertices"])
 
 def makeEdges(onBoundry, curSite):
 	inside = False
@@ -1253,6 +1319,7 @@ for cell in finalCell:
 	plt.fill(vertsX, vertsY, color=(random.random(), random.random(), random.random(), 0.5))																								                        
 		
 plt.show()
+
 
 
 
