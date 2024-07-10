@@ -297,6 +297,9 @@ def xAtY(pt1, pt2, y): # gives x value of bisector between two parabolas at give
 def tAtXandY(pt1, x, y):   
 	a, b = pt1[0], pt1[1]
 	t = ((2 * y) + (( (4 * (y**2)) + 4*( ((x-a)**2) - (2 * y * b) + (b**2 ) ) ) ** 0.5)) / 2
+	#k = -2 * y
+	#l = -1 * ( ( (x-a) ** 2 ) - (2 * y * b) + (b ** 2) )
+	#t = ( (-1 * k) - ( ( (k ** 2) - (4 * l) ) ** 0.5 ) ) / 2
 	return float("%.10f" % t)#t    
 
 
@@ -734,40 +737,91 @@ for vert in vertices: # modifies convex hull so that it has edges extending to t
 		#print()
 		#print(getXAtTime(pickedSites[0][0], pickedSites[0][1], vertPtT - 0.5), getXAtTime(pickedSites[0][1], pickedSites[0][0], vertPtT - 0.5))
 
-		beforeTx = getXAtTime(pickedSites[0], pickedSites[1], vertPtT - 0.5)
-		afterTx = getXAtTime(pickedSites[0], pickedSites[1], vertPtT + 0.5)
+		#deltaT = 0.5
+		#if vertPtT - 0.5 < pickedSites[1][1]:
+		#	deltaT = (vertPtT - pickedSites[1][1]) / 2
+
+		dists = [vertPtT - pickedSites[0][1], vertPtT - pickedSites[1][1], vertPtT - notInPair[1]]
+		dists.sort()
+		print("dists",dists)
+		
+		deltaT = dists[0] / 2
+
+		beforeTx = getXAtTime(pickedSites[0], pickedSites[1], vertPtT - deltaT)
+		afterTx = getXAtTime(pickedSites[0], pickedSites[1], vertPtT + deltaT)
 
 		throughPt = []
-		
+		print("beforeTx",beforeTx, "vertPt",vertPt,"afterTx",afterTx)
 		print("vertPt",vertPt, "vertPtT",vertPtT)
+		print(getYAtTimeAndX(pickedSites[1], vertPtT - deltaT, beforeTx), getYAtTimeAndX(pickedSites[1], vertPtT + deltaT, afterTx))
 
-		if vertPtT - 0.5 < pickedSites[1][1]:
-			diffTempT = vertPtT - pickedSites[1][1]
-			diffTempT = diffTempT / 2
-			print("line747 diffTempT",diffTempT)
-			beforeTx = getXAtTime(pickedSites[0], pickedSites[1], vertPtT - diffTempT)
-			afterTx = getXAtTime(pickedSites[0], pickedSites[1], vertPtT + diffTempT)
+		beforeTy1 = getYAtTimeAndX(pickedSites[0], vertPtT - deltaT, beforeTx)
+		beforeTy2 = getYAtTimeAndX(notInPair, vertPtT - deltaT, beforeTx)
+		afterTy1 = getYAtTimeAndX(pickedSites[0], vertPtT + deltaT, afterTx)
+		afterTy2 = getYAtTimeAndX(notInPair, vertPtT + deltaT, afterTx)
 
-		beforeTy1 = getYAtTimeAndX(pickedSites[0], vertPtT - 0.5, beforeTx)
-		beforeTy2 = getYAtTimeAndX(notInPair, vertPtT - 0.5, beforeTx)
-		afterTy1 = getYAtTimeAndX(pickedSites[0], vertPtT + 0.5, afterTx)
-		afterTy2 = getYAtTimeAndX(notInPair, vertPtT + 0.5, afterTx)
+		# beforeTx = getXAtTime(pickedSites[0], pickedSites[1], vertPtT - 0.5)
+		# afterTx = getXAtTime(pickedSites[0], pickedSites[1], vertPtT + 0.5)
+
+		# throughPt = []
+		
+		# print("vertPt",vertPt, "vertPtT",vertPtT)
+
+		# if vertPtT - 0.5 < pickedSites[1][1]:
+		# 	diffTempT = vertPtT - pickedSites[1][1]
+		# 	diffTempT = diffTempT / 2
+		# 	print("line747 diffTempT",diffTempT)
+		# 	beforeTx = getXAtTime(pickedSites[0], pickedSites[1], vertPtT - diffTempT)
+		# 	afterTx = getXAtTime(pickedSites[0], pickedSites[1], vertPtT + diffTempT)
+
+		# beforeTy1 = getYAtTimeAndX(pickedSites[0], vertPtT - 0.5, beforeTx)
+		# beforeTy2 = getYAtTimeAndX(notInPair, vertPtT - 0.5, beforeTx)
+		# afterTy1 = getYAtTimeAndX(pickedSites[0], vertPtT + 0.5, afterTx)
+		# afterTy2 = getYAtTimeAndX(notInPair, vertPtT + 0.5, afterTx)
 
 		print(pickedSites[0], beforeTy1, notInPair, beforeTy2)
 		print(pickedSites[0], afterTy1, notInPair, afterTy2)
 		
-
-		if vertPtT - 0.5 < notInPair[1]: # If the intersection point time - 0.5 is less than the 3rd point's y, so it should not be considered yet, just use that point
+		if beforeTy1 > beforeTy2:
 			throughPt = [beforeTx, beforeTy1]
-			print("throughA", beforeTx, beforeTy1)
+			print("throughPtA")
+		elif afterTy1 > afterTy2:
+			throughPt = [afterTx, afterTy1]
+			print("throughPtB")
+		# elif yAtX(pickedSites[1], notInPair, beforeTx) < yAtX(pickedSites[1], pickedSites[0], beforeTx):
+		# 	throughPt = [beforeTx, beforeTy1]
+		# 	print("throughPtC")
+		# elif yAtX(pickedSites[1], notInPair, afterTx) < yAtX(pickedSites[1], pickedSites[0], afterTx):
+		# 	throughPt = [afterTx, afterTy1]
+		# 	print("throughPtD")
+		#elif beforeTy1 < beforeTy2:
+		#	throughPt = [afterTx, afterTy2]
+
+		#print(yAtX(pickedSites[1], notInPair, beforeTx), yAtX(pickedSites[1], pickedSites[0], beforeTx))
+		print(yAtX(pickedSites[1], notInPair, afterTx), yAtX(pickedSites[1], pickedSites[0], afterTx))
+
+		# if pickedSites[0][0] > pickedSites[1][0]:
+		# 	if beforeTy1 > beforeTy2:
+		# 		throughPt = [beforeTx, beforeTy1]
+		# 	elif afterTy1 > afterTy2:
+		# 		throughPt = [afterTx, afterTy1]
+		# else:
+		# 	if beforeTy1 < beforeTy2:
+		# 		throughPt = [beforeTx, beforeTy2]
+		# 	elif afterTy1 < afterTy2:
+		# 		throughPt = [afterTx, afterTy2]
+
+		# if vertPtT - deltaT < notInPair[1]: # If the intersection point time - 0.5 is less than the 3rd point's y, so it should not be considered yet, just use that point
+		# 	throughPt = [beforeTx, beforeTy1]
+		# 	print("throughA", beforeTx, beforeTy1)
 			
-		else:
-			if beforeTy1 > beforeTy2:
-				throughPt = [beforeTx, beforeTy1]
-				print("throughB", beforeTx, beforeTy1)
-			elif afterTy1 > afterTy2: # can't be an else
-				throughPt = [afterTx, afterTy1]
-				print("throughC", afterTx, afterTy1)
+		# else:
+		# 	if beforeTy1 > beforeTy2:
+		# 		throughPt = [beforeTx, beforeTy1]
+		# 		print("throughB", beforeTx, beforeTy1)
+		# 	elif afterTy1 > afterTy2: # can't be an else
+		# 		throughPt = [afterTx, afterTy1]
+		# 		print("throughC", afterTx, afterTy1)
 			# elif beforeTy1 < beforeTy2:
 			# 	throughPt = [beforeTx, beforeTy2]
 			# 	print("throughD", beforeTx, beforeTy2)
@@ -783,6 +837,7 @@ for vert in vertices: # modifies convex hull so that it has edges extending to t
 
 			if vertPt[0] < defaultBounds[0][0] or vertPt[0] > defaultBounds[0][1] or vertPt[1] < defaultBounds[1][1] or vertPt[1] > defaultBounds[1][0]:
 			#if withinBounds(vertPt, defaultBounds):
+				print("a")
 				nearestBound = nearestBoundry(vertPt, throughPt)
 
 				newBound1 = nearestOutsideBoundry(vertPt, throughPt)
@@ -803,6 +858,7 @@ for vert in vertices: # modifies convex hull so that it has edges extending to t
 					finalCell[f"{str(pickedSites[1]).replace(', ', '_')}"]["vertices"].append([newBound1, nearestBound])
 				  
 			else:
+				print("b")
 				nearestBound = nearestBoundry(vertPt, throughPt)
 				#print("nearestBound",nearestBound)
 				vertices[vert]["with"].append([pickedSites[0], pickedSites[1]])
@@ -1333,4 +1389,5 @@ for cell in finalCell:
 	plt.fill(vertsX, vertsY, color=(random.random(), random.random(), random.random(), 0.5))																								                        
 		
 plt.show()
+
 
