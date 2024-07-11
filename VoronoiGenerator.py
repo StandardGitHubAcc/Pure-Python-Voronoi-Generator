@@ -7,11 +7,11 @@ import math
 from math import *
 #from sklearn.neighbors import NearestNeighbors
 #                 width     height
-defaultBounds = [[0, 200], [200, 0]]
-#defaultBounds = [[0, 100], [300, 0]]
+#defaultBounds = [[0, 200], [200, 0]]
+defaultBounds = [[0, 100], [300, 0]]
 
 points = []
-for i in range(1, 8):
+for i in range(1, 30):
 	  points.append([random.randint(0, defaultBounds[0][1]), random.randint(0, defaultBounds[1][0])])  
 
 #points = [[50, 50], [25, 25], [75, 75], [98, 70]]
@@ -83,6 +83,9 @@ for i in range(1, 8):
 #points = [[20, 25], [40, 100], [70, 160], [95, 190]]
 
 #points = [[73, 8], [62, 92], [37, 95], [80, 139], [154, 147], [84, 177], [85, 177]] # broke finding boundry edges with outside angles
+
+#points = [[75, 14], [85, 22], [86, 26], [94, 32], [92, 45], [32, 71], [0, 127], [50, 132], [10, 134], [28, 134], [21, 134], [95, 147], [38, 152], [63, 162], [70, 168], [7, 175], [4, 176], [65, 179], [12, 187], [87, 190], [23, 197], [7, 206], [91, 209], [100, 234], [73, 236], [33, 267], [10, 273], [20, 278], [96, 298]]
+points = points = [[86, 16], [33, 30], [49, 32], [27, 36], [98, 40], [23, 47], [11, 49], [69, 59], [67, 66], [81, 75], [75, 78], [6, 81], [1, 108], [4, 133], [100, 151], [30, 165], [86, 189], [30, 226], [54, 244], [15, 253], [41, 255], [52, 267], [11, 269], [27, 271], [13, 272], [49, 293], [84, 294], [2, 298], [46, 300]]
 
 #with box that is 100 wide and 300 tall
 #points = [[45, 70], [61, 100], [13, 162], [84, 208], [99, 233], [73, 270], [6, 281]]
@@ -190,14 +193,17 @@ def sortByX(array):
 			if array[j][0] > array[j + 1][0]:
 				array[j], array[j + 1] = array[j + 1], array[j]
 
-def find3IntersectX(pt1, pt2, pt3): # division by zero happens with the points (50, 50) (25, 25) (75, 75) # finds x-value of intersection of 3 parabolas
+def find3IntersectX(pt1, pt2, pt3): # finds x-value of intersection of 3 parabolas	
 	a, b, c, d, e, f = pt1[0], pt1[1], pt2[0], pt2[1], pt3[0], pt3[1]
 	if (2 * ( ((a-e)*(b-d)) - ((a-c)*(b-f))) ) != 0:
 		x = ( ( ((a**2) - (e**2))*(b-d) ) - ( ((a**2) - (c**2)) * (b-f) ) - ( (d-f)*(b-f)*(b-d) )) / (2 * ( ((a-e)*(b-d)) - ((a-c)*(b-f))) )
 		return float("%.10f" % x)#x
 	else: # I need to have it return the midpoint between the site and nearest site if there is division by zero, because that means that the two lines are parallel and the farther site will not be valid
 		# Seems to not break anything despite the fact that the division by 0 is not handled properly
-		
+		# division by zero happens with the points: 
+		# [50, 50] [25, 25] [75, 75]
+		# [7, 34] [87, 254] [91, 265]
+
 		#print(( ( ((a**2) - (e**2))*(b-d) ) - ( ((a**2) - (c**2)) * (b-f) ) - ( (d-f)*(b-f)*(b-d) )), (2 * ( ((a-e)*(b-d)) - ((a-c)*(b-f))) ))
 		#print(f"({a}, {b}) ({c}, {d}) ({e}, {f})")
 		#print(a-e, b-d, a-c, b-f)
@@ -429,6 +435,11 @@ print(points)
 for i in range(0, points.__len__() -1):
 	if points[i][1] == points[i + 1][1]:
 		points[i + 1][1] += 1
+sortByY(points)
+for i in range(0, points.__len__() -1):
+	if points[i][1] == points[i + 1][1]:
+		points[i + 1][1] += random.random()
+
 
 tmp = []
 for point in points:   
@@ -1046,19 +1057,22 @@ if points.__len__() == 1:
 	
 	finalCell[f"{str(points[0]).replace(', ', '_')}"]["vertices"].extend([A, B, C, D])
 
-
+# print()
+# print("at end:")
+# for tmp in finalCell:
+# 	print("----",tmp,finalCell[tmp]["vertices"])
 
 for pt in points:
 	plt.plot(pt[0], pt[1], "ro")
 	#plt.plot(pt[0], pt[1], color=(1,0,0), marker="o") # works	
 
-for site in cell:  
-	for entry in cell[site]:
+# for site in cell:  
+# 	for entry in cell[site]:
         
-		plt.plot(entry["at"][0], entry["at"][1], "go")
+# 		plt.plot(entry["at"][0], entry["at"][1], "go")
 
-		plt.plot([entry["point2"][0], entry["at"][0], entry["point3"][0], entry["at"][0], entry["point1"][0]], [entry["point2"][1], entry["at"][1], entry["point3"][1], entry["at"][1], entry["point1"][1]], "g") 
-      
+# 		plt.plot([entry["point2"][0], entry["at"][0], entry["point3"][0], entry["at"][0], entry["point1"][0]], [entry["point2"][1], entry["at"][1], entry["point3"][1], entry["at"][1], entry["point1"][1]], "g") 
+
 	
 for cell in finalCell:
 
@@ -1067,7 +1081,7 @@ for cell in finalCell:
 	for pairs in finalCell[cell]["vertices"]:    
 
 		plt.plot([pairs[0][0], pairs[1][0]], [pairs[0][1], pairs[1][1]], "b")
-		plt.plot([pairs[0][0], pairs[1][0]], [pairs[0][1], pairs[1][1]], "bo")                
+		#plt.plot([pairs[0][0], pairs[1][0]], [pairs[0][1], pairs[1][1]], "bo")                
 		
 		if pairs[0] not in used:
 			used.append(pairs[0])
@@ -1093,5 +1107,4 @@ for cell in finalCell:
 	plt.fill(vertsX, vertsY, color=(random.random(), random.random(), random.random(), 0.5))																								                        
 		
 plt.show()
-
 
