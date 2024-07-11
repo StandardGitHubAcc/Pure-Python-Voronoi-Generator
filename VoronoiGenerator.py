@@ -11,8 +11,8 @@ defaultBounds = [[0, 200], [200, 0]]
 #defaultBounds = [[0, 100], [300, 0]]
 
 points = []
-for i in range(1, 8):
-	  points.append([random.randint(0, 200), random.randint(0, 200)])  
+for i in range(1, 4):
+	  points.append([random.randint(0, defaultBounds[0][1]), random.randint(0, defaultBounds[1][0])])  
 
 #points = [[50, 50], [25, 25], [75, 75], [98, 70]]
 #points = [[50, 50], [25, 20], [75, 75], [98, 70]]
@@ -78,14 +78,20 @@ for i in range(1, 8):
 #points = [[43, 20], [10, 32], [91, 55], [136, 72], [123, 79], [52, 99], [0, 174]]
 #points = [[200, 41], [81, 57], [167, 95], [142, 136], [109, 163], [42, 174], [188, 191]]
 
+#points = [[20, 25], [55, 100], [70, 160], [95, 190]]
+#points = [[20, 25], [55, 100], [95, 190]]
+points = [[20, 25], [40, 100], [70, 160], [95, 190]]
+
+#with box that is 100 wide and 300 tall
 #points = [[45, 70], [61, 100], [13, 162], [84, 208], [99, 233], [73, 270], [6, 281]]
+#points = [[15, 38], [22, 55], [25, 158], [75, 197], [0, 225], [68, 248], [83, 249]]
 
 #		bottomleft, topleft, bottomright, topright
 #corners = [[0, 0], [0, 200], [200, 0], [200, 200]] #[ [defaultBounds[0][0], defaultBounds[1][1]], [defaultBounds[0][0], defaultBounds[0][1]], [defaultBounds[1][0], defaultBounds[1][1]], [defaultBounds[0][1], defaultBounds[1][0]] ]
-corners = [ [defaultBounds[0][0], defaultBounds[1][1]], [defaultBounds[0][0], defaultBounds[0][1]], [defaultBounds[1][0], defaultBounds[1][1]], [defaultBounds[0][1], defaultBounds[1][0]] ]
+corners = [ [defaultBounds[0][0], defaultBounds[1][1]], [defaultBounds[0][0], defaultBounds[1][0]], [defaultBounds[0][1], defaultBounds[1][1]], [defaultBounds[0][1], defaultBounds[1][0]] ]
+print("corners",corners)
 
 cell = {}
-#activeSites = []
 vertices = {}
 removeVerts = []
 finalCell = {}
@@ -325,33 +331,39 @@ def pointSlopeX(pt, slope, y):
 
 def nearestBoundry(startPt, throughPt):
 	m = slope(startPt, throughPt)
-
+	print("line334",startPt, throughPt)
 	topX = pointSlopeX(startPt, m, defaultBounds[1][0]) # The x-coordinate of the line when its y equals the top y
 	bottomX = pointSlopeX(startPt, m, defaultBounds[1][1])
 	leftY = pointSlope(startPt, m, defaultBounds[0][0]) # The y-coordinate of the line when its x equals the left x
 	rightY = pointSlope(startPt, m, defaultBounds[0][1])
 	choice = []
 
-	if throughPt[1] > startPt[1] and throughPt[0] > startPt[0]:
+	if throughPt[1] > startPt[1] and throughPt[0] > startPt[0]: # Towards top right
 		choice = [[topX, defaultBounds[1][0]], [defaultBounds[0][1], rightY]] #top and right
-		distanceTargetSort(startPt, choice)
+		#distanceTargetSort(startPt, choice)
+		print("towards top right")
 
-	elif throughPt[1] < startPt[1] and throughPt[0] > startPt[0]:
+	elif throughPt[1] < startPt[1] and throughPt[0] > startPt[0]: # Towards bottom right
 		choice = [[bottomX, defaultBounds[1][1]], [defaultBounds[0][1], rightY]] #bottom and right
-		distanceTargetSort(startPt, choice)
+		#distanceTargetSort(startPt, choice)
+		print("towards bottom right")
 		
-	elif throughPt[1] > startPt[1] and throughPt[0] < startPt[0]:
+	elif throughPt[1] > startPt[1] and throughPt[0] < startPt[0]: # Towards top left
 		choice = [[topX, defaultBounds[1][0]], [defaultBounds[0][0], leftY]] #top and left
-		distanceTargetSort(startPt, choice)
+		#distanceTargetSort(startPt, choice)
+		print("towards top left")
 
-	elif throughPt[1] < startPt[1] and throughPt[0] < startPt[0]:
-
+	elif throughPt[1] < startPt[1] and throughPt[0] < startPt[0]: # Towards bottom left
 		choice = [[bottomX, defaultBounds[1][1]], [defaultBounds[0][0], leftY]] #bottom and left
-		distanceTargetSort(startPt, choice)
+		#distanceTargetSort(startPt, choice)
+		print("towards bottom left")
 
 	else: # throughPt and startPt have the same y
 		choice = [[defaultBounds[0][0], throughPt[1]], [defaultBounds[0][1], throughPt[1]]]
-		distanceTargetSort(startPt, choice)
+		#distanceTargetSort(startPt, choice)
+	
+	distanceTargetSort(startPt, choice)
+	print("choice", choice)
 	
 	return choice[0]
 
@@ -362,9 +374,10 @@ def nearestOutsideBoundry(startPt, throughPt):
 	bottomX = pointSlopeX(startPt, m, defaultBounds[1][1])
 	leftY = pointSlope(startPt, m, defaultBounds[0][0]) # The y-coordinate of the line when its x equals the left x
 	rightY = pointSlope(startPt, m, defaultBounds[0][1])
+	#				top								bottom								left						right
 	choice = [[topX, defaultBounds[1][0]], [bottomX, defaultBounds[1][1]], [defaultBounds[0][0], leftY], [defaultBounds[0][1], rightY]]
 
-	distanceTargetSort(startPt, choice)    
+	distanceTargetSort(startPt, choice)
 
 	if choice[0][1] >= defaultBounds[1][1] and choice[0][1] <= defaultBounds[1][0] and choice[0][0] >= defaultBounds[0][0] and choice[0][0] <= defaultBounds[0][1]:
 		return choice[0]
@@ -448,19 +461,29 @@ for site1 in points:
 							
 						if f"{str(site1).replace(', ', '_')}" in cell:
 							cell[f"{str(site1).replace(', ', '_')}"].append({"point1":site1, "point2":site2, "point3":site3, "time":float("%.10f" % t), "at":[float("%.10f" % x), float("%.10f" % y)]})
-						else:                            
+						else:
 							cell.update({f"{str(site1).replace(', ', '_')}" : [{"point1":site1, "point2":site2, "point3":site3, "time":float("%.10f" % t), "at":[float("%.10f" % x), float("%.10f" % y)]}]})
 	
 # Finds invalid intersects and marks them for removal
 for site1 in cell: 
 	for entry in cell[site1]:
-		for others in points:            
+		for others in points:
 			if entry["point1"] != others and entry["point2"] != others and entry["point3"] != others and others[1] < entry["time"]:
 												
 				otherPointY = getYAtTimeAndX(others, entry["time"], entry["at"][0])
 
 				if otherPointY > entry["at"][1]:
 					removeVerts.append([site1, entry])
+
+#print(cell["[15_38]"])
+#for tmp in cell["[15_38]"]:
+#	print(tmp["at"])
+#print()
+#for tmp in cell["[22_55]"]:
+#	print(tmp["at"])
+#print(cell.keys())
+#for tmp in cell[list(cell.keys())[0]]:
+#	print(tmp["at"])
 
 if removeVerts.__len__() > 0:
 	for site, vert in removeVerts:       
@@ -469,6 +492,8 @@ if removeVerts.__len__() > 0:
 		except Exception:
 			pass
 
+#print()
+#print(cell["[15_38]"])
 
 # There are 3 cases that have to be dealth with seperately: 1 site, 3 sites, and 2 or 3+ sites 
 # (technically 2 sites have to be dealt with seperately but are the same as having a cell in a corner so can be dealt with later)
@@ -512,22 +537,28 @@ else:
 			boundRy = yAtX(point, site2, defaultBounds[0][1]) # The y-value of the bisector at the right boundry
 			boundRt = tAtXandY(point,  defaultBounds[0][1], boundRy)
 
-			boundTx = xAtY(point, site2, defaultBounds[1][0]) # The x-value of teh bisector at the top boundry
+			boundTx = xAtY(point, site2, defaultBounds[1][0]) # The x-value of the bisector at the top boundry
 			boundTt = tAtXandY(point,  boundTx, defaultBounds[1][0])
-			boundBx = xAtY(point, site2, defaultBounds[1][1]) # The x-value of teh bisector at the bottom boundry
+			boundBx = xAtY(point, site2, defaultBounds[1][1]) # The x-value of the bisector at the bottom boundry
 			boundBt = tAtXandY(point,  boundBx, defaultBounds[1][1])
 
 			# Pairing up each of the values found above with their respective boundry value to form points
 			pts = [[defaultBounds[0][0], boundLy], [defaultBounds[0][1], boundRy], [boundTx, defaultBounds[1][0]], [boundBx, defaultBounds[1][1]]]                
-			distanceTargetSort(point, pts)       
+			distanceTargetSort(point, pts)
 			
+			#I should add onto this list so that the list of verticies will also include the corner
 			# I forgot about this section and it is no longer necessary to add the corners here, though it may save time or simplify later steps
 			#	I am not going to try adding corners because I don't want to spend time doing that
-			if not f"{str(point).replace(', ', '_')}" in finalCell:
-				finalCell.update({f"{str(point).replace(', ', '_')}":{"site":point, "vertices":[ #I should add onto this list so that the list of verticies will also include the corner
-				[pts[0], pts[1]]
-				]}})
+			#if not f"{str(point).replace(', ', '_')}" in finalCell:
+			#	finalCell.update({f"{str(point).replace(', ', '_')}":{"site":point, "vertices":[ [pts[0], pts[1]] ]}})
+			site1 = f"{str(point).replace(', ', '_')}"
+			tempPair = [pts[0], pts[1]]
+			sortByY(tempPair)
 
+			if tempPair not in finalCell[site1]["vertices"]:
+				finalCell[site1]["vertices"].append(tempPair)
+			print("line541",pts[0], pts[1], point, site2, f"{str(point).replace(', ', '_')}" in finalCell)
+			
 			# The following two lines are exactly the same, just changed for slightly better clarity
 			#finalCell[f"{str(relative[1]).replace(', ', '_')}"]["vertices"].append([pts[0], pts[1]])
 			finalCell[f"{str(site2).replace(', ', '_')}"]["vertices"].append([pts[0], pts[1]])
@@ -541,11 +572,11 @@ else:
 # 	y += origin[1]        
 # 	return [x, y]           
 
-def angle(pt1, pt2, origin): #gets the interior/smaller angle
-	a, b, c, d, e, f = origin[0], origin[1], pt1[0], pt1[1], pt2[0], pt2[1]
-	#theta = math.acos( ( ((e -a) * (c-a)) + ((f-b) * (d-b)) ) / ( ( ( ((e-a)**2) + ((f-b)**2) ) * ( ((c-a)**2) + ((b-d)**2) ) ) ** 0.5 ) )
-	theta = math.acos( ( ((e -a) * (c-a)) + ((f-b) * (d-b)) ) / ( ( (( ((e-a)**2) + ((f-b)**2) ) ** 0.5) * (( ((c-a)**2) + ((b-d)**2) ) ** 0.5) ) ) )    
-	return theta           
+# def angle(pt1, pt2, origin): #gets the interior/smaller angle
+# 	a, b, c, d, e, f = origin[0], origin[1], pt1[0], pt1[1], pt2[0], pt2[1]
+# 	#theta = math.acos( ( ((e -a) * (c-a)) + ((f-b) * (d-b)) ) / ( ( ( ((e-a)**2) + ((f-b)**2) ) * ( ((c-a)**2) + ((b-d)**2) ) ) ** 0.5 ) )
+# 	theta = math.acos( ( ((e -a) * (c-a)) + ((f-b) * (d-b)) ) / ( ( (( ((e-a)**2) + ((f-b)**2) ) ** 0.5) * (( ((c-a)**2) + ((b-d)**2) ) ** 0.5) ) ) )    
+# 	return theta
 
 #normalTheta + angle == 2pi most of the time
 def normalTheta(pt, origin): #gets the exterior/larger angle (basically)
@@ -630,6 +661,10 @@ for site in cell: # Finds vertices
 		except Exception as e:
 			print(f"site2: {e} not in cell")
 
+print()
+print("before finding vertices:")
+for tmp in finalCell:
+	print("----",tmp,finalCell[tmp]["vertices"])
 
 # Modifies convex hull so that it has edges extending to the boundries of the specified area
 for vert in vertices: 
@@ -746,6 +781,11 @@ for vert in vertices:
 				finalCell[f"{str(pickedSites[0]).replace(', ', '_')}"]["vertices"].append([vertPt, nearestBound])
 				finalCell[f"{str(pickedSites[1]).replace(', ', '_')}"]["vertices"].append([vertPt, nearestBound])
 
+print()
+print("after finding vertices:")
+for tmp in finalCell:
+	print("----",tmp,finalCell[tmp]["vertices"])
+
 # removes duplicate information
 for cell3 in finalCell:
 	
@@ -764,17 +804,24 @@ for cell3 in finalCell:
 
 	finalCell[cell3]["vertices"] = unique
 
+print()
+print("after finding unique:")
+for tmp in finalCell:
+	print("----",tmp,finalCell[tmp]["vertices"])
+print()
 
 for cell4 in finalCell:
 
 	verts = finalCell[cell4]["vertices"].copy()
 	for vert in verts:
-
+		print()
 		startPt = []
 		throughPt = []
 		validVert1 = withinBounds(vert[0], defaultBounds)
 		validVert2 = withinBounds(vert[1], defaultBounds)
-		
+		print("valid",vert, validVert1, validVert2)
+
+
 		if validVert1 and not validVert2:
 			startPt = vert[0]
 			throughPt = vert[1]
@@ -783,7 +830,12 @@ for cell4 in finalCell:
 			throughPt = vert[0]
 		
 		if startPt != []:
-			boundry = nearestBoundry(startPt, throughPt)
+			midPt = midPoint(startPt, throughPt)
+			#boundry = nearestBoundry(midPt, throughPt)
+			boundry = nearestBoundry(startPt, midPt)
+			#boundry = nearestBoundry(startPt, throughPt)
+			print("startPt", startPt, "throughPt", throughPt, "boundry",boundry)
+			
 				
 			if boundry[0] == startPt[0] and boundry[1] == startPt[1]: # If it just turns int a single point, which is not valid
 				finalCell[cell4]["vertices"].remove(vert)
@@ -811,6 +863,64 @@ for cell4 in finalCell:
 			if boundry1[0] == boundry2[0] and boundry1[1] == boundry2[1]: 
 				finalCell[cell4]["vertices"].remove(vert)
 
+print()
+print("after finding valid:")
+for tmp in finalCell:
+	print("----",tmp,finalCell[tmp]["vertices"])
+
+# Finds edges is cases where there are no intersection points
+for cell5 in finalCell:
+	if finalCell[cell5]["vertices"].__len__() == 0:
+		otherPoints = points.copy()
+		distanceTargetSort(finalCell[cell5]["site"], otherPoints)
+		
+		site1 = finalCell[cell5]["site"]
+		site2 = otherPoints[1]
+
+		midPt = midPoint(site1, site2)
+		leftY = yAtX(site1, site2, midPt[0] - 0.5)
+		rightY = yAtX(site1, site2, midPt[0] + 0.5)
+		
+		bound1 = nearestBoundry(midPt, [midPt[0] - 0.5, leftY])
+		bound2 = nearestBoundry(midPt, [midPt[0] + 0.5, rightY])
+
+		#print("line887", bound1, bound2)
+
+		boundPair = [bound1, bound2]
+		sortByY(boundPair)
+
+		finalCell[cell5]["vertices"].append(boundPair)
+		
+		dictSite2 = f"{str(site2).replace(', ', '_')}"
+		if boundPair not in finalCell[dictSite2]["vertices"]:
+			finalCell[dictSite2]["vertices"].append(boundPair)
+
+		if points.index(site1) != points.__len__() - 1 and points.index(site1) != 0: # If it is not the highest point or the lowest
+			site3 = otherPoints[2]
+			
+			midPt = midPoint(site1, site3)
+			leftY = yAtX(site1, site3, midPt[0] - 0.5)
+			rightY = yAtX(site1, site3, midPt[0] + 0.5)
+		
+			bound1 = nearestBoundry(midPt, [midPt[0] - 0.5, leftY])
+			bound2 = nearestBoundry(midPt, [midPt[0] + 0.5, rightY])
+
+			#print("line907", bound1, bound2)
+
+			boundPair = [bound1, bound2]
+			sortByY(boundPair)
+
+			finalCell[cell5]["vertices"].append(boundPair)
+		
+			dictSite3 = f"{str(site3).replace(', ', '_')}"
+			if boundPair not in finalCell[dictSite3]["vertices"]:
+				finalCell[dictSite3]["vertices"].append(boundPair)
+		
+
+print()
+print("before finding edges:")
+for tmp in finalCell:
+	print("----",tmp,finalCell[tmp]["vertices"])
 
 def makeEdges(onBoundry, curSite):
 	inside = False
@@ -969,5 +1079,3 @@ for cell in finalCell:
 	plt.fill(vertsX, vertsY, color=(random.random(), random.random(), random.random(), 0.5))																								                        
 		
 plt.show()
-
-
