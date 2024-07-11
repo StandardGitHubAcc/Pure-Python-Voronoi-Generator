@@ -219,6 +219,9 @@ def otherXOnBisectorAtT(pt1, pt2, pt3, t): # pt1 and pt2 form the bisector and p
 		return defaultBounds[1][1] -5  
 
 def getXAtTime(pt1, pt2, t): # finds x-value of intersection of two parabolas at given time, imaginary if it doesn't exist
+	# The base equation is sensitive to order but this function should be resistant to order
+	# pt1, pt2 using the x1 equation is the same as pt2, pt1 using the x2 equation
+	# Should not use this
 	try:    
 		a, b, c, d = pt1[0], pt1[1], pt2[0], pt2[1]
 		# n = ( 2 * ( (c * (t-b)) + (a * (d-t)) ) ) / (b-d)#(2 * ((-1 * c * b) + (c * t) + (a * d) - (a * t))) / (b-d)
@@ -237,11 +240,12 @@ def getXAtTime(pt1, pt2, t): # finds x-value of intersection of two parabolas at
 		
 		mid = midPoint(pt1, pt2)
 		x1 = ( (-1 * n) + ( ( (n**2) - (4 * m * o) )**0.5 ) ) / (2 * m)
-		x2 = ( (-1 * n) - ( ( (n**2) - (4 * m * o) )**0.5 ) ) / (2 * m)                
+		x2 = ( (-1 * n) - ( ( (n**2) - (4 * m * o) )**0.5 ) ) / (2 * m)
 		dist1 = abs(mid[0] - x1)
 		dist2 = abs(mid[0] - x2)
 
-		#print("-----------line243",x1, x2, x1.imag)
+		print("-----------getXAtTime",x1, x2, mid)
+		print(f"----m:{m} n:{n} o:{o}")
 		
 		if x1.imag != 0.0 or x2.imag != 0.0:
 			return None
@@ -254,6 +258,34 @@ def getXAtTime(pt1, pt2, t): # finds x-value of intersection of two parabolas at
 	except ZeroDivisionError:
 		print(f"zero division error in find2IntersectAtTime with {pt1} {pt2} {pt3} t={t}")        
 		return defaultBounds[1][1] -5                    
+
+def getXAtTimeRef(pt1, pt2, t, refX):
+	try:
+		a, b, c, d = pt1[0], pt1[1], pt2[0], pt2[1]
+		m = d-b
+		n = 2 * ( ( (a-c) * (t-b) ) + (a * (b-d)) )
+		o = -1 * ( ( (b-d) * ( (a**2) + (b**2) - (t**2) ) ) - ( (t-b) * ( (d**2) - (b**2) - (a**2) + (c**2) ) ) )
+		
+		x1 = ( (-1 * n) + ( ( (n**2) - (4 * m * o) )**0.5 ) ) / (2 * m)
+		x2 = ( (-1 * n) - ( ( (n**2) - (4 * m * o) )**0.5 ) ) / (2 * m)
+
+		print("-----------getXAtTime",x1, x2)
+		print(f"----m:{m} n:{n} o:{o}")
+
+		if x1.imag != 0.0 or x2.imag != 0.0:
+			return None
+
+		dist1 = abs(refX - x1)
+		dist2 = abs(refX - x2)
+		
+		if dist1 < dist2:
+			return float("%.10f" % x1)
+		else:
+			return float("%.10f" % x2)
+
+	except ZeroDivisionError:
+		print(f"zero division error in find2IntersectAtTime with {pt1} {pt2} {pt3} t={t}")        
+		return defaultBounds[1][1] -5
 
 def getTimeAtX(pt1, pt2, pt3, x): # finds time when parabola pt1 has given x value, (pt1, pt2, pt3) = (pt1, pt3, pt2)
 	try:    
@@ -296,10 +328,11 @@ def xAtY(pt1, pt2, y): # gives x value of bisector between two parabolas at give
 
 def tAtXandY(pt1, x, y):   
 	a, b = pt1[0], pt1[1]
-	t = ((2 * y) + (( (4 * (y**2)) + 4*( ((x-a)**2) - (2 * y * b) + (b**2 ) ) ) ** 0.5)) / 2
-	#k = -2 * y
-	#l = -1 * ( ( (x-a) ** 2 ) - (2 * y * b) + (b ** 2) )
-	#t = ( (-1 * k) - ( ( (k ** 2) - (4 * l) ) ** 0.5 ) ) / 2
+	#t = ((2 * y) + (( (4 * (y**2)) + 4*( ((x-a)**2) - (2 * y * b) + (b**2 ) ) ) ** 0.5)) / 2
+	k = -2 * y
+	l = -1 * ( ( (x-a) ** 2 ) - (2 * y * b) + (b ** 2) )
+	t = ( (-1 * k) + ( ( (k ** 2) - (4 * l) ) ** 0.5 ) ) / 2
+	#print("tAtXandY",t,((2 * y) + (( (4 * (y**2)) + 4*( ((x-a)**2) - (2 * y * b) + (b**2 ) ) ) ** 0.5)) / 2)
 	return float("%.10f" % t)#t    
 
 
@@ -720,7 +753,7 @@ for vert in vertices: # modifies convex hull so that it has edges extending to t
 			#pickedSites.append([site3, pickedSites[0][1]])
 			notInPair = site3
 			
-		print(pickedSites)
+		print(pickedSites, notInPair)
 		print(site1, site2, site3)
 
 		# test1x = getXAtTime(site1, site2, vertPtT)
@@ -747,8 +780,10 @@ for vert in vertices: # modifies convex hull so that it has edges extending to t
 		
 		deltaT = dists[0] / 2
 
-		beforeTx = getXAtTime(pickedSites[0], pickedSites[1], vertPtT - deltaT)
-		afterTx = getXAtTime(pickedSites[0], pickedSites[1], vertPtT + deltaT)
+		# for some reason when pickedSites = [[167, 95], [188, 191]], both beforeTx and afterTx are less than vertPt[0]
+		beforeTx = getXAtTimeRef(pickedSites[0], pickedSites[1], vertPtT - deltaT, vertPt[0])#getXAtTime(pickedSites[0], pickedSites[1], vertPtT - deltaT)
+		afterTx = getXAtTimeRef(pickedSites[0], pickedSites[1], vertPtT + deltaT, vertPt[0])#getXAtTime(pickedSites[0], pickedSites[1], vertPtT + deltaT)
+		print(getXAtTime(pickedSites[0], pickedSites[1], vertPtT - deltaT), getXAtTime(pickedSites[1], pickedSites[0], vertPtT - deltaT))
 
 		throughPt = []
 		print("beforeTx",beforeTx, "vertPt",vertPt,"afterTx",afterTx)
@@ -1389,5 +1424,6 @@ for cell in finalCell:
 	plt.fill(vertsX, vertsY, color=(random.random(), random.random(), random.random(), 0.5))																								                        
 		
 plt.show()
+
 
 
