@@ -16,7 +16,7 @@ for i in range(1, 4):
 
 #points = [[50, 50], [25, 25], [75, 75], [98, 70]]
 #points = [[50, 50], [25, 20], [75, 75], [98, 70]]
-#points = [[30, 40], [25, 60], [80, 97]]
+points = [[30, 40], [25, 60], [80, 97]]
 #points = [[50, 50], [75, 75]]  
 #points = [[50, 50]]
 
@@ -80,7 +80,7 @@ for i in range(1, 4):
 
 #points = [[20, 25], [55, 100], [70, 160], [95, 190]]
 #points = [[20, 25], [55, 100], [95, 190]]
-points = [[20, 25], [40, 100], [70, 160], [95, 190]]
+#points = [[20, 25], [40, 100], [70, 160], [95, 190]]
 
 #with box that is 100 wide and 300 tall
 #points = [[45, 70], [61, 100], [13, 162], [84, 208], [99, 233], [73, 270], [6, 281]]
@@ -500,13 +500,14 @@ if removeVerts.__len__() > 0:
 if points.__len__() == 3:
 	kys = list(cell.keys())
 
-	current = cell[kys[0]][0]
-	vert = f"{str(current['at']).replace(', ', '_')}"     
-	bound = nearestBoundry(current["at"], midPoint(current["point1"], current["point2"]))
+	if kys.__len__() != 0:
+		current = cell[kys[0]][0]
+		vert = f"{str(current['at']).replace(', ', '_')}"
+		bound = nearestBoundry(current["at"], midPoint(current["point1"], current["point2"]))
 	
-	vertices[vert] = {"sites":[current["point1"], current["point2"], current["point3"]], "with":[[current["point1"], current["point2"]]], "at":[bound]}
-	finalCell[kys[0]]["vertices"].append([current["at"], bound])
-	finalCell[kys[1]]["vertices"].append([current["at"], bound])
+		vertices[vert] = {"sites":[current["point1"], current["point2"], current["point3"]], "with":[[current["point1"], current["point2"]]], "at":[bound]}
+		finalCell[kys[0]]["vertices"].append([current["at"], bound])
+		finalCell[kys[1]]["vertices"].append([current["at"], bound])
 
  # Trying to handle 1 site here will cause the boundry edge finding section to duplicate two sides, 
 #	and not handling this here breaks nothing, so it is handled after everything else	
@@ -1079,3 +1080,4 @@ for cell in finalCell:
 	plt.fill(vertsX, vertsY, color=(random.random(), random.random(), random.random(), 0.5))																								                        
 		
 plt.show()
+
