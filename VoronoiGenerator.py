@@ -87,6 +87,8 @@ for i in range(1, 30):
 #points = [[73, 8], [62, 92], [37, 95], [80, 139], [154, 147], [84, 177], [85, 177]] # broke finding boundry edges with outside angles
 
 #points = [[75, 14], [85, 22], [86, 26], [94, 32], [92, 45], [32, 71], [0, 127], [50, 132], [10, 134], [28, 134], [21, 134], [95, 147], [38, 152], [63, 162], [70, 168], [7, 175], [4, 176], [65, 179], [12, 187], [87, 190], [23, 197], [7, 206], [91, 209], [100, 234], [73, 236], [33, 267], [10, 273], [20, 278], [96, 298]]
+points = [[86, 16], [33, 30], [49, 32], [27, 36], [98, 40], [23, 47], [11, 49], [69, 59], [67, 66], [81, 75], [75, 78], [6, 81], [1, 108], [4, 133], [100, 151], [30, 165], [86, 189], [30, 226], [54, 244], [15, 253], [41, 255], [52, 267], [11, 269], [27, 271], [13, 272], [49, 293], [84, 294], [2, 298], [46, 300]]
+# ^ I think caused by the fact that when the x-values are the same, it just picks a slope without much good reasoning behind it, here causing the slope to be on the wrong side of the intersection
 
 #with box that is 100 wide and 300 tall
 #points = [[45, 70], [61, 100], [13, 162], [84, 208], [99, 233], [73, 270], [6, 281]]
@@ -111,50 +113,6 @@ def distance(x1, y1, x2, y2):
 def distancePt(pt1, pt2):
 	return (((pt1[0] - pt2[0]) ** 2) + ((pt1[1] - pt2[1]) ** 2)) ** 0.5   
 
-def bubbleSort(arr): #Not used but a good template
-	 
-	n = len(arr)
- 
-	# For loop to traverse through all 
-	# element in an array
-	for i in range(n):
-		for j in range(0, n - i - 1):
-			 
-			# Range of the array is from 0 to n-i-1
-			# Swap the elements if the element found 
-			#is greater than the adjacent element
-			if arr[j] > arr[j + 1]:
-				arr[j], arr[j + 1] = arr[j + 1], arr[j]
-
-#https://www.geeksforgeeks.org/python-program-for-insertion-sort/
-def insertionSort(arr): #Not used but a good template
-	n = len(arr)  # Get the length of the array
-	  
-	if n <= 1:
-		return  # If the array has 0 or 1 element, it is already sorted, so return
- 
-	for i in range(1, n):  # Iterate over the array starting from the second element
-		key = arr[i]  # Store the current element as the key to be inserted in the right position
-		j = i-1
-		while j >= 0 and key < arr[j]:  # Move elements greater than key one position ahead
-			arr[j+1] = arr[j]  # Shift elements to the right
-			j -= 1
-		arr[j+1] = key  # Insert the key in the correct position
-
-def distanceVertTargetSortShort(target, array): #good for small arrays #I don't know how to use this
-	n = len(array)  # Get the length of the array
-	  
-	if n <= 1:
-		return  # If the array has 0 or 1 element, it is already sorted, so return
- 
-	for i in range(1, n):  # Iterate over the array starting from the second element
-		key = array[i]  # Store the current element as the key to be inserted in the right position
-		j = i-1
-		while j >= 0 and key < array[j]:  # Move elements greater than key one position ahead
-			array[j+1] = array[j]  # Shift elements to the right
-			j -= 1
-		array[j+1] = key  # Insert the key in the correct position
-		
 def distanceTargetSort(target, array):
 	n = len(array)
  
@@ -1027,5 +985,4 @@ for cell in finalCell:
 	plt.fill(vertsX, vertsY, color=(random.random(), random.random(), random.random(), 0.5))																								                        
 		
 plt.show()
-
 
