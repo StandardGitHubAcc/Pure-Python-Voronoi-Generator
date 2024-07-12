@@ -100,7 +100,9 @@ for i in range(1, 30):
 #points = [[45, 70], [61, 100], [13, 162], [84, 208], [99, 233], [73, 270], [6, 281]]
 #points = [[15, 38], [22, 55], [25, 158], [75, 197], [0, 225], [68, 248], [83, 249]]
 
-points = [[72, 20], [10, 69], [85, 72], [80, 78], [26, 88], [63, 100], [83, 104], [96, 117], [84, 126], [93, 131], [91, 136], [67, 144], [54, 147], [41, 149], [94, 179], [56, 182], [23, 197], [75, 213], [18, 217], [36, 252], [60, 256], [41, 259], [38, 266], [36, 267], [55, 269], [85, 270], [44, 286], [22, 289], [75, 299]]
+#points = [[72, 20], [10, 69], [85, 72], [80, 78], [26, 88], [63, 100], [83, 104], [96, 117], [84, 126], [93, 131], [91, 136], [67, 144], [54, 147], [41, 149], [94, 179], [56, 182], [23, 197], [75, 213], [18, 217], [36, 252], [60, 256], [41, 259], [38, 266], [36, 267], [55, 269], [85, 270], [44, 286], [22, 289], [75, 299]]
+
+points = [[67, 13], [55, 26], [0, 31], [78, 33], [50, 41], [47, 52], [99, 54], [16, 55], [38, 88], [24, 94], [14, 114], [0, 122], [5, 123], [14, 129], [85, 134], [84, 137], [33, 137], [28, 141], [24, 167], [89, 199], [54, 202], [67, 208], [90, 217], [8, 221], [98, 235], [52, 252], [15, 255], [38, 258], [50, 297]]
 
 plt.figure(figsize=(7, 7))
 plt.ylim(defaultBounds[1][1], defaultBounds[1][0])
@@ -749,6 +751,7 @@ for site in cell:
 # Creates a vertex in cases where there there is only one intersection vertex and no other vertices are registered
 #	This happens with [[7, 34], [87, 254], [91, 265], [86, 16]] but not [[50, 50], [25, 25], [75, 75], [98, 70]] because it has an intersection within the buffer zone
 if vertices.__len__() == 0:
+	print("vertices has 0 elements")
 	#print(cell.keys())
 	kys = list(cell.keys())
 	i = 0
@@ -937,17 +940,25 @@ for cell4 in finalCell:
 				pair1 = [startPt, throughPt]
 				sortByY(pair1)
 
-				
-				
-				i = finalCell[cell4]["vertices"].index(pair1)
+				i = 0
+				if pair1 in finalCell[cell4]["vertices"]:
+					i = finalCell[cell4]["vertices"].index(pair1)
+				else:
+					i = finalCell[cell4]["vertices"].index([pair1[1], pair1[0]])
 
 				pair2 = [startPt, boundry]
 				sortByY(pair2)
+				#print(pair2, pair2 in finalCell[cell4]["vertices"], [pair2[1], pair2[0]] in finalCell[cell4]["vertices"])
 
+				# It seems that there are cases where both points in pair1 have the same y value but that can not be the case for pair2
 				if pair2 not in finalCell[cell4]["vertices"]: # This is true most of the time, but sometimes there is a duplicate
 					finalCell[cell4]["vertices"][i] = pair2
 				else:
-					finalCell[cell4]["vertices"].remove(pair1) # since the pair is not being replaced by a new valid one, it needs to be removed
+					#finalCell[cell4]["vertices"].remove(pair1) # since the pair is not being replaced by a new valid one, it needs to be removed
+					if pair1 in finalCell[cell4]["vertices"]:
+						finalCell[cell4]["vertices"].remove(pair1)
+					else:
+						finalCell[cell4]["vertices"].remove([pair1[1], pair1[0]])
 		
 		# If both points are outside of the selected area
 		elif not validVert1 and not validVert2: # might be able to be an else:
@@ -1164,5 +1175,6 @@ for cell in finalCell:
 	plt.fill(vertsX, vertsY, color=(random.random(), random.random(), random.random(), 0.5))																								                        
 		
 plt.show()
+
 
 
