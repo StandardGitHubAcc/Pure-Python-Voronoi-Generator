@@ -4,8 +4,8 @@ import math
 from math import *
 
 #                 width     height
-#defaultBounds = [[0, 200], [200, 0]]
-defaultBounds = [[0, 100], [300, 0]]
+defaultBounds = [[0, 200], [200, 0]]
+#defaultBounds = [[0, 100], [300, 0]]
 
 #		bottomleft, topleft, bottomright, topright
 #corners = [[0, 0], [0, 200], [200, 0], [200, 200]]
@@ -86,14 +86,17 @@ for i in range(1, 30):
 
 #points = [[73, 8], [62, 92], [37, 95], [80, 139], [154, 147], [84, 177], [85, 177]] # broke finding boundry edges with outside angles
 
+points = [[25, 25], [75, 75], [50, 50]]
+
+#with box that is 100 wide and 300 tall
 #points = [[75, 14], [85, 22], [86, 26], [94, 32], [92, 45], [32, 71], [0, 127], [50, 132], [10, 134], [28, 134], [21, 134], [95, 147], [38, 152], [63, 162], [70, 168], [7, 175], [4, 176], [65, 179], [12, 187], [87, 190], [23, 197], [7, 206], [91, 209], [100, 234], [73, 236], [33, 267], [10, 273], [20, 278], [96, 298]]
 #points = [[86, 16], [33, 30], [49, 32], [27, 36], [98, 40], [23, 47], [11, 49], [69, 59], [67, 66], [81, 75], [75, 78], [6, 81], [1, 108], [4, 133], [100, 151], [30, 165], [86, 189], [30, 226], [54, 244], [15, 253], [41, 255], [52, 267], [11, 269], [27, 271], [13, 272], [49, 293], [84, 294], [2, 298], [46, 300]]
 # ^ I think caused by the fact that when the x-values are the same, it just picks a slope without much good reasoning behind it, here causing the slope to be on the wrong side of the intersection
 
-points = [[7, 34], [87, 254], [91, 265], [86, 16]]
+#points = [[7, 34], [87, 254], [91, 265], [86, 16]]
 #points = [[30, 226], [30, 165], [86, 189]]
+#points = [[7, 34], [87, 254], [91, 265]]
 
-#with box that is 100 wide and 300 tall
 #points = [[45, 70], [61, 100], [13, 162], [84, 208], [99, 233], [73, 270], [6, 281]]
 #points = [[15, 38], [22, 55], [25, 158], [75, 197], [0, 225], [68, 248], [83, 249]]
 
@@ -154,25 +157,37 @@ def sortByX(array):
 				array[j], array[j + 1] = array[j + 1], array[j]
 
 def find3IntersectX(pt1, pt2, pt3): # finds x-value of intersection of 3 parabolas	
-	a, b, c, d, e, f = pt1[0], pt1[1], pt2[0], pt2[1], pt3[0], pt3[1]
-	if (2 * ( ((a-e)*(b-d)) - ((a-c)*(b-f))) ) != 0:
+	#a, b, c, d, e, f = pt1[0], pt1[1], pt2[0], pt2[1], pt3[0], pt3[1]
+	#if (2 * ( ((a-e)*(b-d)) - ((a-c)*(b-f))) ) != 0:
+	try:
+		a, b, c, d, e, f = pt1[0], pt1[1], pt2[0], pt2[1], pt3[0], pt3[1]
 		x = ( ( ((a**2) - (e**2))*(b-d) ) - ( ((a**2) - (c**2)) * (b-f) ) - ( (d-f)*(b-f)*(b-d) )) / (2 * ( ((a-e)*(b-d)) - ((a-c)*(b-f))) )
-		return float("%.10f" % x)#x
-	else: # I need to have it return the midpoint between the site and nearest site if there is division by zero, because that means that the two lines are parallel and the farther site will not be valid
-		# Seems to not break anything despite the fact that the division by 0 is not handled properly
+		return float("%.10f" % x)
+	except ZeroDivisionError:
+	#else: # I need to have it return the midpoint between the site and nearest site if there is division by zero, because that means that the two lines are parallel and the farther site will not be valid
+		# Seems to not usually break anything despite the fact that the division by 0 is not handled properly
 		# division by zero happens with the points: 
 		# [50, 50] [25, 25] [75, 75]
 		# [7, 34] [87, 254] [91, 265]
-
+		# using [[7, 34], [87, 254], [91, 265], [86, 16]] will show that it does cause issues, but I am not sure how to handle this
+		#	and returning defaultBounds[0][0] - 5 works better than all of the solutions I have tried so far
+		# Divides by 0 if (a-e)*(b-d) = (a-c)*(b-f) or if all 3 points have either the same x or y value
+		print(f"zero division error in find3IntersectX with {pt1} {pt2} {pt3}")
 		#print(( ( ((a**2) - (e**2))*(b-d) ) - ( ((a**2) - (c**2)) * (b-f) ) - ( (d-f)*(b-f)*(b-d) )), (2 * ( ((a-e)*(b-d)) - ((a-c)*(b-f))) ))
 		#print(f"({a}, {b}) ({c}, {d}) ({e}, {f})")
-		#print(a-e, b-d, a-c, b-f)
-		#print("b",(a - c)/2)                      
+		print(a-e, b-d, a-c, b-f)
+		print((a-e)*(b-d), (a-c)*(b-f))
+		print(-1/slope(pt1, pt2), -1/slope(pt1, pt3), -1/slope(pt2, pt3))
+		#print("b",(a - c)/2)
 		#return (a - c)/2   #returning (a-c)/2 or 0 doesn't seem to make a difference
 		#return 0
-		print(f"zero division error in find3IntersectX with {pt1} {pt2} {pt3}")
-		return defaultBounds[0][0] - 5
-		#return midPoint(pt1, pt2)
+		midPt = midPoint(pt1, pt2)
+		plt.plot([a,c],[b,d], "y")
+		plt.plot(midPt[0], midPt[1], "yo")
+		#return -1000000
+		#return defaultBounds[0][0] - 5
+		#return float("%.10f" % midPoint(pt1, pt2)[0])
+		return None
 
 def otherXOnBisectorAtT(pt1, pt2, pt3, t): # pt1 and pt2 form the bisector and pt3 makes the parabola that it intersects with
 	try:
@@ -445,22 +460,25 @@ for site1 in points:
 					sortByY(sites)
 
 					x = find3IntersectX(sites[0], sites[1], sites[2])
-					t = getTimeAtX(sites[0], sites[1], sites[2], x)
-					y = getYAtTimeAndX(sites[0], t, x)
+					print("line458",x)
+					if x != None:
 					
-					# bufferBounds just increases the bounds of the selected area by a certain amount so that intersection points can happen within it and are not outright rejected
-					#	but need to be accounted for seperately and fixed
-					# The size of bufferWidth and bufferHeight are kind of arbitrary, I just went with 1/4 of the their respective dimension
-					bufferWidth = (defaultBounds[0][0] + defaultBounds[0][1])/4 # the midpoint divided by 2
-					bufferHeight = (defaultBounds[1][1] + defaultBounds[1][0])/4
-					bufferBounds = [[defaultBounds[0][0] - bufferWidth, defaultBounds[0][1] + bufferHeight], [defaultBounds[1][0] + bufferHeight, defaultBounds[1][1] - bufferHeight]]
+						t = getTimeAtX(sites[0], sites[1], sites[2], x)
+						y = getYAtTimeAndX(sites[0], t, x)
 					
-					if t > site1[1] and t > site2[1] and t > site3[1] and withinBounds([x, y], bufferBounds):
+						# bufferBounds just increases the bounds of the selected area by a certain amount so that intersection points can happen within it and are not outright rejected
+						#	but need to be accounted for seperately and fixed
+						# The size of bufferWidth and bufferHeight are kind of arbitrary, I just went with 1/4 of the their respective dimension
+						bufferWidth = (defaultBounds[0][0] + defaultBounds[0][1])/4 # the midpoint divided by 2
+						bufferHeight = (defaultBounds[1][1] + defaultBounds[1][0])/4
+						bufferBounds = [[defaultBounds[0][0] - bufferWidth, defaultBounds[0][1] + bufferHeight], [defaultBounds[1][0] + bufferHeight, defaultBounds[1][1] - bufferHeight]]
+					
+						if t > site1[1] and t > site2[1] and t > site3[1] and withinBounds([x, y], bufferBounds):
 							
-						if f"{str(site1).replace(', ', '_')}" in cell:
-							cell[f"{str(site1).replace(', ', '_')}"].append({"point1":site1, "point2":site2, "point3":site3, "time":float("%.10f" % t), "at":[float("%.10f" % x), float("%.10f" % y)]})
-						else:
-							cell.update({f"{str(site1).replace(', ', '_')}" : [{"point1":site1, "point2":site2, "point3":site3, "time":float("%.10f" % t), "at":[float("%.10f" % x), float("%.10f" % y)]}]})
+							if f"{str(site1).replace(', ', '_')}" in cell:
+								cell[f"{str(site1).replace(', ', '_')}"].append({"point1":site1, "point2":site2, "point3":site3, "time":float("%.10f" % t), "at":[float("%.10f" % x), float("%.10f" % y)]})
+							else:
+								cell.update({f"{str(site1).replace(', ', '_')}" : [{"point1":site1, "point2":site2, "point3":site3, "time":float("%.10f" % t), "at":[float("%.10f" % x), float("%.10f" % y)]}]})
 	
 # Finds invalid intersects and marks them for removal
 for site1 in cell: 
@@ -484,7 +502,7 @@ if removeVerts.__len__() > 0:
 # (technically 2 sites have to be dealt with seperately but are the same as having a cell in a corner so can be dealt with later)
 if points.__len__() == 3:
 	kys = list(cell.keys())
-	#print()
+	#print("line503",kys)
 	if kys.__len__() != 0:
 		current = cell[kys[0]][0]
 		#print(cell)
@@ -504,6 +522,33 @@ if points.__len__() == 3:
 		vertices[vert] = {"sites":[current["point1"], current["point2"], current["point3"]], "with":[[current["point1"], current["point2"]]], "at":[bound]}
 		finalCell[kys[0]]["vertices"].append([current["at"], bound])
 		finalCell[kys[1]]["vertices"].append([current["at"], bound])
+	# else: # This isn't necessary, other parts handle 2 parallel lines correctly
+	# 	site1 = points[0]
+	# 	site2 = points[1]
+	# 	site3 = points[2]
+		
+	# 	site1Key = f"{str(site1).replace(', ', '_')}"
+	# 	site2Key = f"{str(site2).replace(', ', '_')}"
+	# 	site3Key = f"{str(site3).replace(', ', '_')}"
+
+	# 	slp = -1/slope(site1, site2)
+	# 	midPt1 = midPoint(site1, site2)
+	# 	midPt2 = midPoint(site2, site3)
+
+	# 	ptSlope1y = pointSlope(midPt1, slp, midPt1[0] + 0.5)
+	# 	ptSlope2y = pointSlope(midPt1, slp, midPt1[0] - 0.5)
+	# 	ptSlope3y = pointSlope(midPt2, slp, midPt2[0] + 0.5)
+	# 	ptSlope4y = pointSlope(midPt2, slp, midPt2[0] - 0.5)
+
+	# 	bound1 = nearestBoundry(midPt1, [midPt1[0] + 0.5, ptSlope1y])
+	# 	bound2 = nearestBoundry(midPt1, [midPt1[0] - 0.5, ptSlope2y])
+	# 	bound3 = nearestBoundry(midPt2, [midPt2[0] + 0.5, ptSlope3y])
+	# 	bound4 = nearestBoundry(midPt2, [midPt2[0] - 0.5, ptSlope4y])
+
+	# 	finalCell[site1Key]["vertices"].append([bound1, bound2])
+	# 	finalCell[site2Key]["vertices"].append([bound1, bound2])
+	# 	finalCell[site2Key]["vertices"].append([bound3, bound4])
+	# 	finalCell[site3Key]["vertices"].append([bound3, bound4])
 
  # Trying to handle 1 site here will cause the boundry edge finding section to duplicate two sides, 
 #	and not handling this here breaks nothing, so it is handled after everything else	
@@ -520,10 +565,11 @@ else:
 			if vert["point3"] not in usedPoints:
 				usedPoints.append(vert["point3"])
 
+	# This handles sites in corners (?)
 	for i in range(points.__len__()):   
 		point = points[i]    
 		if point not in usedPoints:
-			boundVerts = []
+			#boundVerts = []
 			relative = points.copy()
 			distanceTargetSort(point, relative)
 		
@@ -548,16 +594,16 @@ else:
 			#	I am not going to try adding corners because I don't want to spend time doing that
 
 			site1 = f"{str(point).replace(', ', '_')}"
-			tempPair = [pts[0], pts[1]]
-			sortByY(tempPair)
-
-			if tempPair not in finalCell[site1]["vertices"]:
-				finalCell[site1]["vertices"].append(tempPair)
+			boundPair = [pts[0], pts[1]]
+			sortByY(boundPair)
+			print("line569", boundPair)
+			if boundPair not in finalCell[site1]["vertices"]:
+				finalCell[site1]["vertices"].append(boundPair)
 			
 			# The following two lines are exactly the same, just changed for slightly better clarity
 			#finalCell[f"{str(relative[1]).replace(', ', '_')}"]["vertices"].append([pts[0], pts[1]])
 			finalCell[f"{str(site2).replace(', ', '_')}"]["vertices"].append([pts[0], pts[1]])
-			# I am not entirely sure why I do the above line, but stuff breaks if I remove it
+			# The above line ensures that the other site will also have those vertices
 
 
 # def rotate(pt, origin, amount):   
@@ -619,7 +665,8 @@ def normalTheta(pt, origin): #gets the exterior/larger angle (basically)
 # 	y = (pt[0] * math.sin(pt[1])) + origin[1]
 # 	return [x, y]
 
-for site in cell: # Finds vertices
+# Finds vertices for convex hull cells
+for site in cell:
 	for entry in cell[site]:
 		pt1 = entry["point1"]
 		pt2 = entry["point2"]
@@ -1037,4 +1084,5 @@ for cell in finalCell:
 	plt.fill(vertsX, vertsY, color=(random.random(), random.random(), random.random(), 0.5))																								                        
 		
 plt.show()
+
 
