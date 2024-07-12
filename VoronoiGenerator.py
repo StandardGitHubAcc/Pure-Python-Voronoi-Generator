@@ -16,7 +16,7 @@ points = []
 for i in range(1, 30):
 	  points.append([random.randint(0, defaultBounds[0][1]), random.randint(0, defaultBounds[1][0])])  
 
-#points = [[50, 50], [25, 25], [75, 75], [98, 70]]
+points = [[50, 50], [25, 25], [75, 75], [98, 70]]
 #points = [[50, 50], [25, 20], [75, 75], [98, 70]]
 #points = [[30, 40], [25, 60], [80, 97]]
 #points = [[50, 50], [75, 75]]  
@@ -86,9 +86,9 @@ for i in range(1, 30):
 
 #points = [[73, 8], [62, 92], [37, 95], [80, 139], [154, 147], [84, 177], [85, 177]] # broke finding boundry edges with outside angles
 
-points = [[25, 25], [75, 75], [50, 50]]
+#points = [[25, 25], [75, 75], [50, 50]]
 
-#with box that is 100 wide and 300 tall
+#-------------with box that is 100 wide and 300 tall
 #points = [[75, 14], [85, 22], [86, 26], [94, 32], [92, 45], [32, 71], [0, 127], [50, 132], [10, 134], [28, 134], [21, 134], [95, 147], [38, 152], [63, 162], [70, 168], [7, 175], [4, 176], [65, 179], [12, 187], [87, 190], [23, 197], [7, 206], [91, 209], [100, 234], [73, 236], [33, 267], [10, 273], [20, 278], [96, 298]]
 #points = [[86, 16], [33, 30], [49, 32], [27, 36], [98, 40], [23, 47], [11, 49], [69, 59], [67, 66], [81, 75], [75, 78], [6, 81], [1, 108], [4, 133], [100, 151], [30, 165], [86, 189], [30, 226], [54, 244], [15, 253], [41, 255], [52, 267], [11, 269], [27, 271], [13, 272], [49, 293], [84, 294], [2, 298], [46, 300]]
 # ^ I think caused by the fact that when the x-values are the same, it just picks a slope without much good reasoning behind it, here causing the slope to be on the wrong side of the intersection
@@ -166,6 +166,7 @@ def find3IntersectX(pt1, pt2, pt3): # finds x-value of intersection of 3 parabol
 	except ZeroDivisionError:
 	#else: # I need to have it return the midpoint between the site and nearest site if there is division by zero, because that means that the two lines are parallel and the farther site will not be valid
 		# Seems to not usually break anything despite the fact that the division by 0 is not handled properly
+		# The above statement is wrong. It has always broken something, it is just usually hard to tell
 		# division by zero happens with the points: 
 		# [50, 50] [25, 25] [75, 75]
 		# [7, 34] [87, 254] [91, 265]
@@ -175,9 +176,9 @@ def find3IntersectX(pt1, pt2, pt3): # finds x-value of intersection of 3 parabol
 		print(f"zero division error in find3IntersectX with {pt1} {pt2} {pt3}")
 		#print(( ( ((a**2) - (e**2))*(b-d) ) - ( ((a**2) - (c**2)) * (b-f) ) - ( (d-f)*(b-f)*(b-d) )), (2 * ( ((a-e)*(b-d)) - ((a-c)*(b-f))) ))
 		#print(f"({a}, {b}) ({c}, {d}) ({e}, {f})")
-		print(a-e, b-d, a-c, b-f)
-		print((a-e)*(b-d), (a-c)*(b-f))
-		print(-1/slope(pt1, pt2), -1/slope(pt1, pt3), -1/slope(pt2, pt3))
+		#print(a-e, b-d, a-c, b-f)
+		#print((a-e)*(b-d), (a-c)*(b-f))
+		#print(-1/slope(pt1, pt2), -1/slope(pt1, pt3), -1/slope(pt2, pt3))
 		#print("b",(a - c)/2)
 		#return (a - c)/2   #returning (a-c)/2 or 0 doesn't seem to make a difference
 		#return 0
@@ -462,7 +463,7 @@ for site1 in points:
 					x = find3IntersectX(sites[0], sites[1], sites[2])
 					print("line458",x)
 					if x != None:
-					
+						print(sites)
 						t = getTimeAtX(sites[0], sites[1], sites[2], x)
 						y = getYAtTimeAndX(sites[0], t, x)
 					
@@ -491,12 +492,22 @@ for site1 in cell:
 				if otherPointY > entry["at"][1]:
 					removeVerts.append([site1, entry])
 
+
+for tmp in cell:
+	for tmp2 in cell[tmp]:
+		print(tmp2)
+print()
+
 if removeVerts.__len__() > 0:
 	for site, vert in removeVerts:       
 		try:               
 			del cell[site][cell[site].index(vert)]
 		except Exception:
 			pass
+
+for tmp in cell:
+	for tmp2 in cell[tmp]:
+		print(tmp2)
 
 # There are 3 cases that have to be dealth with seperately: 1 site, 3 sites, and 2 or 3+ sites 
 # (technically 2 sites have to be dealt with seperately but are the same as having a cell in a corner so can be dealt with later)
@@ -664,17 +675,19 @@ def normalTheta(pt, origin): #gets the exterior/larger angle (basically)
 # 	x = (pt[0] * math.cos(pt[1])) + origin[0]
 # 	y = (pt[0] * math.sin(pt[1])) + origin[1]
 # 	return [x, y]
-
-# Finds vertices for convex hull cells
+print()
+# Finds vertices for edges of convex hull cells
 for site in cell:
+	print(site)
 	for entry in cell[site]:
 		pt1 = entry["point1"]
 		pt2 = entry["point2"]
 		pt3 = entry["point3"]
-
+		print("entry",entry)
 		try:
 			site2 = cell[f"{str(pt2).replace(', ', '_')}"]
 			for entry2 in site2:
+				print("entry2",entry2)
 				if entry2["point1"] == pt1 or entry2["point2"] == pt1 or entry2["point3"] == pt1:
 					if entry2["at"] != entry["at"] and [entry["at"], entry2["at"]] not in finalCell[site]["vertices"]:
 
@@ -686,7 +699,7 @@ for site in cell:
 							tempSites = [pt1, pt2, pt3]
 							sortByY(tempSites)
 							vertices.update({atName : {"sites":tempSites, "with":[], "at":[]}})
-						
+						print("...",entry)
 						# These check if the respective site is shared by the first cell but has not already been used to create this vertex
 						if entry2["point1"] in [pt2, pt3] and [pt1, entry2["point1"]] not in vertices[atName]["with"] and [entry2["point1"], pt1] not in vertices[atName]["with"]:
 							vertices[atName]["with"].append([pt1, entry2["point1"]])
@@ -702,7 +715,9 @@ for site in cell:
 																	   
 		except Exception as e:
 			print(f"site2: {e} not in cell")
-
+print()
+print(vertices)
+print(finalCell)
 
 # Modifies convex hull so that it has edges extending to the boundries of the specified area
 for vert in vertices: 
@@ -727,9 +742,9 @@ for vert in vertices:
 			pickedSites = pickedSites[1]
 
 		throughPt = midPoint(pickedSites[0], pickedSites[1])
-
+		print(pickedSites[0], pickedSites[1])
 		if throughPt != []:
-			print("line648", vertPt, throughPt)
+			print("line732", vertPt, throughPt)
 			nearestBound = nearestBoundry(vertPt, throughPt)
 			print(nearestBound)
 			vertices[vert]["with"].append([pickedSites[0], pickedSites[1]])
@@ -1084,5 +1099,6 @@ for cell in finalCell:
 	plt.fill(vertsX, vertsY, color=(random.random(), random.random(), random.random(), 0.5))																								                        
 		
 plt.show()
+
 
 
