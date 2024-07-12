@@ -16,7 +16,7 @@ points = []
 for i in range(1, 30):
 	  points.append([random.randint(0, defaultBounds[0][1]), random.randint(0, defaultBounds[1][0])])  
 
-points = [[50, 50], [25, 25], [75, 75], [98, 70]]
+#points = [[50, 50], [25, 25], [75, 75], [98, 70]]
 #points = [[50, 50], [25, 20], [75, 75], [98, 70]]
 #points = [[30, 40], [25, 60], [80, 97]]
 #points = [[50, 50], [75, 75]]  
@@ -89,7 +89,7 @@ points = [[50, 50], [25, 25], [75, 75], [98, 70]]
 #points = [[25, 25], [75, 75], [50, 50]]
 
 #-------------with box that is 100 wide and 300 tall
-points = [[75, 14], [85, 22], [86, 26], [94, 32], [92, 45], [32, 71], [0, 127], [50, 132], [10, 134], [28, 134], [21, 134], [95, 147], [38, 152], [63, 162], [70, 168], [7, 175], [4, 176], [65, 179], [12, 187], [87, 190], [23, 197], [7, 206], [91, 209], [100, 234], [73, 236], [33, 267], [10, 273], [20, 278], [96, 298]]
+#points = [[75, 14], [85, 22], [86, 26], [94, 32], [92, 45], [32, 71], [0, 127], [50, 132], [10, 134], [28, 134], [21, 134], [95, 147], [38, 152], [63, 162], [70, 168], [7, 175], [4, 176], [65, 179], [12, 187], [87, 190], [23, 197], [7, 206], [91, 209], [100, 234], [73, 236], [33, 267], [10, 273], [20, 278], [96, 298]]
 #points = [[86, 16], [33, 30], [49, 32], [27, 36], [98, 40], [23, 47], [11, 49], [69, 59], [67, 66], [81, 75], [75, 78], [6, 81], [1, 108], [4, 133], [100, 151], [30, 165], [86, 189], [30, 226], [54, 244], [15, 253], [41, 255], [52, 267], [11, 269], [27, 271], [13, 272], [49, 293], [84, 294], [2, 298], [46, 300]]
 # ^ I think caused by the fact that when the x-values are the same, it just picks a slope without much good reasoning behind it, here causing the slope to be on the wrong side of the intersection
 
@@ -99,6 +99,8 @@ points = [[75, 14], [85, 22], [86, 26], [94, 32], [92, 45], [32, 71], [0, 127], 
 
 #points = [[45, 70], [61, 100], [13, 162], [84, 208], [99, 233], [73, 270], [6, 281]]
 #points = [[15, 38], [22, 55], [25, 158], [75, 197], [0, 225], [68, 248], [83, 249]]
+
+points = [[72, 20], [10, 69], [85, 72], [80, 78], [26, 88], [63, 100], [83, 104], [96, 117], [84, 126], [93, 131], [91, 136], [67, 144], [54, 147], [41, 149], [94, 179], [56, 182], [23, 197], [75, 213], [18, 217], [36, 252], [60, 256], [41, 259], [38, 266], [36, 267], [55, 269], [85, 270], [44, 286], [22, 289], [75, 299]]
 
 plt.figure(figsize=(7, 7))
 plt.ylim(defaultBounds[1][1], defaultBounds[1][0])
@@ -461,9 +463,9 @@ for site1 in points:
 					sortByY(sites)
 
 					x = find3IntersectX(sites[0], sites[1], sites[2])
-					print("line458",x)
+					#print("line458",x)
 					if x != None:
-						print(sites)
+						#print(sites)
 						t = getTimeAtX(sites[0], sites[1], sites[2], x)
 						y = getYAtTimeAndX(sites[0], t, x)
 					
@@ -509,10 +511,10 @@ for site1 in cell:
 					removeVerts.append([site1, entry])
 
 
-for tmp in cell:
-	for tmp2 in cell[tmp]:
-		print(tmp2)
-print()
+# for tmp in cell:
+# 	for tmp2 in cell[tmp]:
+# 		print(tmp2)
+# print()
 
 if removeVerts.__len__() > 0:
 	for site, vert in removeVerts:       
@@ -521,9 +523,9 @@ if removeVerts.__len__() > 0:
 		except Exception:
 			pass
 
-for tmp in cell:
-	for tmp2 in cell[tmp]:
-		print(tmp2)
+# for tmp in cell:
+# 	for tmp2 in cell[tmp]:
+# 		print(tmp2)
 
 # There are 3 cases that have to be dealth with seperately: 1 site, 3 sites, and 2 or 3+ sites 
 # (technically 2 sites have to be dealt with seperately but are the same as having a cell in a corner so can be dealt with later)
@@ -696,18 +698,18 @@ print()
 
 
 
-# Finds vertices for edges of convex hull cells
+# Creates some of the edges
 for site in cell:
-	print(site)
+	#print(site)
 	for entry in cell[site]:
 		pt1 = entry["point1"]
 		pt2 = entry["point2"]
 		pt3 = entry["point3"]
-		print("entry",entry)
+		#print("entry",entry)
 		try:
 			site2 = cell[f"{str(pt2).replace(', ', '_')}"]
 			for entry2 in site2:
-				print("entry2",entry2)
+				#print("entry2",entry2)
 				if entry2["point1"] == pt1 or entry2["point2"] == pt1 or entry2["point3"] == pt1:
 					if entry2["at"] != entry["at"] and [entry["at"], entry2["at"]] not in finalCell[site]["vertices"]:
 					#if [entry["at"], entry2["at"]] not in finalCell[site]["vertices"]:
@@ -723,8 +725,8 @@ for site in cell:
 							tempSites = [pt1, pt2, pt3]
 							sortByY(tempSites)
 							vertices.update({atName : {"sites":tempSites, "with":[], "at":[]}})
-						print("...",entry)
-						print("---", finalCell[site]["vertices"])
+						#print("...",entry)
+						#print("---", finalCell[site]["vertices"])
 						# These check if the respective site is shared by the first cell but has not already been used to create this vertex
 						if entry2["point1"] in [pt2, pt3] and [pt1, entry2["point1"]] not in vertices[atName]["with"] and [entry2["point1"], pt1] not in vertices[atName]["with"]:
 							vertices[atName]["with"].append([pt1, entry2["point1"]])
@@ -740,12 +742,12 @@ for site in cell:
 																	   
 		except Exception as e:
 			print(f"site2: {e} not in cell")
-print()
-print(vertices)
+#print()
+#print(vertices)
 #print(finalCell)
 
 # Creates a vertex in cases where there there is only one intersection vertex and no other vertices are registered
-#	This happens with [[7, 34], [87, 254], [91, 265], [86, 16]] but not [[50, 50], [25, 25], [75, 75], [98, 70]] for some reason
+#	This happens with [[7, 34], [87, 254], [91, 265], [86, 16]] but not [[50, 50], [25, 25], [75, 75], [98, 70]] because it has an intersection within the buffer zone
 if vertices.__len__() == 0:
 	#print(cell.keys())
 	kys = list(cell.keys())
@@ -934,6 +936,9 @@ for cell4 in finalCell:
 			else: # If it is valid, replace pair that it was
 				pair1 = [startPt, throughPt]
 				sortByY(pair1)
+
+				
+				
 				i = finalCell[cell4]["vertices"].index(pair1)
 
 				pair2 = [startPt, boundry]
@@ -1159,4 +1164,5 @@ for cell in finalCell:
 	plt.fill(vertsX, vertsY, color=(random.random(), random.random(), random.random(), 0.5))																								                        
 		
 plt.show()
+
 
