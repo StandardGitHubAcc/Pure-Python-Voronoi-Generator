@@ -4,8 +4,8 @@ import math
 from math import *
 
 #                 width     height
-defaultBounds = [[0, 200], [200, 0]]
-#defaultBounds = [[0, 100], [300, 0]]
+#defaultBounds = [[0, 200], [200, 0]]
+defaultBounds = [[0, 100], [300, 0]]
 
 #		bottomleft, topleft, bottomright, topright
 #corners = [[0, 0], [0, 200], [200, 0], [200, 200]]
@@ -89,7 +89,7 @@ points = [[50, 50], [25, 25], [75, 75], [98, 70]]
 #points = [[25, 25], [75, 75], [50, 50]]
 
 #-------------with box that is 100 wide and 300 tall
-#points = [[75, 14], [85, 22], [86, 26], [94, 32], [92, 45], [32, 71], [0, 127], [50, 132], [10, 134], [28, 134], [21, 134], [95, 147], [38, 152], [63, 162], [70, 168], [7, 175], [4, 176], [65, 179], [12, 187], [87, 190], [23, 197], [7, 206], [91, 209], [100, 234], [73, 236], [33, 267], [10, 273], [20, 278], [96, 298]]
+points = [[75, 14], [85, 22], [86, 26], [94, 32], [92, 45], [32, 71], [0, 127], [50, 132], [10, 134], [28, 134], [21, 134], [95, 147], [38, 152], [63, 162], [70, 168], [7, 175], [4, 176], [65, 179], [12, 187], [87, 190], [23, 197], [7, 206], [91, 209], [100, 234], [73, 236], [33, 267], [10, 273], [20, 278], [96, 298]]
 #points = [[86, 16], [33, 30], [49, 32], [27, 36], [98, 40], [23, 47], [11, 49], [69, 59], [67, 66], [81, 75], [75, 78], [6, 81], [1, 108], [4, 133], [100, 151], [30, 165], [86, 189], [30, 226], [54, 244], [15, 253], [41, 255], [52, 267], [11, 269], [27, 271], [13, 272], [49, 293], [84, 294], [2, 298], [46, 300]]
 # ^ I think caused by the fact that when the x-values are the same, it just picks a slope without much good reasoning behind it, here causing the slope to be on the wrong side of the intersection
 
@@ -490,13 +490,13 @@ for site1 in points:
 							# 	cell[f"{str(site1).replace(', ', '_')}"].append({"point1":site1, "point2":site2, "point3":site3, "time":float("%.10f" % t), "at":[float("%.10f" % x), float("%.10f" % y)]})
 							# else:
 							# 	cell.update({f"{str(site1).replace(', ', '_')}" : [{"point1":site1, "point2":site2, "point3":site3, "time":float("%.10f" % t), "at":[float("%.10f" % x), float("%.10f" % y)]}]})
-
+	
 							# For some reason trying to prevent duplicates causes things to break
 							if site1Key in cell:
 								cell[site1Key].append({"point1":site1, "point2":site2, "point3":site3, "time":float("%.10f" % t), "at":[float("%.10f" % x), float("%.10f" % y)]})
 							else:
 								cell.update({site1Key : [{"point1":site1, "point2":site2, "point3":site3, "time":float("%.10f" % t), "at":[float("%.10f" % x), float("%.10f" % y)]}]})
-	
+
 # Finds invalid intersects and marks them for removal
 for site1 in cell: 
 	for entry in cell[site1]:
@@ -692,6 +692,10 @@ def normalTheta(pt, origin): #gets the exterior/larger angle (basically)
 # 	y = (pt[0] * math.sin(pt[1])) + origin[1]
 # 	return [x, y]
 print()
+
+
+
+
 # Finds vertices for edges of convex hull cells
 for site in cell:
 	print(site)
@@ -706,8 +710,12 @@ for site in cell:
 				print("entry2",entry2)
 				if entry2["point1"] == pt1 or entry2["point2"] == pt1 or entry2["point3"] == pt1:
 					if entry2["at"] != entry["at"] and [entry["at"], entry2["at"]] not in finalCell[site]["vertices"]:
+					#if [entry["at"], entry2["at"]] not in finalCell[site]["vertices"]:
 
 						finalCell[site]["vertices"].append([entry["at"], entry2["at"]]) # for some reason sorting it by y here messes something up
+
+						#if [entry["at"], entry2["at"]] not in finalCell[site]["vertices"] and [entry2["at"], entry["at"]] not in finalCell[site]["vertices"] and entry2["at"] != entry["at"]:
+						#	finalCell[site]["vertices"].append([entry["at"], entry2["at"]])
 
 						atName = f"{str(entry['at']).replace(', ', '_')}"
 
@@ -716,6 +724,7 @@ for site in cell:
 							sortByY(tempSites)
 							vertices.update({atName : {"sites":tempSites, "with":[], "at":[]}})
 						print("...",entry)
+						print("---", finalCell[site]["vertices"])
 						# These check if the respective site is shared by the first cell but has not already been used to create this vertex
 						if entry2["point1"] in [pt2, pt3] and [pt1, entry2["point1"]] not in vertices[atName]["with"] and [entry2["point1"], pt1] not in vertices[atName]["with"]:
 							vertices[atName]["with"].append([pt1, entry2["point1"]])
@@ -733,7 +742,42 @@ for site in cell:
 			print(f"site2: {e} not in cell")
 print()
 print(vertices)
-print(finalCell)
+#print(finalCell)
+
+# Creates a vertex in cases where there there is only one intersection vertex and no other vertices are registered
+#	This happens with [[7, 34], [87, 254], [91, 265], [86, 16]] but not [[50, 50], [25, 25], [75, 75], [98, 70]] for some reason
+if vertices.__len__() == 0:
+	#print(cell.keys())
+	kys = list(cell.keys())
+	i = 0
+	while True:
+		#print(cell[kys[i]].__len__())
+		
+		if cell[kys[i]].__len__() != 0:
+			current = cell[kys[i]][0]
+			pt1, pt2, pt3 = current["point1"], current["point2"], current["point3"]
+			vert = f"{str(current['at']).replace(', ', '_')}"
+			
+			tempSites = [pt1, pt2, pt3]
+			sortByY(tempSites)
+			vertices.update({vert : {"sites":tempSites, "with":[], "at":[]}})
+
+			throughPt = midPoint(tempSites[0], tempSites[1])
+
+			bound = nearestBoundry(current['at'], throughPt)
+
+			vertices[vert]["with"].append([tempSites[0], tempSites[1]])
+			vertices[vert]["at"].append(bound)
+			
+			tempEdge = [current['at'], bound]
+			sortByY(tempEdge)
+
+			finalCell[f"{str(tempSites[0]).replace(', ', '_')}"]["vertices"].append(tempEdge)
+			finalCell[f"{str(tempSites[1]).replace(', ', '_')}"]["vertices"].append(tempEdge)
+
+			#print(vertices[vert])
+			break
+		i += 1
 
 # Modifies convex hull so that it has edges extending to the boundries of the specified area
 for vert in vertices: 
@@ -1115,3 +1159,4 @@ for cell in finalCell:
 	plt.fill(vertsX, vertsY, color=(random.random(), random.random(), random.random(), 0.5))																								                        
 		
 plt.show()
+
