@@ -174,8 +174,7 @@ def find3IntersectX(pt1, pt2, pt3): # finds x-value of intersection of 3 parabol
 		# division by zero happens with the points: 
 		# [50, 50] [25, 25] [75, 75]
 		# [7, 34] [87, 254] [91, 265]
-		# using [[7, 34], [87, 254], [91, 265], [86, 16]] will show that it does cause issues, but I am not sure how to handle this
-		#	and returning defaultBounds[0][0] - 5 works better than all of the solutions I have tried so far
+		# using [[7, 34], [87, 254], [91, 265], [86, 16]] will show that it does cause issues
 		# Divides by 0 if (a-e)*(b-d) = (a-c)*(b-f) or if all 3 points have either the same x or y value
 		print(f"zero division error in find3IntersectX with {pt1} {pt2} {pt3}")
 		#print(( ( ((a**2) - (e**2))*(b-d) ) - ( ((a**2) - (c**2)) * (b-f) ) - ( (d-f)*(b-f)*(b-d) )), (2 * ( ((a-e)*(b-d)) - ((a-c)*(b-f))) ))
@@ -205,6 +204,8 @@ def otherXOnBisectorAtT(pt1, pt2, pt3, t): # pt1 and pt2 form the bisector and p
 		x = ( (-1 * n) - ( ( (n**2) - (4 * m * o) )**0.5 ) ) / (2 * m)#( (-1 * n) + ( ( (n**2) - (4 * m * o) )**0.5 ) ) / (2 * m) 
 		return float("%.10f" % x)
 	except ZeroDivisionError:
+		# Divides by 0 if m = 0, so if the first two points have the same y-value
+		# So the correct x-value would be the midpoint between the two since the bisector is a vertical line, causing the y-values to be different with t, but not x
 		print(f"zero division error in otherXOnBisectorAtT with {pt1} {pt2} {pt3} t={t}")        
 		return defaultBounds[1][1] -5  
 
@@ -233,7 +234,9 @@ def getXAtTime(pt1, pt2, t): # finds x-value of intersection of two parabolas at
 			return float("%.10f" % x2)
 
 	except ZeroDivisionError:
-		print(f"zero division error in find2IntersectAtTime with {pt1} {pt2} {pt3} t={t}")
+		# Divides by 0 if m = 0, so if the two points have the same y-value
+		# So the correct x-value would be the midpoint between the two
+		print(f"zero division error in getXAtTime with {pt1} {pt2} {pt3} t={t}")
 		return defaultBounds[1][1] -5
 
 def getXAtTimeRef(pt1, pt2, t, refX):
@@ -258,6 +261,8 @@ def getXAtTimeRef(pt1, pt2, t, refX):
 			return float("%.10f" % x2)
 
 	except ZeroDivisionError:
+		# Divides by 0 if m = 0, so if the two points have the same y-value
+		# So the correct x-value would be the midpoint between the two
 		print(f"zero division error in find2IntersectAtTime with {pt1} {pt2} {pt3} t={t}")
 		return defaultBounds[1][1] -5
 
@@ -1175,6 +1180,7 @@ for cell in finalCell:
 	plt.fill(vertsX, vertsY, color=(random.random(), random.random(), random.random(), 0.5))																								                        
 		
 plt.show()
+
 
 
 
