@@ -185,9 +185,9 @@ def find3IntersectX(pt1, pt2, pt3): # finds x-value of intersection of 3 parabol
 		#print("b",(a - c)/2)
 		#return (a - c)/2   #returning (a-c)/2 or 0 doesn't seem to make a difference
 		#return 0
-		midPt = midPoint(pt1, pt2)
-		plt.plot([a,c],[b,d], "y")
-		plt.plot(midPt[0], midPt[1], "yo")
+		# midPt = midPoint(pt1, pt2)
+		# plt.plot([a,c],[b,d], "y")
+		# plt.plot(midPt[0], midPt[1], "yo")
 		#return -1000000
 		#return defaultBounds[0][0] - 5
 		#return float("%.10f" % midPoint(pt1, pt2)[0])
@@ -207,7 +207,8 @@ def otherXOnBisectorAtT(pt1, pt2, pt3, t): # pt1 and pt2 form the bisector and p
 		# Divides by 0 if m = 0, so if the first two points have the same y-value
 		# So the correct x-value would be the midpoint between the two since the bisector is a vertical line, causing the y-values to be different with t, but not x
 		print(f"zero division error in otherXOnBisectorAtT with {pt1} {pt2} {pt3} t={t}")        
-		return defaultBounds[1][1] -5  
+		#return defaultBounds[1][1] -5  
+		return (a + c) / 2
 
 def getXAtTime(pt1, pt2, t): # finds x-value of intersection of two parabolas at given time, imaginary if it doesn't exist
 	# The base equation is sensitive to order but this function should be resistant to order
@@ -237,7 +238,8 @@ def getXAtTime(pt1, pt2, t): # finds x-value of intersection of two parabolas at
 		# Divides by 0 if m = 0, so if the two points have the same y-value
 		# So the correct x-value would be the midpoint between the two
 		print(f"zero division error in getXAtTime with {pt1} {pt2} {pt3} t={t}")
-		return defaultBounds[1][1] -5
+		#return defaultBounds[1][1] -5
+		return (a + c) / 2
 
 def getXAtTimeRef(pt1, pt2, t, refX):
 	try:
@@ -264,7 +266,8 @@ def getXAtTimeRef(pt1, pt2, t, refX):
 		# Divides by 0 if m = 0, so if the two points have the same y-value
 		# So the correct x-value would be the midpoint between the two
 		print(f"zero division error in find2IntersectAtTime with {pt1} {pt2} {pt3} t={t}")
-		return defaultBounds[1][1] -5
+		#return defaultBounds[1][1] -5
+		return (a + c) / 2
 
 def getTimeAtX(pt1, pt2, pt3, x): # finds time when parabola pt1 has given x value, (pt1, pt2, pt3) = (pt1, pt3, pt2)
 	try:
@@ -281,11 +284,12 @@ def getTimeAtX(pt1, pt2, pt3, x): # finds time when parabola pt1 has given x val
 def getYAtTimeAndX(pt1, t, x): # just the y-value of the parabola at the given t and x, which may different than yAtX since that is locked to the bisector
 	try:
 		a, b = pt1[0], pt1[1]
-		y = (((x-a)**2) / (2 * (b-t))) + (0.5 * (b+t)) # divides by 0 if b+t = 0 and b-t = 0, which is not possible
+		y = (((x-a)**2) / (2 * (b-t))) + (0.5 * (b+t)) # divides by 0 if b-t = 0
 		return float("%.10f" % y)
 	except ZeroDivisionError:
 		print(f"zero division error in getYAtTimeAndX with {pt1} t={t} x={x}")
 		return defaultBounds[1][1] -5
+		#return None
 
 def yAtX(pt1, pt2, x): # gives y value of bisector between two parabolas at given x value
 	try:
@@ -385,23 +389,43 @@ def nearestBoundry(startPt, throughPt):
 		return choice[0]
 
 def nearestOutsideBoundry(startPt, throughPt):
-	m = slope(startPt, throughPt)
+	if startPt[1] == throughPt[1]:
+		dist1 = abs(startPt[0] - defaultBounds[0][0])
+		dist2 = abs(startPt[0] - defaultBounds[0][1])
+
+		if dist1 < dist2:
+			return [defaultBounds[0][0], startPt[1]]
+		else:
+			return [defaultBounds[0][1], startPt[1]]
 		
-	topX = pointSlopeX(startPt, m, defaultBounds[1][0]) # The x-coordinate of the line when its y equals the top y
-	bottomX = pointSlopeX(startPt, m, defaultBounds[1][1])
-	leftY = pointSlope(startPt, m, defaultBounds[0][0]) # The y-coordinate of the line when its x equals the left x
-	rightY = pointSlope(startPt, m, defaultBounds[0][1])
-	#				top								bottom								left						right
-	choice = [[topX, defaultBounds[1][0]], [bottomX, defaultBounds[1][1]], [defaultBounds[0][0], leftY], [defaultBounds[0][1], rightY]]
+	elif startPt[0] == throughPt[0]:
+		dist1 = abs(startPt[1] - defaultBounds[1][0])
+		dist2 = abs(startPt[1] - defaultBounds[1][1])
 
-	distanceTargetSort(startPt, choice)
-
-	if choice[0][1] >= defaultBounds[1][1] and choice[0][1] <= defaultBounds[1][0] and choice[0][0] >= defaultBounds[0][0] and choice[0][0] <= defaultBounds[0][1]:
-		return choice[0]
-	elif choice[1][1] >= defaultBounds[1][1] and choice[1][1] <= defaultBounds[1][0] and choice[1][0] >= defaultBounds[0][0] and choice[1][0] <= defaultBounds[0][1]:                 
-		return choice[1]
+		if dist1 < dist2:
+			return [startPt[0], defaultBounds[1][0]]
+		else:
+			return [startPt[0], defaultBounds[1][1]]
+		
 	else:
-		return None
+	
+		m = slope(startPt, throughPt)
+		
+		topX = pointSlopeX(startPt, m, defaultBounds[1][0]) # The x-coordinate of the line when its y equals the top y
+		bottomX = pointSlopeX(startPt, m, defaultBounds[1][1])
+		leftY = pointSlope(startPt, m, defaultBounds[0][0]) # The y-coordinate of the line when its x equals the left x
+		rightY = pointSlope(startPt, m, defaultBounds[0][1])
+		#				top								bottom								left						right
+		choice = [[topX, defaultBounds[1][0]], [bottomX, defaultBounds[1][1]], [defaultBounds[0][0], leftY], [defaultBounds[0][1], rightY]]
+
+		distanceTargetSort(startPt, choice)
+
+		if choice[0][1] >= defaultBounds[1][1] and choice[0][1] <= defaultBounds[1][0] and choice[0][0] >= defaultBounds[0][0] and choice[0][0] <= defaultBounds[0][1]:
+			return choice[0]
+		elif choice[1][1] >= defaultBounds[1][1] and choice[1][1] <= defaultBounds[1][0] and choice[1][0] >= defaultBounds[0][0] and choice[1][0] <= defaultBounds[0][1]:                 
+			return choice[1]
+		else:
+			return None
 
 # I think this is probably over-engineered
 def slope(pt1, pt2):
@@ -444,13 +468,13 @@ print(points)
 
 # These two loops try to ensure that there are no points with the same y-value,
 # could probably just do the random.random() to avoid having two loops, if that was necessary
-for i in range(0, points.__len__() -1):
-	if points[i][1] == points[i + 1][1]:
-		points[i + 1][1] += 1
-sortByY(points)
-for i in range(0, points.__len__() -1):
-	if points[i][1] == points[i + 1][1]:
-		points[i + 1][1] += random.random()
+# for i in range(0, points.__len__() -1):
+# 	if points[i][1] == points[i + 1][1]:
+# 		points[i + 1][1] += 1
+# sortByY(points)
+# for i in range(0, points.__len__() -1):
+# 	if points[i][1] == points[i + 1][1]:
+# 		points[i + 1][1] += random.random()
 
 
 tmp = []
@@ -475,6 +499,9 @@ for site1 in points:
 						#print(sites)
 						t = getTimeAtX(sites[0], sites[1], sites[2], x)
 						y = getYAtTimeAndX(sites[0], t, x)
+
+						if site1 == [24, 167]:
+							print("---",x,y,t)
 					
 						# bufferBounds just increases the bounds of the selected area by a certain amount so that intersection points can happen within it and are not outright rejected
 						#	but need to be accounted for seperately and fixed
@@ -518,9 +545,8 @@ for site1 in cell:
 					removeVerts.append([site1, entry])
 
 
-# for tmp in cell:
-# 	for tmp2 in cell[tmp]:
-# 		print(tmp2)
+# for tmp in cell["[24_167]"]:
+# 	print(tmp)
 # print()
 
 if removeVerts.__len__() > 0:
@@ -529,6 +555,10 @@ if removeVerts.__len__() > 0:
 			del cell[site][cell[site].index(vert)]
 		except Exception:
 			pass
+
+for tmp in cell["[24_167]"]:
+	print(tmp)
+print()
 
 # for tmp in cell:
 # 	for tmp2 in cell[tmp]:
@@ -700,7 +730,7 @@ def normalTheta(pt, origin): #gets the exterior/larger angle (basically)
 # 	x = (pt[0] * math.cos(pt[1])) + origin[0]
 # 	y = (pt[0] * math.sin(pt[1])) + origin[1]
 # 	return [x, y]
-print()
+# print()
 
 
 
@@ -752,6 +782,17 @@ for site in cell:
 #print()
 #print(vertices)
 #print(finalCell)
+
+print()
+#print(cell.keys())
+for tmp in cell["[24_167]"]:
+	#print(tmp)
+	at = f"{str(tmp['at']).replace(', ', '_')}"
+	if at in vertices:
+		print(tmp["at"], "-", vertices[at]["at"])
+		
+	#if tmp["at"][0] == 0.0 or tmp["at"][1] == 0.0:
+	#	print("---[24, 167]", tmp)
 
 # Creates a vertex in cases where there there is only one intersection vertex and no other vertices are registered
 #	This happens with [[7, 34], [87, 254], [91, 265], [86, 16]] but not [[50, 50], [25, 25], [75, 75], [98, 70]] because it has an intersection within the buffer zone
@@ -900,6 +941,10 @@ for vert in vertices:
 				finalCell[f"{str(pickedSites[0]).replace(', ', '_')}"]["vertices"].append([vertPt, nearestBound])
 				finalCell[f"{str(pickedSites[1]).replace(', ', '_')}"]["vertices"].append([vertPt, nearestBound])
 
+print()
+for tmp in finalCell["[24_167]"]["vertices"]:
+	if tmp[0][0] == 0.0 or tmp [0][1] == 0.0 or tmp[1][0] == 0.0 or tmp[1][1] == 0:
+		print("---[24, 167]", tmp)
 
 # removes duplicate information
 for cell3 in finalCell:
@@ -919,6 +964,12 @@ for cell3 in finalCell:
 
 	finalCell[cell3]["vertices"] = unique
 
+#print("---[24, 167]", finalCell["[24_167]"]["vertices"])
+print()
+for tmp in finalCell["[24_167]"]["vertices"]:
+	if tmp[0][0] == 0.0 or tmp [0][1] == 0.0 or tmp[1][0] == 0.0 or tmp[1][1] == 0:
+		print("---[24, 167]", tmp)
+		
 for cell4 in finalCell:
 
 	verts = finalCell[cell4]["vertices"].copy()
@@ -975,8 +1026,11 @@ for cell4 in finalCell:
 			# I think any points that are beyond different boundry edges (and would thus make a valid edge) should have been dealt with by now, not sure though
 			if boundry1[0] == boundry2[0] and boundry1[1] == boundry2[1]: 
 				finalCell[cell4]["vertices"].remove(vert)
-
-
+#print("---[24, 167]", finalCell["[24_167]"]["vertices"])
+print()
+for tmp in finalCell["[24_167]"]["vertices"]:
+	if tmp[0][0] == 0.0 or tmp [0][1] == 0.0 or tmp[1][0] == 0.0 or tmp[1][1] == 0:
+		print("---[24, 167]", tmp)
 # Finds edges is cases where there are no intersection points
 for cell5 in finalCell:
 	if finalCell[cell5]["vertices"].__len__() == 0 and points.__len__() > 1:
@@ -1022,10 +1076,15 @@ for cell5 in finalCell:
 			dictSite3 = f"{str(site3).replace(', ', '_')}"
 			if boundPair not in finalCell[dictSite3]["vertices"]:
 				finalCell[dictSite3]["vertices"].append(boundPair)
-		
+print()
+for tmp in finalCell["[24_167]"]["vertices"]:
+	if tmp[0][0] == 0.0 or tmp [0][1] == 0.0 or tmp[1][0] == 0.0 or tmp[1][1] == 0:
+		print("---[24, 167]", tmp)
 
+#print("---[24, 167]", finalCell["[24_167]"]["vertices"])
 def makeEdges(onBoundry, curSite):
 	siteInside = False
+	print(onBoundry)
 	vert1Theta = normalTheta(onBoundry[0], curSite)
 	vert2Theta = normalTheta(onBoundry[1], curSite)
 
@@ -1096,6 +1155,7 @@ for cell2 in finalCell:
 			if onBoundry[0][0] == onBoundry[1][0] or onBoundry[0][1] == onBoundry[1][1]: # If the two vertices are on the same edge, they can just be added to finalCell without any extra work
 				finalCell[cell2]["vertices"].append([onBoundry[0], onBoundry[1]])
 			else: # if the two vertices are not on the same edge
+				print("a")
 				makeEdges(onBoundry, curSite)
 
 		else: # if it greater than 2, it would ALMOST have to be a multiple of 2, with verts on different edges
@@ -1114,7 +1174,7 @@ for cell2 in finalCell:
 						sides[3].append(point)
 
 				single = []
-
+				
 				for edge in sides:
 					if edge.__len__() == 2:
 						finalCell[cell2]["vertices"].append([edge[0], edge[1]])
@@ -1123,8 +1183,15 @@ for cell2 in finalCell:
 						single.append(edge[0])
 			
 				if single.__len__() > 0:
-					makeEdges(single, curSite)
+					print("b")
+					#print("sides",sides)
+					#print("curSite",curSite)
+					#print("finalCell",finalCell[cell2]["vertices"])
 
+					if curSite == [24, 167]:
+						print("---[24, 167]", finalCell["[24_167]"]["vertices"])
+					makeEdges(single, curSite)
+#print("---[24, 167]", finalCell["[24_167]"]["vertices"])
 if points.__len__() == 1:
 	
 	A = [corners[0], corners[2]]
@@ -1180,7 +1247,3 @@ for cell in finalCell:
 	plt.fill(vertsX, vertsY, color=(random.random(), random.random(), random.random(), 0.5))																								                        
 		
 plt.show()
-
-
-
-
