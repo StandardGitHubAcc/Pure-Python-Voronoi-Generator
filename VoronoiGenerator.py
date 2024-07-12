@@ -87,8 +87,11 @@ for i in range(1, 30):
 #points = [[73, 8], [62, 92], [37, 95], [80, 139], [154, 147], [84, 177], [85, 177]] # broke finding boundry edges with outside angles
 
 #points = [[75, 14], [85, 22], [86, 26], [94, 32], [92, 45], [32, 71], [0, 127], [50, 132], [10, 134], [28, 134], [21, 134], [95, 147], [38, 152], [63, 162], [70, 168], [7, 175], [4, 176], [65, 179], [12, 187], [87, 190], [23, 197], [7, 206], [91, 209], [100, 234], [73, 236], [33, 267], [10, 273], [20, 278], [96, 298]]
-points = [[86, 16], [33, 30], [49, 32], [27, 36], [98, 40], [23, 47], [11, 49], [69, 59], [67, 66], [81, 75], [75, 78], [6, 81], [1, 108], [4, 133], [100, 151], [30, 165], [86, 189], [30, 226], [54, 244], [15, 253], [41, 255], [52, 267], [11, 269], [27, 271], [13, 272], [49, 293], [84, 294], [2, 298], [46, 300]]
+#points = [[86, 16], [33, 30], [49, 32], [27, 36], [98, 40], [23, 47], [11, 49], [69, 59], [67, 66], [81, 75], [75, 78], [6, 81], [1, 108], [4, 133], [100, 151], [30, 165], [86, 189], [30, 226], [54, 244], [15, 253], [41, 255], [52, 267], [11, 269], [27, 271], [13, 272], [49, 293], [84, 294], [2, 298], [46, 300]]
 # ^ I think caused by the fact that when the x-values are the same, it just picks a slope without much good reasoning behind it, here causing the slope to be on the wrong side of the intersection
+
+points = [[7, 34], [87, 254], [91, 265], [86, 16]]
+#points = [[30, 226], [30, 165], [86, 189]]
 
 #with box that is 100 wide and 300 tall
 #points = [[45, 70], [61, 100], [13, 162], [84, 208], [99, 233], [73, 270], [6, 281]]
@@ -286,40 +289,75 @@ def tAtXandY(pt1, x, y):
 
 	return float("%.10f" % t)
 
-
+# Seems to always do case3 for some reason
 def pointSlope(pt, slope, x):
-	return float("%.10f" % ((slope * (x - pt[0])) + pt[1]) )
+	match slope:
+		case None:
+			#print("case1")
+			return None
+		case 0:
+			#print("case2")
+			return pt[1]
+		case _:
+			#print("case3")
+			return float("%.10f" % ((slope * (x - pt[0])) + pt[1]) )
+		
+	#return float("%.10f" % ((slope * (x - pt[0])) + pt[1]) )
 
-def pointSlopeX(pt, slope, y):
-	return float("%.10f" % ( (y - pt[1] + (slope * pt[0])) / slope) )
+def pointSlopeX(pt, slope, y): # This hasn't errored for some reason
+	match slope:
+		case None:
+			#print("case1")
+			return None
+		case 0:
+			#print("case2")
+			return pt[1]
+		case _:
+			#print("case3")
+			return float("%.10f" % ( (y - pt[1] + (slope * pt[0])) / slope) )
+	#return float("%.10f" % ( (y - pt[1] + (slope * pt[0])) / slope) )
 
 def nearestBoundry(startPt, throughPt):
-	m = slope(startPt, throughPt)
 
-	topX = pointSlopeX(startPt, m, defaultBounds[1][0]) # The x-coordinate of the line when its y equals the top y
-	bottomX = pointSlopeX(startPt, m, defaultBounds[1][1])
-	leftY = pointSlope(startPt, m, defaultBounds[0][0]) # The y-coordinate of the line when its x equals the left x
-	rightY = pointSlope(startPt, m, defaultBounds[0][1])
-	choice = []
-
-	if throughPt[1] > startPt[1] and throughPt[0] > startPt[0]: # Towards top right
-		choice = [[topX, defaultBounds[1][0]], [defaultBounds[0][1], rightY]] #top and right
-
-	elif throughPt[1] < startPt[1] and throughPt[0] > startPt[0]: # Towards bottom right
-		choice = [[bottomX, defaultBounds[1][1]], [defaultBounds[0][1], rightY]] #bottom and right
+	if startPt[1] == throughPt[1]: # Horizontal line
+		if throughPt[0] > startPt[0]:
+			return [defaultBounds[0][1], startPt[1]]
+		else: # If throughPt[0] < startPt[0]
+			return [defaultBounds[0][0], startPt[1]]
 		
-	elif throughPt[1] > startPt[1] and throughPt[0] < startPt[0]: # Towards top left
-		choice = [[topX, defaultBounds[1][0]], [defaultBounds[0][0], leftY]] #top and left
+	elif startPt[0] == throughPt[0]: # Vertical line
+		if throughPt[1] > startPt[1]:
+			return [startPt[0], defaultBounds[1][0]]
+		else: # If throughPt[1] < startPt[1]
+			return [startPt[0], defaultBounds[1][1]]
+		
+	else:
+		m = slope(startPt, throughPt)
 
-	elif throughPt[1] < startPt[1] and throughPt[0] < startPt[0]: # Towards bottom left
-		choice = [[bottomX, defaultBounds[1][1]], [defaultBounds[0][0], leftY]] #bottom and left
+		topX = pointSlopeX(startPt, m, defaultBounds[1][0]) # The x-coordinate of the line when its y equals the top y
+		bottomX = pointSlopeX(startPt, m, defaultBounds[1][1])
+		leftY = pointSlope(startPt, m, defaultBounds[0][0]) # The y-coordinate of the line when its x equals the left x
+		rightY = pointSlope(startPt, m, defaultBounds[0][1])
+		choice = []
 
-	else: # throughPt and startPt have the same y
-		choice = [[defaultBounds[0][0], throughPt[1]], [defaultBounds[0][1], throughPt[1]]]
+		if throughPt[1] > startPt[1] and throughPt[0] > startPt[0]: # Towards top right
+			choice = [[topX, defaultBounds[1][0]], [defaultBounds[0][1], rightY]] #top and right
+
+		elif throughPt[1] < startPt[1] and throughPt[0] > startPt[0]: # Towards bottom right
+			choice = [[bottomX, defaultBounds[1][1]], [defaultBounds[0][1], rightY]] #bottom and right
+		
+		elif throughPt[1] > startPt[1] and throughPt[0] < startPt[0]: # Towards top left
+			choice = [[topX, defaultBounds[1][0]], [defaultBounds[0][0], leftY]] #top and left
+
+		elif throughPt[1] < startPt[1] and throughPt[0] < startPt[0]: # Towards bottom left
+			choice = [[bottomX, defaultBounds[1][1]], [defaultBounds[0][0], leftY]] #bottom and left
+
+		#else: # throughPt and startPt have the same y. This will never be considered now
+		#	choice = [[defaultBounds[0][0], throughPt[1]], [defaultBounds[0][1], throughPt[1]]]
 	
-	distanceTargetSort(startPt, choice)
+		distanceTargetSort(startPt, choice)
 	
-	return choice[0]
+		return choice[0]
 
 def nearestOutsideBoundry(startPt, throughPt):
 	m = slope(startPt, throughPt)
@@ -343,19 +381,21 @@ def nearestOutsideBoundry(startPt, throughPt):
 # I think this is probably over-engineered
 def slope(pt1, pt2):
 	try:
-		if (pt1[1] - pt2[1]) / (pt1[0] - pt2[0]) == 0: # Just having 'pt1[0] - pt2[0] == 0' doesn't work as it allows for a slope of 0
-			if pt1[1] - pt2[1] < 0: # Parts of my code can not handle a slope of 0, so this is here to make it almost 0
-				return -0.0000001 # This is kinda arbitrary
-			else:
-				return 0.0000001
-		else:
-			return (pt1[1] - pt2[1]) / (pt1[0] - pt2[0])
+		# if (pt1[1] - pt2[1]) / (pt1[0] - pt2[0]) == 0: # Just having 'pt1[0] - pt2[0] == 0' doesn't work as it allows for a slope of 0
+		# 	if pt1[1] - pt2[1] < 0: # Parts of my code can not handle a slope of 0, so this is here to make it almost 0
+		# 		return -0.0000001 # This is kinda arbitrary
+		# 	else:
+		# 		return 0.0000001
+		# else:
+		# 	return (pt1[1] - pt2[1]) / (pt1[0] - pt2[0])
+		return (pt1[1] - pt2[1]) / (pt1[0] - pt2[0])
 	except ZeroDivisionError: 
 		print(f"zero division error in slope with {pt1} {pt2}")
-		if pt1[1] - pt2[1] < 0: # This is diffrent from the above since here the two points have the same x-value, so one is right above the other and the slope needs to be extremely big
-			return -100000
-		else:
-			return 100000
+		# if pt1[1] - pt2[1] < 0: # This is diffrent from the above since here the two points have the same x-value, so one is right above the other and the slope needs to be extremely big
+		# 	return -100000
+		# else:
+		# 	return 100000
+		return None
 
 def midPoint(pt1, pt2):
 	return [ (pt1[0] + pt2[0]) / 2,  (pt1[1] + pt2[1]) / 2]    
@@ -394,7 +434,7 @@ for point in points:
 	tmp.extend(point)
 
 print(tmp) # this tmp is never used after this, it just used to print the points in a different format here
-
+print()
 # Finds intersection points of sites, including some that are invalid
 for site1 in points:
 	for site2 in points:
@@ -444,11 +484,22 @@ if removeVerts.__len__() > 0:
 # (technically 2 sites have to be dealt with seperately but are the same as having a cell in a corner so can be dealt with later)
 if points.__len__() == 3:
 	kys = list(cell.keys())
-
+	#print()
 	if kys.__len__() != 0:
 		current = cell[kys[0]][0]
+		#print(cell)
+		#print(current)
+		
 		vert = f"{str(current['at']).replace(', ', '_')}"
-		bound = nearestBoundry(current["at"], midPoint(current["point1"], current["point2"]))
+		#print(vert)
+		
+		#bound = nearestBoundry(current["at"], midPoint(current["point1"], current["point2"]))
+		midPt = midPoint(current["point1"], current["point2"])
+		bound = nearestBoundry(current["at"], midPt)
+		#print(current["point1"], current["point2"], midPoint(current["point1"], current["point2"]))
+		#print("bound",bound)
+		plt.plot(midPt[0], midPt[1], "yo")
+		plt.plot([current["point1"][0], current["point2"][0]], [current["point1"][1], current["point2"][1]], "y")
 	
 		vertices[vert] = {"sites":[current["point1"], current["point2"], current["point3"]], "with":[[current["point1"], current["point2"]]], "at":[bound]}
 		finalCell[kys[0]]["vertices"].append([current["at"], bound])
@@ -631,8 +682,9 @@ for vert in vertices:
 		throughPt = midPoint(pickedSites[0], pickedSites[1])
 
 		if throughPt != []:
+			print("line648", vertPt, throughPt)
 			nearestBound = nearestBoundry(vertPt, throughPt)
-
+			print(nearestBound)
 			vertices[vert]["with"].append([pickedSites[0], pickedSites[1]])
 			vertices[vert]["at"].append(nearestBound)
 			finalCell[f"{str(pickedSites[0]).replace(', ', '_')}"]["vertices"].append([vertPt, nearestBound])
