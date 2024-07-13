@@ -4,8 +4,8 @@ import math
 from math import *
 
 #                 width     height
-#defaultBounds = [[0, 200], [200, 0]]
-defaultBounds = [[0, 100], [300, 0]]
+defaultBounds = [[0, 200], [200, 0]]
+#defaultBounds = [[0, 100], [300, 0]]
 
 #		bottomleft, topleft, bottomright, topright
 #corners = [[0, 0], [0, 200], [200, 0], [200, 200]]
@@ -17,7 +17,7 @@ for i in range(1, 30):
 	  points.append([random.randint(0, defaultBounds[0][1]), random.randint(0, defaultBounds[1][0])])  
 
 #points = [[50, 50], [25, 25], [75, 75], [98, 70]]
-#points = [[50, 50], [25, 20], [75, 75], [98, 70]]
+points = [[50, 50], [25, 20], [75, 75], [98, 70]]
 #points = [[30, 40], [25, 60], [80, 97]]
 #points = [[50, 50], [75, 75]]  
 #points = [[50, 50]]
@@ -102,7 +102,7 @@ for i in range(1, 30):
 
 #points = [[72, 20], [10, 69], [85, 72], [80, 78], [26, 88], [63, 100], [83, 104], [96, 117], [84, 126], [93, 131], [91, 136], [67, 144], [54, 147], [41, 149], [94, 179], [56, 182], [23, 197], [75, 213], [18, 217], [36, 252], [60, 256], [41, 259], [38, 266], [36, 267], [55, 269], [85, 270], [44, 286], [22, 289], [75, 299]]
 
-points = [[67, 13], [55, 26], [0, 31], [78, 33], [50, 41], [47, 52], [99, 54], [16, 55], [38, 88], [24, 94], [14, 114], [0, 122], [5, 123], [14, 129], [85, 134], [84, 137], [33, 137], [28, 141], [24, 167], [89, 199], [54, 202], [67, 208], [90, 217], [8, 221], [98, 235], [52, 252], [15, 255], [38, 258], [50, 297]]
+#points = [[67, 13], [55, 26], [0, 31], [78, 33], [50, 41], [47, 52], [99, 54], [16, 55], [38, 88], [24, 94], [14, 114], [0, 122], [5, 123], [14, 129], [85, 134], [84, 137], [33, 137], [28, 141], [24, 167], [89, 199], [54, 202], [67, 208], [90, 217], [8, 221], [98, 235], [52, 252], [15, 255], [38, 258], [50, 297]]
 
 #points = [[128, 141], [33, 137], [84, 137], [85, 134], [24, 167], [54, 202]]
 
@@ -516,7 +516,8 @@ def fromKey(key):
 
 def sort2ByY(pair):
 	if pair[0][1] > pair[1][1]:
-		pair = [pair[1], pair[0]]
+		pair[0], pair[1] = pair[1], pair[0]
+
 
 sortByY(points)
 print(points)
@@ -795,7 +796,7 @@ else:
 				finalCell[nearestKey]["vertices"].append(boundPair)
 			#finalCell[f"{str(nearest).replace(', ', '_')}"]["vertices"].append(boundPair)
 
-#usedSitePairs = []
+usedSitePairs = []
 for site1Key in cell:
 	# Could probably optimize this so that it doesn't search the same point multiple times
 	#print("site1Key",site1Key)
@@ -814,19 +815,48 @@ for site1Key in cell:
 		#site2Key = toKey(site2)
 		#print("site2Key",site2Key)
 		#for entry2 in site2:
-		for entry2 in cell[site2Key]:
-			#print("site2Key",site2Key)
-			entry2Pts = entry2["sites"]#[entry2["point1"], entry2["point2"], entry2["point3"]]
-			
-			if site1 in entry2Pts and entry1["at"] != entry2["at"]:
-				edgePair = [entry1["at"], entry2["at"]]
-				sortByY(edgePair)
-				
-				if edgePair not in finalCell[site1Key]["vertices"]:
-					#print(entryPts,"-", entry2Pts, "-",edgePair)
 
-					finalCell[site1Key]["vertices"].append(edgePair)
-					break # Since there can only ever be 1 edge between two given sites, can just break the loop once one is found
+		checkPair = [site1, site2]
+		sort2ByY(checkPair)
+
+		if checkPair not in usedSitePairs:
+			for entry2 in cell[site2Key]:
+				#print("site2Key",site2Key)
+				entry2Pts = entry2["sites"]#[entry2["point1"], entry2["point2"], entry2["point3"]]
+			
+				if site1 in entry2Pts and entry1["at"] != entry2["at"]:
+					edgePair = [entry1["at"], entry2["at"]]
+					sort2ByY(edgePair)
+				
+					if edgePair not in finalCell[site1Key]["vertices"]:
+						#print(entryPts,"-", entry2Pts, "-",edgePair)
+
+						finalCell[site1Key]["vertices"].append(edgePair)
+						finalCell[site2Key]["vertices"].append(edgePair)
+
+						sitePair = [site1, site2]
+						sort2ByY(sitePair)
+						usedSitePairs.append(sitePair)
+
+						vert1 = f"{str(entry1['at']).replace(', ', '_')}"
+						if vert1 not in vertices:
+							tempSites = entryPts
+							sortByY(tempSites)
+							vertices.update({vert1 : {"sites":tempSites, "at":entry3['at'], "with":[], "to":[]}})
+					
+						vertices[vert1]["with"].append(sitePair)
+						vertices[vert1]["to"].append(entry2["at"])
+
+						vert2 = f"{str(entry2['at']).replace(', ', '_')}"
+						if vert2 not in vertices:
+							tempSites = entry2Pts
+							sortByY(tempSites)
+							vertices.update({vert2 : {"sites":tempSites, "at":entry2['at'], "with":[], "to":[]}})
+					
+						vertices[vert2]["with"].append(sitePair)
+						vertices[vert2]["to"].append(entry1["at"])
+
+						break # Since there can only ever be 1 edge between two given sites, can just break the loop once one is found
 
 		#site3 = entryPts.copy()
 		#site3.remove(site1)
@@ -837,23 +867,53 @@ for site1Key in cell:
 		#print(site3)
 		site3Key = toKey(site3)
 
-		for entry3 in cell[site3Key]:
-			entry3Pts = entry3["sites"]#[entry3["point1"], entry3["point2"], entry3["point3"]]
+		checkPair = [site1, site3]
+		sort2ByY(checkPair)
+		
+		if checkPair not in usedSitePairs:
+			for entry3 in cell[site3Key]:
+				entry3Pts = entry3["sites"]#[entry3["point1"], entry3["point2"], entry3["point3"]]
 			
-			if site1 in entry3Pts and entry1["at"] != entry3["at"]:
-				edgePair = [entry1["at"], entry3["at"]]
-				sortByY(edgePair)
+				if site1 in entry3Pts and entry1["at"] != entry3["at"]:
+					edgePair = [entry1["at"], entry3["at"]]
+					sort2ByY(edgePair)
 				
-				if edgePair not in finalCell[site1Key]["vertices"]:
-					#print(entryPts,"-", entry3Pts, "-",edgePair)
+					if edgePair not in finalCell[site1Key]["vertices"]:
+						#print(entryPts,"-", entry3Pts, "-",edgePair)
+					
+						finalCell[site1Key]["vertices"].append(edgePair)
+						finalCell[site3Key]["vertices"].append(edgePair)
 
-					finalCell[site1Key]["vertices"].append(edgePair)
-					break
-		print("-------")
+						sitePair = [site1, site3]
+						sort2ByY(sitePair)
+						usedSitePairs.append(sitePair)
+					
+						vert1 = f"{str(entry1['at']).replace(', ', '_')}"
+						if vert1 not in vertices:
+							tempSites = entryPts
+							sortByY(tempSites)
+							vertices.update({vert1 : {"sites":tempSites, "at":entry1['at'],"with":[], "to":[]}})
+					
+						vertices[vert1]["with"].append(sitePair)
+						vertices[vert1]["to"].append(entry3["at"])
+
+						vert2 = f"{str(entry3['at']).replace(', ', '_')}"
+						if vert2 not in vertices:
+							tempSites = entry3Pts
+							sortByY(tempSites)
+							vertices.update({vert2 : {"sites":tempSites, "at":entry3['at'], "with":[], "to":[]}})
+					
+						vertices[vert2]["with"].append(sitePair)
+						vertices[vert2]["to"].append(entry1["at"])
+
+						break
+		#print("-------")
 	print()
 
 print()
 
+print(vertices)
+print()
 # ---------------- End of voronoi calculations ----------------
 
 for pt in points:
@@ -901,5 +961,6 @@ for cell in finalCell:
 	plt.fill(vertsX, vertsY, color=(random.random(), random.random(), random.random(), 0.5))																								                        
 		
 plt.show()
+
 
 
