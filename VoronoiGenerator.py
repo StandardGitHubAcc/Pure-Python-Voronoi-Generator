@@ -18,7 +18,7 @@ for i in range(1, 30):
 
 #points = [[50, 50], [25, 25], [75, 75], [98, 70]]
 #points = [[50, 50], [25, 20], [75, 75], [98, 70]]
-#points = [[30, 40], [25, 60], [80, 97]]
+points = [[30, 40], [25, 60], [80, 97]]
 #points = [[50, 50], [75, 75]]  
 #points = [[50, 50]]
 
@@ -82,7 +82,7 @@ for i in range(1, 30):
 
 #points = [[20, 25], [55, 100], [70, 160], [95, 190]]
 #points = [[20, 25], [55, 100], [95, 190]]
-#points = [[20, 25], [40, 100], [70, 160], [95, 190]]
+#points = [[20, 25], [40, 100], [70, 160], [95, 190]] # no intersections within the target area
 
 #points = [[73, 8], [62, 92], [37, 95], [80, 139], [154, 147], [84, 177], [85, 177]] # broke finding boundry edges with outside angles
 
@@ -106,7 +106,11 @@ for i in range(1, 30):
 
 #points = [[128, 141], [33, 137], [84, 137], [85, 134], [24, 167], [54, 202]]
 
-points = [[104, 95], [167, 95], [142, 136]]
+#points = [[104, 95], [167, 95], [142, 136]]
+
+#points = [[104, 95], [167, 95], [20, 95]]
+#points = [[104, 95], [167, 95], [20, 95], [180, 95]]
+#points = [[40, 10], [40, 20], [40, 30], [40, 75]]
 
 plt.figure(figsize=(7, 7))
 plt.ylim(defaultBounds[1][1], defaultBounds[1][0])
@@ -607,8 +611,8 @@ for others in points:
 				otherPointY = getYAtTimeAndX(others, entry["time"], entry["at"][0])
 				
 				if otherPointY > entry["at"][1]:
-					plt.plot(entry["at"][0], entry["at"][1], "yo")
-					plt.plot([entry["point2"][0], entry["at"][0], entry["point3"][0], entry["at"][0], entry["point1"][0]], [entry["point2"][1], entry["at"][1], entry["point3"][1], entry["at"][1], entry["point1"][1]], "y")
+					#plt.plot(entry["at"][0], entry["at"][1], "yo")
+					#plt.plot([entry["point2"][0], entry["at"][0], entry["point3"][0], entry["at"][0], entry["point1"][0]], [entry["point2"][1], entry["at"][1], entry["point3"][1], entry["at"][1], entry["point1"][1]], "y")
 					removeVerts.append(entry)
 
 		for rmv in removeVerts:
@@ -618,8 +622,124 @@ for others in points:
 				pass
 
 print(cell)
+print(cell.keys().__len__())
+# There are 3 cases that have to be dealth with seperately: 1 site, 3 sites, and 2 or 3+ sites 
+# (technically 2 sites have to be dealt with seperately but are the same as having a cell in a corner so can be dealt with later)
+if points.__len__() == 3 and cell.keys().__len__() != 0:
+	kys = list(cell.keys())
+	#print("line503",kys)
+	if kys.__len__() != 0: # This check is redundant now
+		current = cell[kys[0]][0]
+		#print(cell)
+		#print(current)
+		
+		vert = f"{str(current['at']).replace(', ', '_')}"
+		#print(vert)
+		
+		bound = nearestBoundry(current["at"], midPoint(current["point1"], current["point2"]))
+		#midPt = midPoint(current["point1"], current["point2"])
+		#bound = nearestBoundry(current["at"], midPt)
+		#print(current["point1"], current["point2"], midPoint(current["point1"], current["point2"]))
+		#print("bound",bound)
+		#plt.plot(midPt[0], midPt[1], "yo")
+		#plt.plot([current["point1"][0], current["point2"][0]], [current["point1"][1], current["point2"][1]], "y")
+	
+		vertices[vert] = {"sites":[current["point1"], current["point2"], current["point3"]], "with":[[current["point1"], current["point2"]]], "at":[bound]}
+		finalCell[kys[0]]["vertices"].append([current["at"], bound])
+		finalCell[kys[1]]["vertices"].append([current["at"], bound])
+	# else: # This isn't necessary, other parts handle 2 parallel lines correctly
+	# 	site1 = points[0]
+	# 	site2 = points[1]
+	# 	site3 = points[2]
+		
+	# 	site1Key = f"{str(site1).replace(', ', '_')}"
+	# 	site2Key = f"{str(site2).replace(', ', '_')}"
+	# 	site3Key = f"{str(site3).replace(', ', '_')}"
 
+	# 	slp = -1/slope(site1, site2)
+	# 	midPt1 = midPoint(site1, site2)
+	# 	midPt2 = midPoint(site2, site3)
 
+	# 	ptSlope1y = pointSlope(midPt1, slp, midPt1[0] + 0.5)
+	# 	ptSlope2y = pointSlope(midPt1, slp, midPt1[0] - 0.5)
+	# 	ptSlope3y = pointSlope(midPt2, slp, midPt2[0] + 0.5)
+	# 	ptSlope4y = pointSlope(midPt2, slp, midPt2[0] - 0.5)
+
+	# 	bound1 = nearestBoundry(midPt1, [midPt1[0] + 0.5, ptSlope1y])
+	# 	bound2 = nearestBoundry(midPt1, [midPt1[0] - 0.5, ptSlope2y])
+	# 	bound3 = nearestBoundry(midPt2, [midPt2[0] + 0.5, ptSlope3y])
+	# 	bound4 = nearestBoundry(midPt2, [midPt2[0] - 0.5, ptSlope4y])
+
+	# 	finalCell[site1Key]["vertices"].append([bound1, bound2])
+	# 	finalCell[site2Key]["vertices"].append([bound1, bound2])
+	# 	finalCell[site2Key]["vertices"].append([bound3, bound4])
+	# 	finalCell[site3Key]["vertices"].append([bound3, bound4])
+
+ # Trying to handle 1 site here will cause the boundry edge finding section to duplicate two sides, 
+#	and not handling this here breaks nothing, so it is handled after everything else	
+elif points.__len__() == 1:
+	pass
+else:
+	# Deals with cases where lines are parallel or have no intersection point within the buffer but are still valid
+	usedSites = []
+	for entry in cell:
+		for vert in cell[entry]:
+			if vert["point1"] not in usedSites:
+				usedSites.append(vert["point1"])
+			if vert["point2"] not in usedSites:
+				usedSites.append(vert["point2"])
+			if vert["point3"] not in usedSites:
+				usedSites.append(vert["point3"])
+
+	for site in points:
+		if site not in usedSites:
+			points2 = points.copy()
+			distanceTargetSort(site, points2)
+
+			nearest = []
+			boundPair = []
+			bound1 = []
+			bound2 = []
+
+			if points2[0] == site:
+				nearest = points2[1]
+			else:
+				nearest = points2[0]
+
+			midPt = midPoint(site, nearest)
+
+			if site[1] == nearest[1]:
+				bound1 = nearestBoundry(midPt, [midPt[0], midPt[1] + 0.5])
+				bound2 = nearestBoundry(midPt, [midPt[0], midPt[1] - 0.5])
+			elif site[0] == nearest[0]:
+				bound1 = nearestBoundry(midPt, [midPt[0] + 0.5, midPt[1]])
+				bound2 = nearestBoundry(midPt, [midPt[0] - 0.5, midPt[1]])
+			else:
+			
+				leftY = yAtX(site, nearest, midPt[0] - 0.5)
+				rightY = yAtX(site, nearest, midPt[0] + 0.5)
+
+				#leftBound = nearestBoundry(midPt, [midPt[0] - 0.5, leftY])
+				#rightBound = nearestBoundry(midPt, [midPt[0] + 0.5, rightY])
+
+				#boundPair = [leftBound, rightBound]
+				#sortByY(boundPair)
+
+				bound1 = nearestBoundry(midPt, [midPt[0] - 0.5, leftY])
+				bound2 = nearestBoundry(midPt, [midPt[0] + 0.5, rightY])
+
+			boundPair = [bound1, bound2]
+			sortByY(boundPair)
+
+			siteKey = f"{str(site).replace(', ', '_')}"
+			nearestKey = f"{str(nearest).replace(', ', '_')}"
+			
+			if boundPair not in finalCell[siteKey]["vertices"]:
+				finalCell[siteKey]["vertices"].append(boundPair)
+
+			if boundPair not in finalCell[nearestKey]["vertices"]:
+				finalCell[nearestKey]["vertices"].append(boundPair)
+			#finalCell[f"{str(nearest).replace(', ', '_')}"]["vertices"].append(boundPair)
 
 
 # ---------------- End of voronoi calculations ----------------
@@ -668,5 +788,6 @@ for cell in finalCell:
 	plt.fill(vertsX, vertsY, color=(random.random(), random.random(), random.random(), 0.5))																								                        
 		
 plt.show()
+
 
 
