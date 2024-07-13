@@ -173,6 +173,7 @@ def find3IntersectX(pt1, pt2, pt3): # finds x-value of intersection of 3 parabol
 		x = ( ( ((a**2) - (e**2))*(b-d) ) - ( ((a**2) - (c**2)) * (b-f) ) - ( (d-f)*(b-f)*(b-d) )) / (2 * ( ((a-e)*(b-d)) - ((a-c)*(b-f))) )
 		return float("%.10f" % x)
 	except ZeroDivisionError:
+		# Division by 0 happens if the lines are parallel
 	#else: # I need to have it return the midpoint between the site and nearest site if there is division by zero, because that means that the two lines are parallel and the farther site will not be valid
 		# Seems to not usually break anything despite the fact that the division by 0 is not handled properly
 		# The above statement is wrong. It has always broken something, it is just usually hard to tell
@@ -536,12 +537,49 @@ for site1 in points:
 					if x != None:
 						#print(sites)
 						t = getTimeAtX(sites[0], sites[1], sites[2], x)
-						y = getYAtTimeAndX(sites[0], t, x)
 
-						#if site1 == [24, 167]:
-						#	print("---",x,y,t)
+						if t != None:
+						
+							y = getYAtTimeAndX(sites[0], t, x)
+
+							#if site1 == [24, 167]:
+							#	print("---",x,y,t)
 					
-						if y != None:
+							if y != None:
+
+								# bufferBounds just increases the bounds of the selected area by a certain amount so that intersection points can happen within it and are not outright rejected
+								#	but need to be accounted for seperately and fixed
+								# The size of bufferWidth and bufferHeight are kind of arbitrary, I just went with 1/4 of the their respective dimension
+								bufferWidth = (defaultBounds[0][0] + defaultBounds[0][1])/4 # the midpoint divided by 2
+								bufferHeight = (defaultBounds[1][1] + defaultBounds[1][0])/4
+								bufferBounds = [[defaultBounds[0][0] - bufferWidth, defaultBounds[0][1] + bufferHeight], [defaultBounds[1][0] + bufferHeight, defaultBounds[1][1] - bufferHeight]]
+					
+								if t > site1[1] and t > site2[1] and t > site3[1] and withinBounds([x, y], bufferBounds):
+									site1Key = f"{str(site1).replace(', ', '_')}"
+
+									# if site1Key in cell:
+									# 	# Prevents duplicates (duplicates don't break anything, just makes stuff slower (probably))
+									# 	test1 = {"point1":site1, "point2":site2, "point3":site3, "time":float("%.10f" % t), "at":[float("%.10f" % x), float("%.10f" % y)]}
+									# 	test2 = {"point1":site1, "point2":site3, "point3":site2, "time":float("%.10f" % t), "at":[float("%.10f" % x), float("%.10f" % y)]}
+									# 	if test1 not in cell[site1Key] and test2 not in cell[site1Key]:
+									# 		cell[site1Key].append({"point1":site1, "point2":site2, "point3":site3, "time":float("%.10f" % t), "at":[float("%.10f" % x), float("%.10f" % y)]})
+									# else:
+									# 	cell.update({site1Key : [{"point1":site1, "point2":site2, "point3":site3, "time":float("%.10f" % t), "at":[float("%.10f" % x), float("%.10f" % y)]}]})
+							
+									# if f"{str(site1).replace(', ', '_')}" in cell:
+									# 	cell[f"{str(site1).replace(', ', '_')}"].append({"point1":site1, "point2":site2, "point3":site3, "time":float("%.10f" % t), "at":[float("%.10f" % x), float("%.10f" % y)]})
+									# else:
+									# 	cell.update({f"{str(site1).replace(', ', '_')}" : [{"point1":site1, "point2":site2, "point3":site3, "time":float("%.10f" % t), "at":[float("%.10f" % x), float("%.10f" % y)]}]})
+	
+									# For some reason trying to prevent duplicates causes things to break
+									if site1Key in cell:
+										cell[site1Key].append({"point1":site1, "point2":site2, "point3":site3, "time":float("%.10f" % t), "at":[float("%.10f" % x), float("%.10f" % y)]})
+									else:
+										cell.update({site1Key : [{"point1":site1, "point2":site2, "point3":site3, "time":float("%.10f" % t), "at":[float("%.10f" % x), float("%.10f" % y)]}]})
+
+						else:
+							y = yAtX(sites[0], sites[2], x)
+							t = tAtXandY(sites[0], x, y)
 
 							# bufferBounds just increases the bounds of the selected area by a certain amount so that intersection points can happen within it and are not outright rejected
 							#	but need to be accounted for seperately and fixed
@@ -552,20 +590,6 @@ for site1 in points:
 					
 							if t > site1[1] and t > site2[1] and t > site3[1] and withinBounds([x, y], bufferBounds):
 								site1Key = f"{str(site1).replace(', ', '_')}"
-
-								# if site1Key in cell:
-								# 	# Prevents duplicates (duplicates don't break anything, just makes stuff slower (probably))
-								# 	test1 = {"point1":site1, "point2":site2, "point3":site3, "time":float("%.10f" % t), "at":[float("%.10f" % x), float("%.10f" % y)]}
-								# 	test2 = {"point1":site1, "point2":site3, "point3":site2, "time":float("%.10f" % t), "at":[float("%.10f" % x), float("%.10f" % y)]}
-								# 	if test1 not in cell[site1Key] and test2 not in cell[site1Key]:
-								# 		cell[site1Key].append({"point1":site1, "point2":site2, "point3":site3, "time":float("%.10f" % t), "at":[float("%.10f" % x), float("%.10f" % y)]})
-								# else:
-								# 	cell.update({site1Key : [{"point1":site1, "point2":site2, "point3":site3, "time":float("%.10f" % t), "at":[float("%.10f" % x), float("%.10f" % y)]}]})
-							
-								# if f"{str(site1).replace(', ', '_')}" in cell:
-								# 	cell[f"{str(site1).replace(', ', '_')}"].append({"point1":site1, "point2":site2, "point3":site3, "time":float("%.10f" % t), "at":[float("%.10f" % x), float("%.10f" % y)]})
-								# else:
-								# 	cell.update({f"{str(site1).replace(', ', '_')}" : [{"point1":site1, "point2":site2, "point3":site3, "time":float("%.10f" % t), "at":[float("%.10f" % x), float("%.10f" % y)]}]})
 	
 								# For some reason trying to prevent duplicates causes things to break
 								if site1Key in cell:
@@ -593,7 +617,7 @@ for others in points:
 			except Exception:
 				pass
 
-
+print(cell)
 
 
 
@@ -644,4 +668,5 @@ for cell in finalCell:
 	plt.fill(vertsX, vertsY, color=(random.random(), random.random(), random.random(), 0.5))																								                        
 		
 plt.show()
+
 
