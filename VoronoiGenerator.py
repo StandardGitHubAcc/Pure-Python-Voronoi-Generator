@@ -514,6 +514,10 @@ def fromKey(key):
 	result = [float("%.10f" % result[0]), float("%.10f" % result[1])]
 	return result
 
+def sort2ByY(pair):
+	if pair[0][1] > pair[1][1]:
+		pair = [pair[1], pair[0]]
+
 sortByY(points)
 print(points)
 
@@ -589,13 +593,23 @@ for site1 in points:
 									# 	cell[site1Key].append({"point1":site1, "point2":site2, "point3":site3, "time":float("%.10f" % t), "at":[float("%.10f" % x), float("%.10f" % y)]})
 									# else:
 									# 	cell.update({site1Key : [{"point1":site1, "point2":site2, "point3":site3, "time":float("%.10f" % t), "at":[float("%.10f" % x), float("%.10f" % y)]}]})
+									# if site1Key in cell:
+									# 	#print({"point1":sites[0], "point2":sites[1], "point3":sites[2], "time":float("%.10f" % t), "at":[float("%.10f" % x), float("%.10f" % y)]} in cell[site1Key])
+									# 	if {"point1":sites[0], "point2":sites[1], "point3":sites[2], "time":float("%.10f" % t), "at":[float("%.10f" % x), float("%.10f" % y)]} not in cell[site1Key]:
+									# 		cell[site1Key].append({"point1":sites[0], "point2":sites[1], "point3":sites[2], "time":float("%.10f" % t), "at":[float("%.10f" % x), float("%.10f" % y)]})
+									# else:
+									# 	cell.update({site1Key : [{"point1":sites[0], "point2":sites[1], "point3":sites[2], "time":float("%.10f" % t), "at":[float("%.10f" % x), float("%.10f" % y)]}]})
+
+									sites.remove(site1)
+									
 									if site1Key in cell:
 										#print({"point1":sites[0], "point2":sites[1], "point3":sites[2], "time":float("%.10f" % t), "at":[float("%.10f" % x), float("%.10f" % y)]} in cell[site1Key])
-										if {"point1":sites[0], "point2":sites[1], "point3":sites[2], "time":float("%.10f" % t), "at":[float("%.10f" % x), float("%.10f" % y)]} not in cell[site1Key]:
-											cell[site1Key].append({"point1":sites[0], "point2":sites[1], "point3":sites[2], "time":float("%.10f" % t), "at":[float("%.10f" % x), float("%.10f" % y)]})
+										
+										if {"sites":[site1, sites[0], sites[1]], "time":float("%.10f" % t), "at":[float("%.10f" % x), float("%.10f" % y)]} not in cell[site1Key]:
+											cell[site1Key].append({"sites":[site1, sites[0], sites[1]], "time":float("%.10f" % t), "at":[float("%.10f" % x), float("%.10f" % y)]})
 									else:
-										cell.update({site1Key : [{"point1":sites[0], "point2":sites[1], "point3":sites[2], "time":float("%.10f" % t), "at":[float("%.10f" % x), float("%.10f" % y)]}]})
-
+										cell.update({site1Key : [{"sites":[site1, sites[0], sites[1]], "time":float("%.10f" % t), "at":[float("%.10f" % x), float("%.10f" % y)]}]})
+										
 						else:
 							y = yAtX(sites[0], sites[2], x)
 							t = tAtXandY(sites[0], x, y)
@@ -611,20 +625,31 @@ for site1 in points:
 								#site1Key = f"{str(site1).replace(', ', '_')}"
 	
 								# For some reason trying to prevent duplicates causes things to break
-								if site1Key in cell:
-									if {"point1":sites[0], "point2":sites[1], "point3":sites[2], "time":float("%.10f" % t), "at":[float("%.10f" % x), float("%.10f" % y)]} not in cell[site1Key]:
-										cell[site1Key].append({"point1":sites[0], "point2":sites[1], "point3":sites[2], "time":float("%.10f" % t), "at":[float("%.10f" % x), float("%.10f" % y)]})
-									#cell[site1Key].append({"point1":sites[0], "point2":sites[1], "point3":sites[2], "time":float("%.10f" % t), "at":[float("%.10f" % x), float("%.10f" % y)]})
-								else:
-									cell.update({site1Key : [{"point1":sites[0], "point2":sites[1], "point3":sites[2], "time":float("%.10f" % t), "at":[float("%.10f" % x), float("%.10f" % y)]}]})
+								# if site1Key in cell:
+								# 	if {"point1":sites[0], "point2":sites[1], "point3":sites[2], "time":float("%.10f" % t), "at":[float("%.10f" % x), float("%.10f" % y)]} not in cell[site1Key]:
+								# 		cell[site1Key].append({"point1":sites[0], "point2":sites[1], "point3":sites[2], "time":float("%.10f" % t), "at":[float("%.10f" % x), float("%.10f" % y)]})
+								# 	#cell[site1Key].append({"point1":sites[0], "point2":sites[1], "point3":sites[2], "time":float("%.10f" % t), "at":[float("%.10f" % x), float("%.10f" % y)]})
+								# else:
+								# 	cell.update({site1Key : [{"point1":sites[0], "point2":sites[1], "point3":sites[2], "time":float("%.10f" % t), "at":[float("%.10f" % x), float("%.10f" % y)]}]})
 
+								sites.remove(site1)
+									
+								if site1Key in cell:
+									#print({"point1":sites[0], "point2":sites[1], "point3":sites[2], "time":float("%.10f" % t), "at":[float("%.10f" % x), float("%.10f" % y)]} in cell[site1Key])
+										
+									if {"sites":[site1, sites[0], sites[1]], "time":float("%.10f" % t), "at":[float("%.10f" % x), float("%.10f" % y)]} not in cell[site1Key]:
+										cell[site1Key].append({"sites":[site1, sites[0], sites[1]], "time":float("%.10f" % t), "at":[float("%.10f" % x), float("%.10f" % y)]})
+								else:
+									cell.update({site1Key : [{"sites":[site1, sites[0], sites[1]], "time":float("%.10f" % t), "at":[float("%.10f" % x), float("%.10f" % y)]}]})
+										
 
 for others in points:
 	
 	for site1 in cell:
 		removeVerts = []
 		for entry in cell[site1]:
-			if entry["point1"] != others and entry["point2"] != others and entry["point3"] != others and others[1] < entry["time"]:
+			#if entry["point1"] != others and entry["point2"] != others and entry["point3"] != others and others[1] < entry["time"]:
+			if others not in entry["sites"] and others[1] < entry["time"]:
 				otherPointY = getYAtTimeAndX(others, entry["time"], entry["at"][0])
 				
 				if otherPointY > entry["at"][1]:
@@ -653,7 +678,7 @@ if points.__len__() == 3 and cell.keys().__len__() != 0:
 		
 		vert = f"{str(current['at']).replace(', ', '_')}"
 		#print(vert)
-		sites = [current["point1"], current["point2"], current["point3"]]
+		sites = current["sites"]#[current["point1"], current["point2"], current["point3"]]
 		distanceTargetSort(fromKey(kys[0]), sites)
 		
 		#bound = nearestBoundry(current["at"], midPoint(current["point1"], current["point2"]))
@@ -666,7 +691,8 @@ if points.__len__() == 3 and cell.keys().__len__() != 0:
 		#plt.plot([current["point1"][0], current["point2"][0]], [current["point1"][1], current["point2"][1]], "y")
 	
 		#vertices[vert] = {"sites":[current["point1"], current["point2"], current["point3"]], "with":[[current["point1"], current["point2"]]], "at":[bound]}
-		vertices[vert] = {"sites":[current["point1"], current["point2"], current["point3"]], "with":[[sites[0], sites[1]]], "at":[bound]}
+		#vertices[vert] = {"sites":[current["point1"], current["point2"], current["point3"]], "with":[[sites[0], sites[1]]], "at":[bound]}
+		vertices[vert] = {"sites":current["sites"], "with":[[sites[0], sites[1]]], "at":[bound]}
 		finalCell[kys[0]]["vertices"].append([current["at"], bound])
 		finalCell[kys[1]]["vertices"].append([current["at"], bound])
 	# else: # This isn't necessary, other parts handle 2 parallel lines correctly
@@ -706,12 +732,18 @@ else:
 	usedSites = []
 	for entry in cell:
 		for vert in cell[entry]:
-			if vert["point1"] not in usedSites:
-				usedSites.append(vert["point1"])
-			if vert["point2"] not in usedSites:
-				usedSites.append(vert["point2"])
-			if vert["point3"] not in usedSites:
-				usedSites.append(vert["point3"])
+			# if vert["point1"] not in usedSites:
+			# 	usedSites.append(vert["point1"])
+			# if vert["point2"] not in usedSites:
+			# 	usedSites.append(vert["point2"])
+			# if vert["point3"] not in usedSites:
+			# 	usedSites.append(vert["point3"])
+			if vert["sites"][0] not in usedSites:
+				usedSites.append(vert["sites"][0])
+			if vert["sites"][1] not in usedSites:
+				usedSites.append(vert["sites"][1])
+			if vert["sites"][2] not in usedSites:
+				usedSites.append(vert["sites"][2])
 
 	for site in points:
 		if site not in usedSites:
@@ -763,54 +795,62 @@ else:
 				finalCell[nearestKey]["vertices"].append(boundPair)
 			#finalCell[f"{str(nearest).replace(', ', '_')}"]["vertices"].append(boundPair)
 
-
+#usedSitePairs = []
 for site1Key in cell:
+	# Could probably optimize this so that it doesn't search the same point multiple times
+	#print("site1Key",site1Key)
 	for entry1 in cell[site1Key]:
-		entryPts = [entry1["point1"], entry1["point2"], entry1["point3"]]
+		entryPts = entry1["sites"]#[entry1["point1"], entry1["point2"], entry1["point3"]]
 		
 		site1 = fromKey(site1Key)
-		site2 = []
-		site2Key = []
-
-		if entry1["point2"] != site1:
-			site2 = entry1['point2']
-		else:
-			site2 = entry1['point1']
-
+		site2 = entryPts[1]
 		site2Key = toKey(site2)
-			
+
+		# if entry1["point2"] != site1:
+		# 	site2 = entry1['point2']
+		# else:
+		# 	site2 = entry1['point1']
+
+		#site2Key = toKey(site2)
+		#print("site2Key",site2Key)
 		#for entry2 in site2:
 		for entry2 in cell[site2Key]:
-			entry2Pts = [entry2["point1"], entry2["point2"], entry2["point3"]]
+			#print("site2Key",site2Key)
+			entry2Pts = entry2["sites"]#[entry2["point1"], entry2["point2"], entry2["point3"]]
 			
 			if site1 in entry2Pts and entry1["at"] != entry2["at"]:
 				edgePair = [entry1["at"], entry2["at"]]
 				sortByY(edgePair)
 				
 				if edgePair not in finalCell[site1Key]["vertices"]:
-					print(entryPts,"-", entry2Pts, "-",edgePair)
+					#print(entryPts,"-", entry2Pts, "-",edgePair)
 
 					finalCell[site1Key]["vertices"].append(edgePair)
+					break # Since there can only ever be 1 edge between two given sites, can just break the loop once one is found
 
-		site3 = entryPts.copy()
-		site3.remove(site1)
+		#site3 = entryPts.copy()
+		#site3.remove(site1)
 		#site3.remove(site2Pt)
-		site3.remove(site2)
-		site3 = site3[0]
-		print(site3)
+		#site3.remove(site2)
+		#site3 = site3[0]
+		site3 = entryPts[2]
+		#print(site3)
 		site3Key = toKey(site3)
 
 		for entry3 in cell[site3Key]:
-			entry3Pts = [entry3["point1"], entry3["point2"], entry3["point3"]]
+			entry3Pts = entry3["sites"]#[entry3["point1"], entry3["point2"], entry3["point3"]]
 			
 			if site1 in entry3Pts and entry1["at"] != entry3["at"]:
 				edgePair = [entry1["at"], entry3["at"]]
 				sortByY(edgePair)
 				
 				if edgePair not in finalCell[site1Key]["vertices"]:
-					print(entryPts,"-", entry3Pts, "-",edgePair)
+					#print(entryPts,"-", entry3Pts, "-",edgePair)
 
 					finalCell[site1Key]["vertices"].append(edgePair)
+					break
+		print("-------")
+	print()
 
 print()
 
@@ -825,7 +865,8 @@ for site in cell:
         
 		plt.plot(entry["at"][0], entry["at"][1], "go")
 
-		plt.plot([entry["point2"][0], entry["at"][0], entry["point3"][0], entry["at"][0], entry["point1"][0]], [entry["point2"][1], entry["at"][1], entry["point3"][1], entry["at"][1], entry["point1"][1]], "g") 
+		#plt.plot([entry["point2"][0], entry["at"][0], entry["point3"][0], entry["at"][0], entry["point1"][0]], [entry["point2"][1], entry["at"][1], entry["point3"][1], entry["at"][1], entry["point1"][1]], "g") 
+		plt.plot([entry["sites"][1][0], entry["at"][0], entry["sites"][2][0], entry["at"][0], entry["sites"][0][0]], [entry["sites"][1][1], entry["at"][1], entry["sites"][2][1], entry["at"][1], entry["sites"][0][1]], "g") 
 
 print(finalCell)
 for cell in finalCell:
@@ -860,4 +901,5 @@ for cell in finalCell:
 	plt.fill(vertsX, vertsY, color=(random.random(), random.random(), random.random(), 0.5))																								                        
 		
 plt.show()
+
 
