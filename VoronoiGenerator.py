@@ -18,7 +18,7 @@ for i in range(1, 30):
 
 #points = [[50, 50], [25, 25], [75, 75], [98, 70]]
 #points = [[50, 50], [25, 20], [75, 75], [98, 70]]
-points = [[30, 40], [25, 60], [80, 97]]
+#points = [[30, 40], [25, 60], [80, 97]]
 #points = [[50, 50], [75, 75]]  
 #points = [[50, 50]]
 
@@ -106,7 +106,7 @@ points = [[30, 40], [25, 60], [80, 97]]
 
 #points = [[128, 141], [33, 137], [84, 137], [85, 134], [24, 167], [54, 202]]
 
-#points = [[104, 95], [167, 95], [142, 136]]
+points = [[104, 95], [167, 95], [142, 136]]
 
 #points = [[104, 95], [167, 95], [20, 95]]
 #points = [[104, 95], [167, 95], [20, 95], [180, 95]]
@@ -505,6 +505,14 @@ def formatVertex(vertices):
 			else:
 				vertices[i][j] = float("%.10f" % vertices[i][j])
 
+def toKey(point):
+	return f"{str(point).replace(', ', '_')}"
+
+def fromKey(key):
+	result = key.replace("[", "").replace("]", "").split("_")
+	result = [float(result[0]), float(result[1])]
+	result = [float("%.10f" % result[0]), float("%.10f" % result[1])]
+	return result
 
 sortByY(points)
 print(points)
@@ -533,23 +541,24 @@ for site1 in points:
 		if site1 != site2:
 			for site3 in points:
 				if site3 != site2 and site3 != site1:
+					site1Key = f"{str(site1).replace(', ', '_')}"
 					sites = [site1, site2, site3]
 					sortByY(sites)
 
 					x = find3IntersectX(sites[0], sites[1], sites[2])
 					#print("line458",x)
-					if x != None:
+					if x != None: # x is None if the lines are parallel, which will be handled later
 						#print(sites)
 						t = getTimeAtX(sites[0], sites[1], sites[2], x)
 
-						if t != None:
+						if t != None: # t is None if at least two of the sites have the same y-value
 						
 							y = getYAtTimeAndX(sites[0], t, x)
 
 							#if site1 == [24, 167]:
 							#	print("---",x,y,t)
 					
-							if y != None:
+							if y != None: # y is None if t is equal to the y-value of the point
 
 								# bufferBounds just increases the bounds of the selected area by a certain amount so that intersection points can happen within it and are not outright rejected
 								#	but need to be accounted for seperately and fixed
@@ -559,7 +568,7 @@ for site1 in points:
 								bufferBounds = [[defaultBounds[0][0] - bufferWidth, defaultBounds[0][1] + bufferHeight], [defaultBounds[1][0] + bufferHeight, defaultBounds[1][1] - bufferHeight]]
 					
 								if t > site1[1] and t > site2[1] and t > site3[1] and withinBounds([x, y], bufferBounds):
-									site1Key = f"{str(site1).replace(', ', '_')}"
+									#site1Key = f"{str(site1).replace(', ', '_')}"
 
 									# if site1Key in cell:
 									# 	# Prevents duplicates (duplicates don't break anything, just makes stuff slower (probably))
@@ -576,10 +585,16 @@ for site1 in points:
 									# 	cell.update({f"{str(site1).replace(', ', '_')}" : [{"point1":site1, "point2":site2, "point3":site3, "time":float("%.10f" % t), "at":[float("%.10f" % x), float("%.10f" % y)]}]})
 	
 									# For some reason trying to prevent duplicates causes things to break
+									# if site1Key in cell:
+									# 	cell[site1Key].append({"point1":site1, "point2":site2, "point3":site3, "time":float("%.10f" % t), "at":[float("%.10f" % x), float("%.10f" % y)]})
+									# else:
+									# 	cell.update({site1Key : [{"point1":site1, "point2":site2, "point3":site3, "time":float("%.10f" % t), "at":[float("%.10f" % x), float("%.10f" % y)]}]})
 									if site1Key in cell:
-										cell[site1Key].append({"point1":site1, "point2":site2, "point3":site3, "time":float("%.10f" % t), "at":[float("%.10f" % x), float("%.10f" % y)]})
+										print({"point1":sites[0], "point2":sites[1], "point3":sites[2], "time":float("%.10f" % t), "at":[float("%.10f" % x), float("%.10f" % y)]} in cell[site1Key])
+										if {"point1":sites[0], "point2":sites[1], "point3":sites[2], "time":float("%.10f" % t), "at":[float("%.10f" % x), float("%.10f" % y)]} not in cell[site1Key]:
+											cell[site1Key].append({"point1":sites[0], "point2":sites[1], "point3":sites[2], "time":float("%.10f" % t), "at":[float("%.10f" % x), float("%.10f" % y)]})
 									else:
-										cell.update({site1Key : [{"point1":site1, "point2":site2, "point3":site3, "time":float("%.10f" % t), "at":[float("%.10f" % x), float("%.10f" % y)]}]})
+										cell.update({site1Key : [{"point1":sites[0], "point2":sites[1], "point3":sites[2], "time":float("%.10f" % t), "at":[float("%.10f" % x), float("%.10f" % y)]}]})
 
 						else:
 							y = yAtX(sites[0], sites[2], x)
@@ -593,13 +608,15 @@ for site1 in points:
 							bufferBounds = [[defaultBounds[0][0] - bufferWidth, defaultBounds[0][1] + bufferHeight], [defaultBounds[1][0] + bufferHeight, defaultBounds[1][1] - bufferHeight]]
 					
 							if t > site1[1] and t > site2[1] and t > site3[1] and withinBounds([x, y], bufferBounds):
-								site1Key = f"{str(site1).replace(', ', '_')}"
+								#site1Key = f"{str(site1).replace(', ', '_')}"
 	
 								# For some reason trying to prevent duplicates causes things to break
 								if site1Key in cell:
-									cell[site1Key].append({"point1":site1, "point2":site2, "point3":site3, "time":float("%.10f" % t), "at":[float("%.10f" % x), float("%.10f" % y)]})
+									if {"point1":sites[0], "point2":sites[1], "point3":sites[2], "time":float("%.10f" % t), "at":[float("%.10f" % x), float("%.10f" % y)]} not in cell[site1Key]:
+										cell[site1Key].append({"point1":sites[0], "point2":sites[1], "point3":sites[2], "time":float("%.10f" % t), "at":[float("%.10f" % x), float("%.10f" % y)]})
+									#cell[site1Key].append({"point1":sites[0], "point2":sites[1], "point3":sites[2], "time":float("%.10f" % t), "at":[float("%.10f" % x), float("%.10f" % y)]})
 								else:
-									cell.update({site1Key : [{"point1":site1, "point2":site2, "point3":site3, "time":float("%.10f" % t), "at":[float("%.10f" % x), float("%.10f" % y)]}]})
+									cell.update({site1Key : [{"point1":sites[0], "point2":sites[1], "point3":sites[2], "time":float("%.10f" % t), "at":[float("%.10f" % x), float("%.10f" % y)]}]})
 
 
 for others in points:
@@ -621,8 +638,9 @@ for others in points:
 			except Exception:
 				pass
 
-print(cell)
-print(cell.keys().__len__())
+for tmp in cell:
+	for tmp2 in cell[tmp]:
+		print(tmp, "-", tmp2)
 # There are 3 cases that have to be dealth with seperately: 1 site, 3 sites, and 2 or 3+ sites 
 # (technically 2 sites have to be dealt with seperately but are the same as having a cell in a corner so can be dealt with later)
 if points.__len__() == 3 and cell.keys().__len__() != 0:
@@ -631,12 +649,15 @@ if points.__len__() == 3 and cell.keys().__len__() != 0:
 	if kys.__len__() != 0: # This check is redundant now
 		current = cell[kys[0]][0]
 		#print(cell)
-		#print(current)
+		#print("line646",kys[0])
 		
 		vert = f"{str(current['at']).replace(', ', '_')}"
 		#print(vert)
+		sites = [current["point1"], current["point2"], current["point3"]]
+		distanceTargetSort(fromKey(kys[0]), sites)
 		
-		bound = nearestBoundry(current["at"], midPoint(current["point1"], current["point2"]))
+		#bound = nearestBoundry(current["at"], midPoint(current["point1"], current["point2"]))
+		bound = nearestBoundry(current["at"], midPoint(sites[0], sites[1]))
 		#midPt = midPoint(current["point1"], current["point2"])
 		#bound = nearestBoundry(current["at"], midPt)
 		#print(current["point1"], current["point2"], midPoint(current["point1"], current["point2"]))
@@ -644,7 +665,8 @@ if points.__len__() == 3 and cell.keys().__len__() != 0:
 		#plt.plot(midPt[0], midPt[1], "yo")
 		#plt.plot([current["point1"][0], current["point2"][0]], [current["point1"][1], current["point2"][1]], "y")
 	
-		vertices[vert] = {"sites":[current["point1"], current["point2"], current["point3"]], "with":[[current["point1"], current["point2"]]], "at":[bound]}
+		#vertices[vert] = {"sites":[current["point1"], current["point2"], current["point3"]], "with":[[current["point1"], current["point2"]]], "at":[bound]}
+		vertices[vert] = {"sites":[current["point1"], current["point2"], current["point3"]], "with":[[sites[0], sites[1]]], "at":[bound]}
 		finalCell[kys[0]]["vertices"].append([current["at"], bound])
 		finalCell[kys[1]]["vertices"].append([current["at"], bound])
 	# else: # This isn't necessary, other parts handle 2 parallel lines correctly
@@ -742,6 +764,14 @@ else:
 			#finalCell[f"{str(nearest).replace(', ', '_')}"]["vertices"].append(boundPair)
 
 
+for site in cell:
+	for entry1 in cell[site]:
+		entryPts = [entry1["point1"], entry1["point2"], entry1["point3"]]
+		
+		site2 = cell[f"{str(entryPts[1]).replace(', ', '_')}"]
+		
+
+
 # ---------------- End of voronoi calculations ----------------
 
 for pt in points:
@@ -788,6 +818,7 @@ for cell in finalCell:
 	plt.fill(vertsX, vertsY, color=(random.random(), random.random(), random.random(), 0.5))																								                        
 		
 plt.show()
+
 
 
 
