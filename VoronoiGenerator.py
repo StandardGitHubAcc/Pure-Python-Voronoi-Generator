@@ -4,8 +4,8 @@ import math
 from math import *
 
 #                 width     height
-defaultBounds = [[0, 200], [200, 0]]
-#defaultBounds = [[0, 100], [300, 0]]
+#defaultBounds = [[0, 200], [200, 0]]
+defaultBounds = [[0, 100], [300, 0]]
 
 #		bottomleft, topleft, bottomright, topright
 #corners = [[0, 0], [0, 200], [200, 0], [200, 200]]
@@ -102,11 +102,11 @@ for i in range(1, 30):
 
 #points = [[72, 20], [10, 69], [85, 72], [80, 78], [26, 88], [63, 100], [83, 104], [96, 117], [84, 126], [93, 131], [91, 136], [67, 144], [54, 147], [41, 149], [94, 179], [56, 182], [23, 197], [75, 213], [18, 217], [36, 252], [60, 256], [41, 259], [38, 266], [36, 267], [55, 269], [85, 270], [44, 286], [22, 289], [75, 299]]
 
-#points = [[67, 13], [55, 26], [0, 31], [78, 33], [50, 41], [47, 52], [99, 54], [16, 55], [38, 88], [24, 94], [14, 114], [0, 122], [5, 123], [14, 129], [85, 134], [84, 137], [33, 137], [28, 141], [24, 167], [89, 199], [54, 202], [67, 208], [90, 217], [8, 221], [98, 235], [52, 252], [15, 255], [38, 258], [50, 297]]
+points = [[67, 13], [55, 26], [0, 31], [78, 33], [50, 41], [47, 52], [99, 54], [16, 55], [38, 88], [24, 94], [14, 114], [0, 122], [5, 123], [14, 129], [85, 134], [84, 137], [33, 137], [28, 141], [24, 167], [89, 199], [54, 202], [67, 208], [90, 217], [8, 221], [98, 235], [52, 252], [15, 255], [38, 258], [50, 297]]
 
 #points = [[128, 141], [33, 137], [84, 137], [85, 134], [24, 167], [54, 202]]
 
-points = [[104, 95], [167, 95], [142, 136]]
+#points = [[104, 95], [167, 95], [142, 136]]
 
 #points = [[104, 95], [167, 95], [20, 95]]
 #points = [[104, 95], [167, 95], [20, 95], [180, 95]]
@@ -590,7 +590,7 @@ for site1 in points:
 									# else:
 									# 	cell.update({site1Key : [{"point1":site1, "point2":site2, "point3":site3, "time":float("%.10f" % t), "at":[float("%.10f" % x), float("%.10f" % y)]}]})
 									if site1Key in cell:
-										print({"point1":sites[0], "point2":sites[1], "point3":sites[2], "time":float("%.10f" % t), "at":[float("%.10f" % x), float("%.10f" % y)]} in cell[site1Key])
+										#print({"point1":sites[0], "point2":sites[1], "point3":sites[2], "time":float("%.10f" % t), "at":[float("%.10f" % x), float("%.10f" % y)]} in cell[site1Key])
 										if {"point1":sites[0], "point2":sites[1], "point3":sites[2], "time":float("%.10f" % t), "at":[float("%.10f" % x), float("%.10f" % y)]} not in cell[site1Key]:
 											cell[site1Key].append({"point1":sites[0], "point2":sites[1], "point3":sites[2], "time":float("%.10f" % t), "at":[float("%.10f" % x), float("%.10f" % y)]})
 									else:
@@ -764,13 +764,55 @@ else:
 			#finalCell[f"{str(nearest).replace(', ', '_')}"]["vertices"].append(boundPair)
 
 
-for site in cell:
-	for entry1 in cell[site]:
+for site1Key in cell:
+	for entry1 in cell[site1Key]:
 		entryPts = [entry1["point1"], entry1["point2"], entry1["point3"]]
 		
-		site2 = cell[f"{str(entryPts[1]).replace(', ', '_')}"]
-		
+		site1 = fromKey(site1Key)
+		site2 = []
+		site2Key = []
 
+		if entry1["point2"] != site1:
+			site2 = entry1['point2']
+		else:
+			site2 = entry1['point1']
+
+		site2Key = toKey(site2)
+			
+		#for entry2 in site2:
+		for entry2 in cell[site2Key]:
+			entry2Pts = [entry2["point1"], entry2["point2"], entry2["point3"]]
+			
+			if site1 in entry2Pts and entry1["at"] != entry2["at"]:
+				edgePair = [entry1["at"], entry2["at"]]
+				sortByY(edgePair)
+				
+				if edgePair not in finalCell[site1Key]["vertices"]:
+					print(entryPts,"-", entry2Pts, "-",edgePair)
+
+					finalCell[site1Key]["vertices"].append(edgePair)
+
+		site3 = entryPts.copy()
+		site3.remove(site1)
+		#site3.remove(site2Pt)
+		site3.remove(site2)
+		site3 = site3[0]
+		print(site3)
+		site3Key = toKey(site3)
+
+		for entry3 in cell[site3Key]:
+			entry3Pts = [entry3["point1"], entry3["point2"], entry3["point3"]]
+			
+			if site1 in entry3Pts and entry1["at"] != entry3["at"]:
+				edgePair = [entry1["at"], entry3["at"]]
+				sortByY(edgePair)
+				
+				if edgePair not in finalCell[site1Key]["vertices"]:
+					print(entryPts,"-", entry3Pts, "-",edgePair)
+
+					finalCell[site1Key]["vertices"].append(edgePair)
+
+print()
 
 # ---------------- End of voronoi calculations ----------------
 
@@ -818,7 +860,4 @@ for cell in finalCell:
 	plt.fill(vertsX, vertsY, color=(random.random(), random.random(), random.random(), 0.5))																								                        
 		
 plt.show()
-
-
-
 
