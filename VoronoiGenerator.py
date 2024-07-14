@@ -17,7 +17,7 @@ for i in range(1, 30):
 	  points.append([random.randint(0, defaultBounds[0][1]), random.randint(0, defaultBounds[1][0])])  
 
 #points = [[50, 50], [25, 25], [75, 75], [98, 70]]
-points = [[50, 50], [25, 20], [75, 75], [98, 70]]
+#points = [[50, 50], [25, 20], [75, 75], [98, 70]]
 #points = [[30, 40], [25, 60], [80, 97]]
 #points = [[50, 50], [75, 75]]  
 #points = [[50, 50]]
@@ -87,6 +87,10 @@ points = [[50, 50], [25, 20], [75, 75], [98, 70]]
 #points = [[73, 8], [62, 92], [37, 95], [80, 139], [154, 147], [84, 177], [85, 177]] # broke finding boundry edges with outside angles
 
 #points = [[25, 25], [75, 75], [50, 50]]
+
+#points = [[136, 20], [21, 25], [62, 26], [17, 39], [131, 45], [165, 47], [104, 52], [151, 67], [28, 72], [84, 72], [34, 73], [186, 73], [165, 75], [8, 75], [33, 76], [35, 81], [105, 83], [196, 89], [162, 101], [11, 103], [105, 109], [135, 109], [8, 114], [18, 114], [164, 116], [12, 119], [148, 123], [138, 127], [80, 157]]
+points = [[17, 39], [8, 75], [28, 72], [34, 73], [33, 76], [35, 81]]
+#points = []
 
 #-------------with box that is 100 wide and 300 tall
 #points = [[75, 14], [85, 22], [86, 26], [94, 32], [92, 45], [32, 71], [0, 127], [50, 132], [10, 134], [28, 134], [21, 134], [95, 147], [38, 152], [63, 162], [70, 168], [7, 175], [4, 176], [65, 179], [12, 187], [87, 190], [23, 197], [7, 206], [91, 209], [100, 234], [73, 236], [33, 267], [10, 273], [20, 278], [96, 298]]
@@ -802,7 +806,7 @@ for site1Key in cell:
 	#print("site1Key",site1Key)
 	for entry1 in cell[site1Key]:
 		entryPts = entry1["sites"]#[entry1["point1"], entry1["point2"], entry1["point3"]]
-		
+		print(entry1)
 		site1 = fromKey(site1Key)
 		site2 = entryPts[1]
 		site2Key = toKey(site2)
@@ -830,39 +834,44 @@ for site1Key in cell:
 				
 					if edgePair not in finalCell[site1Key]["vertices"]:
 						#print(entryPts,"-", entry2Pts, "-",edgePair)
-
-						finalCell[site1Key]["vertices"].append(edgePair)
-						finalCell[site2Key]["vertices"].append(edgePair)
-
+						print("edgePair",edgePair)
+						#if edgePair not in finalCell[site1Key]["vertices"]: # This might be an unecessary check
+						#	finalCell[site1Key]["vertices"].append(edgePair)
+						if edgePair not in finalCell[site2Key]["vertices"]:
+							finalCell[site2Key]["vertices"].append(edgePair)
+						finalCell[site1Key]["vertices"].append([entry1["at"], entry2["at"]])
+						#print("line842",edgePair, "-", entry1["sites"], "-", entry2["sites"])
 						sitePair = [site1, site2]
 						sort2ByY(sitePair)
 						usedSitePairs.append(sitePair)
 
-						vert1 = f"{str(entry1['at']).replace(', ', '_')}"
-						if vert1 not in vertices:
-							tempSites = entryPts
-							sortByY(tempSites)
-							vertices.update({vert1 : {"sites":tempSites, "at":entry3['at'], "with":[], "to":[]}})
+						# vert1 = f"{str(entry1['at']).replace(', ', '_')}"
+						# if vert1 not in vertices:
+						# 	tempSites = entryPts
+						# 	sortByY(tempSites)
+						# 	vertices.update({vert1 : {"sites":tempSites, "at":entry1['at'], "with":[], "to":[]}})
 					
-						vertices[vert1]["with"].append(sitePair)
-						vertices[vert1]["to"].append(entry2["at"])
+						# 	vertices[vert1]["with"].append(sitePair)
+						# 	vertices[vert1]["to"].append(entry2["at"])
+						# elif entry2["at"] not in vertices[vert1]["to"]:
+						# 	vertices[vert1]["with"].append(sitePair)
+						# 	vertices[vert1]["to"].append(entry2["at"])
+							
 
-						vert2 = f"{str(entry2['at']).replace(', ', '_')}"
-						if vert2 not in vertices:
-							tempSites = entry2Pts
-							sortByY(tempSites)
-							vertices.update({vert2 : {"sites":tempSites, "at":entry2['at'], "with":[], "to":[]}})
+						# vert2 = f"{str(entry2['at']).replace(', ', '_')}"
+						# if vert2 not in vertices:
+						# 	tempSites = entry2Pts
+						# 	sortByY(tempSites)
+						# 	vertices.update({vert2 : {"sites":tempSites, "at":entry2['at'], "with":[], "to":[]}})
 					
-						vertices[vert2]["with"].append(sitePair)
-						vertices[vert2]["to"].append(entry1["at"])
+						# 	#vertices[vert2]["with"].append(sitePair)
+						# 	#vertices[vert2]["to"].append(entry1["at"])
+						# #elif entry1["at"] not in vertices[vert2]["to"]:
+						# vertices[vert2]["with"].append(sitePair)
+						# vertices[vert2]["to"].append(entry1["at"])
 
 						break # Since there can only ever be 1 edge between two given sites, can just break the loop once one is found
 
-		#site3 = entryPts.copy()
-		#site3.remove(site1)
-		#site3.remove(site2Pt)
-		#site3.remove(site2)
-		#site3 = site3[0]
 		site3 = entryPts[2]
 		#print(site3)
 		site3Key = toKey(site3)
@@ -881,39 +890,160 @@ for site1Key in cell:
 					if edgePair not in finalCell[site1Key]["vertices"]:
 						#print(entryPts,"-", entry3Pts, "-",edgePair)
 					
-						finalCell[site1Key]["vertices"].append(edgePair)
-						finalCell[site3Key]["vertices"].append(edgePair)
+						#if edgePair not in finalCell[site1Key]["vertices"]: # This check might be unecessary
+						#	finalCell[site1Key]["vertices"].append(edgePair)
+						#if edgePair not in finalCell[site3Key]["vertices"]:
+						#	finalCell[site3Key]["vertices"].append(edgePair)
+						#print("line896",edgePair)
+						# sitePair = [site1, site3]
+						# sort2ByY(sitePair)
+						# usedSitePairs.append(sitePair)
+					
+						# vert1 = f"{str(entry1['at']).replace(', ', '_')}"
+						# if vert1 not in vertices:
+						# 	tempSites = entryPts
+						# 	sortByY(tempSites)
+						# 	vertices.update({vert1 : {"sites":tempSites, "at":entry1['at'],"with":[], "to":[]}})
+					
+						# 	vertices[vert1]["with"].append(sitePair)
+						# 	vertices[vert1]["to"].append(entry3["at"])
+						# elif entry3["at"] not in vertices[vert1]["to"]:
+						# 	vertices[vert1]["with"].append(sitePair)
+						# 	vertices[vert1]["to"].append(entry3["at"])
 
-						sitePair = [site1, site3]
-						sort2ByY(sitePair)
-						usedSitePairs.append(sitePair)
+						# vert2 = f"{str(entry3['at']).replace(', ', '_')}"
+						# if vert2 not in vertices:
+						# 	tempSites = entry3Pts
+						# 	sortByY(tempSites)
+						# 	vertices.update({vert2 : {"sites":tempSites, "at":entry3['at'], "with":[], "to":[]}})
 					
-						vert1 = f"{str(entry1['at']).replace(', ', '_')}"
-						if vert1 not in vertices:
-							tempSites = entryPts
-							sortByY(tempSites)
-							vertices.update({vert1 : {"sites":tempSites, "at":entry1['at'],"with":[], "to":[]}})
-					
-						vertices[vert1]["with"].append(sitePair)
-						vertices[vert1]["to"].append(entry3["at"])
-
-						vert2 = f"{str(entry3['at']).replace(', ', '_')}"
-						if vert2 not in vertices:
-							tempSites = entry3Pts
-							sortByY(tempSites)
-							vertices.update({vert2 : {"sites":tempSites, "at":entry3['at'], "with":[], "to":[]}})
-					
-						vertices[vert2]["with"].append(sitePair)
-						vertices[vert2]["to"].append(entry1["at"])
+						# vertices[vert2]["with"].append(sitePair)
+						# vertices[vert2]["to"].append(entry1["at"])
 
 						break
 		#print("-------")
-	print()
-
+	#print()
+print(usedSitePairs)
 print()
 
-print(vertices)
+#print(vertices)
 print()
+
+# Modifies convex hull so that it has edges extending to the boundries of the specified area
+for vert in vertices: 
+	continue
+	#tempVertPt = str(vert).removeprefix("[").removesuffix("]").split("_")
+	#vertPt = [float(tempVertPt[0]), float(tempVertPt[1])]
+	vertPt = vertices[vert]["at"]
+
+	if vertices[vert]["to"].__len__() == 1:
+		site1 = vertices[vert]["sites"][0]
+		site2 = vertices[vert]["sites"][1]
+		site3 = vertices[vert]["sites"][2]
+
+		pickedSites = [[site1, site2], [site1, site3], [site2, site3]]
+		pickedSites.remove(vertices[vert]["with"][0])
+		
+		dist1 = distancePt(pickedSites[0][0], pickedSites[0][1])
+		dist2 = distancePt(pickedSites[1][0], pickedSites[1][1])
+
+		if dist1 < dist2:
+			pickedSites = pickedSites[0]
+		else:
+			pickedSites = pickedSites[1]
+
+		throughPt = midPoint(pickedSites[0], pickedSites[1])
+		#print(pickedSites[0], pickedSites[1])
+		if throughPt != []:
+			#print("line732", vertPt, throughPt)
+			nearestBound = nearestBoundry(vertPt, throughPt)
+			#print(nearestBound)
+			vertices[vert]["with"].append([pickedSites[0], pickedSites[1]])
+			vertices[vert]["to"].append(nearestBound)
+			finalCell[f"{str(pickedSites[0]).replace(', ', '_')}"]["vertices"].append([vertPt, nearestBound])
+			finalCell[f"{str(pickedSites[1]).replace(', ', '_')}"]["vertices"].append([vertPt, nearestBound])
+
+	if vertices[vert]["at"].__len__() == 2:
+		continue
+		site1 = vertices[vert]["sites"][0]
+		site2 = vertices[vert]["sites"][1]
+		site3 = vertices[vert]["sites"][2]
+
+		vertPtT = tAtXandY(site1, vertPt[0], vertPt[1])
+
+		pickedSites = [[site1, site2], [site1, site3], [site2, site3]]
+		pickedSites.remove(vertices[vert]["with"][0])
+		pickedSites.remove(vertices[vert]["with"][1])
+		pickedSites = pickedSites[0]
+		
+		sortByY(pickedSites)
+		notInPair = []
+
+		if site1 != pickedSites[0] and site1 != pickedSites[1]:
+			notInPair = site1
+		elif site2 != pickedSites[0] and site2 != pickedSites[1]:
+			notInPair = site2
+		elif site3 != pickedSites[0] and site3 != pickedSites[1]:
+			notInPair = site3
+
+		dists = [vertPtT - pickedSites[0][1], vertPtT - pickedSites[1][1], vertPtT - notInPair[1]]
+		dists.sort()
+		
+		deltaT = dists[0] / 2
+
+		# for some reason when pickedSites = [[167, 95], [188, 191]], both beforeTx and afterTx are less than vertPt[0]
+		#	This is because there are two locations where the two parabolas intersect, so there are 4 possible points.
+		#	Using getXAtTimeRef instead of getXAtTime ensures that the x picked is the one closest to the target intersection point
+		#	getXAtTime works in most cases because the second option for an intersection point is usaully really far away from the other one
+		#		and the midpoint, but that is not the case for the above scenario
+		beforeTx = getXAtTimeRef(pickedSites[0], pickedSites[1], vertPtT - deltaT, vertPt[0])
+		afterTx = getXAtTimeRef(pickedSites[0], pickedSites[1], vertPtT + deltaT, vertPt[0])
+
+		throughPt = []
+
+		beforeTy1 = getYAtTimeAndX(pickedSites[0], vertPtT - deltaT, beforeTx)
+		beforeTy2 = getYAtTimeAndX(notInPair, vertPtT - deltaT, beforeTx)
+		afterTy1 = getYAtTimeAndX(pickedSites[0], vertPtT + deltaT, afterTx)
+		afterTy2 = getYAtTimeAndX(notInPair, vertPtT + deltaT, afterTx)
+		
+		if beforeTy1 > beforeTy2:
+			throughPt = [beforeTx, beforeTy1]
+		elif afterTy1 > afterTy2:
+			throughPt = [afterTx, afterTy1]
+
+		if throughPt != []:
+
+			if vertPt[0] < defaultBounds[0][0] or vertPt[0] > defaultBounds[0][1] or vertPt[1] < defaultBounds[1][1] or vertPt[1] > defaultBounds[1][0]:
+				nearestBound = nearestBoundry(vertPt, throughPt)
+
+				newBound1 = nearestOutsideBoundry(vertPt, throughPt)
+				newBound2 = nearestOutsideBoundry(vertPt, vertices[vert]["at"][0])
+				newBound3 = nearestOutsideBoundry(vertPt, vertices[vert]["at"][1])
+
+				finalCell[f"{str(vertices[vert]['with'][0][0]).replace(', ', '_')}"]["vertices"].append([vertices[vert]["at"][0], newBound2])
+				finalCell[f"{str(vertices[vert]['with'][0][1]).replace(', ', '_')}"]["vertices"].append([vertices[vert]["at"][0], newBound2])
+				finalCell[f"{str(vertices[vert]['with'][1][0]).replace(', ', '_')}"]["vertices"].append([vertices[vert]["at"][1], newBound3])
+				finalCell[f"{str(vertices[vert]['with'][1][1]).replace(', ', '_')}"]["vertices"].append([vertices[vert]["at"][1], newBound3])
+				
+				# I could put both of these statements into one, but they are so big that I split them into two for readability
+				if (nearestBound[0] == defaultBounds[0][0] or nearestBound[0] == defaultBounds[0][1]) and (nearestBound[1] <= defaultBounds[1][0] and nearestBound[1] >= defaultBounds[1][1]):
+					finalCell[f"{str(pickedSites[0]).replace(', ', '_')}"]["vertices"].append([newBound1, nearestBound])
+					finalCell[f"{str(pickedSites[1]).replace(', ', '_')}"]["vertices"].append([newBound1, nearestBound])
+				elif (nearestBound[1] == defaultBounds[1][0] or nearestBound[1] == defaultBounds[1][1]) and (nearestBound[0] >= defaultBounds[0][0] and nearestBound[0] <= defaultBounds[0][1]):
+					finalCell[f"{str(pickedSites[0]).replace(', ', '_')}"]["vertices"].append([newBound1, nearestBound])
+					finalCell[f"{str(pickedSites[1]).replace(', ', '_')}"]["vertices"].append([newBound1, nearestBound])
+				  
+			else:
+				nearestBound = nearestBoundry(vertPt, throughPt)
+
+				# Stuff should be fine when removing these two commented lines since the vertices dictionary is never used again after this, only finalCell
+				#vertices[vert]["with"].append([pickedSites[0], pickedSites[1]])
+				#vertices[vert]["at"].append(nearestBound)
+				finalCell[f"{str(pickedSites[0]).replace(', ', '_')}"]["vertices"].append([vertPt, nearestBound])
+				finalCell[f"{str(pickedSites[1]).replace(', ', '_')}"]["vertices"].append([vertPt, nearestBound])
+
+
+
 # ---------------- End of voronoi calculations ----------------
 
 for pt in points:
@@ -928,7 +1058,7 @@ for site in cell:
 		#plt.plot([entry["point2"][0], entry["at"][0], entry["point3"][0], entry["at"][0], entry["point1"][0]], [entry["point2"][1], entry["at"][1], entry["point3"][1], entry["at"][1], entry["point1"][1]], "g") 
 		plt.plot([entry["sites"][1][0], entry["at"][0], entry["sites"][2][0], entry["at"][0], entry["sites"][0][0]], [entry["sites"][1][1], entry["at"][1], entry["sites"][2][1], entry["at"][1], entry["sites"][0][1]], "g") 
 
-print(finalCell)
+#print(finalCell)
 for cell in finalCell:
 
 	used = []
@@ -961,6 +1091,7 @@ for cell in finalCell:
 	plt.fill(vertsX, vertsY, color=(random.random(), random.random(), random.random(), 0.5))																								                        
 		
 plt.show()
+
 
 
 
