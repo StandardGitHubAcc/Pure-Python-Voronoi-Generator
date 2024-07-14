@@ -89,7 +89,7 @@ for i in range(1, 30):
 #points = [[25, 25], [75, 75], [50, 50]]
 
 #points = [[136, 20], [21, 25], [62, 26], [17, 39], [131, 45], [165, 47], [104, 52], [151, 67], [28, 72], [84, 72], [34, 73], [186, 73], [165, 75], [8, 75], [33, 76], [35, 81], [105, 83], [196, 89], [162, 101], [11, 103], [105, 109], [135, 109], [8, 114], [18, 114], [164, 116], [12, 119], [148, 123], [138, 127], [80, 157]]
-points = [[17, 39], [8, 75], [28, 72], [34, 73], [33, 76], [35, 81]]
+#points = [[17, 39], [8, 75], [28, 72], [34, 73], [33, 76], [35, 81]]
 #points = []
 
 #-------------with box that is 100 wide and 300 tall
@@ -892,12 +892,13 @@ for site1Key in cell:
 					
 						#if edgePair not in finalCell[site1Key]["vertices"]: # This check might be unecessary
 						#	finalCell[site1Key]["vertices"].append(edgePair)
-						#if edgePair not in finalCell[site3Key]["vertices"]:
-						#	finalCell[site3Key]["vertices"].append(edgePair)
+						if edgePair not in finalCell[site3Key]["vertices"]:
+							finalCell[site3Key]["vertices"].append(edgePair)
 						#print("line896",edgePair)
-						# sitePair = [site1, site3]
-						# sort2ByY(sitePair)
-						# usedSitePairs.append(sitePair)
+						finalCell[site1Key]["vertices"].append(edgePair)
+						sitePair = [site1, site3]
+						sort2ByY(sitePair)
+						usedSitePairs.append(sitePair)
 					
 						# vert1 = f"{str(entry1['at']).replace(', ', '_')}"
 						# if vert1 not in vertices:
@@ -1091,6 +1092,7 @@ for cell in finalCell:
 	plt.fill(vertsX, vertsY, color=(random.random(), random.random(), random.random(), 0.5))																								                        
 		
 plt.show()
+
 
 
 
