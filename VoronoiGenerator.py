@@ -82,7 +82,7 @@ points = []
 
 #points = [[20, 25], [55, 100], [70, 160], [95, 190]]
 #points = [[20, 25], [55, 100], [95, 190]]
-#points = [[20, 25], [40, 100], [70, 160], [95, 190]] # no intersections within the target area
+points = [[20, 25], [40, 100], [70, 160], [95, 190]] # no intersections within the target area
 
 #points = [[73, 8], [62, 92], [37, 95], [80, 139], [154, 147], [84, 177], [85, 177]] # broke finding boundry edges with outside angles
 
@@ -100,8 +100,9 @@ points = []
 
 #points = [[20, 4], [169, 5], [31, 16], [13, 21], [27, 22], [101, 31], [111, 32], [136, 50], [126, 59], [192, 67], [172, 68], [69, 83], [45, 97], [150, 116], [91, 117], [40, 120], [49, 130], [116, 138], [4, 144], [156, 149], [88, 150], [10, 150], [58, 151], [16, 153], [163, 161], [157, 186], [190, 193], [54, 195], [194, 200]]
 
-points = [[22, 299], [23, 299], [12, 273], [25, 25]]
-points = [[22, 199], [23, 199], [12, 173], [25, 25]]
+#vertices is 0
+#points = [[22, 299], [23, 299], [12, 273], [25, 25]]
+#points = [[22, 199], [23, 199], [12, 173], [25, 25]]
 #points = [[20, 199], [25, 199], [12, 173], [25, 25]]
 
 #------------- 100 points
@@ -865,17 +866,19 @@ else:
 				nearest = points2[0]
 
 			midPt = midPoint(site, nearest)
+			#diff = distancePt(site, midPt)/2
+			diff = 0.5
 
 			if site[1] == nearest[1]:
-				bound1 = nearestBoundry(midPt, [midPt[0], midPt[1] + 0.5])
-				bound2 = nearestBoundry(midPt, [midPt[0], midPt[1] - 0.5])
+				bound1 = nearestBoundry(midPt, [midPt[0], midPt[1] + diff])
+				bound2 = nearestBoundry(midPt, [midPt[0], midPt[1] - diff])
 			elif site[0] == nearest[0]:
-				bound1 = nearestBoundry(midPt, [midPt[0] + 0.5, midPt[1]])
-				bound2 = nearestBoundry(midPt, [midPt[0] - 0.5, midPt[1]])
+				bound1 = nearestBoundry(midPt, [midPt[0] + diff, midPt[1]])
+				bound2 = nearestBoundry(midPt, [midPt[0] - diff, midPt[1]])
 			else:
 			
-				leftY = yAtX(site, nearest, midPt[0] - 0.5)
-				rightY = yAtX(site, nearest, midPt[0] + 0.5)
+				leftY = yAtX(site, nearest, midPt[0] - diff)
+				rightY = yAtX(site, nearest, midPt[0] + diff)
 
 				#leftBound = nearestBoundry(midPt, [midPt[0] - 0.5, leftY])
 				#rightBound = nearestBoundry(midPt, [midPt[0] + 0.5, rightY])
@@ -883,15 +886,15 @@ else:
 				#boundPair = [leftBound, rightBound]
 				#sortByY(boundPair)
 
-				bound1 = nearestBoundry(midPt, [midPt[0] - 0.5, leftY])
-				bound2 = nearestBoundry(midPt, [midPt[0] + 0.5, rightY])
+				bound1 = nearestBoundry(midPt, [midPt[0] - diff, leftY])
+				bound2 = nearestBoundry(midPt, [midPt[0] + diff, rightY])
 
 			boundPair = [bound1, bound2]
 			#print("line863",boundPair)
 			sort2ByY(boundPair)
 			#print("line865",boundPair)
 			scanSort2ByX(boundPair)
-			#print("line873", site, boundPair)
+			print("line873", site, boundPair)
 
 			siteKey = f"{str(site).replace(', ', '_')}"
 			nearestKey = f"{str(nearest).replace(', ', '_')}"
@@ -903,7 +906,57 @@ else:
 				finalCell[nearestKey]["vertices"].append(boundPair)
 			#finalCell[f"{str(nearest).replace(', ', '_')}"]["vertices"].append(boundPair)
 #print(finalCell["[20_4]"]["vertices"])
+for tmp in cell.keys():
+	print(tmp, "-", cell[tmp])
 
+# Creates a vertex in cases where there there is only one intersection vertex and no other vertices are registered
+#	This happens with [[7, 34], [87, 254], [91, 265], [86, 16]] but not [[50, 50], [25, 25], [75, 75], [98, 70]] because it has an intersection within the buffer zone
+#	Also happens with [[25, 25], [12, 173], [22, 199], [23, 199]]
+if vertices.__len__() == 0:
+	print("vertices has 0 elements")
+	#print(cell.keys())
+	kys = list(cell.keys())
+	i = 0
+	while True:
+
+		if i >= kys.__len__():
+			break
+		
+		if cell[kys[i]].__len__() != 0:
+			current = cell[kys[i]][0]
+			
+			pt1, pt2, pt3 = current["sites"]#current["point1"], current["point2"], current["point3"]
+			print("line924",pt1, pt2, pt3)
+			vert = f"{str(current['at']).replace(', ', '_')}"
+			
+			tempSites = [pt1, pt2, pt3]
+			sortByY(tempSites)
+			
+			vertices.update({vert : {"sites":tempSites, "at":current["at"], "with":[], "to":[]}})
+
+			tempSites = [tempSites[0], tempSites[1]]
+			scanSort2ByX(tempSites)
+
+			throughPt = midPoint(tempSites[0], tempSites[1])
+
+			bound = nearestBoundry(current['at'], throughPt)
+
+			vertices[vert]["with"].append([tempSites[0], tempSites[1]])
+			vertices[vert]["to"].append(bound)
+			
+			tempEdge = [current['at'], bound]
+			sort2ByY(tempEdge)
+			scanSort2ByX(tempEdge)
+
+			finalCell[f"{str(tempSites[0]).replace(', ', '_')}"]["vertices"].append(tempEdge)
+			finalCell[f"{str(tempSites[1]).replace(', ', '_')}"]["vertices"].append(tempEdge)
+
+			#print(vertices[vert])
+			break
+		i += 1
+
+
+	
 usedSitePairs = []
 for site1Key in cell:
 	# Could probably optimize this so that it doesn't search the same point multiple times
@@ -1031,7 +1084,7 @@ for site1Key in cell:
 						vertices[vert4]["to"].append(entry1["at"])
 
 						break
-
+print(vertices)
 #for vert1 in vertices: # I don't know if this is more efficient than sorting the vertices by x within the loop that they are created
 #	scanSortByXSwap(vertices[vert1]["with"], vertices[vert1]["to"])
 
@@ -1040,7 +1093,7 @@ for site1Key in cell:
 removeVerts = []
 for vert1 in vertices:
 	vertPt = vertices[vert1]["at"]
-
+	print("line1093",vertPt)
 	if not withinBounds(vertPt, defaultBounds):
 		for other in vertices[vert1]["to"]:
 			if toKey(other) in vertices: # If it is not in 'vertices', then 'other' is a boundry vertice
@@ -1373,5 +1426,6 @@ for cell in finalCell:
 	plt.fill(vertsX, vertsY, color=(clamp(random.random(), 0.1, 0.9), clamp(random.random(), 0.1, 0.9), clamp(random.random(), 0.1, 0.9), 0.5))
 		
 plt.show()
+
 
 
