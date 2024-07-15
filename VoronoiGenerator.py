@@ -891,7 +891,7 @@ else:
 			sort2ByY(boundPair)
 			#print("line865",boundPair)
 			scanSort2ByX(boundPair)
-			#print("line873", boundPair)
+			#print("line873", site, boundPair)
 
 			siteKey = f"{str(site).replace(', ', '_')}"
 			nearestKey = f"{str(nearest).replace(', ', '_')}"
@@ -928,6 +928,7 @@ for site1Key in cell:
 
 		checkPair = [site1, site2]
 		sort2ByY(checkPair)
+		scanSort2ByX(checkPair)
 
 		if checkPair not in usedSitePairs:
 			for entry2 in cell[site2Key]:
@@ -982,6 +983,7 @@ for site1Key in cell:
 
 		checkPair = [site1, site3]
 		sort2ByY(checkPair)
+		scanSort2ByX(checkPair)
 		
 		if checkPair not in usedSitePairs:
 			for entry3 in cell[site3Key]:
@@ -1010,7 +1012,7 @@ for site1Key in cell:
 							tempSites = entryPts
 							sortByY(tempSites)
 							#scanScortByX(tempSites)
-							vertices.update({vert3 : {"sites":tempSites, "at":entry1['at'],"with":[], "to":[]}})
+							vertices.update({vert3 : {"sites":tempSites, "at":entry1['at'], "with":[], "to":[]}})
 					
 							vertices[vert3]["with"].append(sitePair)
 							vertices[vert3]["to"].append(entry3["at"])
@@ -1203,8 +1205,8 @@ for vert in vertices:
 			finalCell[f"{str(pickedSites[0]).replace(', ', '_')}"]["vertices"].append([vertPt, nearestBound])
 			finalCell[f"{str(pickedSites[1]).replace(', ', '_')}"]["vertices"].append([vertPt, nearestBound])
 
+
 def makeEdges(onBoundry, curSite):
-	
 	siteInside = False
 	#print(onBoundry)
 	vert1Theta = normalTheta(onBoundry[0], curSite)
@@ -1371,4 +1373,5 @@ for cell in finalCell:
 	plt.fill(vertsX, vertsY, color=(clamp(random.random(), 0.1, 0.9), clamp(random.random(), 0.1, 0.9), clamp(random.random(), 0.1, 0.9), 0.5))
 		
 plt.show()
+
 
