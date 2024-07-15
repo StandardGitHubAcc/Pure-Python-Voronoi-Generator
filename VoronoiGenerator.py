@@ -18,7 +18,7 @@ for i in range(1, 30):
 
 #points = [[50, 50], [25, 25], [75, 75], [98, 70]]
 #points = [[50, 50], [25, 20], [75, 75], [98, 70]]
-points = [[30, 40], [25, 60], [80, 97]]
+#points = [[30, 40], [25, 60], [80, 97]]
 #points = [[50, 50], [75, 75]]  
 #points = [[50, 50]]
 
@@ -99,6 +99,8 @@ points = [[30, 40], [25, 60], [80, 97]]
 #points = [[16, 0], [29, 8], [178, 9], [174, 9], [131, 21], [110, 32], [191, 40], [65, 47], [182, 66], [57, 78], [31, 88], [184, 95], [60, 114], [28, 115], [143, 117], [181, 126], [116, 129], [131, 135], [143, 140], [127, 143], [57, 148], [158, 150], [11, 155], [122, 159], [108, 162], [176, 162], [189, 166], [8, 181], [194, 192]]
 
 #points = [[20, 4], [169, 5], [31, 16], [13, 21], [27, 22], [101, 31], [111, 32], [136, 50], [126, 59], [192, 67], [172, 68], [69, 83], [45, 97], [150, 116], [91, 117], [40, 120], [49, 130], [116, 138], [4, 144], [156, 149], [88, 150], [10, 150], [58, 151], [16, 153], [163, 161], [157, 186], [190, 193], [54, 195], [194, 200]]
+
+
 
 #-------------with box that is 100 wide and 300 tall
 #points = [[75, 14], [85, 22], [86, 26], [94, 32], [92, 45], [32, 71], [0, 127], [50, 132], [10, 134], [28, 134], [21, 134], [95, 147], [38, 152], [63, 162], [70, 168], [7, 175], [4, 176], [65, 179], [12, 187], [87, 190], [23, 197], [7, 206], [91, 209], [100, 234], [73, 236], [33, 267], [10, 273], [20, 278], [96, 298]]
@@ -825,7 +827,7 @@ else:
 		# 	if not withinBounds(cell[toKey(site)][0]["at"], defaultBounds) and not withinBounds(cell[toKey(site)][1]["at"], defaultBounds):
 		# 		test = True
 		#print(usedSites)
-		print(cell)
+		#print(cell)
 		if cell.__len__() == 0:
 			test = True
 		elif cell[toKey(site)].__len__() == 0:
@@ -843,7 +845,7 @@ else:
 		#test3 = cell[toKey(site)].__len__() == 2 and not withinBounds(cell[toKey(site)][0]["at"], defaultBounds) and not withinBounds(cell[toKey(site)][1]["at"], defaultBounds)
 		#if site not in usedSites:
 		if test == True:
-			print("line798", site)
+			#print("line798", site)
 			points2 = points.copy()
 			distanceTargetSort(site, points2)
 
@@ -951,7 +953,7 @@ for site1Key in cell:
 						sort2ByY(sitePair)
 						scanSort2ByX(sitePair)
 						usedSitePairs.append(sitePair)
-						print("sitePair", sitePair)
+						#print("sitePair", sitePair)
 						vert1 = f"{str(entry1['at']).replace(', ', '_')}"
 						if vert1 not in vertices:
 							tempSites = entryPts
@@ -1005,13 +1007,13 @@ for site1Key in cell:
 						#	finalCell[site1Key]["vertices"].append(edgePair)
 						if edgePair not in finalCell[site3Key]["vertices"]:
 							finalCell[site3Key]["vertices"].append(edgePair)
-						print("line987edgePair",edgePair)
+						#print("line987edgePair",edgePair)
 						finalCell[site1Key]["vertices"].append(edgePair)
 						sitePair = [site1, site3]
 						sort2ByY(sitePair)
 						#print("---line952",sitePair)
 						scanSort2ByX(sitePair)
-						print("....line993",sitePair)
+						#print("....line993",sitePair)
 						
 						usedSitePairs.append(sitePair)
 						#print("sitePair2",sitePair)
@@ -1045,8 +1047,7 @@ for site1Key in cell:
 		#print("-------")
 	#print()
 #print(usedSitePairs)
-print()
-print("a")
+
 #print(n1, n2)
 #print(vertices)
 #print()
@@ -1077,7 +1078,7 @@ print("a")
 removeVerts = []
 for vert1 in vertices:
 	vertPt = vertices[vert1]["at"]
-	print(vertPt)
+	#print(vertPt)
 	if not withinBounds(vertPt, defaultBounds):
 		for other in vertices[vert1]["to"]:
 			if toKey(other) in vertices: # If it is not in vertices, then other is a boundry vertice
@@ -1101,7 +1102,7 @@ for vert1 in vertices:
 					newPair = [otherVert["at"], bound]
 					sort2ByY(newPair)
 					scanSort2ByX(newPair)
-					print("line1070", otherWith)
+					#print("line1070", otherWith)
 					j = finalCell[toKey(otherWith[0])]["vertices"].index(originalPair)
 					finalCell[toKey(otherWith[0])]["vertices"][j] = newPair
 
@@ -1112,8 +1113,8 @@ for vert1 in vertices:
 					#print(finalCell[toKey(otherWith[0])]["vertices"])
 					#print(finalCell[toKey(otherWith[1])]["vertices"])
 				else:
-					print(otherVert["at"], "not within bounds")
-					print("original",originalPair)
+					#print(otherVert["at"], "not within bounds")
+					#print("original",originalPair)
 
 					cell1 = finalCell[toKey(otherWith[0])]["vertices"]
 					cell2 = finalCell[toKey(otherWith[1])]["vertices"]
@@ -1131,7 +1132,7 @@ for vert1 in vertices:
 #print(removeVerts)
 for rmv in removeVerts:
 	del vertices[rmv]
-print("b")
+
 # This works, but it might be better to try to remove the edges where both vertices are outside of bounds in the previous loop
 # for siteKey in finalCell:
 # 	removeVerts = []
@@ -1277,7 +1278,126 @@ for vert in vertices:
 			finalCell[f"{str(pickedSites[0]).replace(', ', '_')}"]["vertices"].append([vertPt, nearestBound])
 			finalCell[f"{str(pickedSites[1]).replace(', ', '_')}"]["vertices"].append([vertPt, nearestBound])
 
+def makeEdges(onBoundry, curSite):
+	
+	siteInside = False
+	print(onBoundry)
+	vert1Theta = normalTheta(onBoundry[0], curSite)
+	vert2Theta = normalTheta(onBoundry[1], curSite)
 
+	minTheta = min(vert1Theta, vert2Theta)
+	maxTheta = max(vert1Theta, vert2Theta)
+				
+	# Checks if there is a site within the sector formed by the two boundry vertices
+	for pt in points:
+		if pt != curSite:
+			ptTheta = normalTheta(pt, curSite)
+			if ptTheta > minTheta and ptTheta < maxTheta:
+				siteInside = True
+				break
+
+	withCorners = [[onBoundry[0], vert1Theta], [onBoundry[1], vert2Theta]]
+
+	if siteInside == False: # If there is not a site between the angles of the two boundry vertices
+
+		for i in range(0, corners.__len__()): # Finds corners that are within the area
+			cornerTheta = normalTheta(corners[i], curSite)
+
+			if cornerTheta > minTheta and cornerTheta < maxTheta:
+				withCorners.append([corners[i], cornerTheta])
+
+		sortByY(withCorners)
+
+	else:
+
+		# If there is a site within the angle between the two boundry vertices, use the area between the upper angle and the lower angle (opposite of between lower angle and upper)
+		for i in range(0, corners.__len__()):
+			cornerTheta = normalTheta(corners[i], curSite)
+			
+			if cornerTheta < minTheta or cornerTheta > maxTheta:
+				tempAngle = cornerTheta - vert1Theta # Rotates the corner angle so that the upper boundry angle becomes 0 degrees
+				if tempAngle < 0:
+					tempAngle += 2 * math.pi
+							
+				withCorners.append([corners[i], tempAngle])
+
+		if vert1Theta == maxTheta:
+			withCorners[0] = [onBoundry[0], 0] # Makes the upper boundry angle 0 degrees
+			withCorners[1] = [onBoundry[1], ((2 * math.pi) - vert1Theta) + vert2Theta] # Changes the lower boundry angle to be the new upper bound
+		else:
+			withCorners[0] = [onBoundry[1], 0]
+			withCorners[1] = [onBoundry[0], ((2 * math.pi) - vert1Theta) + vert2Theta]
+
+		sortByY(withCorners)
+
+	for i in range(0, withCorners.__len__()-1):
+		finalCell[cell2]["vertices"].append([withCorners[i][0], withCorners[i+1][0]])
+
+# Finds edges that are on the boundry of the target area
+for cell2 in finalCell:
+	onBoundry = []
+	for vert in finalCell[cell2]["vertices"]:
+		boundSize = [defaultBounds[0][0], defaultBounds[0][1], defaultBounds[1][0], defaultBounds[1][1]] # Flattened version of defaultBounds array
+		if (vert[0][0] in boundSize or vert[0][1] in boundSize) and vert[0] not in onBoundry:
+			onBoundry.append(vert[0])
+		if (vert[1][0] in boundSize or vert[1][1] in boundSize) and vert[1] not in onBoundry:
+			onBoundry.append(vert[1])
+				
+	if onBoundry != []:
+		curSite = finalCell[cell2]["site"]
+
+		sortByY(onBoundry)
+      
+		if onBoundry.__len__() == 2:
+			if onBoundry[0][0] == onBoundry[1][0] or onBoundry[0][1] == onBoundry[1][1]: # If the two vertices are on the same edge, they can just be added to finalCell without any extra work
+				finalCell[cell2]["vertices"].append([onBoundry[0], onBoundry[1]])
+			else: # if the two vertices are not on the same edge
+				#print("a")
+				makeEdges(onBoundry, curSite)
+
+		else: # if it greater than 2, it would ALMOST have to be a multiple of 2, with verts on different edges
+
+			if onBoundry.__len__() % 2 == 0: # might be redundant, not sure if it is possible for a site to have more than 2 boundry edges
+				#		left, right, top, bottom
+				sides = [[], [], [], []]
+				for point in onBoundry:
+					if point[0] == defaultBounds[0][0]:
+						sides[0].append(point)
+					elif point[0] == defaultBounds[0][1]:
+						sides[1].append(point)
+					elif point[1] == defaultBounds[1][0]:
+						sides[2].append(point)
+					else:
+						sides[3].append(point)
+
+				single = []
+				
+				for edge in sides:
+					if edge.__len__() == 2:
+						finalCell[cell2]["vertices"].append([edge[0], edge[1]])
+
+					elif edge.__len__() == 1:
+						single.append(edge[0])
+			
+				if single.__len__() > 0:
+					#print("b")
+					#print("sides",sides)
+					#print("curSite",curSite)
+					#print("finalCell",finalCell[cell2]["vertices"])
+
+					#if curSite == [24, 167]:
+					#	print("---[24, 167]", finalCell["[24_167]"]["vertices"])
+					makeEdges(single, curSite)
+
+# If there is only one point, then the whole area is one cell
+if points.__len__() == 1:
+	
+	A = [corners[0], corners[2]]
+	B = [corners[2], corners[3]]
+	C = [corners[3], corners[1]]
+	D = [corners[0], corners[1]]
+	
+	finalCell[f"{str(points[0]).replace(', ', '_')}"]["vertices"].extend([A, B, C, D])
 
 # ---------------- End of voronoi calculations ----------------
 
@@ -1336,6 +1456,7 @@ for cell in finalCell:
 	plt.fill(vertsX, vertsY, color=(clamp(random.random(), 0.1, 0.9), clamp(random.random(), 0.1, 0.9), clamp(random.random(), 0.1, 0.9), 0.5))
 		
 plt.show()
+
 
 
 
