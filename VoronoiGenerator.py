@@ -92,7 +92,7 @@ for i in range(1, 30):
 #points = [[17, 39], [8, 75], [28, 72], [34, 73], [33, 76], [35, 81]]
 #points = []
 
-points = [[0, 8], [35, 8], [126, 11], [192, 14], [35, 18], [144, 20], [34, 30], [145, 31], [132, 51], [49, 86], [91, 86], [101, 95], [126, 98], [116, 105], [142, 116], [183, 139], [139, 143], [180, 151], [177, 156], [77, 161], [115, 162], [15, 163], [141, 163], [170, 163], [46, 164], [18, 164], [172, 164], [14, 175], [18, 175]]
+#points = [[0, 8], [35, 8], [126, 11], [192, 14], [35, 18], [144, 20], [34, 30], [145, 31], [132, 51], [49, 86], [91, 86], [101, 95], [126, 98], [116, 105], [142, 116], [183, 139], [139, 143], [180, 151], [177, 156], [77, 161], [115, 162], [15, 163], [141, 163], [170, 163], [46, 164], [18, 164], [172, 164], [14, 175], [18, 175]]
 #points = [[198, 11], [109, 11], [155, 20], [194, 21], [119, 22], [152, 29], [81, 34], [175, 36], [165, 41], [3, 50], [190, 54], [164, 55], [152, 56], [11, 59], [72, 62], [33, 74], [9, 80], [110, 82], [164, 82], [157, 98], [141, 100], [90, 102], [156, 111], [15, 120], [42, 125], [115, 126], [40, 147], [139, 178], [10, 184]]
 
 #points = [[149, 2], [121, 8], [13, 12], [195, 25], [176, 34], [181, 42], [66, 49], [187, 66], [178, 66], [130, 67], [175, 75], [6, 82], [63, 89], [101, 95], [194, 97], [18, 105], [65, 105], [80, 105], [175, 112], [77, 113], [175, 120], [113, 130], [37, 130], [87, 142], [143, 146], [86, 149], [151, 160], [112, 177], [78, 198]]
@@ -1008,7 +1008,7 @@ print()
 # 			#i = otherVert["to"].index(vertPt)
 # 			#j = otherVert["with"].index()
 # 			print(otherVert["with"])
-print(finalCell["[0_8]"]["vertices"])
+#print(finalCell["[0_8]"]["vertices"])
 removeVerts = []
 for vert1 in vertices:
 	vertPt = vertices[vert1]["at"]
@@ -1018,41 +1018,46 @@ for vert1 in vertices:
 			if toKey(other) in vertices: # If it is not in vertices, then other is a boundry vertice
 				
 				otherVert = vertices[toKey(other)]
+				i = otherVert["to"].index(vertPt)
+				otherWith = otherVert["with"][i]
+				
+				originalPair = [otherVert["at"], otherVert["to"][i]]
+				sort2ByY(originalPair)
+				scanSort2ByX(originalPair)
 				
 				if withinBounds(otherVert["at"], defaultBounds):
 
 					bound = nearestBoundry(otherVert["at"], vertPt)
-					i = otherVert["to"].index(vertPt)
-					originalPair = [otherVert["at"], otherVert["to"][i]]
+					
 					otherVert["to"][i] = bound
-				
-					sort2ByY(originalPair)
-					scanSort2ByX(originalPair)
-
+					
 					#print("original",originalPair)
 
-					pair = [otherVert["at"], bound]
-					sort2ByY(pair)
-					scanSort2ByX(pair)
+					newPair = [otherVert["at"], bound]
+					sort2ByY(newPair)
+					scanSort2ByX(newPair)
 					
-					otherWith = otherVert["with"][i]
 					j = finalCell[toKey(otherWith[0])]["vertices"].index(originalPair)
-					#print("....", finalCell[toKey(otherWith[0])]["vertices"][j])
-					finalCell[toKey(otherWith[0])]["vertices"][j] = pair
-					#print("....-", finalCell[toKey(otherWith[0])]["vertices"][j])
+					finalCell[toKey(otherWith[0])]["vertices"][j] = newPair
+
 					j = finalCell[toKey(otherWith[1])]["vertices"].index(originalPair)
-					#print("....", finalCell[toKey(otherWith[1])]["vertices"][j])
-					finalCell[toKey(otherWith[1])]["vertices"][j] = pair
-					#print("....-", finalCell[toKey(otherWith[1])]["vertices"][j])
+					finalCell[toKey(otherWith[1])]["vertices"][j] = newPair
 
 					print(vertPt, otherVert["at"], bound, otherWith)
 					print(finalCell[toKey(otherWith[0])]["vertices"])
 					print(finalCell[toKey(otherWith[1])]["vertices"])
 				else:
 					print(otherVert["at"], "not within bounds")
+					print("original",originalPair)
 
-					
-					
+					cell1 = finalCell[toKey(otherWith[0])]["vertices"]
+					cell2 = finalCell[toKey(otherWith[1])]["vertices"]
+
+					if originalPair in cell1:
+						cell1.remove(originalPair)
+					if originalPair in cell2:
+						cell2.remove(originalPair)
+
 			else:
 				print("--",other)
 			print()
@@ -1209,7 +1214,7 @@ for vert in vertices:
 				finalCell[f"{str(pickedSites[0]).replace(', ', '_')}"]["vertices"].append([vertPt, nearestBound])
 				finalCell[f"{str(pickedSites[1]).replace(', ', '_')}"]["vertices"].append([vertPt, nearestBound])
 
-print(finalCell["[0_8]"]["vertices"])
+#print(finalCell["[0_8]"]["vertices"])
 
 # ---------------- End of voronoi calculations ----------------
 
@@ -1264,5 +1269,6 @@ for cell in finalCell:
 	plt.fill(vertsX, vertsY, color=(random.random(), random.random(), random.random(), 0.5))																								                        
 		
 plt.show()
+
 
 
