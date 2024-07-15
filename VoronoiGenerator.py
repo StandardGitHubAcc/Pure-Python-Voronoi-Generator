@@ -13,8 +13,8 @@ corners = [ [defaultBounds[0][0], defaultBounds[1][1]], [defaultBounds[0][0], de
 
 
 points = []
-#for i in range(1, 100):
-#	  points.append([random.randint(0, defaultBounds[0][1]), random.randint(0, defaultBounds[1][0])])  
+for i in range(1, 100):
+	  points.append([random.randint(0, defaultBounds[0][1]), random.randint(0, defaultBounds[1][0])])  
 
 #points = [[50, 50], [25, 25], [75, 75], [98, 70]]
 #points = [[50, 50], [25, 20], [75, 75], [98, 70]]
@@ -109,7 +109,7 @@ points = []
 #points = [[69, 228], [77, 228], [73, 239]]
 
 #------------- 100 points
-points = [[64, 3], [56, 4], [20, 8], [8, 9], [59, 12], [88, 14], [27, 20], [3, 22], [26, 23], [99, 29], [29, 32], [56, 37], [29, 38], [50, 38], [22, 39], [56, 40], [11, 52], [92, 52], [90, 58], [79, 69], [97, 70], [32, 71], [46, 71], [7, 73], [18, 74], [89, 79], [58, 80], [51, 84], [17, 88], [13, 94], [24, 99], [94, 101], [43, 101], [45, 106], [50, 111], [17, 112], [41, 114], [89, 115], [80, 118], [33, 123], [74, 123], [88, 131], [19, 133], [29, 137], [20, 138], [40, 139], [60, 140], [49, 144], [1, 157], [67, 160], [95, 164], [50, 165], [38, 166], [58, 170], [52, 174], [34, 177], [12, 179], [25, 184], [91, 185], [62, 185], [80, 189], [56, 192], [28, 196], [19, 196], [84, 203], [52, 204], [66, 206], [23, 206], [34, 207], [41, 215], [100, 217], [46, 218], [40, 220], [62, 220], [17, 222], [77, 228], [69, 228], [15, 229], [45, 237], [73, 239], [19, 240], [81, 243], [63, 244], [13, 258], [1, 259], [43, 261], [42, 264], [44, 268], [78, 268], [11, 269], [12, 273], [50, 274], [68, 278], [37, 278], [75, 281], [92, 295], [23, 299], [22, 299], [91, 300]]
+#points = [[64, 3], [56, 4], [20, 8], [8, 9], [59, 12], [88, 14], [27, 20], [3, 22], [26, 23], [99, 29], [29, 32], [56, 37], [29, 38], [50, 38], [22, 39], [56, 40], [11, 52], [92, 52], [90, 58], [79, 69], [97, 70], [32, 71], [46, 71], [7, 73], [18, 74], [89, 79], [58, 80], [51, 84], [17, 88], [13, 94], [24, 99], [94, 101], [43, 101], [45, 106], [50, 111], [17, 112], [41, 114], [89, 115], [80, 118], [33, 123], [74, 123], [88, 131], [19, 133], [29, 137], [20, 138], [40, 139], [60, 140], [49, 144], [1, 157], [67, 160], [95, 164], [50, 165], [38, 166], [58, 170], [52, 174], [34, 177], [12, 179], [25, 184], [91, 185], [62, 185], [80, 189], [56, 192], [28, 196], [19, 196], [84, 203], [52, 204], [66, 206], [23, 206], [34, 207], [41, 215], [100, 217], [46, 218], [40, 220], [62, 220], [17, 222], [77, 228], [69, 228], [15, 229], [45, 237], [73, 239], [19, 240], [81, 243], [63, 244], [13, 258], [1, 259], [43, 261], [42, 264], [44, 268], [78, 268], [11, 269], [12, 273], [50, 274], [68, 278], [37, 278], [75, 281], [92, 295], [23, 299], [22, 299], [91, 300]]
 
 #-------------with box that is 100 wide and 300 tall
 #points = [[75, 14], [85, 22], [86, 26], [94, 32], [92, 45], [32, 71], [0, 127], [50, 132], [10, 134], [28, 134], [21, 134], [95, 147], [38, 152], [63, 162], [70, 168], [7, 175], [4, 176], [65, 179], [12, 187], [87, 190], [23, 197], [7, 206], [91, 209], [100, 234], [73, 236], [33, 267], [10, 273], [20, 278], [96, 298]]
@@ -209,7 +209,7 @@ def find3IntersectX(pt1, pt2, pt3): # finds x-value of intersection of 3 parabol
 		# [7, 34] [87, 254] [91, 265]
 		# using [[7, 34], [87, 254], [91, 265], [86, 16]] will show that it does cause issues
 		# Divides by 0 if (a-e)*(b-d) = (a-c)*(b-f) or if all 3 points have either the same x or y value
-		print(f"zero division error in find3IntersectX with {pt1} {pt2} {pt3}")
+		print(f"division by zero in find3IntersectX with {pt1} {pt2} {pt3}")
 		#print(( ( ((a**2) - (e**2))*(b-d) ) - ( ((a**2) - (c**2)) * (b-f) ) - ( (d-f)*(b-f)*(b-d) )), (2 * ( ((a-e)*(b-d)) - ((a-c)*(b-f))) ))
 		#print(f"({a}, {b}) ({c}, {d}) ({e}, {f})")
 		#print(a-e, b-d, a-c, b-f)
@@ -239,7 +239,7 @@ def otherXOnBisectorAtT(pt1, pt2, pt3, t): # pt1 and pt2 form the bisector and p
 	except ZeroDivisionError:
 		# Divides by 0 if m = 0, so if the first two points have the same y-value
 		# So the correct x-value would be the midpoint between the two since the bisector is a vertical line, causing the y-values to be different with t, but not x
-		print(f"zero division error in otherXOnBisectorAtT with {pt1} {pt2} {pt3} t={t}")        
+		print(f"division by zero in otherXOnBisectorAtT with {pt1} {pt2} {pt3} t={t}")        
 		#return defaultBounds[1][1] -5  
 		return (a + c) / 2
 
@@ -270,7 +270,7 @@ def getXAtTime(pt1, pt2, t): # finds x-value of intersection of two parabolas at
 	except ZeroDivisionError:
 		# Divides by 0 if m = 0, so if the two points have the same y-value
 		# So the correct x-value would be the midpoint between the two
-		print(f"zero division error in getXAtTime with {pt1} {pt2} t={t}")
+		print(f"division by zero in getXAtTime with {pt1} {pt2} t={t}")
 		#return defaultBounds[1][1] -5
 		return (a + c) / 2
 
@@ -298,7 +298,7 @@ def getXAtTimeRef(pt1, pt2, t, refX):
 	except ZeroDivisionError:
 		# Divides by 0 if m = 0, so if the two points have the same y-value
 		# So the correct x-value would be the midpoint between the two
-		print(f"zero division error in find2IntersectAtTime with {pt1} {pt2} t={t}")
+		print(f"division by zero in find2IntersectAtTime with {pt1} {pt2} t={t}")
 		#return defaultBounds[1][1] -5
 		return (a + c) / 2
 
@@ -315,7 +315,8 @@ def getTimeAtX(pt1, pt2, pt3, x): # finds time when parabola pt1 has given x val
 		t = ((-1 * k) - ( (k**2) - (4 * j * L))**0.5) / (2 * j) # division by 0 if j = 0, j = 0 if b-d = 0, so if the first 2 points have the same y value
 		return float("%.10f" % t)
 	except ZeroDivisionError:
-		print(f"zero division error in getTimeAtX with {pt1} {pt2} {pt3} x={x} j={j} k={k} L={L}")        
+		#print(f"division by zero in getTimeAtX with {pt1} {pt2} {pt3} x={x} j={j} k={k} L={L}") # j, k, and L will always be 0 in this event
+		print(f"division by zero in getTimeAtX with {pt1} {pt2} {pt3} x={x}")
 		#return pt1[1]
 		return None
 
@@ -325,7 +326,7 @@ def getYAtTimeAndX(pt1, t, x): # just the y-value of the parabola at the given t
 		y = (((x-a)**2) / (2 * (b-t))) + (0.5 * (b+t)) # divides by 0 if b-t = 0
 		return float("%.10f" % y)
 	except ZeroDivisionError:
-		print(f"zero division error in getYAtTimeAndX with {pt1} t={t} x={x}")
+		print(f"division by zero in getYAtTimeAndX with {pt1} t={t} x={x}")
 		#return defaultBounds[1][1] -5
 		return None
 
@@ -335,7 +336,7 @@ def yAtX(pt1, pt2, x): # gives y value of bisector between two parabolas at give
 		y = ((c-a) / (b-d)) * (x - ( (a+c)/2) ) + ((b+d)/2) # divides by 0 if b-d = 0 (points have same y value), so the valid y value would also be the same
 		return float("%.10f" % y)
 	except ZeroDivisionError:
-		print(f"zero division error in yAtX with {pt1} {pt2} x={x}")
+		print(f"division by zero in yAtX with {pt1} {pt2} x={x}")
 		return pt1[1]
 	
 def xAtY(pt1, pt2, y): # gives x value of bisector between two parabolas at given y value
@@ -344,7 +345,7 @@ def xAtY(pt1, pt2, y): # gives x value of bisector between two parabolas at give
 		x = ( (2 * y * (d-b)) - ((d**2) - (b**2)) + ((a**2) - (c**2)) ) / (2 * (a-c)) # divides by 0 if a-c = 0 (points have the same x value), so the correct x value would be the same as well
 		return float("%.10f" % x)
 	except ZeroDivisionError:
-		print(f"zero division error in xAtY with {pt1} {pt2} y={y}")
+		print(f"division by zero in xAtY with {pt1} {pt2} y={y}")
 		return pt1[0]
 
 def tAtXandY(pt1, x, y):
@@ -1163,7 +1164,7 @@ for vert in vertices:
 	#tempVertPt = str(vert).removeprefix("[").removesuffix("]").split("_")
 	#vertPt = [float(tempVertPt[0]), float(tempVertPt[1])]
 	vertPt = vertices[vert]["at"]
-	continue
+	
 	if vertices[vert]["to"].__len__() == 1:
 
 		site1 = vertices[vert]["sites"][0]
@@ -1205,7 +1206,7 @@ for vert in vertices:
 		
 
 	if vertices[vert]["to"].__len__() == 2:
-
+		
 		site1 = vertices[vert]["sites"][0]
 		site2 = vertices[vert]["sites"][1]
 		site3 = vertices[vert]["sites"][2]
@@ -1326,7 +1327,7 @@ def makeEdges(onBoundry, curSite):
 
 # Finds edges that are on the boundry of the target area
 for cell2 in finalCell:
-	continue
+	
 	onBoundry = []
 	for vert in finalCell[cell2]["vertices"]:
 		boundSize = [defaultBounds[0][0], defaultBounds[0][1], defaultBounds[1][0], defaultBounds[1][1]] # Flattened version of defaultBounds array
@@ -1438,8 +1439,4 @@ for cell in finalCell:
 	plt.fill(vertsX, vertsY, color=(clamp(random.random(), 0.1, 0.8), clamp(random.random(), 0.1, 0.8), clamp(random.random(), 0.1, 0.8), 0.5))
 		
 plt.show()
-
-
-
-
 
