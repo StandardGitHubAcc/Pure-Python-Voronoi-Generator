@@ -90,12 +90,15 @@ for i in range(1, 30):
 
 #points = [[136, 20], [21, 25], [62, 26], [17, 39], [131, 45], [165, 47], [104, 52], [151, 67], [28, 72], [84, 72], [34, 73], [186, 73], [165, 75], [8, 75], [33, 76], [35, 81], [105, 83], [196, 89], [162, 101], [11, 103], [105, 109], [135, 109], [8, 114], [18, 114], [164, 116], [12, 119], [148, 123], [138, 127], [80, 157]]
 #points = [[17, 39], [8, 75], [28, 72], [34, 73], [33, 76], [35, 81]]
-#points = []
 
 #points = [[0, 8], [35, 8], [126, 11], [192, 14], [35, 18], [144, 20], [34, 30], [145, 31], [132, 51], [49, 86], [91, 86], [101, 95], [126, 98], [116, 105], [142, 116], [183, 139], [139, 143], [180, 151], [177, 156], [77, 161], [115, 162], [15, 163], [141, 163], [170, 163], [46, 164], [18, 164], [172, 164], [14, 175], [18, 175]]
 #points = [[198, 11], [109, 11], [155, 20], [194, 21], [119, 22], [152, 29], [81, 34], [175, 36], [165, 41], [3, 50], [190, 54], [164, 55], [152, 56], [11, 59], [72, 62], [33, 74], [9, 80], [110, 82], [164, 82], [157, 98], [141, 100], [90, 102], [156, 111], [15, 120], [42, 125], [115, 126], [40, 147], [139, 178], [10, 184]]
 
 #points = [[149, 2], [121, 8], [13, 12], [195, 25], [176, 34], [181, 42], [66, 49], [187, 66], [178, 66], [130, 67], [175, 75], [6, 82], [63, 89], [101, 95], [194, 97], [18, 105], [65, 105], [80, 105], [175, 112], [77, 113], [175, 120], [113, 130], [37, 130], [87, 142], [143, 146], [86, 149], [151, 160], [112, 177], [78, 198]]
+
+#points = [[16, 0], [29, 8], [178, 9], [174, 9], [131, 21], [110, 32], [191, 40], [65, 47], [182, 66], [57, 78], [31, 88], [184, 95], [60, 114], [28, 115], [143, 117], [181, 126], [116, 129], [131, 135], [143, 140], [127, 143], [57, 148], [158, 150], [11, 155], [122, 159], [108, 162], [176, 162], [189, 166], [8, 181], [194, 192]]
+
+#points = [[20, 4], [169, 5], [31, 16], [13, 21], [27, 22], [101, 31], [111, 32], [136, 50], [126, 59], [192, 67], [172, 68], [69, 83], [45, 97], [150, 116], [91, 117], [40, 120], [49, 130], [116, 138], [4, 144], [156, 149], [88, 150], [10, 150], [58, 151], [16, 153], [163, 161], [157, 186], [190, 193], [54, 195], [194, 200]]
 
 #-------------with box that is 100 wide and 300 tall
 #points = [[75, 14], [85, 22], [86, 26], [94, 32], [92, 45], [32, 71], [0, 127], [50, 132], [10, 134], [28, 134], [21, 134], [95, 147], [38, 152], [63, 162], [70, 168], [7, 175], [4, 176], [65, 179], [12, 187], [87, 190], [23, 197], [7, 206], [91, 209], [100, 234], [73, 236], [33, 267], [10, 273], [20, 278], [96, 298]]
@@ -585,7 +588,7 @@ for point in points:
 
 print(tmp) # this tmp is never used after this, it just used to print the points in a different format here
 print()
-print(finalCell.keys())
+#print(finalCell.keys())
 # Finds intersection points of sites, including some that are invalid
 for site1 in points:
 	for site2 in points:
@@ -713,6 +716,9 @@ for others in points:
 #for tmp in cell:
 #	for tmp2 in cell[tmp]:
 #		print(tmp, "-", tmp2)
+
+#print(cell["[16_0]"])
+#print(finalCell["[20_4]"]["vertices"])
 # There are 3 cases that have to be dealth with seperately: 1 site, 3 sites, and 2 or 3+ sites 
 # (technically 2 sites have to be dealt with seperately but are the same as having a cell in a corner so can be dealt with later)
 if points.__len__() == 3 and cell.keys().__len__() != 0:
@@ -740,8 +746,14 @@ if points.__len__() == 3 and cell.keys().__len__() != 0:
 		#vertices[vert] = {"sites":[current["point1"], current["point2"], current["point3"]], "with":[[current["point1"], current["point2"]]], "at":[bound]}
 		#vertices[vert] = {"sites":[current["point1"], current["point2"], current["point3"]], "with":[[sites[0], sites[1]]], "at":[bound]}
 		vertices[vert] = {"sites":current["sites"], "with":[[sites[0], sites[1]]], "at":[bound]}
-		finalCell[kys[0]]["vertices"].append([current["at"], bound])
-		finalCell[kys[1]]["vertices"].append([current["at"], bound])
+		#finalCell[kys[0]]["vertices"].append([current["at"], bound])
+		#finalCell[kys[1]]["vertices"].append([current["at"], bound])
+		edgePair = [current["at"], bound]
+		sort2ByY(edgePair)
+		scanSort2ByX(edgePair)
+		finalCell[kys[0]]["vertices"].append(edgePair)
+		finalCell[kys[1]]["vertices"].append(edgePair)
+		
 	# else: # This isn't necessary, other parts handle 2 parallel lines correctly
 	# 	site1 = points[0]
 	# 	site2 = points[1]
@@ -793,7 +805,31 @@ else:
 				usedSites.append(vert["sites"][2])
 
 	for site in points:
+
+		#test1 = False
+		#test2 = False
+		#test3 = False
+
+		test = False
+		
 		if site not in usedSites:
+			#test1 = True
+			test = True
+		elif cell[toKey(site)].__len__() == 1:
+			if not withinBounds(cell[toKey(site)][0]["at"], defaultBounds):
+				#test2 = True
+				test = True
+		elif cell[toKey(site)].__len__() == 2:
+			if not withinBounds(cell[toKey(site)][0]["at"], defaultBounds) and not withinBounds(cell[toKey(site)][1]["at"], defaultBounds):
+				test = True
+		
+
+		#test1 = site not in usedSites
+		#test2 = cell[toKey(site)].__len__() == 1 and not withinBounds(cell[toKey(site)][0]["at"], defaultBounds)
+		#test3 = cell[toKey(site)].__len__() == 2 and not withinBounds(cell[toKey(site)][0]["at"], defaultBounds) and not withinBounds(cell[toKey(site)][1]["at"], defaultBounds)
+		#if site not in usedSites:
+		if test == True:
+			print("line798", site)
 			points2 = points.copy()
 			distanceTargetSort(site, points2)
 
@@ -830,8 +866,11 @@ else:
 				bound2 = nearestBoundry(midPt, [midPt[0] + 0.5, rightY])
 
 			boundPair = [bound1, bound2]
-			sortByY(boundPair)
+			#print("line863",boundPair)
+			sort2ByY(boundPair)
+			#print("line865",boundPair)
 			scanSort2ByX(boundPair)
+			print("line873", boundPair)
 
 			siteKey = f"{str(site).replace(', ', '_')}"
 			nearestKey = f"{str(nearest).replace(', ', '_')}"
@@ -842,8 +881,8 @@ else:
 			if boundPair not in finalCell[nearestKey]["vertices"]:
 				finalCell[nearestKey]["vertices"].append(boundPair)
 			#finalCell[f"{str(nearest).replace(', ', '_')}"]["vertices"].append(boundPair)
-#n1 = 0
-#n2 = 0
+#print(finalCell["[20_4]"]["vertices"])
+
 usedSitePairs = []
 for site1Key in cell:
 	# Could probably optimize this so that it doesn't search the same point multiple times
@@ -876,23 +915,29 @@ for site1Key in cell:
 			
 				if site1 in entry2Pts and entry1["at"] != entry2["at"]:
 					edgePair = [entry1["at"], entry2["at"]]
+					
+					#print(id(entry1["at"]), id(edgePair[0]))
+					#print(id(entry))
 					sort2ByY(edgePair)
+					#print(id(entry))
 					scanSort2ByX(edgePair)
+					
 					#print("edgePair", edgePair, edgePair in finalCell[site1Key]["vertices"])
 					if edgePair not in finalCell[site1Key]["vertices"]: # For some reason this loop gets to this check many fewer times than the other loop
 						#print(entryPts,"-", entry2Pts, "-",edgePair)
-						#print("edgePair",edgePair)
+						#print("line923edgePair",edgePair)
 						#if edgePair not in finalCell[site1Key]["vertices"]: # This might be an unecessary check
 						#	finalCell[site1Key]["vertices"].append(edgePair)
 						if edgePair not in finalCell[site2Key]["vertices"]:
 							finalCell[site2Key]["vertices"].append(edgePair)
-						finalCell[site1Key]["vertices"].append([entry1["at"], entry2["at"]])
+						#finalCell[site1Key]["vertices"].append([entry1["at"], entry2["at"]])
+						finalCell[site1Key]["vertices"].append(edgePair)
 						#print("line842",edgePair, "-", entry1["sites"], "-", entry2["sites"])
 						sitePair = [site1, site2]
 						sort2ByY(sitePair)
 						scanSort2ByX(sitePair)
 						usedSitePairs.append(sitePair)
-						#print("sitePair", sitePair)
+						print("sitePair", sitePair)
 						vert1 = f"{str(entry1['at']).replace(', ', '_')}"
 						if vert1 not in vertices:
 							tempSites = entryPts
@@ -917,6 +962,7 @@ for site1Key in cell:
 							#vertices[vert2]["with"].append(sitepair)
 							#vertices[vert2]["to"].append(entry1["at"])
 						#elif entry1["at"] not in vertices[vert2]["to"]:
+						
 						vertices[vert2]["with"].append(sitePair)
 						vertices[vert2]["to"].append(entry1["at"])
 						#n1 += 1
@@ -945,13 +991,13 @@ for site1Key in cell:
 						#	finalCell[site1Key]["vertices"].append(edgePair)
 						if edgePair not in finalCell[site3Key]["vertices"]:
 							finalCell[site3Key]["vertices"].append(edgePair)
-						#print("line896",edgePair)
+						print("line987edgePair",edgePair)
 						finalCell[site1Key]["vertices"].append(edgePair)
 						sitePair = [site1, site3]
 						sort2ByY(sitePair)
 						#print("---line952",sitePair)
 						scanSort2ByX(sitePair)
-						#print("....line953",sitePair)
+						print("....line993",sitePair)
 						
 						usedSitePairs.append(sitePair)
 						#print("sitePair2",sitePair)
@@ -988,7 +1034,7 @@ for site1Key in cell:
 print()
 #print(n1, n2)
 #print(vertices)
-print()
+#print()
 
 #for vert1 in vertices: # I don't know if this is more efficient than sorting the vertices by x within the loop that they are created
 #	scanSortByXSwap(vertices[vert1]["with"], vertices[vert1]["to"])
@@ -1009,6 +1055,10 @@ print()
 # 			#j = otherVert["with"].index()
 # 			print(otherVert["with"])
 #print(finalCell["[0_8]"]["vertices"])
+#print(finalCell["[20_4]"]["vertices"])
+
+
+# Splits vertices that are outside of bounds into two vertices that are at the boundries
 removeVerts = []
 for vert1 in vertices:
 	vertPt = vertices[vert1]["at"]
@@ -1036,16 +1086,16 @@ for vert1 in vertices:
 					newPair = [otherVert["at"], bound]
 					sort2ByY(newPair)
 					scanSort2ByX(newPair)
-					
+					print("line1070", otherWith)
 					j = finalCell[toKey(otherWith[0])]["vertices"].index(originalPair)
 					finalCell[toKey(otherWith[0])]["vertices"][j] = newPair
 
 					j = finalCell[toKey(otherWith[1])]["vertices"].index(originalPair)
 					finalCell[toKey(otherWith[1])]["vertices"][j] = newPair
 
-					print(vertPt, otherVert["at"], bound, otherWith)
-					print(finalCell[toKey(otherWith[0])]["vertices"])
-					print(finalCell[toKey(otherWith[1])]["vertices"])
+					#print(vertPt, otherVert["at"], bound, otherWith)
+					#print(finalCell[toKey(otherWith[0])]["vertices"])
+					#print(finalCell[toKey(otherWith[1])]["vertices"])
 				else:
 					print(otherVert["at"], "not within bounds")
 					print("original",originalPair)
@@ -1058,12 +1108,12 @@ for vert1 in vertices:
 					if originalPair in cell2:
 						cell2.remove(originalPair)
 
-			else:
-				print("--",other)
-			print()
+			#else:
+			#	print("--",other)
+			#print()
 
 		removeVerts.append(vert1)
-print(removeVerts)
+#print(removeVerts)
 for rmv in removeVerts:
 	del vertices[rmv]
 
@@ -1084,7 +1134,7 @@ for vert in vertices:
 	vertPt = vertices[vert]["at"]
 	
 	if vertices[vert]["to"].__len__() == 1:
-		print("a")
+		#print("a")
 		site1 = vertices[vert]["sites"][0]
 		site2 = vertices[vert]["sites"][1]
 		site3 = vertices[vert]["sites"][2]
@@ -1110,16 +1160,10 @@ for vert in vertices:
 			vertices[vert]["to"].append(nearestBound)
 			finalCell[f"{str(pickedSites[0]).replace(', ', '_')}"]["vertices"].append([vertPt, nearestBound])
 			finalCell[f"{str(pickedSites[1]).replace(', ', '_')}"]["vertices"].append([vertPt, nearestBound])
-
-	#within = True
-
-	#if not withinBounds(vertPt, defaultBounds):
-	#	print(vertPt,"not within bounds")
-	#	within = False
 		
 
 	if vertices[vert]["to"].__len__() == 2:
-		print("b")
+		#print("b")
 
 		site1 = vertices[vert]["sites"][0]
 		site2 = vertices[vert]["sites"][1]
@@ -1218,7 +1262,52 @@ for vert in vertices:
 			finalCell[f"{str(pickedSites[0]).replace(', ', '_')}"]["vertices"].append([vertPt, nearestBound])
 			finalCell[f"{str(pickedSites[1]).replace(', ', '_')}"]["vertices"].append([vertPt, nearestBound])
 
-#print(finalCell["[0_8]"]["vertices"])
+# Finds edges in cases where there are no intersection points or none within bounds
+for cell5 in finalCell:
+	continue
+	if finalCell[cell5]["vertices"].__len__() == 0 and points.__len__() > 1:
+		otherPoints = points.copy()
+		distanceTargetSort(finalCell[cell5]["site"], otherPoints)
+		
+		site1 = finalCell[cell5]["site"]
+		site2 = otherPoints[1]
+
+		midPt = midPoint(site1, site2)
+		leftY = yAtX(site1, site2, midPt[0] - 0.5)
+		rightY = yAtX(site1, site2, midPt[0] + 0.5)
+		
+		# Since there are no intersection points, can just find the boundry intersections in both directions
+		bound1 = nearestBoundry(midPt, [midPt[0] - 0.5, leftY])
+		bound2 = nearestBoundry(midPt, [midPt[0] + 0.5, rightY])
+
+		boundPair = [bound1, bound2]
+		sortByY(boundPair)
+
+		finalCell[cell5]["vertices"].append(boundPair)
+		
+		dictSite2 = f"{str(site2).replace(', ', '_')}"
+		if boundPair not in finalCell[dictSite2]["vertices"]:
+			finalCell[dictSite2]["vertices"].append(boundPair)
+		
+		if points.index(site1) != points.__len__() - 1 and points.index(site1) != 0: # If it is not the highest point or the lowest
+			site3 = otherPoints[2]
+			
+			midPt = midPoint(site1, site3)
+			leftY = yAtX(site1, site3, midPt[0] - 0.5)
+			rightY = yAtX(site1, site3, midPt[0] + 0.5)
+		
+			bound1 = nearestBoundry(midPt, [midPt[0] - 0.5, leftY])
+			bound2 = nearestBoundry(midPt, [midPt[0] + 0.5, rightY])
+
+			boundPair = [bound1, bound2]
+			sortByY(boundPair)
+
+			finalCell[cell5]["vertices"].append(boundPair)
+		
+			dictSite3 = f"{str(site3).replace(', ', '_')}"
+			if boundPair not in finalCell[dictSite3]["vertices"]:
+				finalCell[dictSite3]["vertices"].append(boundPair)
+
 
 # ---------------- End of voronoi calculations ----------------
 
@@ -1273,7 +1362,6 @@ for cell in finalCell:
 	plt.fill(vertsX, vertsY, color=(random.random(), random.random(), random.random(), 0.5))																								                        
 		
 plt.show()
-
 
 
 
