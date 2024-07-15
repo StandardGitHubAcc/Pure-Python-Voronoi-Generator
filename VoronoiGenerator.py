@@ -108,6 +108,8 @@ for i in range(1, 100):
 #points = [[69, 228], [77, 228], [73, 239], [63, 244], [62, 220], [84, 203], [81, 243]]
 #points = [[69, 228], [77, 228], [73, 239]]
 
+#points = [[69, 228], [77, 228], [73, 239]]
+
 #------------- 100 points
 #points = [[64, 3], [56, 4], [20, 8], [8, 9], [59, 12], [88, 14], [27, 20], [3, 22], [26, 23], [99, 29], [29, 32], [56, 37], [29, 38], [50, 38], [22, 39], [56, 40], [11, 52], [92, 52], [90, 58], [79, 69], [97, 70], [32, 71], [46, 71], [7, 73], [18, 74], [89, 79], [58, 80], [51, 84], [17, 88], [13, 94], [24, 99], [94, 101], [43, 101], [45, 106], [50, 111], [17, 112], [41, 114], [89, 115], [80, 118], [33, 123], [74, 123], [88, 131], [19, 133], [29, 137], [20, 138], [40, 139], [60, 140], [49, 144], [1, 157], [67, 160], [95, 164], [50, 165], [38, 166], [58, 170], [52, 174], [34, 177], [12, 179], [25, 184], [91, 185], [62, 185], [80, 189], [56, 192], [28, 196], [19, 196], [84, 203], [52, 204], [66, 206], [23, 206], [34, 207], [41, 215], [100, 217], [46, 218], [40, 220], [62, 220], [17, 222], [77, 228], [69, 228], [15, 229], [45, 237], [73, 239], [19, 240], [81, 243], [63, 244], [13, 258], [1, 259], [43, 261], [42, 264], [44, 268], [78, 268], [11, 269], [12, 273], [50, 274], [68, 278], [37, 278], [75, 281], [92, 295], [23, 299], [22, 299], [91, 300]]
 
@@ -1219,7 +1221,7 @@ for vert in vertices:
 		#scanSortByX(withVerts)
 		scanSortByX(pickedSites)
 		#print("picked",pickedSites)
-		print("--------",vertPt)
+		print("--------vertPt",vertPt)
 		print(vertices[vert]["with"])
 		print(vertices[vert])
 		print(pickedSites)
@@ -1228,7 +1230,7 @@ for vert in vertices:
 		#pickedSites.remove(withVerts[0])
 		#pickedSites.remove(withVerts[1])
 		pickedSites = pickedSites[0]
-		
+		print("line1233pickedSites",pickedSites)
 		sortByY(pickedSites)
 		notInPair = []
 
@@ -1238,11 +1240,13 @@ for vert in vertices:
 			notInPair = site2
 		elif site3 != pickedSites[0] and site3 != pickedSites[1]:
 			notInPair = site3
-
+		
 		dists = [vertPtT - pickedSites[0][1], vertPtT - pickedSites[1][1], vertPtT - notInPair[1]]
 		dists.sort()
-		
+		print(dists)
 		deltaT = dists[0] / 2
+
+		
 
 		# for some reason when pickedSites = [[167, 95], [188, 191]], both beforeTx and afterTx are less than vertPt[0]
 		#	This is because there are two locations where the two parabolas intersect, so there are 4 possible points.
@@ -1263,17 +1267,30 @@ for vert in vertices:
 			throughPt = [beforeTx, beforeTy1]
 		elif afterTy1 > afterTy2:
 			throughPt = [afterTx, afterTy1]
-
+		elif deltaT == 0.0:
+			afterTx = getXAtTimeRef(pickedSites[0], pickedSites[1], vertPtT + 0.5, vertPt[0])
+			afterTy1 = getYAtTimeAndX(pickedSites[0], vertPtT + 0.5, afterTx)
+			throughPt = [afterTx, afterTy1]
+			
+		print("line1268",throughPt)
 		if throughPt != []:
 			# The points aren't added to the 'vertices' dictionary since it is not used after this part of this function, so there is point to
 			nearestBound = nearestBoundry(vertPt, throughPt)
-			finalCell[f"{str(pickedSites[0]).replace(', ', '_')}"]["vertices"].append([vertPt, nearestBound])
-			finalCell[f"{str(pickedSites[1]).replace(', ', '_')}"]["vertices"].append([vertPt, nearestBound])
+
+			edgePair = [vertPt, nearestBound]
+			sort2ByY(edgePair)
+			scanSort2ByX(edgePair)
+			
+			#finalCell[f"{str(pickedSites[0]).replace(', ', '_')}"]["vertices"].append([vertPt, nearestBound])
+			#finalCell[f"{str(pickedSites[1]).replace(', ', '_')}"]["vertices"].append([vertPt, nearestBound])
+
+			finalCell[toKey(pickedSites[0])]["vertices"].append(edgePair)
+			finalCell[toKey(pickedSites[1])]["vertices"].append(edgePair)
 
 
 def makeEdges(onBoundry, curSite):
 	siteInside = False
-	
+	print(onBoundry, "-", curSite)
 	vert1Theta = normalTheta(onBoundry[0], curSite)
 	vert2Theta = normalTheta(onBoundry[1], curSite)
 
@@ -1321,10 +1338,11 @@ def makeEdges(onBoundry, curSite):
 			withCorners[1] = [onBoundry[0], ((2 * math.pi) - vert1Theta) + vert2Theta]
 
 		sortByY(withCorners)
+		print("line1326",withCorners)
 
 	for i in range(0, withCorners.__len__()-1):
 		finalCell[cell2]["vertices"].append([withCorners[i][0], withCorners[i+1][0]])
-
+#print(".....",finalCell["[69_228]"]["vertices"][0])
 # Finds edges that are on the boundry of the target area
 for cell2 in finalCell:
 	
@@ -1345,6 +1363,7 @@ for cell2 in finalCell:
 			if onBoundry[0][0] == onBoundry[1][0] or onBoundry[0][1] == onBoundry[1][1]: # If the two vertices are on the same edge, they can just be added to finalCell without any extra work
 				finalCell[cell2]["vertices"].append([onBoundry[0], onBoundry[1]])
 			else: # if the two vertices are not on the same edge
+				print("a")
 				makeEdges(onBoundry, curSite)
 
 		else: # if it greater than 2, it would ALMOST have to be a multiple of 2, with verts on different edges
@@ -1363,7 +1382,7 @@ for cell2 in finalCell:
 					sides[3].append(point)
 
 			single = []
-				
+			print("sides",sides)
 			for edge in sides:
 				if edge.__len__() == 2:
 					finalCell[cell2]["vertices"].append([edge[0], edge[1]])
@@ -1372,6 +1391,7 @@ for cell2 in finalCell:
 					single.append(edge[0])
 			
 			if single.__len__() > 0:
+				print("b")
 				makeEdges(single, curSite)
 
 # If there is only one point, then the whole area is one cell
