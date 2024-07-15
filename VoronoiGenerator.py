@@ -92,10 +92,10 @@ for i in range(1, 30):
 #points = [[17, 39], [8, 75], [28, 72], [34, 73], [33, 76], [35, 81]]
 #points = []
 
-#points = [[0, 8], [35, 8], [126, 11], [192, 14], [35, 18], [144, 20], [34, 30], [145, 31], [132, 51], [49, 86], [91, 86], [101, 95], [126, 98], [116, 105], [142, 116], [183, 139], [139, 143], [180, 151], [177, 156], [77, 161], [115, 162], [15, 163], [141, 163], [170, 163], [46, 164], [18, 164], [172, 164], [14, 175], [18, 175]]
+points = [[0, 8], [35, 8], [126, 11], [192, 14], [35, 18], [144, 20], [34, 30], [145, 31], [132, 51], [49, 86], [91, 86], [101, 95], [126, 98], [116, 105], [142, 116], [183, 139], [139, 143], [180, 151], [177, 156], [77, 161], [115, 162], [15, 163], [141, 163], [170, 163], [46, 164], [18, 164], [172, 164], [14, 175], [18, 175]]
 #points = [[198, 11], [109, 11], [155, 20], [194, 21], [119, 22], [152, 29], [81, 34], [175, 36], [165, 41], [3, 50], [190, 54], [164, 55], [152, 56], [11, 59], [72, 62], [33, 74], [9, 80], [110, 82], [164, 82], [157, 98], [141, 100], [90, 102], [156, 111], [15, 120], [42, 125], [115, 126], [40, 147], [139, 178], [10, 184]]
 
-points = [[149, 2], [121, 8], [13, 12], [195, 25], [176, 34], [181, 42], [66, 49], [187, 66], [178, 66], [130, 67], [175, 75], [6, 82], [63, 89], [101, 95], [194, 97], [18, 105], [65, 105], [80, 105], [175, 112], [77, 113], [175, 120], [113, 130], [37, 130], [87, 142], [143, 146], [86, 149], [151, 160], [112, 177], [78, 198]]
+#points = [[149, 2], [121, 8], [13, 12], [195, 25], [176, 34], [181, 42], [66, 49], [187, 66], [178, 66], [130, 67], [175, 75], [6, 82], [63, 89], [101, 95], [194, 97], [18, 105], [65, 105], [80, 105], [175, 112], [77, 113], [175, 120], [113, 130], [37, 130], [87, 142], [143, 146], [86, 149], [151, 160], [112, 177], [78, 198]]
 
 #-------------with box that is 100 wide and 300 tall
 #points = [[75, 14], [85, 22], [86, 26], [94, 32], [92, 45], [32, 71], [0, 127], [50, 132], [10, 134], [28, 134], [21, 134], [95, 147], [38, 152], [63, 162], [70, 168], [7, 175], [4, 176], [65, 179], [12, 187], [87, 190], [23, 197], [7, 206], [91, 209], [100, 234], [73, 236], [33, 267], [10, 273], [20, 278], [96, 298]]
@@ -540,18 +540,26 @@ def sort2ByY(pair):
 
 def scanSortByX(array):
 	
-	for i in range(0, array.__len__() - 1):
-		if array[i][1] == array[i+1][1] and array[i][0] > array[i+1][0]:
-			#print("line545",array)
-			array[i], array[i+1] = array[i+1], array[i]
+	for i in range(0, array.__len__()):
+		#print("line544",array[i])
+		if array[i][0][1] == array[i][1][1] and array[i][0][0] > array[i][1][0]:
+			#print("line545",array[i])
+			array[i][0], array[i][1] = array[i][1], array[i][0]
 			#print("line547",array)
+
+def scanSort2ByX(array):
+	if array[0][1] == array[1][1] and array[0][0] > array[1][0]:
+		array[0], array[1] = array[1], array[0]
 
 def scanSortByXSwap(focus, other):
 	
-	for i in range(0, focus.__len__() - 1):
-		if focus[i][1] == focus[i+1][1] and focus[i][0] > focus[i+1][0]:
-			focus[i], focus[i+1] = focus[i+1], focus[i]
+	for i in range(0, focus.__len__()):
+		#print("line557",focus[i])
+		if focus[i][0][1] == focus[i][1][1] and focus[i][0][0] > focus[i][1][0]:
+			#print("line559",focus[i])
+			focus[i][0], focus[i][1] = focus[i][1], focus[i][0]
 			other[i], other[i+1] = other[i+1], other[i]
+			#print("line562",focus[i])
 			
 
 sortByY(points)
@@ -823,6 +831,7 @@ else:
 
 			boundPair = [bound1, bound2]
 			sortByY(boundPair)
+			scanSort2ByX(boundPair)
 
 			siteKey = f"{str(site).replace(', ', '_')}"
 			nearestKey = f"{str(nearest).replace(', ', '_')}"
@@ -845,7 +854,7 @@ for site1Key in cell:
 		site1 = fromKey(site1Key)
 		site2 = entryPts[1]
 		site2Key = toKey(site2)
-		print("site1key",site1Key)
+		#print("site1key",site1Key)
 		#print(entryPts)
 		#print(site2Key)
 		# if entry1["point2"] != site1:
@@ -868,6 +877,7 @@ for site1Key in cell:
 				if site1 in entry2Pts and entry1["at"] != entry2["at"]:
 					edgePair = [entry1["at"], entry2["at"]]
 					sort2ByY(edgePair)
+					scanSort2ByX(edgePair)
 					#print("edgePair", edgePair, edgePair in finalCell[site1Key]["vertices"])
 					if edgePair not in finalCell[site1Key]["vertices"]: # For some reason this loop gets to this check many fewer times than the other loop
 						#print(entryPts,"-", entry2Pts, "-",edgePair)
@@ -880,8 +890,9 @@ for site1Key in cell:
 						#print("line842",edgePair, "-", entry1["sites"], "-", entry2["sites"])
 						sitePair = [site1, site2]
 						sort2ByY(sitePair)
+						scanSort2ByX(sitePair)
 						usedSitePairs.append(sitePair)
-						print("sitePair", sitePair)
+						#print("sitePair", sitePair)
 						vert1 = f"{str(entry1['at']).replace(', ', '_')}"
 						if vert1 not in vertices:
 							tempSites = entryPts
@@ -925,6 +936,7 @@ for site1Key in cell:
 				if site1 in entry3Pts and entry1["at"] != entry3["at"]:
 					edgePair = [entry1["at"], entry3["at"]]
 					sort2ByY(edgePair)
+					scanSort2ByX(edgePair)
 					#print("edgePair2", edgePair, edgePair in finalCell[site1Key]["vertices"])
 					if edgePair not in finalCell[site1Key]["vertices"]:
 						#print(entryPts,"-", entry3Pts, "-",edgePair)
@@ -937,8 +949,12 @@ for site1Key in cell:
 						finalCell[site1Key]["vertices"].append(edgePair)
 						sitePair = [site1, site3]
 						sort2ByY(sitePair)
+						#print("---line952",sitePair)
+						scanSort2ByX(sitePair)
+						#print("....line953",sitePair)
+						
 						usedSitePairs.append(sitePair)
-						print("sitePair2",sitePair)
+						#print("sitePair2",sitePair)
 						vert3 = f"{str(entry1['at']).replace(', ', '_')}"
 						if vert3 not in vertices:
 							tempSites = entryPts
@@ -974,30 +990,94 @@ print()
 #print(vertices)
 print()
 
+#for vert1 in vertices: # I don't know if this is more efficient than sorting the vertices by x within the loop that they are created
+#	scanSortByXSwap(vertices[vert1]["with"], vertices[vert1]["to"])
+
+# for vert1 in vertices:
+# 	vertPt = vertices[vert1]["at"]
+	
+# 	if not withinBounds(vertPt, defaultBounds):
+# 		organized = vertices[vert1].copy()
+# 		scanSortByXSwap(organized["with"], organized["to"])
+# 		print("          ",vertices[vert1])
+# 		print("          ", organized)
+# 		for other in vertices[vert1]["to"]:
+# 			otherVert = vertices[toKey(other)] # since I haven't copied this, any changes to otherVert will change vertices[toKey(other)]
+# 			bound = nearestBoundry(otherVert["at"], vertPt)
+# 			# The fact that I organized the "with" by x as well might cause issues since I didn't move the "to" when I did that
+# 			#i = otherVert["to"].index(vertPt)
+# 			#j = otherVert["with"].index()
+# 			print(otherVert["with"])
+print(finalCell["[0_8]"]["vertices"])
+removeVerts = []
 for vert1 in vertices:
 	vertPt = vertices[vert1]["at"]
 	
 	if not withinBounds(vertPt, defaultBounds):
-		organized = vertices[vert1].copy()
-		scanSortByXSwap(organized["with"], organized["to"])
-		print("          ",vertices[vert1])
-		print("          ", organized)
 		for other in vertices[vert1]["to"]:
-			otherVert = vertices[toKey(other)] # since I haven't copied this, any changes to otherVert will change vertices[toKey(other)]
-			bound = nearestBoundry(otherVert["at"], vertPt)
-			# The fact that I organized the "with" by x as well might cause issues since I didn't move the "to" when I did that
-			#i = otherVert["to"].index(vertPt)
-			#j = otherVert["with"].index()
-			print(otherVert["with"])
-			
+			if toKey(other) in vertices: # If it is not in vertices, then other is a boundry vertice
+				
+				otherVert = vertices[toKey(other)]
+				
+				if withinBounds(otherVert["at"], defaultBounds):
+
+					bound = nearestBoundry(otherVert["at"], vertPt)
+					i = otherVert["to"].index(vertPt)
+					originalPair = [otherVert["at"], otherVert["to"][i]]
+					otherVert["to"][i] = bound
+				
+					sort2ByY(originalPair)
+					scanSort2ByX(originalPair)
+
+					#print("original",originalPair)
+
+					pair = [otherVert["at"], bound]
+					sort2ByY(pair)
+					scanSort2ByX(pair)
+					
+					otherWith = otherVert["with"][i]
+					j = finalCell[toKey(otherWith[0])]["vertices"].index(originalPair)
+					#print("....", finalCell[toKey(otherWith[0])]["vertices"][j])
+					finalCell[toKey(otherWith[0])]["vertices"][j] = pair
+					#print("....-", finalCell[toKey(otherWith[0])]["vertices"][j])
+					j = finalCell[toKey(otherWith[1])]["vertices"].index(originalPair)
+					#print("....", finalCell[toKey(otherWith[1])]["vertices"][j])
+					finalCell[toKey(otherWith[1])]["vertices"][j] = pair
+					#print("....-", finalCell[toKey(otherWith[1])]["vertices"][j])
+
+					print(vertPt, otherVert["at"], bound, otherWith)
+					print(finalCell[toKey(otherWith[0])]["vertices"])
+					print(finalCell[toKey(otherWith[1])]["vertices"])
+				else:
+					print(otherVert["at"], "not within bounds")
+
+					
+					
+			else:
+				print("--",other)
+			print()
+
+		removeVerts.append(vert1)
+print(removeVerts)
+for rmv in removeVerts:
+	del vertices[rmv]
+
+# This works, but it might be better to try to remove the edges where both vertices are outside of bounds in the previous loop
+# for siteKey in finalCell:
+# 	removeVerts = []
+# 	for vertice in finalCell[siteKey]["vertices"]:
+# 		if not withinBounds(vertice[0], defaultBounds) or not withinBounds(vertice[1], defaultBounds):
+# 			removeVerts.append(vertice)
+
+# 	for rmv in removeVerts:
+# 		finalCell[siteKey]["vertices"].remove(rmv)
 
 # Modifies convex hull so that it has edges extending to the boundries of the specified area
 for vert in vertices: 
-	
 	#tempVertPt = str(vert).removeprefix("[").removesuffix("]").split("_")
 	#vertPt = [float(tempVertPt[0]), float(tempVertPt[1])]
 	vertPt = vertices[vert]["at"]
-
+	continue
 	if vertices[vert]["to"].__len__() == 1:
 		print("a")
 		site1 = vertices[vert]["sites"][0]
@@ -1035,7 +1115,7 @@ for vert in vertices:
 
 	if vertices[vert]["to"].__len__() == 2:
 		print("b")
-		continue
+
 		site1 = vertices[vert]["sites"][0]
 		site2 = vertices[vert]["sites"][1]
 		site3 = vertices[vert]["sites"][2]
@@ -1043,15 +1123,16 @@ for vert in vertices:
 		vertPtT = tAtXandY(site1, vertPt[0], vertPt[1])
 
 		pickedSites = [[site1, site2], [site1, site3], [site2, site3]]
-		print("picked",pickedSites)
-		print("----",vertices[vert]["with"][0])
-		withVerts = vertices[vert]["with"].copy()
-		scanSortByX(withVerts)
+		
+		#print("----",vertices[vert]["with"])
+		#withVerts = vertices[vert]["with"].copy()
+		#scanSortByX(withVerts)
 		scanSortByX(pickedSites)
-		#pickedSites.remove(vertices[vert]["with"][0])
-		#pickedSites.remove(vertices[vert]["with"][1])
-		pickedSites.remove(withVerts[0])
-		pickedSites.remove(withVerts[1])
+		#print("picked",pickedSites)
+		pickedSites.remove(vertices[vert]["with"][0])
+		pickedSites.remove(vertices[vert]["with"][1])
+		#pickedSites.remove(withVerts[0])
+		#pickedSites.remove(withVerts[1])
 		pickedSites = pickedSites[0]
 		
 		sortByY(pickedSites)
@@ -1090,7 +1171,7 @@ for vert in vertices:
 			throughPt = [afterTx, afterTy1]
 
 		if throughPt != []:
-
+			# This deals with vertices outside of the selected area, which are no longer possible
 			if vertPt[0] < defaultBounds[0][0] or vertPt[0] > defaultBounds[0][1] or vertPt[1] < defaultBounds[1][1] or vertPt[1] > defaultBounds[1][0]:
 				nearestBound = nearestBoundry(vertPt, throughPt)
 
@@ -1128,7 +1209,7 @@ for vert in vertices:
 				finalCell[f"{str(pickedSites[0]).replace(', ', '_')}"]["vertices"].append([vertPt, nearestBound])
 				finalCell[f"{str(pickedSites[1]).replace(', ', '_')}"]["vertices"].append([vertPt, nearestBound])
 
-
+print(finalCell["[0_8]"]["vertices"])
 
 # ---------------- End of voronoi calculations ----------------
 
@@ -1183,4 +1264,5 @@ for cell in finalCell:
 	plt.fill(vertsX, vertsY, color=(random.random(), random.random(), random.random(), 0.5))																								                        
 		
 plt.show()
+
 
