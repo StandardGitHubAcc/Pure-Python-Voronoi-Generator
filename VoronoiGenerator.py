@@ -18,7 +18,7 @@ for i in range(1, 30):
 
 #points = [[50, 50], [25, 25], [75, 75], [98, 70]]
 #points = [[50, 50], [25, 20], [75, 75], [98, 70]]
-#points = [[30, 40], [25, 60], [80, 97]]
+points = [[30, 40], [25, 60], [80, 97]]
 #points = [[50, 50], [75, 75]]  
 #points = [[50, 50]]
 
@@ -724,35 +724,37 @@ for others in points:
 if points.__len__() == 3 and cell.keys().__len__() != 0:
 	kys = list(cell.keys())
 	#print("line503",kys)
-	if kys.__len__() != 0: # This check is redundant now
-		current = cell[kys[0]][0]
-		#print(cell)
-		#print("line646",kys[0])
+	#if kys.__len__() != 0: # This check is redundant now
+	current = cell[kys[0]][0]
+	#print(cell)
+	#print("line646",kys[0])
 		
-		vert = f"{str(current['at']).replace(', ', '_')}"
-		#print(vert)
-		sites = current["sites"]#[current["point1"], current["point2"], current["point3"]]
-		distanceTargetSort(fromKey(kys[0]), sites)
+	vert = f"{str(current['at']).replace(', ', '_')}"
+	#print(vert)
+	sites = current["sites"]#[current["point1"], current["point2"], current["point3"]]
+	distanceTargetSort(fromKey(kys[0]), sites)
 		
-		#bound = nearestBoundry(current["at"], midPoint(current["point1"], current["point2"]))
-		bound = nearestBoundry(current["at"], midPoint(sites[0], sites[1]))
-		#midPt = midPoint(current["point1"], current["point2"])
-		#bound = nearestBoundry(current["at"], midPt)
-		#print(current["point1"], current["point2"], midPoint(current["point1"], current["point2"]))
-		#print("bound",bound)
-		#plt.plot(midPt[0], midPt[1], "yo")
-		#plt.plot([current["point1"][0], current["point2"][0]], [current["point1"][1], current["point2"][1]], "y")
+	#bound = nearestBoundry(current["at"], midPoint(current["point1"], current["point2"]))
+	bound = nearestBoundry(current["at"], midPoint(sites[0], sites[1]))
+	#midPt = midPoint(current["point1"], current["point2"])
+	#bound = nearestBoundry(current["at"], midPt)
+	#print(current["point1"], current["point2"], midPoint(current["point1"], current["point2"]))
+	#print("bound",bound)
+	#plt.plot(midPt[0], midPt[1], "yo")
+	#plt.plot([current["point1"][0], current["point2"][0]], [current["point1"][1], current["point2"][1]], "y")
 	
-		#vertices[vert] = {"sites":[current["point1"], current["point2"], current["point3"]], "with":[[current["point1"], current["point2"]]], "at":[bound]}
-		#vertices[vert] = {"sites":[current["point1"], current["point2"], current["point3"]], "with":[[sites[0], sites[1]]], "at":[bound]}
-		vertices[vert] = {"sites":current["sites"], "with":[[sites[0], sites[1]]], "at":[bound]}
-		#finalCell[kys[0]]["vertices"].append([current["at"], bound])
-		#finalCell[kys[1]]["vertices"].append([current["at"], bound])
-		edgePair = [current["at"], bound]
-		sort2ByY(edgePair)
-		scanSort2ByX(edgePair)
-		finalCell[kys[0]]["vertices"].append(edgePair)
-		finalCell[kys[1]]["vertices"].append(edgePair)
+	#vertices[vert] = {"sites":[current["point1"], current["point2"], current["point3"]], "with":[[current["point1"], current["point2"]]], "at":[bound]}
+	#vertices[vert] = {"sites":[current["point1"], current["point2"], current["point3"]], "with":[[sites[0], sites[1]]], "at":[bound]}
+	#vertices[vert] = {"sites":current["sites"], "with":[[sites[0], sites[1]]], "at":[bound]}	
+	#finalCell[kys[0]]["vertices"].append([current["at"], bound])
+	#finalCell[kys[1]]["vertices"].append([current["at"], bound])
+
+	vertices[vert] = {"sites":current["sites"], "at":current["at"], "with":[[sites[0], sites[1]]], "to":[bound]}
+	edgePair = [current["at"], bound]
+	sort2ByY(edgePair)
+	scanSort2ByX(edgePair)
+	finalCell[kys[0]]["vertices"].append(edgePair)
+	finalCell[kys[1]]["vertices"].append(edgePair)
 		
 	# else: # This isn't necessary, other parts handle 2 parallel lines correctly
 	# 	site1 = points[0]
@@ -788,21 +790,21 @@ elif points.__len__() == 1:
 	pass
 else:
 	# Deals with cases where lines are parallel or have no intersection point within the buffer but are still valid
-	usedSites = []
-	for entry in cell:
-		for vert in cell[entry]:
-			# if vert["point1"] not in usedSites:
-			# 	usedSites.append(vert["point1"])
-			# if vert["point2"] not in usedSites:
-			# 	usedSites.append(vert["point2"])
-			# if vert["point3"] not in usedSites:
-			# 	usedSites.append(vert["point3"])
-			if vert["sites"][0] not in usedSites:
-				usedSites.append(vert["sites"][0])
-			if vert["sites"][1] not in usedSites:
-				usedSites.append(vert["sites"][1])
-			if vert["sites"][2] not in usedSites:
-				usedSites.append(vert["sites"][2])
+	# usedSites = []
+	# for entry in cell:
+	# 	for vert in cell[entry]:
+	# 		# if vert["point1"] not in usedSites:
+	# 		# 	usedSites.append(vert["point1"])
+	# 		# if vert["point2"] not in usedSites:
+	# 		# 	usedSites.append(vert["point2"])
+	# 		# if vert["point3"] not in usedSites:
+	# 		# 	usedSites.append(vert["point3"])
+	# 		if vert["sites"][0] not in usedSites:
+	# 			usedSites.append(vert["sites"][0])
+	# 		if vert["sites"][1] not in usedSites:
+	# 			usedSites.append(vert["sites"][1])
+	# 		if vert["sites"][2] not in usedSites:
+	# 			usedSites.append(vert["sites"][2])
 
 	for site in points:
 
@@ -812,12 +814,24 @@ else:
 
 		test = False
 		
-		if site not in usedSites:
-			#test1 = True
+		# if site not in usedSites:
+		# 	#test1 = True
+		# 	test = True
+		# elif cell[toKey(site)].__len__() == 1:
+		# 	if not withinBounds(cell[toKey(site)][0]["at"], defaultBounds):
+		# 		#test2 = True
+		# 		test = True
+		# elif cell[toKey(site)].__len__() == 2:
+		# 	if not withinBounds(cell[toKey(site)][0]["at"], defaultBounds) and not withinBounds(cell[toKey(site)][1]["at"], defaultBounds):
+		# 		test = True
+		#print(usedSites)
+		print(cell)
+		if cell.__len__() == 0:
+			test = True
+		elif cell[toKey(site)].__len__() == 0:
 			test = True
 		elif cell[toKey(site)].__len__() == 1:
 			if not withinBounds(cell[toKey(site)][0]["at"], defaultBounds):
-				#test2 = True
 				test = True
 		elif cell[toKey(site)].__len__() == 2:
 			if not withinBounds(cell[toKey(site)][0]["at"], defaultBounds) and not withinBounds(cell[toKey(site)][1]["at"], defaultBounds):
@@ -870,7 +884,7 @@ else:
 			sort2ByY(boundPair)
 			#print("line865",boundPair)
 			scanSort2ByX(boundPair)
-			print("line873", boundPair)
+			#print("line873", boundPair)
 
 			siteKey = f"{str(site).replace(', ', '_')}"
 			nearestKey = f"{str(nearest).replace(', ', '_')}"
@@ -1032,6 +1046,7 @@ for site1Key in cell:
 	#print()
 #print(usedSitePairs)
 print()
+print("a")
 #print(n1, n2)
 #print(vertices)
 #print()
@@ -1062,7 +1077,7 @@ print()
 removeVerts = []
 for vert1 in vertices:
 	vertPt = vertices[vert1]["at"]
-	
+	print(vertPt)
 	if not withinBounds(vertPt, defaultBounds):
 		for other in vertices[vert1]["to"]:
 			if toKey(other) in vertices: # If it is not in vertices, then other is a boundry vertice
@@ -1116,7 +1131,7 @@ for vert1 in vertices:
 #print(removeVerts)
 for rmv in removeVerts:
 	del vertices[rmv]
-
+print("b")
 # This works, but it might be better to try to remove the edges where both vertices are outside of bounds in the previous loop
 # for siteKey in finalCell:
 # 	removeVerts = []
@@ -1262,51 +1277,6 @@ for vert in vertices:
 			finalCell[f"{str(pickedSites[0]).replace(', ', '_')}"]["vertices"].append([vertPt, nearestBound])
 			finalCell[f"{str(pickedSites[1]).replace(', ', '_')}"]["vertices"].append([vertPt, nearestBound])
 
-# Finds edges in cases where there are no intersection points or none within bounds
-for cell5 in finalCell:
-	continue
-	if finalCell[cell5]["vertices"].__len__() == 0 and points.__len__() > 1:
-		otherPoints = points.copy()
-		distanceTargetSort(finalCell[cell5]["site"], otherPoints)
-		
-		site1 = finalCell[cell5]["site"]
-		site2 = otherPoints[1]
-
-		midPt = midPoint(site1, site2)
-		leftY = yAtX(site1, site2, midPt[0] - 0.5)
-		rightY = yAtX(site1, site2, midPt[0] + 0.5)
-		
-		# Since there are no intersection points, can just find the boundry intersections in both directions
-		bound1 = nearestBoundry(midPt, [midPt[0] - 0.5, leftY])
-		bound2 = nearestBoundry(midPt, [midPt[0] + 0.5, rightY])
-
-		boundPair = [bound1, bound2]
-		sortByY(boundPair)
-
-		finalCell[cell5]["vertices"].append(boundPair)
-		
-		dictSite2 = f"{str(site2).replace(', ', '_')}"
-		if boundPair not in finalCell[dictSite2]["vertices"]:
-			finalCell[dictSite2]["vertices"].append(boundPair)
-		
-		if points.index(site1) != points.__len__() - 1 and points.index(site1) != 0: # If it is not the highest point or the lowest
-			site3 = otherPoints[2]
-			
-			midPt = midPoint(site1, site3)
-			leftY = yAtX(site1, site3, midPt[0] - 0.5)
-			rightY = yAtX(site1, site3, midPt[0] + 0.5)
-		
-			bound1 = nearestBoundry(midPt, [midPt[0] - 0.5, leftY])
-			bound2 = nearestBoundry(midPt, [midPt[0] + 0.5, rightY])
-
-			boundPair = [bound1, bound2]
-			sortByY(boundPair)
-
-			finalCell[cell5]["vertices"].append(boundPair)
-		
-			dictSite3 = f"{str(site3).replace(', ', '_')}"
-			if boundPair not in finalCell[dictSite3]["vertices"]:
-				finalCell[dictSite3]["vertices"].append(boundPair)
 
 
 # ---------------- End of voronoi calculations ----------------
@@ -1357,11 +1327,16 @@ for cell in finalCell:
 
 	for point in temp2:
 		vertsX.append(point[0][0])
-		vertsY.append(point[0][1])		
+		vertsY.append(point[0][1])
+
+	def clamp(n, lower, upper):
+		return max(lower, min(n, upper))
 	
-	plt.fill(vertsX, vertsY, color=(random.random(), random.random(), random.random(), 0.5))																								                        
+	#plt.fill(vertsX, vertsY, color=(random.random(), random.random(), random.random(), 0.5))
+	plt.fill(vertsX, vertsY, color=(clamp(random.random(), 0.1, 0.9), clamp(random.random(), 0.1, 0.9), clamp(random.random(), 0.1, 0.9), 0.5))
 		
 plt.show()
+
 
 
 
