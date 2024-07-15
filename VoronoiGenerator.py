@@ -1082,7 +1082,7 @@ for vert in vertices:
 	#tempVertPt = str(vert).removeprefix("[").removesuffix("]").split("_")
 	#vertPt = [float(tempVertPt[0]), float(tempVertPt[1])]
 	vertPt = vertices[vert]["at"]
-	continue
+	
 	if vertices[vert]["to"].__len__() == 1:
 		print("a")
 		site1 = vertices[vert]["sites"][0]
@@ -1177,42 +1177,46 @@ for vert in vertices:
 
 		if throughPt != []:
 			# This deals with vertices outside of the selected area, which are no longer possible
-			if vertPt[0] < defaultBounds[0][0] or vertPt[0] > defaultBounds[0][1] or vertPt[1] < defaultBounds[1][1] or vertPt[1] > defaultBounds[1][0]:
-				nearestBound = nearestBoundry(vertPt, throughPt)
+			# if vertPt[0] < defaultBounds[0][0] or vertPt[0] > defaultBounds[0][1] or vertPt[1] < defaultBounds[1][1] or vertPt[1] > defaultBounds[1][0]:
+			# 	nearestBound = nearestBoundry(vertPt, throughPt)
 
-				newBound1 = nearestOutsideBoundry(vertPt, throughPt)
-				newBound2 = nearestOutsideBoundry(vertPt, vertices[vert]["to"][0])
-				newBound3 = nearestOutsideBoundry(vertPt, vertices[vert]["to"][1])
-				print("line1062",newBound1, "-", newBound2, "-",newBound3)
-				#print(fromKey("[12.5_3]"))
-				#print(vertices[vert]['with'], vertices[vert]['with'][0][0], toKey(vertices[vert]['with'][0][0]) in list(finalCell.keys()), vertices[vert]['with'][0][0] in points)
-				#finalCell[f"{str(vertices[vert]['with'][0][0]).replace(', ', '_')}"]["vertices"].append([vertices[vert]["to"][0], newBound2])
-				#finalCell[f"{str(vertices[vert]['with'][0][1]).replace(', ', '_')}"]["vertices"].append([vertices[vert]["to"][0], newBound2])
-				#finalCell[f"{str(vertices[vert]['with'][1][0]).replace(', ', '_')}"]["vertices"].append([vertices[vert]["to"][1], newBound3])
-				#finalCell[f"{str(vertices[vert]['with'][1][1]).replace(', ', '_')}"]["vertices"].append([vertices[vert]["to"][1], newBound3])
-				finalCell[f"{str(vertices[vert]['with'][0][0]).replace(', ', '_')}"]["vertices"].append([vertices[vert]["at"], newBound2])
-				finalCell[f"{str(vertices[vert]['with'][0][1]).replace(', ', '_')}"]["vertices"].append([vertices[vert]["at"], newBound2])
-				finalCell[f"{str(vertices[vert]['with'][1][0]).replace(', ', '_')}"]["vertices"].append([vertices[vert]["at"], newBound3])
-				finalCell[f"{str(vertices[vert]['with'][1][1]).replace(', ', '_')}"]["vertices"].append([vertices[vert]["at"], newBound3])
+			# 	newBound1 = nearestOutsideBoundry(vertPt, throughPt)
+			# 	newBound2 = nearestOutsideBoundry(vertPt, vertices[vert]["to"][0])
+			# 	newBound3 = nearestOutsideBoundry(vertPt, vertices[vert]["to"][1])
+			# 	print("line1062",newBound1, "-", newBound2, "-",newBound3)
+			# 	#print(fromKey("[12.5_3]"))
+			# 	#print(vertices[vert]['with'], vertices[vert]['with'][0][0], toKey(vertices[vert]['with'][0][0]) in list(finalCell.keys()), vertices[vert]['with'][0][0] in points)
+			# 	#finalCell[f"{str(vertices[vert]['with'][0][0]).replace(', ', '_')}"]["vertices"].append([vertices[vert]["to"][0], newBound2])
+			# 	#finalCell[f"{str(vertices[vert]['with'][0][1]).replace(', ', '_')}"]["vertices"].append([vertices[vert]["to"][0], newBound2])
+			# 	#finalCell[f"{str(vertices[vert]['with'][1][0]).replace(', ', '_')}"]["vertices"].append([vertices[vert]["to"][1], newBound3])
+			# 	#finalCell[f"{str(vertices[vert]['with'][1][1]).replace(', ', '_')}"]["vertices"].append([vertices[vert]["to"][1], newBound3])
+			# 	finalCell[f"{str(vertices[vert]['with'][0][0]).replace(', ', '_')}"]["vertices"].append([vertices[vert]["at"], newBound2])
+			# 	finalCell[f"{str(vertices[vert]['with'][0][1]).replace(', ', '_')}"]["vertices"].append([vertices[vert]["at"], newBound2])
+			# 	finalCell[f"{str(vertices[vert]['with'][1][0]).replace(', ', '_')}"]["vertices"].append([vertices[vert]["at"], newBound3])
+			# 	finalCell[f"{str(vertices[vert]['with'][1][1]).replace(', ', '_')}"]["vertices"].append([vertices[vert]["at"], newBound3])
 				
-				# I could put both of these statements into one, but they are so big that I split them into two for readability
-				if (nearestBound[0] == defaultBounds[0][0] or nearestBound[0] == defaultBounds[0][1]) and (nearestBound[1] <= defaultBounds[1][0] and nearestBound[1] >= defaultBounds[1][1]):
-					finalCell[f"{str(pickedSites[0]).replace(', ', '_')}"]["vertices"].append([newBound1, nearestBound])
-					finalCell[f"{str(pickedSites[1]).replace(', ', '_')}"]["vertices"].append([newBound1, nearestBound])
+			# 	# I could put both of these statements into one, but they are so big that I split them into two for readability
+			# 	if (nearestBound[0] == defaultBounds[0][0] or nearestBound[0] == defaultBounds[0][1]) and (nearestBound[1] <= defaultBounds[1][0] and nearestBound[1] >= defaultBounds[1][1]):
+			# 		finalCell[f"{str(pickedSites[0]).replace(', ', '_')}"]["vertices"].append([newBound1, nearestBound])
+			# 		finalCell[f"{str(pickedSites[1]).replace(', ', '_')}"]["vertices"].append([newBound1, nearestBound])
 					
-				elif (nearestBound[1] == defaultBounds[1][0] or nearestBound[1] == defaultBounds[1][1]) and (nearestBound[0] >= defaultBounds[0][0] and nearestBound[0] <= defaultBounds[0][1]):
-					finalCell[f"{str(pickedSites[0]).replace(', ', '_')}"]["vertices"].append([newBound1, nearestBound])
-					finalCell[f"{str(pickedSites[1]).replace(', ', '_')}"]["vertices"].append([newBound1, nearestBound])
+			# 	elif (nearestBound[1] == defaultBounds[1][0] or nearestBound[1] == defaultBounds[1][1]) and (nearestBound[0] >= defaultBounds[0][0] and nearestBound[0] <= defaultBounds[0][1]):
+			# 		finalCell[f"{str(pickedSites[0]).replace(', ', '_')}"]["vertices"].append([newBound1, nearestBound])
+			# 		finalCell[f"{str(pickedSites[1]).replace(', ', '_')}"]["vertices"].append([newBound1, nearestBound])
 					
 				  
-			else:
-				nearestBound = nearestBoundry(vertPt, throughPt)
+			# else:
+			# 	nearestBound = nearestBoundry(vertPt, throughPt)
 
-				# Stuff should be fine when removing these two commented lines since the vertices dictionary is never used again after this, only finalCell
-				#vertices[vert]["with"].append([pickedSites[0], pickedSites[1]])
-				#vertices[vert]["at"].append(nearestBound)
-				finalCell[f"{str(pickedSites[0]).replace(', ', '_')}"]["vertices"].append([vertPt, nearestBound])
-				finalCell[f"{str(pickedSites[1]).replace(', ', '_')}"]["vertices"].append([vertPt, nearestBound])
+			# 	# Stuff should be fine when removing these two commented lines since the vertices dictionary is never used again after this, only finalCell
+			# 	#vertices[vert]["with"].append([pickedSites[0], pickedSites[1]])
+			# 	#vertices[vert]["at"].append(nearestBound)
+			# 	finalCell[f"{str(pickedSites[0]).replace(', ', '_')}"]["vertices"].append([vertPt, nearestBound])
+			# 	finalCell[f"{str(pickedSites[1]).replace(', ', '_')}"]["vertices"].append([vertPt, nearestBound])
+
+			nearestBound = nearestBoundry(vertPt, throughPt)
+			finalCell[f"{str(pickedSites[0]).replace(', ', '_')}"]["vertices"].append([vertPt, nearestBound])
+			finalCell[f"{str(pickedSites[1]).replace(', ', '_')}"]["vertices"].append([vertPt, nearestBound])
 
 #print(finalCell["[0_8]"]["vertices"])
 
@@ -1269,6 +1273,7 @@ for cell in finalCell:
 	plt.fill(vertsX, vertsY, color=(random.random(), random.random(), random.random(), 0.5))																								                        
 		
 plt.show()
+
 
 
 
