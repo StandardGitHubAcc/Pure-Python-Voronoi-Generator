@@ -82,7 +82,7 @@ points = []
 
 #points = [[20, 25], [55, 100], [70, 160], [95, 190]]
 #points = [[20, 25], [55, 100], [95, 190]]
-points = [[20, 25], [40, 100], [70, 160], [95, 190]] # no intersections within the target area
+#points = [[20, 25], [40, 100], [70, 160], [95, 190]] # no intersections within the target area
 
 #points = [[73, 8], [62, 92], [37, 95], [80, 139], [154, 147], [84, 177], [85, 177]] # broke finding boundry edges with outside angles
 
@@ -104,6 +104,9 @@ points = [[20, 25], [40, 100], [70, 160], [95, 190]] # no intersections within t
 #points = [[22, 299], [23, 299], [12, 273], [25, 25]]
 #points = [[22, 199], [23, 199], [12, 173], [25, 25]]
 #points = [[20, 199], [25, 199], [12, 173], [25, 25]]
+
+#points = [[69, 228], [77, 228], [73, 239], [63, 244], [62, 220], [84, 203], [81, 243]]
+#points = [[69, 228], [77, 228], [73, 239]]
 
 #------------- 100 points
 points = [[64, 3], [56, 4], [20, 8], [8, 9], [59, 12], [88, 14], [27, 20], [3, 22], [26, 23], [99, 29], [29, 32], [56, 37], [29, 38], [50, 38], [22, 39], [56, 40], [11, 52], [92, 52], [90, 58], [79, 69], [97, 70], [32, 71], [46, 71], [7, 73], [18, 74], [89, 79], [58, 80], [51, 84], [17, 88], [13, 94], [24, 99], [94, 101], [43, 101], [45, 106], [50, 111], [17, 112], [41, 114], [89, 115], [80, 118], [33, 123], [74, 123], [88, 131], [19, 133], [29, 137], [20, 138], [40, 139], [60, 140], [49, 144], [1, 157], [67, 160], [95, 164], [50, 165], [38, 166], [58, 170], [52, 174], [34, 177], [12, 179], [25, 184], [91, 185], [62, 185], [80, 189], [56, 192], [28, 196], [19, 196], [84, 203], [52, 204], [66, 206], [23, 206], [34, 207], [41, 215], [100, 217], [46, 218], [40, 220], [62, 220], [17, 222], [77, 228], [69, 228], [15, 229], [45, 237], [73, 239], [19, 240], [81, 243], [63, 244], [13, 258], [1, 259], [43, 261], [42, 264], [44, 268], [78, 268], [11, 269], [12, 273], [50, 274], [68, 278], [37, 278], [75, 281], [92, 295], [23, 299], [22, 299], [91, 300]]
@@ -659,6 +662,7 @@ for site1 in points:
 									# 	cell.update({site1Key : [{"point1":sites[0], "point2":sites[1], "point3":sites[2], "time":float("%.10f" % t), "at":[float("%.10f" % x), float("%.10f" % y)]}]})
 
 									sites.remove(site1)
+									scanSort2ByX(sites)
 									
 									if site1Key in cell:
 										#print({"point1":sites[0], "point2":sites[1], "point3":sites[2], "time":float("%.10f" % t), "at":[float("%.10f" % x), float("%.10f" % y)]} in cell[site1Key])
@@ -671,6 +675,7 @@ for site1 in points:
 						else:
 							y = yAtX(sites[0], sites[2], x)
 							t = tAtXandY(sites[0], x, y)
+							#print("line677",x,y,t)
 
 							# bufferBounds just increases the bounds of the selected area by a certain amount so that intersection points can happen within it and are not outright rejected
 							#	but need to be accounted for seperately and fixed
@@ -679,7 +684,9 @@ for site1 in points:
 							bufferHeight = (defaultBounds[1][1] + defaultBounds[1][0])/4
 							bufferBounds = [[defaultBounds[0][0] - bufferWidth, defaultBounds[0][1] + bufferHeight], [defaultBounds[1][0] + bufferHeight, defaultBounds[1][1] - bufferHeight]]
 					
-							if t > site1[1] and t > site2[1] and t > site3[1] and withinBounds([x, y], bufferBounds):
+							# This is >= instead of > since if the 3rd site is exactly at the x-value of the intersection point and the y-values of the other two sites are equal,
+							#	then a t-value equal to the y-value of the higest site is valid
+							if t >= site1[1] and t >= site2[1] and t >= site3[1] and withinBounds([x, y], bufferBounds):
 								#site1Key = f"{str(site1).replace(', ', '_')}"
 	
 								# For some reason trying to prevent duplicates causes things to break
@@ -691,6 +698,7 @@ for site1 in points:
 								# 	cell.update({site1Key : [{"point1":sites[0], "point2":sites[1], "point3":sites[2], "time":float("%.10f" % t), "at":[float("%.10f" % x), float("%.10f" % y)]}]})
 
 								sites.remove(site1)
+								scanSort2ByX(sites)
 									
 								if site1Key in cell:
 									#print({"point1":sites[0], "point2":sites[1], "point3":sites[2], "time":float("%.10f" % t), "at":[float("%.10f" % x), float("%.10f" % y)]} in cell[site1Key])
@@ -700,7 +708,7 @@ for site1 in points:
 								else:
 									cell.update({site1Key : [{"sites":[site1, sites[0], sites[1]], "time":float("%.10f" % t), "at":[float("%.10f" % x), float("%.10f" % y)]}]})
 										
-
+print("Deleting invalid cell vertices...")
 for others in points:
 	
 	for site1 in cell:
@@ -714,16 +722,16 @@ for others in points:
 					#plt.plot(entry["at"][0], entry["at"][1], "yo")
 					#plt.plot([entry["point2"][0], entry["at"][0], entry["point3"][0], entry["at"][0], entry["point1"][0]], [entry["point2"][1], entry["at"][1], entry["point3"][1], entry["at"][1], entry["point1"][1]], "y")
 					removeVerts.append(entry)
-
+		#print(site1, removeVerts)
 		for rmv in removeVerts:
 			try:
 				del cell[site1][cell[site1].index(rmv)]
 			except Exception:
 				pass
 
-#for tmp in cell:
-#	for tmp2 in cell[tmp]:
-#		print(tmp, "-", tmp2)
+# for tmp in cell:
+# 	for tmp2 in cell[tmp]:
+# 		print(tmp, "-", tmp2)
 
 #print(cell["[16_0]"])
 #print(finalCell["[20_4]"]["vertices"])
@@ -906,54 +914,9 @@ else:
 				finalCell[nearestKey]["vertices"].append(boundPair)
 			#finalCell[f"{str(nearest).replace(', ', '_')}"]["vertices"].append(boundPair)
 #print(finalCell["[20_4]"]["vertices"])
-for tmp in cell.keys():
-	print(tmp, "-", cell[tmp])
+#for tmp in cell.keys():
+#	print(tmp, "-", cell[tmp])
 
-# Creates a vertex in cases where there there is only one intersection vertex and no other vertices are registered
-#	This happens with [[7, 34], [87, 254], [91, 265], [86, 16]] but not [[50, 50], [25, 25], [75, 75], [98, 70]] because it has an intersection within the buffer zone
-#	Also happens with [[25, 25], [12, 173], [22, 199], [23, 199]]
-if vertices.__len__() == 0:
-	print("vertices has 0 elements")
-	#print(cell.keys())
-	kys = list(cell.keys())
-	i = 0
-	while True:
-
-		if i >= kys.__len__():
-			break
-		
-		if cell[kys[i]].__len__() != 0:
-			current = cell[kys[i]][0]
-			
-			pt1, pt2, pt3 = current["sites"]#current["point1"], current["point2"], current["point3"]
-			print("line924",pt1, pt2, pt3)
-			vert = f"{str(current['at']).replace(', ', '_')}"
-			
-			tempSites = [pt1, pt2, pt3]
-			sortByY(tempSites)
-			
-			vertices.update({vert : {"sites":tempSites, "at":current["at"], "with":[], "to":[]}})
-
-			tempSites = [tempSites[0], tempSites[1]]
-			scanSort2ByX(tempSites)
-
-			throughPt = midPoint(tempSites[0], tempSites[1])
-
-			bound = nearestBoundry(current['at'], throughPt)
-
-			vertices[vert]["with"].append([tempSites[0], tempSites[1]])
-			vertices[vert]["to"].append(bound)
-			
-			tempEdge = [current['at'], bound]
-			sort2ByY(tempEdge)
-			scanSort2ByX(tempEdge)
-
-			finalCell[f"{str(tempSites[0]).replace(', ', '_')}"]["vertices"].append(tempEdge)
-			finalCell[f"{str(tempSites[1]).replace(', ', '_')}"]["vertices"].append(tempEdge)
-
-			#print(vertices[vert])
-			break
-		i += 1
 
 
 	
@@ -1147,12 +1110,60 @@ for rmv in removeVerts:
 # 	for rmv in removeVerts:
 # 		finalCell[siteKey]["vertices"].remove(rmv)
 
+# Creates a vertex in cases where there there is only one intersection vertex and no other vertices are registered
+#	This happens with [[7, 34], [87, 254], [91, 265], [86, 16]] but not [[50, 50], [25, 25], [75, 75], [98, 70]] because it has an intersection within the buffer zone
+#	Also happens with [[25, 25], [12, 173], [22, 199], [23, 199]]
+if vertices.__len__() == 0:
+	print("vertices has 0 elements")
+	#print(cell.keys())
+	kys = list(cell.keys())
+	i = 0
+	while True:
+
+		if i >= kys.__len__():
+			break
+		
+		if cell[kys[i]].__len__() != 0:
+			current = cell[kys[i]][0]
+			
+			pt1, pt2, pt3 = current["sites"]#current["point1"], current["point2"], current["point3"]
+			print("line924",pt1, pt2, pt3)
+			vert = f"{str(current['at']).replace(', ', '_')}"
+			
+			tempSites = [pt1, pt2, pt3]
+			sortByY(tempSites)
+			
+			vertices.update({vert : {"sites":tempSites, "at":current["at"], "with":[], "to":[]}})
+
+			tempSites = [tempSites[0], tempSites[1]]
+			scanSort2ByX(tempSites)
+
+			throughPt = midPoint(tempSites[0], tempSites[1])
+
+			bound = nearestBoundry(current['at'], throughPt)
+
+			vertices[vert]["with"].append([tempSites[0], tempSites[1]])
+			vertices[vert]["to"].append(bound)
+			
+			tempEdge = [current['at'], bound]
+			sort2ByY(tempEdge)
+			scanSort2ByX(tempEdge)
+
+			finalCell[f"{str(tempSites[0]).replace(', ', '_')}"]["vertices"].append(tempEdge)
+			finalCell[f"{str(tempSites[1]).replace(', ', '_')}"]["vertices"].append(tempEdge)
+
+			#print(vertices[vert])
+			break
+		i += 1
+
+
+
 # Modifies convex hull so that it has edges extending to the boundries of the specified area
 for vert in vertices: 
 	#tempVertPt = str(vert).removeprefix("[").removesuffix("]").split("_")
 	#vertPt = [float(tempVertPt[0]), float(tempVertPt[1])]
 	vertPt = vertices[vert]["at"]
-	
+	continue
 	if vertices[vert]["to"].__len__() == 1:
 
 		site1 = vertices[vert]["sites"][0]
@@ -1315,6 +1326,7 @@ def makeEdges(onBoundry, curSite):
 
 # Finds edges that are on the boundry of the target area
 for cell2 in finalCell:
+	continue
 	onBoundry = []
 	for vert in finalCell[cell2]["vertices"]:
 		boundSize = [defaultBounds[0][0], defaultBounds[0][1], defaultBounds[1][0], defaultBounds[1][1]] # Flattened version of defaultBounds array
@@ -1423,9 +1435,10 @@ for cell in finalCell:
 		return max(lower, min(n, upper))
 	
 	#plt.fill(vertsX, vertsY, color=(random.random(), random.random(), random.random(), 0.5))
-	plt.fill(vertsX, vertsY, color=(clamp(random.random(), 0.1, 0.9), clamp(random.random(), 0.1, 0.9), clamp(random.random(), 0.1, 0.9), 0.5))
+	plt.fill(vertsX, vertsY, color=(clamp(random.random(), 0.1, 0.8), clamp(random.random(), 0.1, 0.8), clamp(random.random(), 0.1, 0.8), 0.5))
 		
 plt.show()
+
 
 
 
