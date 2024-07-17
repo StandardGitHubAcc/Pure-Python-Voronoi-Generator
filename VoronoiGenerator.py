@@ -148,7 +148,9 @@ cell = {}
 vertices = {}
 removeVerts = []
 finalCell = {}
-#boundryEdges = []
+
+# I could replace all of the try: catch: statements in the math functions with if: else:
+# since it is just math and I know exactly what circumstances will cause a division by 0
 
 def distance(x1, y1, x2, y2):
 	return (((x1 - x2) ** 2) + ((y1 - y2) ** 2)) ** 0.5
@@ -229,7 +231,7 @@ def otherXOnBisectorAtT(pt1, pt2, pt3, t): # pt1 and pt2 form the bisector and p
 	except ZeroDivisionError:
 		# Divides by 0 if m = 0, so if the first two points have the same y-value
 		# So the correct x-value would be the midpoint between the two since the bisector is a vertical line, causing the y-values to be different with t, but not x
-		print(f"division by zero in otherXOnBisectorAtT with {pt1} {pt2} {pt3} t={t}")        
+		print(f"division by zero in otherXOnBisectorAtT with {pt1} {pt2} {pt3} t={t}")
 		return (a + c) / 2
 
 def getXAtTime(pt1, pt2, t): # finds x-value of intersection of two parabolas at given time, imaginary if it doesn't exist
@@ -240,7 +242,7 @@ def getXAtTime(pt1, pt2, t): # finds x-value of intersection of two parabolas at
 
 		# Math is the same as otherXOnBisectorAtT except e is replaced with a and f is replaced with b
 		m = d-b
-		n = 2 * ( ( (a-c) * (t-b) ) + (a * (b-d)) )        
+		n = 2 * ( ( (a-c) * (t-b) ) + (a * (b-d)) )
 		o = -1 * ( ( (b-d) * ( (a**2) + (b**2) - (t**2) ) ) - ( (t-b) * ( (d**2) - (b**2) - (a**2) + (c**2) ) ) )
 		
 		mid = midPoint(pt1, pt2)
@@ -498,7 +500,7 @@ def slope(pt1, pt2):
 		return None
 
 def midPoint(pt1, pt2):
-	return [ (pt1[0] + pt2[0]) / 2,  (pt1[1] + pt2[1]) / 2]    
+	return [ (pt1[0] + pt2[0]) / 2,  (pt1[1] + pt2[1]) / 2]
 
 def withinBounds(vert, bounds):
 	return vert[0] >= bounds[0][0] and vert[0] <= bounds[0][1] and vert[1] >= bounds[1][1] and vert[1] <= bounds[1][0]
@@ -552,7 +554,6 @@ def scanSortByXSwap(focus, other):
 
 
 sortByY(points)
-#scanSortByX(points) # not sure if sorting by x here helps anything
 print(points)
 
 
@@ -594,39 +595,11 @@ for site1 in points:
 								bufferBounds = [[defaultBounds[0][0] - bufferWidth, defaultBounds[0][1] + bufferHeight], [defaultBounds[1][0] + bufferHeight, defaultBounds[1][1] - bufferHeight]]
 					
 								if t > site1[1] and t > site2[1] and t > site3[1] and withinBounds([x, y], bufferBounds):
-									#site1Key = f"{str(site1).replace(', ', '_')}"
-
-									# if site1Key in cell:
-									# 	# Prevents duplicates (duplicates don't break anything, just makes stuff slower (probably))
-									# 	test1 = {"point1":site1, "point2":site2, "point3":site3, "time":float("%.10f" % t), "at":[float("%.10f" % x), float("%.10f" % y)]}
-									# 	test2 = {"point1":site1, "point2":site3, "point3":site2, "time":float("%.10f" % t), "at":[float("%.10f" % x), float("%.10f" % y)]}
-									# 	if test1 not in cell[site1Key] and test2 not in cell[site1Key]:
-									# 		cell[site1Key].append({"point1":site1, "point2":site2, "point3":site3, "time":float("%.10f" % t), "at":[float("%.10f" % x), float("%.10f" % y)]})
-									# else:
-									# 	cell.update({site1Key : [{"point1":site1, "point2":site2, "point3":site3, "time":float("%.10f" % t), "at":[float("%.10f" % x), float("%.10f" % y)]}]})
-							
-									# if f"{str(site1).replace(', ', '_')}" in cell:
-									# 	cell[f"{str(site1).replace(', ', '_')}"].append({"point1":site1, "point2":site2, "point3":site3, "time":float("%.10f" % t), "at":[float("%.10f" % x), float("%.10f" % y)]})
-									# else:
-									# 	cell.update({f"{str(site1).replace(', ', '_')}" : [{"point1":site1, "point2":site2, "point3":site3, "time":float("%.10f" % t), "at":[float("%.10f" % x), float("%.10f" % y)]}]})
-	
-									# For some reason trying to prevent duplicates causes things to break
-									# if site1Key in cell:
-									# 	cell[site1Key].append({"point1":site1, "point2":site2, "point3":site3, "time":float("%.10f" % t), "at":[float("%.10f" % x), float("%.10f" % y)]})
-									# else:
-									# 	cell.update({site1Key : [{"point1":site1, "point2":site2, "point3":site3, "time":float("%.10f" % t), "at":[float("%.10f" % x), float("%.10f" % y)]}]})
-									# if site1Key in cell:
-									# 	#print({"point1":sites[0], "point2":sites[1], "point3":sites[2], "time":float("%.10f" % t), "at":[float("%.10f" % x), float("%.10f" % y)]} in cell[site1Key])
-									# 	if {"point1":sites[0], "point2":sites[1], "point3":sites[2], "time":float("%.10f" % t), "at":[float("%.10f" % x), float("%.10f" % y)]} not in cell[site1Key]:
-									# 		cell[site1Key].append({"point1":sites[0], "point2":sites[1], "point3":sites[2], "time":float("%.10f" % t), "at":[float("%.10f" % x), float("%.10f" % y)]})
-									# else:
-									# 	cell.update({site1Key : [{"point1":sites[0], "point2":sites[1], "point3":sites[2], "time":float("%.10f" % t), "at":[float("%.10f" % x), float("%.10f" % y)]}]})
-
+									
 									sites.remove(site1)
 									scanSort2ByX(sites)
 									
 									if site1Key in cell:
-										#print({"point1":sites[0], "point2":sites[1], "point3":sites[2], "time":float("%.10f" % t), "at":[float("%.10f" % x), float("%.10f" % y)]} in cell[site1Key])
 										# Prevents duplicate information
 										if {"sites":[site1, sites[0], sites[1]], "time":float("%.10f" % t), "at":[float("%.10f" % x), float("%.10f" % y)]} not in cell[site1Key]:
 											cell[site1Key].append({"sites":[site1, sites[0], sites[1]], "time":float("%.10f" % t), "at":[float("%.10f" % x), float("%.10f" % y)]})
@@ -652,7 +625,6 @@ for site1 in points:
 								scanSort2ByX(sites)
 									
 								if site1Key in cell:
-									#print({"point1":sites[0], "point2":sites[1], "point3":sites[2], "time":float("%.10f" % t), "at":[float("%.10f" % x), float("%.10f" % y)]} in cell[site1Key])
 									# Prevents duplicate information
 									if {"sites":[site1, sites[0], sites[1]], "time":float("%.10f" % t), "at":[float("%.10f" % x), float("%.10f" % y)]} not in cell[site1Key]:
 										cell[site1Key].append({"sites":[site1, sites[0], sites[1]], "time":float("%.10f" % t), "at":[float("%.10f" % x), float("%.10f" % y)]})
@@ -669,7 +641,6 @@ for others in points:
 				otherPointY = getYAtTimeAndX(others, entry["time"], entry["at"][0])
 				
 				if otherPointY > entry["at"][1]: # It is not possible to have 4th site below a correct intersection point and have a higher parabola y-value than that point at the same time
-					#plt.plot(entry["at"][0], entry["at"][1], "yo")
 					removeVerts.append(entry)
 
 		for rmv in removeVerts:
@@ -684,7 +655,6 @@ for others in points:
 if points.__len__() == 3 and cell.keys().__len__() != 0:
 	kys = list(cell.keys())
 	
-	#if kys.__len__() != 0: # This check is redundant now
 	current = cell[kys[0]][0]
 		
 	vert = f"{str(current['at']).replace(', ', '_')}"
@@ -700,34 +670,7 @@ if points.__len__() == 3 and cell.keys().__len__() != 0:
 	scanSort2ByX(edgePair)
 	finalCell[kys[0]]["vertices"].append(edgePair)
 	finalCell[kys[1]]["vertices"].append(edgePair)
-		
-	# else: # This isn't necessary, other parts handle 2 parallel lines correctly
-	# 	site1 = points[0]
-	# 	site2 = points[1]
-	# 	site3 = points[2]
-		
-	# 	site1Key = f"{str(site1).replace(', ', '_')}"
-	# 	site2Key = f"{str(site2).replace(', ', '_')}"
-	# 	site3Key = f"{str(site3).replace(', ', '_')}"
 
-	# 	slp = -1/slope(site1, site2)
-	# 	midPt1 = midPoint(site1, site2)
-	# 	midPt2 = midPoint(site2, site3)
-
-	# 	ptSlope1y = pointSlope(midPt1, slp, midPt1[0] + 0.5)
-	# 	ptSlope2y = pointSlope(midPt1, slp, midPt1[0] - 0.5)
-	# 	ptSlope3y = pointSlope(midPt2, slp, midPt2[0] + 0.5)
-	# 	ptSlope4y = pointSlope(midPt2, slp, midPt2[0] - 0.5)
-
-	# 	bound1 = nearestBoundry(midPt1, [midPt1[0] + 0.5, ptSlope1y])
-	# 	bound2 = nearestBoundry(midPt1, [midPt1[0] - 0.5, ptSlope2y])
-	# 	bound3 = nearestBoundry(midPt2, [midPt2[0] + 0.5, ptSlope3y])
-	# 	bound4 = nearestBoundry(midPt2, [midPt2[0] - 0.5, ptSlope4y])
-
-	# 	finalCell[site1Key]["vertices"].append([bound1, bound2])
-	# 	finalCell[site2Key]["vertices"].append([bound1, bound2])
-	# 	finalCell[site2Key]["vertices"].append([bound3, bound4])
-	# 	finalCell[site3Key]["vertices"].append([bound3, bound4])
 
  # Trying to handle 1 site here will cause the boundry edge finding section to duplicate two sides, 
 #	and not handling this here breaks nothing, so it is handled after everything else	
@@ -1258,9 +1201,9 @@ for pt in points:
 	plt.plot(pt[0], pt[1], "ro")
 	#plt.plot(pt[0], pt[1], color=(1,0,0), marker="o") # works	
 
-# for site in cell:  
+# for site in cell:
 # 	for entry in cell[site]:
-        
+
 # 		plt.plot(entry["at"][0], entry["at"][1], "go")
 
 # 		#plt.plot([entry["point2"][0], entry["at"][0], entry["point3"][0], entry["at"][0], entry["point1"][0]], [entry["point2"][1], entry["at"][1], entry["point3"][1], entry["at"][1], entry["point1"][1]], "g") 
@@ -1307,3 +1250,4 @@ for cell in finalCell:
 	plt.fill(vertsX, vertsY, color=(clamp(random.random(), 0.1, 0.8), clamp(random.random(), 0.1, 0.8), clamp(random.random(), 0.1, 0.8), 0.5))
 		
 plt.show()
+
