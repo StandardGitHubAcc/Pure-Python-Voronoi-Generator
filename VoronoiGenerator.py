@@ -108,7 +108,7 @@ for i in range(1, 100):
 #points = [[69, 228], [77, 228], [73, 239], [63, 244], [62, 220], [84, 203], [81, 243]]
 #points = [[69, 228], [77, 228], [73, 239]]
 
-points = [[69, 228], [77, 228], [73, 239]]
+#points = [[69, 228], [77, 228], [73, 239]]
 
 #------------- 100 points
 #points = [[64, 3], [56, 4], [20, 8], [8, 9], [59, 12], [88, 14], [27, 20], [3, 22], [26, 23], [99, 29], [29, 32], [56, 37], [29, 38], [50, 38], [22, 39], [56, 40], [11, 52], [92, 52], [90, 58], [79, 69], [97, 70], [32, 71], [46, 71], [7, 73], [18, 74], [89, 79], [58, 80], [51, 84], [17, 88], [13, 94], [24, 99], [94, 101], [43, 101], [45, 106], [50, 111], [17, 112], [41, 114], [89, 115], [80, 118], [33, 123], [74, 123], [88, 131], [19, 133], [29, 137], [20, 138], [40, 139], [60, 140], [49, 144], [1, 157], [67, 160], [95, 164], [50, 165], [38, 166], [58, 170], [52, 174], [34, 177], [12, 179], [25, 184], [91, 185], [62, 185], [80, 189], [56, 192], [28, 196], [19, 196], [84, 203], [52, 204], [66, 206], [23, 206], [34, 207], [41, 215], [100, 217], [46, 218], [40, 220], [62, 220], [17, 222], [77, 228], [69, 228], [15, 229], [45, 237], [73, 239], [19, 240], [81, 243], [63, 244], [13, 258], [1, 259], [43, 261], [42, 264], [44, 268], [78, 268], [11, 269], [12, 273], [50, 274], [68, 278], [37, 278], [75, 281], [92, 295], [23, 299], [22, 299], [91, 300]]
@@ -230,7 +230,6 @@ def otherXOnBisectorAtT(pt1, pt2, pt3, t): # pt1 and pt2 form the bisector and p
 		# Divides by 0 if m = 0, so if the first two points have the same y-value
 		# So the correct x-value would be the midpoint between the two since the bisector is a vertical line, causing the y-values to be different with t, but not x
 		print(f"division by zero in otherXOnBisectorAtT with {pt1} {pt2} {pt3} t={t}")        
-		#return defaultBounds[1][1] -5  
 		return (a + c) / 2
 
 def getXAtTime(pt1, pt2, t): # finds x-value of intersection of two parabolas at given time, imaginary if it doesn't exist
@@ -261,7 +260,6 @@ def getXAtTime(pt1, pt2, t): # finds x-value of intersection of two parabolas at
 		# Divides by 0 if m = 0, so if the two points have the same y-value
 		# So the correct x-value would be the midpoint between the two
 		print(f"division by zero in getXAtTime with {pt1} {pt2} t={t}")
-		#return defaultBounds[1][1] -5
 		return (a + c) / 2
 
 def getXAtTimeRef(pt1, pt2, t, refX):
@@ -289,7 +287,6 @@ def getXAtTimeRef(pt1, pt2, t, refX):
 		# Divides by 0 if m = 0, so if the two points have the same y-value
 		# So the correct x-value would be the midpoint between the two
 		print(f"division by zero in find2IntersectAtTime with {pt1} {pt2} t={t}")
-		#return defaultBounds[1][1] -5
 		return (a + c) / 2
 
 def getTimeAtX(pt1, pt2, pt3, x): # finds time when parabola pt1 has given x value, sensitive to order, (pt1, pt2, pt3) != (pt1, pt3, pt2) #(pt1, pt2, pt3) = (pt1, pt3, pt2)
@@ -307,7 +304,6 @@ def getTimeAtX(pt1, pt2, pt3, x): # finds time when parabola pt1 has given x val
 	except ZeroDivisionError:
 		#print(f"division by zero in getTimeAtX with {pt1} {pt2} {pt3} x={x} j={j} k={k} L={L}") # j, k, and L will always be 0 in this event
 		print(f"division by zero in getTimeAtX with {pt1} {pt2} {pt3} x={x}")
-		#return pt1[1]
 		return None
 
 def getYAtTimeAndX(pt1, t, x): # just the y-value of the parabola at the given t and x, which may different than yAtX since that is locked to the bisector
@@ -317,7 +313,6 @@ def getYAtTimeAndX(pt1, t, x): # just the y-value of the parabola at the given t
 		return float("%.10f" % y)
 	except ZeroDivisionError:
 		print(f"division by zero in getYAtTimeAndX with {pt1} t={t} x={x}")
-		#return defaultBounds[1][1] -5
 		return None
 
 def yAtX(pt1, pt2, x): # gives y value of bisector between two parabolas at given x value
@@ -387,9 +382,8 @@ def pointSlope(pt, slope, x):
 			#print("case3")
 			return float("%.10f" % ((slope * (x - pt[0])) + pt[1]) )
 		
-	#return float("%.10f" % ((slope * (x - pt[0])) + pt[1]) )
 
-def pointSlopeX(pt, slope, y): # This hasn't errored for some reason (this was before putting in the match case statement)
+def pointSlopeX(pt, slope, y): # This hasn't errored for some reason (this was before putting in the match case statement, still doesn't error though)
 	match slope:
 		case None:
 			#print("case1")
@@ -400,7 +394,6 @@ def pointSlopeX(pt, slope, y): # This hasn't errored for some reason (this was b
 		case _:
 			#print("case3")
 			return float("%.10f" % ( (y - pt[1] + (slope * pt[0])) / slope) )
-	#return float("%.10f" % ( (y - pt[1] + (slope * pt[0])) / slope) )
 
 def nearestBoundry(startPt, throughPt):
 
@@ -1265,18 +1258,18 @@ for pt in points:
 	plt.plot(pt[0], pt[1], "ro")
 	#plt.plot(pt[0], pt[1], color=(1,0,0), marker="o") # works	
 
-for site in cell:  
-	for entry in cell[site]:
+# for site in cell:  
+# 	for entry in cell[site]:
         
-		plt.plot(entry["at"][0], entry["at"][1], "go")
+# 		plt.plot(entry["at"][0], entry["at"][1], "go")
 
-		#plt.plot([entry["point2"][0], entry["at"][0], entry["point3"][0], entry["at"][0], entry["point1"][0]], [entry["point2"][1], entry["at"][1], entry["point3"][1], entry["at"][1], entry["point1"][1]], "g") 
-		plt.plot([entry["sites"][1][0], entry["at"][0], entry["sites"][2][0], entry["at"][0], entry["sites"][0][0]], [entry["sites"][1][1], entry["at"][1], entry["sites"][2][1], entry["at"][1], entry["sites"][0][1]], "g") 
+# 		#plt.plot([entry["point2"][0], entry["at"][0], entry["point3"][0], entry["at"][0], entry["point1"][0]], [entry["point2"][1], entry["at"][1], entry["point3"][1], entry["at"][1], entry["point1"][1]], "g") 
+# 		plt.plot([entry["sites"][1][0], entry["at"][0], entry["sites"][2][0], entry["at"][0], entry["sites"][0][0]], [entry["sites"][1][1], entry["at"][1], entry["sites"][2][1], entry["at"][1], entry["sites"][0][1]], "g") 
 
-for vert3key in vertices:
-	vert3 = vertices[vert3key]
+# for vert3key in vertices:
+# 	vert3 = vertices[vert3key]
 	
-	plt.plot([vert3["sites"][0][0], vert3["at"][0], vert3["sites"][1][0], vert3["at"][0], vert3["sites"][2][0]], [vert3["sites"][0][1], vert3["at"][1], vert3["sites"][1][1], vert3["at"][1], vert3["sites"][2][1]], "y")
+# 	plt.plot([vert3["sites"][0][0], vert3["at"][0], vert3["sites"][1][0], vert3["at"][0], vert3["sites"][2][0]], [vert3["sites"][0][1], vert3["at"][1], vert3["sites"][1][1], vert3["at"][1], vert3["sites"][2][1]], "y")
 
 for cell in finalCell:
 
@@ -1285,7 +1278,7 @@ for cell in finalCell:
 	for pairs in finalCell[cell]["vertices"]:    
 
 		plt.plot([pairs[0][0], pairs[1][0]], [pairs[0][1], pairs[1][1]], "b")
-		plt.plot([pairs[0][0], pairs[1][0]], [pairs[0][1], pairs[1][1]], "bo")
+		#plt.plot([pairs[0][0], pairs[1][0]], [pairs[0][1], pairs[1][1]], "bo")
 		
 		if pairs[0] not in used:
 			used.append(pairs[0])
@@ -1314,5 +1307,3 @@ for cell in finalCell:
 	plt.fill(vertsX, vertsY, color=(clamp(random.random(), 0.1, 0.8), clamp(random.random(), 0.1, 0.8), clamp(random.random(), 0.1, 0.8), 0.5))
 		
 plt.show()
-
-
