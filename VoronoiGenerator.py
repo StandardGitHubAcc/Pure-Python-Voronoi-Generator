@@ -4,8 +4,8 @@ import math
 from math import *
 
 #                 width     height
-defaultBounds = [[0, 200], [200, 0]]
-#defaultBounds = [[0, 100], [300, 0]]
+#defaultBounds = [[0, 200], [200, 0]]
+defaultBounds = [[0, 100], [300, 0]]
 
 #		bottomleft, topleft, bottomright, topright
 #corners = [[0, 0], [0, 200], [200, 0], [200, 200]]
@@ -112,11 +112,10 @@ for i in range(1, 100):
 
 #------------- 100 points
 #points = [[64, 3], [56, 4], [20, 8], [8, 9], [59, 12], [88, 14], [27, 20], [3, 22], [26, 23], [99, 29], [29, 32], [56, 37], [29, 38], [50, 38], [22, 39], [56, 40], [11, 52], [92, 52], [90, 58], [79, 69], [97, 70], [32, 71], [46, 71], [7, 73], [18, 74], [89, 79], [58, 80], [51, 84], [17, 88], [13, 94], [24, 99], [94, 101], [43, 101], [45, 106], [50, 111], [17, 112], [41, 114], [89, 115], [80, 118], [33, 123], [74, 123], [88, 131], [19, 133], [29, 137], [20, 138], [40, 139], [60, 140], [49, 144], [1, 157], [67, 160], [95, 164], [50, 165], [38, 166], [58, 170], [52, 174], [34, 177], [12, 179], [25, 184], [91, 185], [62, 185], [80, 189], [56, 192], [28, 196], [19, 196], [84, 203], [52, 204], [66, 206], [23, 206], [34, 207], [41, 215], [100, 217], [46, 218], [40, 220], [62, 220], [17, 222], [77, 228], [69, 228], [15, 229], [45, 237], [73, 239], [19, 240], [81, 243], [63, 244], [13, 258], [1, 259], [43, 261], [42, 264], [44, 268], [78, 268], [11, 269], [12, 273], [50, 274], [68, 278], [37, 278], [75, 281], [92, 295], [23, 299], [22, 299], [91, 300]]
-points = [[62, 159], [65, 159], [84, 159], [149, 160], [132, 160], [39, 161], [26, 161], [5, 161], [186, 163], [33, 165], [181, 165], [157, 165], [200, 167], [85, 171], [142, 171], [180, 171], [185, 175], [52, 176], [48, 177], [57, 177], [122, 182], [157, 187], [11, 187], [102, 190], [176, 191], [8, 191], [68, 194], [99, 196]]
 
 #-------------with box that is 100 wide and 300 tall
 #points = [[75, 14], [85, 22], [86, 26], [94, 32], [92, 45], [32, 71], [0, 127], [50, 132], [10, 134], [28, 134], [21, 134], [95, 147], [38, 152], [63, 162], [70, 168], [7, 175], [4, 176], [65, 179], [12, 187], [87, 190], [23, 197], [7, 206], [91, 209], [100, 234], [73, 236], [33, 267], [10, 273], [20, 278], [96, 298]]
-#points = [[86, 16], [33, 30], [49, 32], [27, 36], [98, 40], [23, 47], [11, 49], [69, 59], [67, 66], [81, 75], [75, 78], [6, 81], [1, 108], [4, 133], [100, 151], [30, 165], [86, 189], [30, 226], [54, 244], [15, 253], [41, 255], [52, 267], [11, 269], [27, 271], [13, 272], [49, 293], [84, 294], [2, 298], [46, 300]]
+points = [[86, 16], [33, 30], [49, 32], [27, 36], [98, 40], [23, 47], [11, 49], [69, 59], [67, 66], [81, 75], [75, 78], [6, 81], [1, 108], [4, 133], [100, 151], [30, 165], [86, 189], [30, 226], [54, 244], [15, 253], [41, 255], [52, 267], [11, 269], [27, 271], [13, 272], [49, 293], [84, 294], [2, 298], [46, 300]]
 # ^ I think caused by the fact that when the x-values are the same, it just picks a slope without much good reasoning behind it, here causing the slope to be on the wrong side of the intersection
 
 #points = [[7, 34], [87, 254], [91, 265], [86, 16]]
@@ -525,58 +524,34 @@ for site1 in points:
 					x = find3IntersectX(sites[0], sites[1], sites[2])
 
 					if x != None: # x is None if the lines are parallel, which will be handled later
-
-						t = getTimeAtX(sites[0], sites[1], sites[2], x)
-
-						if t != None: # t is None if at least two of the sites have the same y-value
 						
-							y = getYAtTimeAndX(sites[0], t, x)
-					
-							if y != None: # y is None if t is equal to the y-value of the point
+						y = yAtX(sites[0], sites[2], x)
+						t = tAtXandY(sites[0], x, y)
 
-								# bufferBounds just increases the bounds of the selected area by a certain amount so that intersection points can happen within it and are not outright rejected
-								#	but need to be accounted for seperately and fixed
-								# The size of bufferWidth and bufferHeight are kind of arbitrary, I just went with 1/4 of the their respective dimension
-								bufferWidth = (defaultBounds[0][0] + defaultBounds[0][1])/4 # the midpoint divided by 2
-								bufferHeight = (defaultBounds[1][1] + defaultBounds[1][0])/4
-								bufferBounds = [[defaultBounds[0][0] - bufferWidth, defaultBounds[0][1] + bufferHeight], [defaultBounds[1][0] + bufferHeight, defaultBounds[1][1] - bufferHeight]]
+						# bufferBounds just increases the bounds of the selected area by a certain amount so that intersection points can happen within it and are not outright rejected
+						#	but need to be accounted for seperately and fixed
+						# The size of bufferWidth and bufferHeight are kind of arbitrary, I just went with 1/4 of the their respective dimension
+						bufferWidth = (defaultBounds[0][0] + defaultBounds[0][1])/4 # the midpoint divided by 2
+						bufferHeight = (defaultBounds[1][1] + defaultBounds[1][0])/4
+						bufferBounds = [[defaultBounds[0][0] - bufferWidth, defaultBounds[0][1] + bufferHeight], [defaultBounds[1][0] + bufferHeight, defaultBounds[1][1] - bufferHeight]]
 					
-								if t > site1[1] and t > site2[1] and t > site3[1] and withinBounds([x, y], bufferBounds):
-									
-									sites.remove(site1)
-									scanSort2ByX(sites)
-									
-									if site1Key in cell:
-										# Prevents duplicate information
-										if {"sites":[site1, sites[0], sites[1]], "time":float("%.10f" % t), "at":[float("%.10f" % x), float("%.10f" % y)]} not in cell[site1Key]:
-											cell[site1Key].append({"sites":[site1, sites[0], sites[1]], "time":float("%.10f" % t), "at":[float("%.10f" % x), float("%.10f" % y)]})
-									else:
-										cell.update({site1Key : [{"sites":[site1, sites[0], sites[1]], "time":float("%.10f" % t), "at":[float("%.10f" % x), float("%.10f" % y)]}]})
-										
-						else:
-							y = yAtX(sites[0], sites[2], x)
-							t = tAtXandY(sites[0], x, y)
+						# This is >= instead of > since if the 3rd site is exactly at the x-value of the intersection point and the y-values of the other two sites are equal,
+						#	then a t-value equal to the y-value of the higest site is valid
+						if t >= site1[1] and t >= site2[1] and t >= site3[1] and withinBounds([x, y], bufferBounds):
 
-							# bufferBounds just increases the bounds of the selected area by a certain amount so that intersection points can happen within it and are not outright rejected
-							#	but need to be accounted for seperately and fixed
-							# The size of bufferWidth and bufferHeight are kind of arbitrary, I just went with 1/4 of the their respective dimension
-							bufferWidth = (defaultBounds[0][0] + defaultBounds[0][1])/4 # the midpoint divided by 2
-							bufferHeight = (defaultBounds[1][1] + defaultBounds[1][0])/4
-							bufferBounds = [[defaultBounds[0][0] - bufferWidth, defaultBounds[0][1] + bufferHeight], [defaultBounds[1][0] + bufferHeight, defaultBounds[1][1] - bufferHeight]]
-					
-							# This is >= instead of > since if the 3rd site is exactly at the x-value of the intersection point and the y-values of the other two sites are equal,
-							#	then a t-value equal to the y-value of the higest site is valid
-							if t >= site1[1] and t >= site2[1] and t >= site3[1] and withinBounds([x, y], bufferBounds):
+							sites.remove(site1)
+							scanSort2ByX(sites)
+							
+							x = float("%.10f" % x)
+							y = float("%.10f" % y)
+							t = float("%.10f" % t)
 
-								sites.remove(site1)
-								scanSort2ByX(sites)
-									
-								if site1Key in cell:
-									# Prevents duplicate information
-									if {"sites":[site1, sites[0], sites[1]], "time":float("%.10f" % t), "at":[float("%.10f" % x), float("%.10f" % y)]} not in cell[site1Key]:
-										cell[site1Key].append({"sites":[site1, sites[0], sites[1]], "time":float("%.10f" % t), "at":[float("%.10f" % x), float("%.10f" % y)]})
-								else:
-									cell.update({site1Key : [{"sites":[site1, sites[0], sites[1]], "time":float("%.10f" % t), "at":[float("%.10f" % x), float("%.10f" % y)]}]})
+							if site1Key in cell:
+								# Prevents duplicate information
+								if {"sites":[site1, sites[0], sites[1]], "time":t, "at":[x, y]} not in cell[site1Key]:
+									cell[site1Key].append({"sites":[site1, sites[0], sites[1]], "time":t, "at":[x, y]})
+							else:
+								cell.update({site1Key : [{"sites":[site1, sites[0], sites[1]], "time":t, "at":[x, y]}]})
 										
 print("Deleting invalid cell vertices...")
 for others in points:
@@ -1212,5 +1187,6 @@ print()
 print("convex hull vertices", unique)
 
 plt.show()
+
 
 
