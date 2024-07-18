@@ -4,8 +4,8 @@ import math
 from math import *
 
 #                 width     height
-#defaultBounds = [[0, 200], [200, 0]]
-defaultBounds = [[0, 100], [300, 0]]
+defaultBounds = [[0, 200], [200, 0]]
+#defaultBounds = [[0, 100], [300, 0]]
 
 #		bottomleft, topleft, bottomright, topright
 #corners = [[0, 0], [0, 200], [200, 0], [200, 200]]
@@ -110,12 +110,14 @@ for i in range(1, 100):
 
 #points = [[69, 228], [77, 228], [73, 239]]
 
+#points = [[25, 25], [50, 50], [75, 75], [100, 100]]
+
 #------------- 100 points
 #points = [[64, 3], [56, 4], [20, 8], [8, 9], [59, 12], [88, 14], [27, 20], [3, 22], [26, 23], [99, 29], [29, 32], [56, 37], [29, 38], [50, 38], [22, 39], [56, 40], [11, 52], [92, 52], [90, 58], [79, 69], [97, 70], [32, 71], [46, 71], [7, 73], [18, 74], [89, 79], [58, 80], [51, 84], [17, 88], [13, 94], [24, 99], [94, 101], [43, 101], [45, 106], [50, 111], [17, 112], [41, 114], [89, 115], [80, 118], [33, 123], [74, 123], [88, 131], [19, 133], [29, 137], [20, 138], [40, 139], [60, 140], [49, 144], [1, 157], [67, 160], [95, 164], [50, 165], [38, 166], [58, 170], [52, 174], [34, 177], [12, 179], [25, 184], [91, 185], [62, 185], [80, 189], [56, 192], [28, 196], [19, 196], [84, 203], [52, 204], [66, 206], [23, 206], [34, 207], [41, 215], [100, 217], [46, 218], [40, 220], [62, 220], [17, 222], [77, 228], [69, 228], [15, 229], [45, 237], [73, 239], [19, 240], [81, 243], [63, 244], [13, 258], [1, 259], [43, 261], [42, 264], [44, 268], [78, 268], [11, 269], [12, 273], [50, 274], [68, 278], [37, 278], [75, 281], [92, 295], [23, 299], [22, 299], [91, 300]]
-
+points = [[140, 4], [45, 4], [106, 5], [51, 7], [197, 9], [71, 9], [85, 12], [151, 16], [74, 16], [185, 22], [139, 24], [158, 33], [81, 34], [135, 37], [97, 37], [145, 39], [19, 42], [91, 42], [62, 42], [60, 43], [4, 46], [172, 49], [72, 53], [26, 54], [137, 56], [150, 56], [41, 61], [53, 64], [150, 64], [167, 65], [11, 65], [127, 67], [184, 68], [151, 68], [54, 69], [143, 71], [103, 75], [45, 79], [3, 83], [7, 84], [29, 86], [153, 86], [101, 91], [165, 96], [199, 96], [79, 97], [147, 101], [6, 102], [30, 103], [190, 104], [13, 105], [138, 109], [159, 109], [84, 109], [177, 110], [170, 111], [85, 116], [140, 119], [4, 121], [184, 124], [107, 125], [16, 127], [154, 131], [200, 132], [46, 133], [122, 134], [73, 142], [34, 145], [52, 147], [108, 148], [169, 151], [62, 159], [65, 159], [84, 159], [149, 160], [132, 160], [39, 161], [26, 161], [5, 161], [186, 163], [33, 165], [181, 165], [157, 165], [200, 167], [85, 171], [142, 171], [180, 171], [185, 175], [52, 176], [48, 177], [57, 177], [122, 182], [157, 187], [11, 187], [102, 190], [176, 191], [8, 191], [68, 194], [99, 196]]
 #-------------with box that is 100 wide and 300 tall
 #points = [[75, 14], [85, 22], [86, 26], [94, 32], [92, 45], [32, 71], [0, 127], [50, 132], [10, 134], [28, 134], [21, 134], [95, 147], [38, 152], [63, 162], [70, 168], [7, 175], [4, 176], [65, 179], [12, 187], [87, 190], [23, 197], [7, 206], [91, 209], [100, 234], [73, 236], [33, 267], [10, 273], [20, 278], [96, 298]]
-points = [[86, 16], [33, 30], [49, 32], [27, 36], [98, 40], [23, 47], [11, 49], [69, 59], [67, 66], [81, 75], [75, 78], [6, 81], [1, 108], [4, 133], [100, 151], [30, 165], [86, 189], [30, 226], [54, 244], [15, 253], [41, 255], [52, 267], [11, 269], [27, 271], [13, 272], [49, 293], [84, 294], [2, 298], [46, 300]]
+#points = [[86, 16], [33, 30], [49, 32], [27, 36], [98, 40], [23, 47], [11, 49], [69, 59], [67, 66], [81, 75], [75, 78], [6, 81], [1, 108], [4, 133], [100, 151], [30, 165], [86, 189], [30, 226], [54, 244], [15, 253], [41, 255], [52, 267], [11, 269], [27, 271], [13, 272], [49, 293], [84, 294], [2, 298], [46, 300]]
 # ^ I think caused by the fact that when the x-values are the same, it just picks a slope without much good reasoning behind it, here causing the slope to be on the wrong side of the intersection
 
 #points = [[7, 34], [87, 254], [91, 265], [86, 16]]
@@ -505,7 +507,7 @@ print(points)
 
 tmp = []
 for point in points:
-	finalCell.update({f"{str(point).replace(', ', '_')}" : {"site":point, "vertices":[]}})
+	finalCell.update({toKey(point) : {"site":point, "vertices":[]}})
 	tmp.extend(point)
 
 print(tmp) # this tmp is never used after this, it just used to print the points in a different format here
@@ -517,7 +519,7 @@ for site1 in points:
 		if site1 != site2:
 			for site3 in points:
 				if site3 != site2 and site3 != site1:
-					site1Key = f"{str(site1).replace(', ', '_')}"
+					site1Key = toKey(site1)
 					sites = [site1, site2, site3]
 					sortByY(sites)
 
@@ -571,6 +573,10 @@ for others in points:
 			except Exception:
 				pass
 
+print()
+for tmp in cell:
+	for tmp2 in cell[tmp]:
+		print(tmp, "-", tmp2)
 
 # There are 3 cases that have to be dealth with seperately: 1 site, 3 sites, and 2 or 3+ sites 
 # (technically 2 sites have to be dealt with seperately but are the same as having a cell in a corner so can be dealt with later)
@@ -579,7 +585,7 @@ if points.__len__() == 3 and cell.keys().__len__() != 0:
 	
 	current = cell[kys[0]][0]
 		
-	vert = f"{str(current['at']).replace(', ', '_')}"
+	vert = toKey(current['at'])
 
 	sites = current["sites"]
 	distanceTargetSort(fromKey(kys[0]), sites)
@@ -653,13 +659,13 @@ else:
 			sort2ByY(boundPair)
 			scanSort2ByX(boundPair)
 
-			siteKey = f"{str(site).replace(', ', '_')}"
-			nearestKey = f"{str(nearest).replace(', ', '_')}"
+			siteKey = toKey(site)
+			nearestKey = toKey(nearest)
 			
-			# At least one of these checks might be redundant
-			#if boundPair not in finalCell[siteKey]["vertices"]:
-			#	finalCell[siteKey]["vertices"].append(boundPair)
-			finalCell[siteKey]["vertices"].append(boundPair)
+			# This first check is not redundant as in some cases there can be duplicate information
+			if boundPair not in finalCell[siteKey]["vertices"]:
+				finalCell[siteKey]["vertices"].append(boundPair)
+			#finalCell[siteKey]["vertices"].append(boundPair)
 
 			if boundPair not in finalCell[nearestKey]["vertices"]:
 				finalCell[nearestKey]["vertices"].append(boundPair)
@@ -700,7 +706,7 @@ for site1Key in cell:
 						scanSort2ByX(sitePair)
 						usedSitePairs.append(sitePair)
 
-						vert1 = f"{str(entry1['at']).replace(', ', '_')}"
+						vert1 = toKey(entry1['at'])
 						if vert1 not in vertices:
 							tempSites = entryPts
 							sortByY(tempSites)
@@ -714,7 +720,7 @@ for site1Key in cell:
 							vertices[vert1]["to"].append(entry2["at"])
 							
 
-						vert2 = f"{str(entry2['at']).replace(', ', '_')}"
+						vert2 = toKey(entry2['at'])
 						if vert2 not in vertices:
 							tempsites = entry2Pts
 							sortByY(tempsites)
@@ -755,7 +761,7 @@ for site1Key in cell:
 						
 						usedSitePairs.append(sitePair)
 
-						vert3 = f"{str(entry1['at']).replace(', ', '_')}"
+						vert3 = toKey(entry1['at'])
 						if vert3 not in vertices:
 							tempSites = entryPts
 							sortByY(tempSites)
@@ -768,7 +774,7 @@ for site1Key in cell:
 							vertices[vert3]["with"].append(sitePair)
 							vertices[vert3]["to"].append(entry3["at"])
 
-						vert4 = f"{str(entry3['at']).replace(', ', '_')}"
+						vert4 = toKey(entry3['at'])
 						if vert4 not in vertices:
 							tempSites = entry3Pts
 							sortByY(tempSites)
@@ -861,7 +867,7 @@ if vertices.__len__() == 0:
 			
 			pt1, pt2, pt3 = current["sites"]
 
-			vert = f"{str(current['at']).replace(', ', '_')}"
+			vert = toKey(current["at"])
 			
 			tempSites = [pt1, pt2, pt3]
 			sortByY(tempSites)
@@ -882,15 +888,14 @@ if vertices.__len__() == 0:
 			sort2ByY(tempEdge)
 			scanSort2ByX(tempEdge)
 
-			finalCell[f"{str(tempSites[0]).replace(', ', '_')}"]["vertices"].append(tempEdge)
-			finalCell[f"{str(tempSites[1]).replace(', ', '_')}"]["vertices"].append(tempEdge)
+			finalCell[toKey(tempSites[0])]["vertices"].append(tempEdge)
+			finalCell[toKey(tempSites[1])]["vertices"].append(tempEdge)
 
 			break
 		i += 1
-
+print()
 for tmp in finalCell:
-	print(finalCell[tmp]["vertices"])
-
+	print("line927",finalCell[tmp]["vertices"])
 # Modifies convex hull so that it has edges extending to the boundries of the specified area
 for vert in vertices: 
 	#tempVertPt = str(vert).removeprefix("[").removesuffix("]").split("_")
@@ -920,6 +925,7 @@ for vert in vertices:
 
 			nearestBound = nearestBoundry(vertPt, throughPt)
 			boundryPair = [vertPt, nearestBound]
+			
 			sort2ByY(boundryPair)
 			scanSort2ByX(boundryPair)
 
@@ -929,8 +935,8 @@ for vert in vertices:
 			vertices[vert]["with"].append(pickedSites)
 			vertices[vert]["to"].append(nearestBound)
 
-			finalCell[f"{str(pickedSites[0]).replace(', ', '_')}"]["vertices"].append(boundryPair)
-			finalCell[f"{str(pickedSites[1]).replace(', ', '_')}"]["vertices"].append(boundryPair)
+			finalCell[toKey(pickedSites[0])]["vertices"].append(boundryPair)
+			finalCell[toKey(pickedSites[1])]["vertices"].append(boundryPair)
 		
 
 	if vertices[vert]["to"].__len__() == 2:
@@ -1100,7 +1106,7 @@ for cell2 in finalCell:
 			single = []
 
 			for edge in sides:
-				if edge.__len__() == 2:
+				if edge.__len__() == 2: # If there are two points in the same 'edge', they are on the same boundry and can be directly added to the finalCell as an edge
 					finalCell[cell2]["vertices"].append([edge[0], edge[1]])
 
 				elif edge.__len__() == 1:
@@ -1117,7 +1123,7 @@ if points.__len__() == 1:
 	C = [corners[3], corners[1]]
 	D = [corners[0], corners[1]]
 	
-	finalCell[f"{str(points[0]).replace(', ', '_')}"]["vertices"].extend([A, B, C, D])
+	finalCell[toKey(points[0])]["vertices"].extend([A, B, C, D])
 
 # ---------------- End of voronoi calculations ----------------
 
@@ -1125,13 +1131,13 @@ for pt in points:
 	plt.plot(pt[0], pt[1], "ro")
 	#plt.plot(pt[0], pt[1], color=(1,0,0), marker="o") # works
 
-# for site in cell:
-# 	for entry in cell[site]:
+for site in cell:
+	for entry in cell[site]:
 
-# 		plt.plot(entry["at"][0], entry["at"][1], "go")
+		plt.plot(entry["at"][0], entry["at"][1], "go")
 
-# 		#plt.plot([entry["point2"][0], entry["at"][0], entry["point3"][0], entry["at"][0], entry["point1"][0]], [entry["point2"][1], entry["at"][1], entry["point3"][1], entry["at"][1], entry["point1"][1]], "g") 
-# 		plt.plot([entry["sites"][1][0], entry["at"][0], entry["sites"][2][0], entry["at"][0], entry["sites"][0][0]], [entry["sites"][1][1], entry["at"][1], entry["sites"][2][1], entry["at"][1], entry["sites"][0][1]], "g") 
+		#plt.plot([entry["point2"][0], entry["at"][0], entry["point3"][0], entry["at"][0], entry["point1"][0]], [entry["point2"][1], entry["at"][1], entry["point3"][1], entry["at"][1], entry["point1"][1]], "g") 
+		plt.plot([entry["sites"][1][0], entry["at"][0], entry["sites"][2][0], entry["at"][0], entry["sites"][0][0]], [entry["sites"][1][1], entry["at"][1], entry["sites"][2][1], entry["at"][1], entry["sites"][0][1]], "g") 
 
 # for vert3key in vertices:
 # 	vert3 = vertices[vert3key]
@@ -1187,6 +1193,7 @@ print()
 print("convex hull vertices", unique)
 
 plt.show()
+
 
 
 
