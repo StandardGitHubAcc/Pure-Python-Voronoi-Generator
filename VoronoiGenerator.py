@@ -4,8 +4,8 @@ import math
 from math import *
 
 #                 width     height
-#defaultBounds = [[0, 200], [200, 0]]
-defaultBounds = [[0, 100], [300, 0]]
+defaultBounds = [[0, 200], [200, 0]]
+#defaultBounds = [[0, 100], [300, 0]]
 
 #		bottomleft, topleft, bottomright, topright
 #corners = [[0, 0], [0, 200], [200, 0], [200, 200]]
@@ -112,6 +112,7 @@ for i in range(1, 100):
 
 #------------- 100 points
 #points = [[64, 3], [56, 4], [20, 8], [8, 9], [59, 12], [88, 14], [27, 20], [3, 22], [26, 23], [99, 29], [29, 32], [56, 37], [29, 38], [50, 38], [22, 39], [56, 40], [11, 52], [92, 52], [90, 58], [79, 69], [97, 70], [32, 71], [46, 71], [7, 73], [18, 74], [89, 79], [58, 80], [51, 84], [17, 88], [13, 94], [24, 99], [94, 101], [43, 101], [45, 106], [50, 111], [17, 112], [41, 114], [89, 115], [80, 118], [33, 123], [74, 123], [88, 131], [19, 133], [29, 137], [20, 138], [40, 139], [60, 140], [49, 144], [1, 157], [67, 160], [95, 164], [50, 165], [38, 166], [58, 170], [52, 174], [34, 177], [12, 179], [25, 184], [91, 185], [62, 185], [80, 189], [56, 192], [28, 196], [19, 196], [84, 203], [52, 204], [66, 206], [23, 206], [34, 207], [41, 215], [100, 217], [46, 218], [40, 220], [62, 220], [17, 222], [77, 228], [69, 228], [15, 229], [45, 237], [73, 239], [19, 240], [81, 243], [63, 244], [13, 258], [1, 259], [43, 261], [42, 264], [44, 268], [78, 268], [11, 269], [12, 273], [50, 274], [68, 278], [37, 278], [75, 281], [92, 295], [23, 299], [22, 299], [91, 300]]
+points = [[62, 159], [65, 159], [84, 159], [149, 160], [132, 160], [39, 161], [26, 161], [5, 161], [186, 163], [33, 165], [181, 165], [157, 165], [200, 167], [85, 171], [142, 171], [180, 171], [185, 175], [52, 176], [48, 177], [57, 177], [122, 182], [157, 187], [11, 187], [102, 190], [176, 191], [8, 191], [68, 194], [99, 196]]
 
 #-------------with box that is 100 wide and 300 tall
 #points = [[75, 14], [85, 22], [86, 26], [94, 32], [92, 45], [32, 71], [0, 127], [50, 132], [10, 134], [28, 134], [21, 134], [95, 147], [38, 152], [63, 162], [70, 168], [7, 175], [4, 176], [65, 179], [12, 187], [87, 190], [23, 197], [7, 206], [91, 209], [100, 234], [73, 236], [33, 267], [10, 273], [20, 278], [96, 298]]
@@ -196,8 +197,6 @@ def sortByX(array):
 				array[j], array[j + 1] = array[j + 1], array[j]
 
 def find3IntersectX(pt1, pt2, pt3): # finds x-value of intersection of 3 parabolas	
-	#a, b, c, d, e, f = pt1[0], pt1[1], pt2[0], pt2[1], pt3[0], pt3[1]
-	#if (2 * ( ((a-e)*(b-d)) - ((a-c)*(b-f))) ) != 0:
 	# If the y-values of two of the points are the same, this will give the x-value of the midpoint of the two points that have the same y-value
 	try:
 		a, b, c, d, e, f = pt1[0], pt1[1], pt2[0], pt2[1], pt3[0], pt3[1]
@@ -344,7 +343,7 @@ def tAtXandY(pt1, x, y):
 
 	return float("%.10f" % t)
 
-#normalTheta + angle == 2pi most of the time
+#normalTheta + angle == 2pi most of the time (angle was a function that got the andle between two vectors)
 def normalTheta(pt, origin): #gets the exterior/larger angle (basically)
 	a, b, c, d = pt[0], pt[1], origin[0], origin[1]
 	x = a-c
@@ -439,64 +438,12 @@ def nearestBoundry(startPt, throughPt):
 	
 		return choice[0]
 
-# Not used anymore
-def nearestOutsideBoundry(startPt, throughPt):
-	
-	# if startPt[1] == throughPt[1]:
-	# 	dist1 = abs(startPt[0] - defaultBounds[0][0])
-	# 	dist2 = abs(startPt[0] - defaultBounds[0][1])
-
-	# 	if dist1 < dist2:
-	# 		return [defaultBounds[0][0], startPt[1]]
-	# 	else:
-	# 		return [defaultBounds[0][1], startPt[1]]
-		
-	# elif startPt[0] == throughPt[0]:
-	# 	dist1 = abs(startPt[1] - defaultBounds[1][0])
-	# 	dist2 = abs(startPt[1] - defaultBounds[1][1])
-
-	# 	if dist1 < dist2:
-	# 		return [startPt[0], defaultBounds[1][0]]
-	# 	else:
-	# 		return [startPt[0], defaultBounds[1][1]]
-		
-	# else:
-	
-	m = slope(startPt, throughPt)
-		
-	topX = pointSlopeX(startPt, m, defaultBounds[1][0]) # The x-coordinate of the line when its y equals the top y
-	bottomX = pointSlopeX(startPt, m, defaultBounds[1][1])
-	leftY = pointSlope(startPt, m, defaultBounds[0][0]) # The y-coordinate of the line when its x equals the left x
-	rightY = pointSlope(startPt, m, defaultBounds[0][1])
-	#				top								bottom								left						right
-	choice = [[topX, defaultBounds[1][0]], [bottomX, defaultBounds[1][1]], [defaultBounds[0][0], leftY], [defaultBounds[0][1], rightY]]
-
-	distanceTargetSort(startPt, choice)
-
-	if choice[0][1] >= defaultBounds[1][1] and choice[0][1] <= defaultBounds[1][0] and choice[0][0] >= defaultBounds[0][0] and choice[0][0] <= defaultBounds[0][1]:
-		return choice[0]
-	elif choice[1][1] >= defaultBounds[1][1] and choice[1][1] <= defaultBounds[1][0] and choice[1][0] >= defaultBounds[0][0] and choice[1][0] <= defaultBounds[0][1]:                 
-		return choice[1]
-	else:
-		return None
-
-# I think this is probably over-engineered
 def slope(pt1, pt2):
 	try:
-		# if (pt1[1] - pt2[1]) / (pt1[0] - pt2[0]) == 0: # Just having 'pt1[0] - pt2[0] == 0' doesn't work as it allows for a slope of 0
-		# 	if pt1[1] - pt2[1] < 0: # Parts of my code can not handle a slope of 0, so this is here to make it almost 0
-		# 		return -0.0000001 # This is kinda arbitrary
-		# 	else:
-		# 		return 0.0000001
-		# else:
-		# 	return (pt1[1] - pt2[1]) / (pt1[0] - pt2[0])
 		return (pt1[1] - pt2[1]) / (pt1[0] - pt2[0])
 	except ZeroDivisionError: 
 		print(f"zero division error in slope with {pt1} {pt2}")
-		# if pt1[1] - pt2[1] < 0: # This is diffrent from the above since here the two points have the same x-value, so one is right above the other and the slope needs to be extremely big
-		# 	return -100000
-		# else:
-		# 	return 100000
+
 		return None
 
 def midPoint(pt1, pt2):
@@ -558,7 +505,7 @@ print(points)
 
 
 tmp = []
-for point in points:   
+for point in points:
 	finalCell.update({f"{str(point).replace(', ', '_')}" : {"site":point, "vertices":[]}})
 	tmp.extend(point)
 
@@ -742,7 +689,7 @@ else:
 			if boundPair not in finalCell[nearestKey]["vertices"]:
 				finalCell[nearestKey]["vertices"].append(boundPair)
 
-
+# Finds pairs of vertices that can be used to make cell edges
 usedSitePairs = []
 for site1Key in cell:
 	for entry1 in cell[site1Key]:
@@ -966,6 +913,8 @@ if vertices.__len__() == 0:
 			break
 		i += 1
 
+for tmp in finalCell:
+	print(finalCell[tmp]["vertices"])
 
 # Modifies convex hull so that it has edges extending to the boundries of the specified area
 for vert in vertices: 
@@ -1199,7 +1148,7 @@ if points.__len__() == 1:
 
 for pt in points:
 	plt.plot(pt[0], pt[1], "ro")
-	#plt.plot(pt[0], pt[1], color=(1,0,0), marker="o") # works	
+	#plt.plot(pt[0], pt[1], color=(1,0,0), marker="o") # works
 
 # for site in cell:
 # 	for entry in cell[site]:
@@ -1218,7 +1167,7 @@ for cell in finalCell:
 
 	used = []
 
-	for pairs in finalCell[cell]["vertices"]:    
+	for pairs in finalCell[cell]["vertices"]:
 
 		plt.plot([pairs[0][0], pairs[1][0]], [pairs[0][1], pairs[1][1]], "b")
 		#plt.plot([pairs[0][0], pairs[1][0]], [pairs[0][1], pairs[1][1]], "bo")
@@ -1226,7 +1175,7 @@ for cell in finalCell:
 		if pairs[0] not in used:
 			used.append(pairs[0])
 		if pairs[1] not in used:
-			used.append(pairs[1])									
+			used.append(pairs[1])
 
 	temp = used.copy()
 	temp2 = []
@@ -1248,6 +1197,20 @@ for cell in finalCell:
 	
 	#plt.fill(vertsX, vertsY, color=(random.random(), random.random(), random.random(), 0.5))
 	plt.fill(vertsX, vertsY, color=(clamp(random.random(), 0.1, 0.8), clamp(random.random(), 0.1, 0.8), clamp(random.random(), 0.1, 0.8), 0.5))
-		
+
+unique = []
+for cell3 in finalCell:
+	for vert in finalCell[cell3]["vertices"]:
+		if vert[0] not in unique:
+			if vert[0][0] != defaultBounds[0][0] and vert[0][0] != defaultBounds[0][1] and vert[0][1] != defaultBounds[1][0] and vert[0][1] != defaultBounds[1][1]:
+				unique.append(vert[0])
+		if vert[1] not in unique:
+			if vert[1][0] != defaultBounds[0][0] and vert[1][0] != defaultBounds[0][1] and vert[1][1] != defaultBounds[1][0] and vert[1][1] != defaultBounds[1][1]:
+				unique.append(vert[1])
+
+print()
+print("convex hull vertices", unique)
+
 plt.show()
+
 
