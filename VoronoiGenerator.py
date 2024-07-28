@@ -13,7 +13,7 @@ corners = [ [defaultBounds[0][0], defaultBounds[1][1]], [defaultBounds[0][0], de
 
 
 points = []
-for i in range(1, 100):
+for i in range(1, 8):
 	  points.append([random.randint(0, defaultBounds[0][1]), random.randint(0, defaultBounds[1][0])])  
 
 #points = [[50, 50], [25, 25], [75, 75], [98, 70]]
@@ -111,6 +111,10 @@ for i in range(1, 100):
 #points = [[69, 228], [77, 228], [73, 239]]
 
 #points = [[25, 25], [50, 50], [75, 75], [100, 100]]
+
+#points = [[25, 25], [26,50], [27, 75], [28, 100]]
+points = [[25, 25], [26,50], [27, 75]]
+#points = [[25, 25], [26,50], [27, 76]]
 
 #------------- 100 points
 #points = [[64, 3], [56, 4], [20, 8], [8, 9], [59, 12], [88, 14], [27, 20], [3, 22], [26, 23], [99, 29], [29, 32], [56, 37], [29, 38], [50, 38], [22, 39], [56, 40], [11, 52], [92, 52], [90, 58], [79, 69], [97, 70], [32, 71], [46, 71], [7, 73], [18, 74], [89, 79], [58, 80], [51, 84], [17, 88], [13, 94], [24, 99], [94, 101], [43, 101], [45, 106], [50, 111], [17, 112], [41, 114], [89, 115], [80, 118], [33, 123], [74, 123], [88, 131], [19, 133], [29, 137], [20, 138], [40, 139], [60, 140], [49, 144], [1, 157], [67, 160], [95, 164], [50, 165], [38, 166], [58, 170], [52, 174], [34, 177], [12, 179], [25, 184], [91, 185], [62, 185], [80, 189], [56, 192], [28, 196], [19, 196], [84, 203], [52, 204], [66, 206], [23, 206], [34, 207], [41, 215], [100, 217], [46, 218], [40, 220], [62, 220], [17, 222], [77, 228], [69, 228], [15, 229], [45, 237], [73, 239], [19, 240], [81, 243], [63, 244], [13, 258], [1, 259], [43, 261], [42, 264], [44, 268], [78, 268], [11, 269], [12, 273], [50, 274], [68, 278], [37, 278], [75, 281], [92, 295], [23, 299], [22, 299], [91, 300]]
@@ -910,7 +914,7 @@ for vert in vertices:
 	vertPt = vertices[vert]["at"]
 	
 	if vertices[vert]["to"].__len__() == 1:
-
+		print("a")
 		site1 = vertices[vert]["sites"][0]
 		site2 = vertices[vert]["sites"][1]
 		site3 = vertices[vert]["sites"][2]
@@ -947,7 +951,7 @@ for vert in vertices:
 		
 
 	if vertices[vert]["to"].__len__() == 2:
-		
+		print("b")
 		site1 = vertices[vert]["sites"][0]
 		site2 = vertices[vert]["sites"][1]
 		site3 = vertices[vert]["sites"][2]
@@ -1161,7 +1165,7 @@ for cell in finalCell:
 	for pairs in finalCell[cell]["vertices"]:
 
 		plt.plot([pairs[0][0], pairs[1][0]], [pairs[0][1], pairs[1][1]], "b")
-		#plt.plot([pairs[0][0], pairs[1][0]], [pairs[0][1], pairs[1][1]], "bo")
+		plt.plot([pairs[0][0], pairs[1][0]], [pairs[0][1], pairs[1][1]], "bo")
 		
 		if pairs[0] not in used:
 			used.append(pairs[0])
@@ -1203,6 +1207,4 @@ for cell in finalCell:
 # print("convex hull vertices", unique)
 
 plt.show()
-
-
 
