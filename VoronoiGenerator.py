@@ -13,12 +13,12 @@ corners = [ [defaultBounds[0][0], defaultBounds[1][1]], [defaultBounds[0][0], de
 
 
 points = []
-for i in range(1, 8):
+for i in range(0, 101):
 	  points.append([random.randint(0, defaultBounds[0][1]), random.randint(0, defaultBounds[1][0])])  
 
 #points = [[50, 50], [25, 25], [75, 75], [98, 70]]
 #points = [[50, 50], [25, 20], [75, 75], [98, 70]]
-#points = [[30, 40], [25, 60], [80, 97]]
+points = [[30, 40], [25, 60], [80, 97]]
 #points = [[50, 50], [75, 75]]
 #points = [[50, 50]]
 
@@ -113,7 +113,7 @@ for i in range(1, 8):
 #points = [[25, 25], [50, 50], [75, 75], [100, 100]]
 
 #points = [[25, 25], [26,50], [27, 75], [28, 100]]
-points = [[25, 25], [26,50], [27, 75]]
+#points = [[25, 25], [26,50], [27, 75]]
 #points = [[25, 25], [26,50], [27, 76]]
 
 #------------- 100 points
@@ -679,9 +679,62 @@ else:
 			if boundPair not in finalCell[nearestKey]["vertices"]:
 				finalCell[nearestKey]["vertices"].append(boundPair)
 
-
 # Finds pairs of vertices that can be used to make cell edges
 usedSitePairs = []
+
+def searchForPair(site1, site1Key, site2, site2Key):
+	checkPair = [site1, site2]
+	sort2ByY(checkPair)
+	scanSort2ByX(checkPair)
+
+	if checkPair not in usedSitePairs:
+		for entry2 in cell[site2Key]:
+
+			entry2Pts = entry2["sites"].copy() # Since all lists in Python are passed by reference, this is required as to not mess up entry2["sites"]
+			
+			if site1 in entry2Pts and entry1["at"] != entry2["at"]:
+				edgePair = [entry1["at"], entry2["at"]]
+				sort2ByY(edgePair)
+				scanSort2ByX(edgePair)
+					
+				if edgePair not in finalCell[site1Key]["vertices"]: # For some reason this loop gets to this check many fewer times than the other loop
+
+					finalCell[site1Key]["vertices"].append(edgePair)
+
+					if edgePair not in finalCell[site2Key]["vertices"]:
+						finalCell[site2Key]["vertices"].append(edgePair)
+
+					sitePair = [site1, site2]
+					sort2ByY(sitePair)
+					scanSort2ByX(sitePair)
+					usedSitePairs.append(sitePair)
+
+					vert1 = toKey(entry1['at'])
+					if vert1 not in vertices:
+						tempSites = entryPts
+						sortByY(tempSites)
+						#scanScortByX(tempSites) # tempSites doesn't need to be sorted by X since the order of the sites isn't used for anything
+						vertices.update({vert1 : {"sites":tempSites, "at":entry1['at'], "with":[], "to":[]}})
+					
+						vertices[vert1]["with"].append(sitePair) # Could just turn this into 'if entry2["at"] not in vertices[vert1]["to"]:', just did this because vert1 is guaranteed to not be in vertices if it wasn't in it before
+						vertices[vert1]["to"].append(entry2["at"])
+					elif entry2["at"] not in vertices[vert1]["to"]:
+						vertices[vert1]["with"].append(sitePair)
+						vertices[vert1]["to"].append(entry2["at"])
+							
+
+					vert2 = toKey(entry2['at'])
+					if vert2 not in vertices:
+						tempsites = entry2Pts
+						sortByY(tempsites)
+						#scanScortByX(tempSites)
+						vertices.update({vert2 : {"sites":tempsites, "at":entry2['at'], "with":[], "to":[]}})
+						
+					vertices[vert2]["with"].append(sitePair)
+					vertices[vert2]["to"].append(entry1["at"])
+
+					break # Since there can only ever be 1 edge between two given sites, can just break the loop once one is found
+
 for site1Key in cell:
 	for entry1 in cell[site1Key]:
 		entryPts = entry1["sites"].copy()
@@ -690,111 +743,115 @@ for site1Key in cell:
 		site2 = entryPts[1]
 		site2Key = toKey(site2)
 
-		checkPair = [site1, site2]
-		sort2ByY(checkPair)
-		scanSort2ByX(checkPair)
+		searchForPair(site1, site1Key, site2, site2Key)
 
-		if checkPair not in usedSitePairs:
-			for entry2 in cell[site2Key]:
+		# checkPair = [site1, site2]
+		# sort2ByY(checkPair)
+		# scanSort2ByX(checkPair)
 
-				entry2Pts = entry2["sites"].copy() # Since all lists in Python are passed by reference, this is required as to not mess up entry2["sites"]
+		# if checkPair not in usedSitePairs:
+		# 	for entry2 in cell[site2Key]:
+
+		# 		entry2Pts = entry2["sites"].copy() # Since all lists in Python are passed by reference, this is required as to not mess up entry2["sites"]
 			
-				if site1 in entry2Pts and entry1["at"] != entry2["at"]:
-					edgePair = [entry1["at"], entry2["at"]]
-					sort2ByY(edgePair)
-					scanSort2ByX(edgePair)
+		# 		if site1 in entry2Pts and entry1["at"] != entry2["at"]:
+		# 			edgePair = [entry1["at"], entry2["at"]]
+		# 			sort2ByY(edgePair)
+		# 			scanSort2ByX(edgePair)
 					
-					if edgePair not in finalCell[site1Key]["vertices"]: # For some reason this loop gets to this check many fewer times than the other loop
+		# 			if edgePair not in finalCell[site1Key]["vertices"]: # For some reason this loop gets to this check many fewer times than the other loop
 
-						finalCell[site1Key]["vertices"].append(edgePair)
+		# 				finalCell[site1Key]["vertices"].append(edgePair)
 
-						if edgePair not in finalCell[site2Key]["vertices"]:
-							finalCell[site2Key]["vertices"].append(edgePair)
+		# 				if edgePair not in finalCell[site2Key]["vertices"]:
+		# 					finalCell[site2Key]["vertices"].append(edgePair)
 
-						sitePair = [site1, site2]
-						sort2ByY(sitePair)
-						scanSort2ByX(sitePair)
-						usedSitePairs.append(sitePair)
+		# 				sitePair = [site1, site2]
+		# 				sort2ByY(sitePair)
+		# 				scanSort2ByX(sitePair)
+		# 				usedSitePairs.append(sitePair)
 
-						vert1 = toKey(entry1['at'])
-						if vert1 not in vertices:
-							tempSites = entryPts
-							sortByY(tempSites)
-							#scanScortByX(tempSites) # tempSites doesn't need to be sorted by X since the order of the sites isn't used for anything
-							vertices.update({vert1 : {"sites":tempSites, "at":entry1['at'], "with":[], "to":[]}})
+		# 				vert1 = toKey(entry1['at'])
+		# 				if vert1 not in vertices:
+		# 					tempSites = entryPts
+		# 					sortByY(tempSites)
+		# 					#scanScortByX(tempSites) # tempSites doesn't need to be sorted by X since the order of the sites isn't used for anything
+		# 					vertices.update({vert1 : {"sites":tempSites, "at":entry1['at'], "with":[], "to":[]}})
 					
-							vertices[vert1]["with"].append(sitePair) # Could just turn this into 'if entry2["at"] not in vertices[vert1]["to"]:', just did this because vert1 is guaranteed to not be in vertices if it wasn't in it before
-							vertices[vert1]["to"].append(entry2["at"])
-						elif entry2["at"] not in vertices[vert1]["to"]:
-							vertices[vert1]["with"].append(sitePair)
-							vertices[vert1]["to"].append(entry2["at"])
+		# 					vertices[vert1]["with"].append(sitePair) # Could just turn this into 'if entry2["at"] not in vertices[vert1]["to"]:', just did this because vert1 is guaranteed to not be in vertices if it wasn't in it before
+		# 					vertices[vert1]["to"].append(entry2["at"])
+		# 				elif entry2["at"] not in vertices[vert1]["to"]:
+		# 					vertices[vert1]["with"].append(sitePair)
+		# 					vertices[vert1]["to"].append(entry2["at"])
 							
 
-						vert2 = toKey(entry2['at'])
-						if vert2 not in vertices:
-							tempsites = entry2Pts
-							sortByY(tempsites)
-							#scanScortByX(tempSites)
-							vertices.update({vert2 : {"sites":tempsites, "at":entry2['at'], "with":[], "to":[]}})
+		# 				vert2 = toKey(entry2['at'])
+		# 				if vert2 not in vertices:
+		# 					tempsites = entry2Pts
+		# 					sortByY(tempsites)
+		# 					#scanScortByX(tempSites)
+		# 					vertices.update({vert2 : {"sites":tempsites, "at":entry2['at'], "with":[], "to":[]}})
 						
-						vertices[vert2]["with"].append(sitePair)
-						vertices[vert2]["to"].append(entry1["at"])
+		# 				vertices[vert2]["with"].append(sitePair)
+		# 				vertices[vert2]["to"].append(entry1["at"])
 
-						break # Since there can only ever be 1 edge between two given sites, can just break the loop once one is found
+		# 				break # Since there can only ever be 1 edge between two given sites, can just break the loop once one is found
 
 		site3 = entryPts[2]
 		site3Key = toKey(site3)
 
-		checkPair = [site1, site3]
-		sort2ByY(checkPair)
-		scanSort2ByX(checkPair)
+		searchForPair(site1, site1Key, site3, site3Key)
+
+		# checkPair = [site1, site3]
+		# sort2ByY(checkPair)
+		# scanSort2ByX(checkPair)
 		
-		if checkPair not in usedSitePairs:
-			for entry3 in cell[site3Key]:
-				entry3Pts = entry3["sites"].copy()
+		# if checkPair not in usedSitePairs:
+		# 	for entry3 in cell[site3Key]:
+		# 		entry3Pts = entry3["sites"].copy()
 			
-				if site1 in entry3Pts and entry1["at"] != entry3["at"]:
-					edgePair = [entry1["at"], entry3["at"]]
-					sort2ByY(edgePair)
-					scanSort2ByX(edgePair)
+		# 		if site1 in entry3Pts and entry1["at"] != entry3["at"]:
+		# 			edgePair = [entry1["at"], entry3["at"]]
+		# 			sort2ByY(edgePair)
+		# 			scanSort2ByX(edgePair)
 
-					if edgePair not in finalCell[site1Key]["vertices"]:
+		# 			if edgePair not in finalCell[site1Key]["vertices"]:
 					
-						finalCell[site1Key]["vertices"].append(edgePair)
+		# 				finalCell[site1Key]["vertices"].append(edgePair)
 
-						if edgePair not in finalCell[site3Key]["vertices"]:
-							finalCell[site3Key]["vertices"].append(edgePair)
+		# 				if edgePair not in finalCell[site3Key]["vertices"]:
+		# 					finalCell[site3Key]["vertices"].append(edgePair)
 						
-						sitePair = [site1, site3]
-						sort2ByY(sitePair)
-						scanSort2ByX(sitePair)
+		# 				sitePair = [site1, site3]
+		# 				sort2ByY(sitePair)
+		# 				scanSort2ByX(sitePair)
 						
-						usedSitePairs.append(sitePair)
+		# 				usedSitePairs.append(sitePair)
 
-						vert3 = toKey(entry1['at'])
-						if vert3 not in vertices:
-							tempSites = entryPts
-							sortByY(tempSites)
-							#scanScortByX(tempSites)
-							vertices.update({vert3 : {"sites":tempSites, "at":entry1['at'], "with":[], "to":[]}})
+		# 				vert3 = toKey(entry1['at'])
+		# 				if vert3 not in vertices:
+		# 					tempSites = entryPts
+		# 					sortByY(tempSites)
+		# 					#scanScortByX(tempSites)
+		# 					vertices.update({vert3 : {"sites":tempSites, "at":entry1['at'], "with":[], "to":[]}})
 					
-							vertices[vert3]["with"].append(sitePair)
-							vertices[vert3]["to"].append(entry3["at"])
-						elif entry3["at"] not in vertices[vert3]["to"]:
-							vertices[vert3]["with"].append(sitePair)
-							vertices[vert3]["to"].append(entry3["at"])
+		# 					vertices[vert3]["with"].append(sitePair)
+		# 					vertices[vert3]["to"].append(entry3["at"])
+		# 				elif entry3["at"] not in vertices[vert3]["to"]:
+		# 					vertices[vert3]["with"].append(sitePair)
+		# 					vertices[vert3]["to"].append(entry3["at"])
 
-						vert4 = toKey(entry3['at'])
-						if vert4 not in vertices:
-							tempSites = entry3Pts
-							sortByY(tempSites)
-							#scanScortByX(tempSites)
-							vertices.update({vert4 : {"sites":tempSites, "at":entry3['at'], "with":[], "to":[]}})
+		# 				vert4 = toKey(entry3['at'])
+		# 				if vert4 not in vertices:
+		# 					tempSites = entry3Pts
+		# 					sortByY(tempSites)
+		# 					#scanScortByX(tempSites)
+		# 					vertices.update({vert4 : {"sites":tempSites, "at":entry3['at'], "with":[], "to":[]}})
 					
-						vertices[vert4]["with"].append(sitePair)
-						vertices[vert4]["to"].append(entry1["at"])
+		# 				vertices[vert4]["with"].append(sitePair)
+		# 				vertices[vert4]["to"].append(entry1["at"])
 
-						break
+		# 				break
 
 
 #for vert1 in vertices: # I don't know if this is more efficient than sorting the vertices by x within the loop that they are created
@@ -822,7 +879,7 @@ for vert1 in vertices:
 
 					bound = nearestBoundry(otherVert["at"], vertPt)
 					
-					otherVert["to"][i] = bound
+					otherVert["to"][i] = bound # otherVert["to"].index(vertPt) = bound
 
 					newPair = [otherVert["at"], bound]
 					sort2ByY(newPair)
@@ -912,12 +969,15 @@ for vert in vertices:
 	#tempVertPt = str(vert).removeprefix("[").removesuffix("]").split("_")
 	#vertPt = [float(tempVertPt[0]), float(tempVertPt[1])]
 	vertPt = vertices[vert]["at"]
-	
+	site1 = vertices[vert]["sites"][0]
+	site2 = vertices[vert]["sites"][1]
+	site3 = vertices[vert]["sites"][2]
+
 	if vertices[vert]["to"].__len__() == 1:
 		print("a")
-		site1 = vertices[vert]["sites"][0]
-		site2 = vertices[vert]["sites"][1]
-		site3 = vertices[vert]["sites"][2]
+		# site1 = vertices[vert]["sites"][0]
+		# site2 = vertices[vert]["sites"][1]
+		# site3 = vertices[vert]["sites"][2]
 
 		pickedSites = [[site1, site2], [site1, site3], [site2, site3]]
 		pickedSites.remove(vertices[vert]["with"][0])
@@ -932,29 +992,29 @@ for vert in vertices:
 
 		throughPt = midPoint(pickedSites[0], pickedSites[1])
 
-		if throughPt != []:
+		#if throughPt != []:
 
-			nearestBound = nearestBoundry(vertPt, throughPt)
-			boundryPair = [vertPt, nearestBound]
+		nearestBound = nearestBoundry(vertPt, throughPt)
+		boundryPair = [vertPt, nearestBound]
 			
-			sort2ByY(boundryPair)
-			scanSort2ByX(boundryPair)
+		sort2ByY(boundryPair)
+		scanSort2ByX(boundryPair)
 
-			sort2ByY(pickedSites)
-			scanSort2ByX(pickedSites)
+		sort2ByY(pickedSites)
+		scanSort2ByX(pickedSites)
 
-			vertices[vert]["with"].append(pickedSites)
-			vertices[vert]["to"].append(nearestBound)
+		vertices[vert]["with"].append(pickedSites)
+		vertices[vert]["to"].append(nearestBound)
 
-			finalCell[toKey(pickedSites[0])]["vertices"].append(boundryPair)
-			finalCell[toKey(pickedSites[1])]["vertices"].append(boundryPair)
+		finalCell[toKey(pickedSites[0])]["vertices"].append(boundryPair)
+		finalCell[toKey(pickedSites[1])]["vertices"].append(boundryPair)
 		
 
 	if vertices[vert]["to"].__len__() == 2:
 		print("b")
-		site1 = vertices[vert]["sites"][0]
-		site2 = vertices[vert]["sites"][1]
-		site3 = vertices[vert]["sites"][2]
+		# site1 = vertices[vert]["sites"][0]
+		# site2 = vertices[vert]["sites"][1]
+		# site3 = vertices[vert]["sites"][2]
 
 		vertPtT = tAtXandY(site1, vertPt[0], vertPt[1])
 
@@ -975,7 +1035,7 @@ for vert in vertices:
 		elif site3 != pickedSites[0] and site3 != pickedSites[1]:
 			notInPair = site3
 		
-		dists = [vertPtT - pickedSites[0][1], vertPtT - pickedSites[1][1], vertPtT - notInPair[1]]
+		dists = [vertPtT - site1[1], vertPtT - site2[1], vertPtT - site3[1]]#[vertPtT - pickedSites[0][1], vertPtT - pickedSites[1][1], vertPtT - notInPair[1]] # [vertPtT - site1[1], vertPtT - site2[1], vertPtT - site3[1]]
 		dists.sort()
 
 		throughPt = []
@@ -1007,21 +1067,21 @@ for vert in vertices:
 			#	afterTx = getXAtTimeRef(pickedSites[0], pickedSites[1], vertPtT + 0.5, vertPt[0])
 			#	afterTy1 = getYAtTimeAndX(pickedSites[0], vertPtT + 0.5, afterTx)
 			#	throughPt = [afterTx, afterTy1]
-		else:
+		else: # Doing this should be slightly more efficient than the previous option since it doesn't unecessarily calculate beforeTx, beforeTy1, and beforeTy2
 			afterTx = getXAtTimeRef(pickedSites[0], pickedSites[1], vertPtT + 0.5, vertPt[0])
 			afterTy1 = getYAtTimeAndX(pickedSites[0], vertPtT + 0.5, afterTx)
 			throughPt = [afterTx, afterTy1]
 
-		if throughPt != []:
-			# The points aren't added to the 'vertices' dictionary since it is not used after this part of this function, so there is point to
-			nearestBound = nearestBoundry(vertPt, throughPt)
+		#if throughPt != []:
+		# The points aren't added to the 'vertices' dictionary since it is not used after this part of this function, so there is point to
+		nearestBound = nearestBoundry(vertPt, throughPt)
 
-			edgePair = [vertPt, nearestBound]
-			sort2ByY(edgePair)
-			scanSort2ByX(edgePair)
+		edgePair = [vertPt, nearestBound]
+		sort2ByY(edgePair)
+		scanSort2ByX(edgePair)
 
-			finalCell[toKey(pickedSites[0])]["vertices"].append(edgePair)
-			finalCell[toKey(pickedSites[1])]["vertices"].append(edgePair)
+		finalCell[toKey(pickedSites[0])]["vertices"].append(edgePair)
+		finalCell[toKey(pickedSites[1])]["vertices"].append(edgePair)
 
 
 def makeEdges(onBoundry, curSite):
@@ -1207,4 +1267,5 @@ for cell in finalCell:
 # print("convex hull vertices", unique)
 
 plt.show()
+
 
