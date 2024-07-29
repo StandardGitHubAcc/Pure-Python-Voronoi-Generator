@@ -125,12 +125,12 @@ for i in range(0, 101):
 #------------- 100 points
 #points = [[64, 3], [56, 4], [20, 8], [8, 9], [59, 12], [88, 14], [27, 20], [3, 22], [26, 23], [99, 29], [29, 32], [56, 37], [29, 38], [50, 38], [22, 39], [56, 40], [11, 52], [92, 52], [90, 58], [79, 69], [97, 70], [32, 71], [46, 71], [7, 73], [18, 74], [89, 79], [58, 80], [51, 84], [17, 88], [13, 94], [24, 99], [94, 101], [43, 101], [45, 106], [50, 111], [17, 112], [41, 114], [89, 115], [80, 118], [33, 123], [74, 123], [88, 131], [19, 133], [29, 137], [20, 138], [40, 139], [60, 140], [49, 144], [1, 157], [67, 160], [95, 164], [50, 165], [38, 166], [58, 170], [52, 174], [34, 177], [12, 179], [25, 184], [91, 185], [62, 185], [80, 189], [56, 192], [28, 196], [19, 196], [84, 203], [52, 204], [66, 206], [23, 206], [34, 207], [41, 215], [100, 217], [46, 218], [40, 220], [62, 220], [17, 222], [77, 228], [69, 228], [15, 229], [45, 237], [73, 239], [19, 240], [81, 243], [63, 244], [13, 258], [1, 259], [43, 261], [42, 264], [44, 268], [78, 268], [11, 269], [12, 273], [50, 274], [68, 278], [37, 278], [75, 281], [92, 295], [23, 299], [22, 299], [91, 300]]
 
-#points = [[140, 4], [45, 4], [106, 5], [51, 7], [197, 9], [71, 9], [85, 12], [151, 16], [74, 16], [185, 22], [139, 24], [158, 33], [81, 34], [135, 37], [97, 37], [145, 39], [19, 42], [91, 42], [62, 42], [60, 43], [4, 46], [172, 49], [72, 53], [26, 54], [137, 56], [150, 56], [41, 61], [53, 64], [150, 64], [167, 65], [11, 65], [127, 67], [184, 68], [151, 68], [54, 69], [143, 71], [103, 75], [45, 79], [3, 83], [7, 84], [29, 86], [153, 86], [101, 91], [165, 96], [199, 96], [79, 97], [147, 101], [6, 102], [30, 103], [190, 104], [13, 105], [138, 109], [159, 109], [84, 109], [177, 110], [170, 111], [85, 116], [140, 119], [4, 121], [184, 124], [107, 125], [16, 127], [154, 131], [200, 132], [46, 133], [122, 134], [73, 142], [34, 145], [52, 147], [108, 148], [169, 151], [62, 159], [65, 159], [84, 159], [149, 160], [132, 160], [39, 161], [26, 161], [5, 161], [186, 163], [33, 165], [181, 165], [157, 165], [200, 167], [85, 171], [142, 171], [180, 171], [185, 175], [52, 176], [48, 177], [57, 177], [122, 182], [157, 187], [11, 187], [102, 190], [176, 191], [8, 191], [68, 194], [99, 196]]
+points = [[140, 4], [45, 4], [106, 5], [51, 7], [197, 9], [71, 9], [85, 12], [151, 16], [74, 16], [185, 22], [139, 24], [158, 33], [81, 34], [135, 37], [97, 37], [145, 39], [19, 42], [91, 42], [62, 42], [60, 43], [4, 46], [172, 49], [72, 53], [26, 54], [137, 56], [150, 56], [41, 61], [53, 64], [150, 64], [167, 65], [11, 65], [127, 67], [184, 68], [151, 68], [54, 69], [143, 71], [103, 75], [45, 79], [3, 83], [7, 84], [29, 86], [153, 86], [101, 91], [165, 96], [199, 96], [79, 97], [147, 101], [6, 102], [30, 103], [190, 104], [13, 105], [138, 109], [159, 109], [84, 109], [177, 110], [170, 111], [85, 116], [140, 119], [4, 121], [184, 124], [107, 125], [16, 127], [154, 131], [200, 132], [46, 133], [122, 134], [73, 142], [34, 145], [52, 147], [108, 148], [169, 151], [62, 159], [65, 159], [84, 159], [149, 160], [132, 160], [39, 161], [26, 161], [5, 161], [186, 163], [33, 165], [181, 165], [157, 165], [200, 167], [85, 171], [142, 171], [180, 171], [185, 175], [52, 176], [48, 177], [57, 177], [122, 182], [157, 187], [11, 187], [102, 190], [176, 191], [8, 191], [68, 194], [99, 196]]
 #points = [[62, 159], [65, 159], [84, 159], [149, 160], [132, 160], [39, 161], [26, 161], [5, 161], [186, 163], [33, 165], [181, 165], [157, 165], [200, 167], [85, 171], [142, 171], [180, 171], [185, 175], [52, 176], [48, 177], [57, 177], [122, 182], [157, 187], [11, 187], [102, 190], [176, 191], [8, 191], [68, 194], [99, 196]]
 #points = [[39, 161], [26, 161], [5, 161], [33, 165], [48, 177], [11, 187], [8, 191], [68, 194]] # breaks finding 3rd vertice on boundry
 
 #points = [[116, 0], [187, 1], [130, 1], [68, 2], [18, 4], [135, 5], [64, 6], [159, 8], [0, 11], [187, 11], [123, 14], [7, 19], [138, 20], [72, 23], [30, 24], [8, 26], [193, 27], [21, 29], [33, 31], [108, 36], [87, 37], [129, 38], [66, 39], [11, 40], [63, 41], [129, 43], [186, 45], [32, 47], [159, 47], [139, 47], [119, 48], [48, 49], [37, 56], [73, 58], [8, 59], [138, 59], [58, 61], [198, 65], [48, 67], [87, 67], [4, 70], [76, 72], [146, 72], [56, 74], [169, 75], [37, 75], [139, 78], [180, 78], [143, 82], [59, 82], [150, 86], [8, 87], [194, 88], [191, 88], [167, 90], [191, 91], [93, 91], [137, 91], [102, 101], [46, 102], [121, 103], [17, 105], [72, 107], [65, 107], [130, 107], [9, 108], [110, 110], [82, 113], [177, 115], [73, 118], [103, 120], [73, 122], [4, 125], [174, 127], [157, 135], [128, 135], [125, 135], [4, 137], [136, 138], [44, 141], [113, 142], [41, 144], [16, 151], [93, 152], [47, 154], [159, 156], [10, 163], [116, 166], [51, 166], [110, 167], [178, 171], [88, 172], [29, 172], [80, 172], [62, 173], [55, 180], [60, 181], [74, 186], [92, 187], [38, 190], [58, 197]]
-points = [[10, 163], [16, 151], [41, 144], [4, 137], [4, 125], [9, 108]]
+#points = [[10, 163], [16, 151], [41, 144], [4, 137], [4, 125], [9, 108]] # breaks finding 3rd vertice on boundary
 
 #-------------with box that is 100 wide and 300 tall
 #points = [[75, 14], [85, 22], [86, 26], [94, 32], [92, 45], [32, 71], [0, 127], [50, 132], [10, 134], [28, 134], [21, 134], [95, 147], [38, 152], [63, 162], [70, 168], [7, 175], [4, 176], [65, 179], [12, 187], [87, 190], [23, 197], [7, 206], [91, 209], [100, 234], [73, 236], [33, 267], [10, 273], [20, 278], [96, 298]]
@@ -519,6 +519,14 @@ def scanSortByXSwap(focus, other):
 			focus[i][0], focus[i][1] = focus[i][1], focus[i][0]
 			other[i], other[i+1] = other[i+1], other[i]
 
+def scanSortByXv2(array):
+	n = len(array)
+ 
+	for i in range(n):
+		for j in range(0, n - i - 1):
+
+			if array[j][1] == array[j + 1][1] and array[j][0] > array[j + 1][0]:
+				array[j], array[j + 1] = array[j + 1], array[j]
 
 sortByY(points)
 print(points)
@@ -537,6 +545,7 @@ print()
 #	But that would probably require restructuring finding edges
 # Could also probably be opimized by keeping track of the triple sites used and not repeating the calculations for them,
 #	the ones that are parallel would be especially easy to keep track of but would also provide the least benefit
+usedSiteTrios = []
 for site1 in points:
 	for site2 in points:
 		if site1 != site2:
@@ -545,38 +554,43 @@ for site1 in points:
 					site1Key = toKey(site1)
 					sites = [site1, site2, site3]
 					sortByY(sites)
+					scanSortByXv2(sites)
 
-					x = find3IntersectX(sites[0], sites[1], sites[2])
+					if sites not in usedSiteTrios:
 
-					if x != None: # x is None if the lines are parallel, which will be handled later
+						x = find3IntersectX(sites[0], sites[1], sites[2])
 
-						y = yAtX(sites[0], sites[2], x)
-						t = tAtXandY(sites[0], x, y)
+						if x != None: # x is None if the lines are parallel, which will be handled later
 
-						# bufferBounds just increases the bounds of the selected area by a certain amount so that intersection points can happen within it and are not outright rejected
-						#	but need to be accounted for seperately and fixed
-						# The size of bufferWidth and bufferHeight are kind of arbitrary, I just went with 1/4 of the their respective dimension
-						bufferWidth = (defaultBounds[0][0] + defaultBounds[0][1])/4 # the midpoint divided by 2
-						bufferHeight = (defaultBounds[1][1] + defaultBounds[1][0])/4
-						bufferBounds = [[defaultBounds[0][0] - bufferWidth, defaultBounds[0][1] + bufferHeight], [defaultBounds[1][0] + bufferHeight, defaultBounds[1][1] - bufferHeight]]
+							y = yAtX(sites[0], sites[2], x)
+							t = tAtXandY(sites[0], x, y)
 
-						# This is >= instead of > since if the 3rd site is exactly at the x-value of the intersection point and the y-values of the other two sites are equal,
-						#	then a t-value equal to the y-value of the higest site is valid
-						if t >= site1[1] and t >= site2[1] and t >= site3[1] and withinBounds([x, y], bufferBounds):
+							# bufferBounds just increases the bounds of the selected area by a certain amount so that intersection points can happen within it and are not outright rejected
+							#	but need to be accounted for seperately and fixed
+							# The size of bufferWidth and bufferHeight are kind of arbitrary, I just went with 1/4 of the their respective dimension
+							bufferWidth = (defaultBounds[0][0] + defaultBounds[0][1])/4 # the midpoint divided by 2
+							bufferHeight = (defaultBounds[1][1] + defaultBounds[1][0])/4
+							bufferBounds = [[defaultBounds[0][0] - bufferWidth, defaultBounds[0][1] + bufferHeight], [defaultBounds[1][0] + bufferHeight, defaultBounds[1][1] - bufferHeight]]
 
-							sites.remove(site1)
-							scanSort2ByX(sites)
+							# This is >= instead of > since if the 3rd site is exactly at the x-value of the intersection point and the y-values of the other two sites are equal,
+							#	then a t-value equal to the y-value of the higest site is valid
+							if t >= site1[1] and t >= site2[1] and t >= site3[1] and withinBounds([x, y], bufferBounds):
 
-							x = float("%.10f" % x)
-							y = float("%.10f" % y)
-							t = float("%.10f" % t)
+								sites.remove(site1)
+								scanSort2ByX(sites)
 
-							if site1Key in cell:
-								# Prevents duplicate information
-								if {"sites":[site1, sites[0], sites[1]], "time":t, "at":[x, y]} not in cell[site1Key]:
-									cell[site1Key].append({"sites":[site1, sites[0], sites[1]], "time":t, "at":[x, y]})
-							else:
-								cell.update({site1Key : [{"sites":[site1, sites[0], sites[1]], "time":t, "at":[x, y]}]})
+								x = float("%.10f" % x)
+								y = float("%.10f" % y)
+								t = float("%.10f" % t)
+
+								if site1Key in cell:
+									# Prevents duplicate information
+									if {"sites":[site1, sites[0], sites[1]], "time":t, "at":[x, y]} not in cell[site1Key]:
+										cell[site1Key].append({"sites":[site1, sites[0], sites[1]], "time":t, "at":[x, y]})
+								else:
+									cell.update({site1Key : [{"sites":[site1, sites[0], sites[1]], "time":t, "at":[x, y]}]})
+						else:
+							usedSiteTrios.append(sites)
 
 print("Deleting invalid cell vertices...")
 for others in points:
@@ -650,7 +664,7 @@ else:
 			bound1 = []
 			bound2 = []
 
-			if siteKey in cell.keys() and cell[siteKey].__len__() != 0:
+			if siteKey in cell.keys() and cell[siteKey].__len__() == 1:
 				points2 = cell[siteKey][0]["sites"].copy()
 				distanceTargetSort(site, points2)
 				nearest = points2[1]
@@ -684,7 +698,7 @@ else:
 			boundPair = [bound1, bound2]
 			sort2ByY(boundPair)
 			scanSort2ByX(boundPair)
-
+			print("line701",site, nearest)
 			nearestKey = toKey(nearest)
 			# This first check is not redundant as in some cases there can be duplicate information
 			if boundPair not in finalCell[siteKey]["vertices"]:
@@ -799,7 +813,8 @@ for vert1 in vertices:
 					finalCell[toKey(otherWith[1])]["vertices"][j] = newPair
 
 				else: # This happens if there are two intersection points outside of bounds and one is connected to the other
-					#print(otherVert["at"], "not within bounds")
+					print(vertPt, otherVert["at"], "not within bounds")
+					print(vertices[vert1]["sites"], vertices[toKey(other)]["sites"])
 					cell1 = finalCell[toKey(otherWith[0])]["vertices"]
 					cell2 = finalCell[toKey(otherWith[1])]["vertices"]
 
@@ -931,17 +946,21 @@ for vert in vertices:
 		elif site3 != pickedSites[0] and site3 != pickedSites[1]:
 			notInPair = site3
 
-		midPt1 = midPoint(pickedSites[0], notInPair)
-		midPt2 = midPoint(pickedSites[1], notInPair)
-		referencePt = midPoint(midPt1, midPt2)
+		#midPt1 = midPoint(pickedSites[0], notInPair)
+		#midPt2 = midPoint(pickedSites[1], notInPair)
+		#referencePt = midPoint(midPt1, midPt2)
 
-		if pickedSites[0][0] == pickedSites[1][0] or pickedSites[0][1] == pickedSites[1][1]:
-			plt.plot(referencePt[0], referencePt[1], "yo")
-			plt.plot([site1[0], referencePt[0], site2[0], referencePt[0], site3[0]], [site1[1], referencePt[1], site2[1], referencePt[1], site3[1]], "y")
+		#if pickedSites[0][0] == pickedSites[1][0] or pickedSites[0][1] == pickedSites[1][1]:
+		#	plt.plot(referencePt[0], referencePt[1], "yo")
+		#	plt.plot([site1[0], referencePt[0], site2[0], referencePt[0], site3[0]], [site1[1], referencePt[1], site2[1], referencePt[1], site3[1]], "y")
 		
 		throughPt = []
 		# [[39, 161], [26, 161], [5, 161], [33, 165], [48, 177], [11, 187], [8, 191], [68, 194]] shows that using the 3 midpoints is necessary
 		#referencePt = testMpt3#[(site1[0] + site2[0] + site3[0])/3, (site1[1] + site2[1] + site3[1])/3]
+
+		dists = [vertPtT - site1[1], vertPtT - site2[1], vertPtT - site3[1]]#[vertPtT - pickedSites[0][1], vertPtT - pickedSites[1][1], vertPtT - notInPair[1]] # [vertPtT - site1[1], vertPtT - site2[1], vertPtT - site3[1]]
+		dists.sort()
+		print(dists)
 
 		# The fact that these changes in x are just in incremments of 0.5 probably won't cause any issues because even if the step overshoots
 		#	the reference point, that test will still be closer to the reference point than the other one, having the same result as if it hadn't
@@ -950,14 +969,14 @@ for vert in vertices:
 		if pickedSites[0][0] == pickedSites[1][0]: # The bisector is horizontal
 			leftX = vertPt[0] - 0.5
 			rightX = vertPt[0] + 0.5
-			if abs(referencePt[0] - leftX) > abs(referencePt[0] - rightX): # using either 3 midpoints or the average of the 3 sites seems to work # using average of 3 sites does not always work
+			if abs(notInPair[0] - leftX) > abs(notInPair[0] - rightX): # using either 3 midpoints or the average of the 3 sites seems to work # using average of 3 sites does not always work
 				throughPt = [leftX, vertPt[1]]
 			else:
 				throughPt = [rightX, vertPt[1]]
 		elif pickedSites[0][1] == pickedSites[1][1]: # The bisector is vertical
 			bottomY = vertPt[1] - 0.5
 			topY = vertPt[1] + 0.5
-			if abs(referencePt[1] - bottomY) > abs(referencePt[1] - topY):
+			if abs(notInPair[1] - bottomY) > abs(notInPair[1] - topY):
 				throughPt = [vertPt[0], bottomY]
 			else:
 				throughPt = [vertPt[0], topY]
@@ -1059,7 +1078,7 @@ def makeEdges(onboundary, curSite):
 
 # Finds edges that are on the boundary of the target area
 for cell2 in finalCell:
-	continue
+	
 	onboundary = []
 	for vert in finalCell[cell2]["vertices"]:
 		boundSize = [defaultBounds[0][0], defaultBounds[0][1], defaultBounds[1][0], defaultBounds[1][1]] # Flattened version of defaultBounds array
@@ -1185,4 +1204,3 @@ for cell in finalCell:
 # print("convex hull vertices", unique)
 
 plt.show()
-
