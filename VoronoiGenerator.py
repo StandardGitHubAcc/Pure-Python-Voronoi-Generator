@@ -19,7 +19,7 @@ for i in range(1, 100):
 #points = [[50, 50], [25, 25], [75, 75], [98, 70]]
 #points = [[50, 50], [25, 20], [75, 75], [98, 70]]
 #points = [[30, 40], [25, 60], [80, 97]]
-#points = [[50, 50], [75, 75]]  
+#points = [[50, 50], [75, 75]]
 #points = [[50, 50]]
 
 #points = [[30, 30], [40, 40], [10, 50]]
@@ -74,7 +74,7 @@ for i in range(1, 100):
 #points = [[159, 14], [49, 18], [63, 32], [87, 48], [191, 60], [131, 99], [150, 183]] # breaks stuff, not sure what exactly
 #points = [[59, 65], [194, 108], [134, 152], [147, 155], [75, 166], [64, 172], [180, 195]] # breaks stuff, not sure what exactly
 
-#points = [[25, 25], [175, 175], [25, 175], [175, 25], [100, 100]]
+points = [[25, 25], [175, 175], [25, 175], [175, 25], [100, 100]]
 #points = [[50, 50], [75, 75], [195, 195]]	  
 
 #points = [[43, 20], [10, 32], [91, 55], [136, 72], [123, 79], [52, 99], [0, 174]]
@@ -117,7 +117,7 @@ for i in range(1, 100):
 
 #points = [[140, 4], [45, 4], [106, 5], [51, 7], [197, 9], [71, 9], [85, 12], [151, 16], [74, 16], [185, 22], [139, 24], [158, 33], [81, 34], [135, 37], [97, 37], [145, 39], [19, 42], [91, 42], [62, 42], [60, 43], [4, 46], [172, 49], [72, 53], [26, 54], [137, 56], [150, 56], [41, 61], [53, 64], [150, 64], [167, 65], [11, 65], [127, 67], [184, 68], [151, 68], [54, 69], [143, 71], [103, 75], [45, 79], [3, 83], [7, 84], [29, 86], [153, 86], [101, 91], [165, 96], [199, 96], [79, 97], [147, 101], [6, 102], [30, 103], [190, 104], [13, 105], [138, 109], [159, 109], [84, 109], [177, 110], [170, 111], [85, 116], [140, 119], [4, 121], [184, 124], [107, 125], [16, 127], [154, 131], [200, 132], [46, 133], [122, 134], [73, 142], [34, 145], [52, 147], [108, 148], [169, 151], [62, 159], [65, 159], [84, 159], [149, 160], [132, 160], [39, 161], [26, 161], [5, 161], [186, 163], [33, 165], [181, 165], [157, 165], [200, 167], [85, 171], [142, 171], [180, 171], [185, 175], [52, 176], [48, 177], [57, 177], [122, 182], [157, 187], [11, 187], [102, 190], [176, 191], [8, 191], [68, 194], [99, 196]]
 #points = [[62, 159], [65, 159], [84, 159], [149, 160], [132, 160], [39, 161], [26, 161], [5, 161], [186, 163], [33, 165], [181, 165], [157, 165], [200, 167], [85, 171], [142, 171], [180, 171], [185, 175], [52, 176], [48, 177], [57, 177], [122, 182], [157, 187], [11, 187], [102, 190], [176, 191], [8, 191], [68, 194], [99, 196]]
-points = [[39, 161], [26, 161], [5, 161], [33, 165], [48, 177], [11, 187], [8, 191], [68, 194]]
+#points = [[39, 161], [26, 161], [5, 161], [33, 165], [48, 177], [11, 187], [8, 191], [68, 194]]
 
 #-------------with box that is 100 wide and 300 tall
 #points = [[75, 14], [85, 22], [86, 26], [94, 32], [92, 45], [32, 71], [0, 127], [50, 132], [10, 134], [28, 134], [21, 134], [95, 147], [38, 152], [63, 162], [70, 168], [7, 175], [4, 176], [65, 179], [12, 187], [87, 190], [23, 197], [7, 206], [91, 209], [100, 234], [73, 236], [33, 267], [10, 273], [20, 278], [96, 298]]
@@ -634,11 +634,11 @@ else:
 		# 		test = True
 		
 
-		if site == [8, 191]:
-			print("----------")
-			print(cell[toKey(site)])
-			print(cell[toKey(site)].__len__())
-			print("----------")
+		# if site == [8, 191]:
+		# 	print("----------")
+		# 	print(cell[toKey(site)])
+		# 	print(cell[toKey(site)].__len__())
+		# 	print("----------")
 
 		if test == True:
 
@@ -679,19 +679,19 @@ else:
 
 			
 			nearestKey = toKey(nearest)
-			print("line686")
+			#print("line686")
 			# This first check is not redundant as in some cases there can be duplicate information
 			if boundPair not in finalCell[siteKey]["vertices"]:
 				finalCell[siteKey]["vertices"].append(boundPair)
-				print("line677", siteKey, "-", boundPair)
+				#print("line677", siteKey, "-", boundPair)
 			#finalCell[siteKey]["vertices"].append(boundPair)
 			#print("line672",site, "-",nearest,"-", boundPair)
 			if boundPair not in finalCell[nearestKey]["vertices"]:
 				finalCell[nearestKey]["vertices"].append(boundPair)
-				print("line682", nearestKey, "-", boundPair)
+				#print("line682", nearestKey, "-", boundPair)
 
-print("line684",cell["[8_191]"])
-print(finalCell["[8_191]"])
+# print("line684",cell["[8_191]"])
+# print(finalCell["[8_191]"])
 
 # Finds pairs of vertices that can be used to make cell edges
 usedSitePairs = []
@@ -814,8 +814,8 @@ for site1Key in cell:
 #	scanSortByXSwap(vertices[vert1]["with"], vertices[vert1]["to"])
 
 #print("line796",vertices["[8_191]"])
-print("line797",cell["[8_191]"])
-print(finalCell["[8_191]"])
+# print("line797",cell["[8_191]"])
+# print(finalCell["[8_191]"])
 # Splits vertices that are outside of bounds into two vertices that are at the boundries
 removeVerts = []
 for vert1 in vertices:
@@ -1091,7 +1091,7 @@ def makeEdges(onBoundry, curSite):
 	for i in range(0, withCorners.__len__()-1):
 		finalCell[cell2]["vertices"].append([withCorners[i][0], withCorners[i+1][0]])
 
-print("line1071 [8_191]", finalCell["[8_191]"])
+# print("line1071 [8_191]", finalCell["[8_191]"])
 
 # Finds edges that are on the boundry of the target area
 for cell2 in finalCell:
@@ -1220,4 +1220,5 @@ for cell in finalCell:
 # print("convex hull vertices", unique)
 
 plt.show()
+
 
