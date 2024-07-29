@@ -74,7 +74,7 @@ for i in range(1, 100):
 #points = [[159, 14], [49, 18], [63, 32], [87, 48], [191, 60], [131, 99], [150, 183]] # breaks stuff, not sure what exactly
 #points = [[59, 65], [194, 108], [134, 152], [147, 155], [75, 166], [64, 172], [180, 195]] # breaks stuff, not sure what exactly
 
-points = [[25, 25], [175, 175], [25, 175], [175, 25], [100, 100]]
+#points = [[25, 25], [175, 175], [25, 175], [175, 25], [100, 100]]
 #points = [[50, 50], [75, 75], [195, 195]]	  
 
 #points = [[43, 20], [10, 32], [91, 55], [136, 72], [123, 79], [52, 99], [0, 174]]
@@ -217,6 +217,7 @@ def find3IntersectX(pt1, pt2, pt3): # finds x-value of intersection of 3 parabol
 		# [7, 34] [87, 254] [91, 265]
 		# using [[7, 34], [87, 254], [91, 265], [86, 16]] will show that it does cause issues
 		# Divides by 0 if (a-e)*(b-d) = (a-c)*(b-f) or if all 3 points have either the same x or y value
+		# Divides by 0 if the difference between the y-values of all 3 points are the same
 		print(f"division by zero in find3IntersectX with {pt1} {pt2} {pt3}")
 
 		return None
@@ -558,7 +559,7 @@ for site1 in points:
 									cell[site1Key].append({"sites":[site1, sites[0], sites[1]], "time":t, "at":[x, y]})
 							else:
 								cell.update({site1Key : [{"sites":[site1, sites[0], sites[1]], "time":t, "at":[x, y]}]})
-										
+
 print("Deleting invalid cell vertices...")
 for others in points:
 	
@@ -576,11 +577,6 @@ for others in points:
 				del cell[site1][cell[site1].index(rmv)]
 			except Exception:
 				pass
-
-# print()
-# for tmp in cell:
-# 	for tmp2 in cell[tmp]:
-# 		print(tmp, "-", tmp2)
 
 # There are 3 cases that have to be dealth with seperately: 1 site, 3 sites, and 2 or 3+ sites 
 # (technically 2 sites have to be dealt with seperately but are the same as having a cell in a corner so can be dealt with later)
@@ -615,30 +611,23 @@ else:
 		siteKey = toKey(site)
 		test = False
 		
-		
 		if cell.__len__() == 0: # If there is nothing cell, which would cause issues if the case of only 1 point being caught earlier wasn't caught
 			test = True
 		elif cell[toKey(site)].__len__() == 0: # This happens if there is a point but it is not associated with any intersection points, which does not happen often
 			test = True
-		else: # In most cases there are 1 or 2 sites outside the boundries,
-			#  but in [[39, 161], [26, 161], [5, 161], [33, 165], [48, 177], [11, 187], [8, 191], [68, 194]] there are 3 somehow for [8, 191]
+		else:
+			# In most cases there are 1 or 2 sites outside the boundries, but in [[39, 161], [26, 161], [5, 161], [33, 165], [48, 177], [11, 187], [8, 191], [68, 194]]
+			#	there are 3 somehow for [8, 191]
 			test = True
-		for entry in cell[siteKey]:
-			if withinBounds(entry["at"], defaultBounds):
-				test = False
+			for entry in cell[siteKey]:
+				if withinBounds(entry["at"], defaultBounds):
+					test = False
 		# elif cell[toKey(site)].__len__() == 1:
 		# 	if not withinBounds(cell[toKey(site)][0]["at"], defaultBounds):
 		# 		test = True
 		# elif cell[toKey(site)].__len__() == 2:
 		# 	if not withinBounds(cell[toKey(site)][0]["at"], defaultBounds) and not withinBounds(cell[toKey(site)][1]["at"], defaultBounds):
 		# 		test = True
-		
-
-		# if site == [8, 191]:
-		# 	print("----------")
-		# 	print(cell[toKey(site)])
-		# 	print(cell[toKey(site)].__len__())
-		# 	print("----------")
 
 		if test == True:
 
@@ -677,21 +666,15 @@ else:
 			sort2ByY(boundPair)
 			scanSort2ByX(boundPair)
 
-			
 			nearestKey = toKey(nearest)
-			#print("line686")
+
 			# This first check is not redundant as in some cases there can be duplicate information
 			if boundPair not in finalCell[siteKey]["vertices"]:
 				finalCell[siteKey]["vertices"].append(boundPair)
-				#print("line677", siteKey, "-", boundPair)
-			#finalCell[siteKey]["vertices"].append(boundPair)
-			#print("line672",site, "-",nearest,"-", boundPair)
+
 			if boundPair not in finalCell[nearestKey]["vertices"]:
 				finalCell[nearestKey]["vertices"].append(boundPair)
-				#print("line682", nearestKey, "-", boundPair)
 
-# print("line684",cell["[8_191]"])
-# print(finalCell["[8_191]"])
 
 # Finds pairs of vertices that can be used to make cell edges
 usedSitePairs = []
@@ -813,9 +796,7 @@ for site1Key in cell:
 #for vert1 in vertices: # I don't know if this is more efficient than sorting the vertices by x within the loop that they are created
 #	scanSortByXSwap(vertices[vert1]["with"], vertices[vert1]["to"])
 
-#print("line796",vertices["[8_191]"])
-# print("line797",cell["[8_191]"])
-# print(finalCell["[8_191]"])
+
 # Splits vertices that are outside of bounds into two vertices that are at the boundries
 removeVerts = []
 for vert1 in vertices:
@@ -1004,6 +985,8 @@ for vert in vertices:
 			#	Using getXAtTimeRef instead of getXAtTime ensures that the x picked is the one closest to the target intersection point
 			#	getXAtTime works in most cases because the second option for an intersection point is usaully really far away from the other one
 			#		and the midpoint, but that is not the case for the above scenario
+
+			# The x-values of the points are the intersection of the two parabolas pickedSites[0] and pickedSites[1] before and after the vertice
 			beforeTx = getXAtTimeRef(pickedSites[0], pickedSites[1], vertPtT - deltaT, vertPt[0])
 			afterTx = getXAtTimeRef(pickedSites[0], pickedSites[1], vertPtT + deltaT, vertPt[0])
 
@@ -1220,5 +1203,6 @@ for cell in finalCell:
 # print("convex hull vertices", unique)
 
 plt.show()
+
 
 
