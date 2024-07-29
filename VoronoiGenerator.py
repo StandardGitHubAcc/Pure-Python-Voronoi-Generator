@@ -4,12 +4,12 @@ import math
 from math import *
 
 #                 width     height
-defaultBounds = [[0, 200], [200, 0]]
-#defaultBounds = [[0, 100], [300, 0]]
+#defaultBounds = [[0, 200], [200, 0]]
+defaultBounds = [[0, 100], [300, 0]]
 
 #		bottomleft, topleft, bottomright, topright
-corners = [[0, 0], [0, 200], [200, 0], [200, 200]]
-#corners = [ [defaultBounds[0][0], defaultBounds[1][1]], [defaultBounds[0][0], defaultBounds[1][0]], [defaultBounds[0][1], defaultBounds[1][1]], [defaultBounds[0][1], defaultBounds[1][0]] ]
+#corners = [[0, 0], [0, 200], [200, 0], [200, 200]]
+corners = [ [defaultBounds[0][0], defaultBounds[1][1]], [defaultBounds[0][0], defaultBounds[1][0]], [defaultBounds[0][1], defaultBounds[1][1]], [defaultBounds[0][1], defaultBounds[1][0]] ]
 
 
 points = []
@@ -117,7 +117,7 @@ for i in range(0, 101):
 #points = [[25, 25], [26,50], [27, 76]]
 
 #------------- 100 points
-#points = [[64, 3], [56, 4], [20, 8], [8, 9], [59, 12], [88, 14], [27, 20], [3, 22], [26, 23], [99, 29], [29, 32], [56, 37], [29, 38], [50, 38], [22, 39], [56, 40], [11, 52], [92, 52], [90, 58], [79, 69], [97, 70], [32, 71], [46, 71], [7, 73], [18, 74], [89, 79], [58, 80], [51, 84], [17, 88], [13, 94], [24, 99], [94, 101], [43, 101], [45, 106], [50, 111], [17, 112], [41, 114], [89, 115], [80, 118], [33, 123], [74, 123], [88, 131], [19, 133], [29, 137], [20, 138], [40, 139], [60, 140], [49, 144], [1, 157], [67, 160], [95, 164], [50, 165], [38, 166], [58, 170], [52, 174], [34, 177], [12, 179], [25, 184], [91, 185], [62, 185], [80, 189], [56, 192], [28, 196], [19, 196], [84, 203], [52, 204], [66, 206], [23, 206], [34, 207], [41, 215], [100, 217], [46, 218], [40, 220], [62, 220], [17, 222], [77, 228], [69, 228], [15, 229], [45, 237], [73, 239], [19, 240], [81, 243], [63, 244], [13, 258], [1, 259], [43, 261], [42, 264], [44, 268], [78, 268], [11, 269], [12, 273], [50, 274], [68, 278], [37, 278], [75, 281], [92, 295], [23, 299], [22, 299], [91, 300]]
+points = [[64, 3], [56, 4], [20, 8], [8, 9], [59, 12], [88, 14], [27, 20], [3, 22], [26, 23], [99, 29], [29, 32], [56, 37], [29, 38], [50, 38], [22, 39], [56, 40], [11, 52], [92, 52], [90, 58], [79, 69], [97, 70], [32, 71], [46, 71], [7, 73], [18, 74], [89, 79], [58, 80], [51, 84], [17, 88], [13, 94], [24, 99], [94, 101], [43, 101], [45, 106], [50, 111], [17, 112], [41, 114], [89, 115], [80, 118], [33, 123], [74, 123], [88, 131], [19, 133], [29, 137], [20, 138], [40, 139], [60, 140], [49, 144], [1, 157], [67, 160], [95, 164], [50, 165], [38, 166], [58, 170], [52, 174], [34, 177], [12, 179], [25, 184], [91, 185], [62, 185], [80, 189], [56, 192], [28, 196], [19, 196], [84, 203], [52, 204], [66, 206], [23, 206], [34, 207], [41, 215], [100, 217], [46, 218], [40, 220], [62, 220], [17, 222], [77, 228], [69, 228], [15, 229], [45, 237], [73, 239], [19, 240], [81, 243], [63, 244], [13, 258], [1, 259], [43, 261], [42, 264], [44, 268], [78, 268], [11, 269], [12, 273], [50, 274], [68, 278], [37, 278], [75, 281], [92, 295], [23, 299], [22, 299], [91, 300]]
 
 #points = [[140, 4], [45, 4], [106, 5], [51, 7], [197, 9], [71, 9], [85, 12], [151, 16], [74, 16], [185, 22], [139, 24], [158, 33], [81, 34], [135, 37], [97, 37], [145, 39], [19, 42], [91, 42], [62, 42], [60, 43], [4, 46], [172, 49], [72, 53], [26, 54], [137, 56], [150, 56], [41, 61], [53, 64], [150, 64], [167, 65], [11, 65], [127, 67], [184, 68], [151, 68], [54, 69], [143, 71], [103, 75], [45, 79], [3, 83], [7, 84], [29, 86], [153, 86], [101, 91], [165, 96], [199, 96], [79, 97], [147, 101], [6, 102], [30, 103], [190, 104], [13, 105], [138, 109], [159, 109], [84, 109], [177, 110], [170, 111], [85, 116], [140, 119], [4, 121], [184, 124], [107, 125], [16, 127], [154, 131], [200, 132], [46, 133], [122, 134], [73, 142], [34, 145], [52, 147], [108, 148], [169, 151], [62, 159], [65, 159], [84, 159], [149, 160], [132, 160], [39, 161], [26, 161], [5, 161], [186, 163], [33, 165], [181, 165], [157, 165], [200, 167], [85, 171], [142, 171], [180, 171], [185, 175], [52, 176], [48, 177], [57, 177], [122, 182], [157, 187], [11, 187], [102, 190], [176, 191], [8, 191], [68, 194], [99, 196]]
 #points = [[62, 159], [65, 159], [84, 159], [149, 160], [132, 160], [39, 161], [26, 161], [5, 161], [186, 163], [33, 165], [181, 165], [157, 165], [200, 167], [85, 171], [142, 171], [180, 171], [185, 175], [52, 176], [48, 177], [57, 177], [122, 182], [157, 187], [11, 187], [102, 190], [176, 191], [8, 191], [68, 194], [99, 196]]
@@ -140,8 +140,9 @@ for i in range(0, 101):
 #points = [[67, 13], [55, 26], [0, 31], [78, 33], [50, 41], [47, 52], [99, 54], [16, 55], [38, 88], [24, 94], [14, 114], [0, 122], [5, 123], [14, 129], [85, 134], [84, 137], [33, 137], [28, 141], [24, 167], [89, 199], [54, 202], [67, 208], [90, 217], [8, 221], [98, 235], [52, 252], [15, 255], [38, 258], [50, 297]]
 
 #points = [[128, 141], [33, 137], [84, 137], [85, 134], [24, 167], [54, 202]] # causes issues somewhere
+#^ no issues if the bounds are set to [[0, 200], [200, 0]] but causes issue if bounds are [[0, 100], [300, 0]]
 
-points = [[104, 95], [167, 95], [142, 136]] # causes division by zero in getXAtTimeRef
+#points = [[104, 95], [167, 95], [142, 136]] # causes division by zero in getXAtTimeRef
 
 #points = [[104, 95], [167, 95], [20, 95]]
 #points = [[104, 95], [167, 95], [20, 95], [180, 95]]
@@ -586,7 +587,7 @@ for others in points:
 # (technically 2 sites have to be dealt with seperately but are the same as having a cell in a corner so can be dealt with later)
 if points.__len__() == 3 and cell.keys().__len__() != 0:
 	kys = list(cell.keys())
-	
+	print("line589",kys)
 	current = cell[kys[0]][0]
 
 	vert = toKey(current['at'])
@@ -600,8 +601,10 @@ if points.__len__() == 3 and cell.keys().__len__() != 0:
 	edgePair = [current["at"], bound]
 	sort2ByY(edgePair)
 	scanSort2ByX(edgePair)
-	finalCell[kys[0]]["vertices"].append(edgePair)
-	finalCell[kys[1]]["vertices"].append(edgePair)
+	#finalCell[kys[0]]["vertices"].append(edgePair)
+	#finalCell[kys[1]]["vertices"].append(edgePair)
+	finalCell[toKey(sites[0])]["vertices"].append(edgePair)
+	finalCell[toKey(sites[1])]["vertices"].append(edgePair)
 
 
  # Trying to handle 1 site here will cause the boundary edge finding section to duplicate two sides, 
@@ -665,7 +668,7 @@ else:
 			scanSort2ByX(boundPair)
 
 			nearestKey = toKey(nearest)
-
+			print("line668")
 			# This first check is not redundant as in some cases there can be duplicate information
 			if boundPair not in finalCell[siteKey]["vertices"]:
 				finalCell[siteKey]["vertices"].append(boundPair)
@@ -749,7 +752,7 @@ for site1Key in cell:
 removeVerts = []
 for vert1 in vertices:
 	vertPt = vertices[vert1]["at"]
-
+	
 	if not withinBounds(vertPt, defaultBounds):
 		for other in vertices[vert1]["to"]:
 			if toKey(other) in vertices: # If it is not in 'vertices', then 'other' is a boundary vertice
@@ -856,7 +859,7 @@ for vert in vertices:
 	site1 = vertices[vert]["sites"][0]
 	site2 = vertices[vert]["sites"][1]
 	site3 = vertices[vert]["sites"][2]
-	continue
+	
 	if vertices[vert]["to"].__len__() == 1:
 		
 		pickedSites = [[site1, site2], [site1, site3], [site2, site3]]
@@ -888,7 +891,7 @@ for vert in vertices:
 		finalCell[toKey(pickedSites[1])]["vertices"].append(boundaryPair)
 	
 	if vertices[vert]["to"].__len__() == 2:
-		continue
+		
 		vertPtT = tAtXandY(site1, vertPt[0], vertPt[1])
 		print("b", vertPt, vertPtT)
 
@@ -920,11 +923,14 @@ for vert in vertices:
 		testMpt3 = midPoint(testMpt1, testMpt2)
 		plt.plot(testMpt3[0], testMpt3[1], "yo")
 		print("line921", testMpt3, [(site1[0] + site2[0] + site3[0])/3, (site1[1] + site2[1] + site3[1])/3])
+		plt.plot((site1[0] + site2[0] + site3[0])/3, (site1[1] + site2[1] + site3[1])/3, "mo")
 
 		dists = [vertPtT - site1[1], vertPtT - site2[1], vertPtT - site3[1]]#[vertPtT - pickedSites[0][1], vertPtT - pickedSites[1][1], vertPtT - notInPair[1]] # [vertPtT - site1[1], vertPtT - site2[1], vertPtT - site3[1]]
 		dists.sort()
 
 		throughPt = []
+
+		testMpt3 = [(site1[0] + site2[0] + site3[0])/3, (site1[1] + site2[1] + site3[1])/3]
 
 		if pickedSites[0][0] == pickedSites[1][0]: # The bisector is horizontal
 			leftX = vertPt[0] - 0.5
@@ -1172,6 +1178,7 @@ for cell in finalCell:
 # print("convex hull vertices", unique)
 
 plt.show()
+
 
 
 
