@@ -14,7 +14,7 @@ corners = [ [defaultBounds[0][0], defaultBounds[1][1]], [defaultBounds[0][0], de
 
 points = []
 for i in range(0, 101):
-	  points.append([random.randint(0, defaultBounds[0][1]), random.randint(0, defaultBounds[1][0])])  
+	  points.append([random.randint(0, defaultBounds[0][1]), random.randint(0, defaultBounds[1][0])])
 
 #points = [[50, 50], [25, 25], [75, 75], [98, 70]]
 #points = [[50, 50], [25, 20], [75, 75], [98, 70]]
@@ -127,7 +127,10 @@ for i in range(0, 101):
 
 #points = [[140, 4], [45, 4], [106, 5], [51, 7], [197, 9], [71, 9], [85, 12], [151, 16], [74, 16], [185, 22], [139, 24], [158, 33], [81, 34], [135, 37], [97, 37], [145, 39], [19, 42], [91, 42], [62, 42], [60, 43], [4, 46], [172, 49], [72, 53], [26, 54], [137, 56], [150, 56], [41, 61], [53, 64], [150, 64], [167, 65], [11, 65], [127, 67], [184, 68], [151, 68], [54, 69], [143, 71], [103, 75], [45, 79], [3, 83], [7, 84], [29, 86], [153, 86], [101, 91], [165, 96], [199, 96], [79, 97], [147, 101], [6, 102], [30, 103], [190, 104], [13, 105], [138, 109], [159, 109], [84, 109], [177, 110], [170, 111], [85, 116], [140, 119], [4, 121], [184, 124], [107, 125], [16, 127], [154, 131], [200, 132], [46, 133], [122, 134], [73, 142], [34, 145], [52, 147], [108, 148], [169, 151], [62, 159], [65, 159], [84, 159], [149, 160], [132, 160], [39, 161], [26, 161], [5, 161], [186, 163], [33, 165], [181, 165], [157, 165], [200, 167], [85, 171], [142, 171], [180, 171], [185, 175], [52, 176], [48, 177], [57, 177], [122, 182], [157, 187], [11, 187], [102, 190], [176, 191], [8, 191], [68, 194], [99, 196]]
 #points = [[62, 159], [65, 159], [84, 159], [149, 160], [132, 160], [39, 161], [26, 161], [5, 161], [186, 163], [33, 165], [181, 165], [157, 165], [200, 167], [85, 171], [142, 171], [180, 171], [185, 175], [52, 176], [48, 177], [57, 177], [122, 182], [157, 187], [11, 187], [102, 190], [176, 191], [8, 191], [68, 194], [99, 196]]
-points = [[39, 161], [26, 161], [5, 161], [33, 165], [48, 177], [11, 187], [8, 191], [68, 194]] # breaks finding 3rd vertice on boundry
+#points = [[39, 161], [26, 161], [5, 161], [33, 165], [48, 177], [11, 187], [8, 191], [68, 194]] # breaks finding 3rd vertice on boundry
+
+#points = [[116, 0], [187, 1], [130, 1], [68, 2], [18, 4], [135, 5], [64, 6], [159, 8], [0, 11], [187, 11], [123, 14], [7, 19], [138, 20], [72, 23], [30, 24], [8, 26], [193, 27], [21, 29], [33, 31], [108, 36], [87, 37], [129, 38], [66, 39], [11, 40], [63, 41], [129, 43], [186, 45], [32, 47], [159, 47], [139, 47], [119, 48], [48, 49], [37, 56], [73, 58], [8, 59], [138, 59], [58, 61], [198, 65], [48, 67], [87, 67], [4, 70], [76, 72], [146, 72], [56, 74], [169, 75], [37, 75], [139, 78], [180, 78], [143, 82], [59, 82], [150, 86], [8, 87], [194, 88], [191, 88], [167, 90], [191, 91], [93, 91], [137, 91], [102, 101], [46, 102], [121, 103], [17, 105], [72, 107], [65, 107], [130, 107], [9, 108], [110, 110], [82, 113], [177, 115], [73, 118], [103, 120], [73, 122], [4, 125], [174, 127], [157, 135], [128, 135], [125, 135], [4, 137], [136, 138], [44, 141], [113, 142], [41, 144], [16, 151], [93, 152], [47, 154], [159, 156], [10, 163], [116, 166], [51, 166], [110, 167], [178, 171], [88, 172], [29, 172], [80, 172], [62, 173], [55, 180], [60, 181], [74, 186], [92, 187], [38, 190], [58, 197]]
+points = [[10, 163], [16, 151], [41, 144], [4, 137], [4, 125], [9, 108]]
 
 #-------------with box that is 100 wide and 300 tall
 #points = [[75, 14], [85, 22], [86, 26], [94, 32], [92, 45], [32, 71], [0, 127], [50, 132], [10, 134], [28, 134], [21, 134], [95, 147], [38, 152], [63, 162], [70, 168], [7, 175], [4, 176], [65, 179], [12, 187], [87, 190], [23, 197], [7, 206], [91, 209], [100, 234], [73, 236], [33, 267], [10, 273], [20, 278], [96, 298]]
@@ -530,6 +533,10 @@ print(tmp) # this tmp is never used after this, it just used to print the points
 print()
 
 # Finds intersection points of sites, including some that are invalid
+# Could be opimized by having the first loop go through all points, second go through all points starting at the index of the first loop, and third loop go through all points starting at index of second loop
+#	But that would probably require restructuring finding edges
+# Could also probably be opimized by keeping track of the triple sites used and not repeating the calculations for them,
+#	the ones that are parallel would be especially easy to keep track of but would also provide the least benefit
 for site1 in points:
 	for site2 in points:
 		if site1 != site2:
@@ -589,15 +596,11 @@ for others in points:
 			except Exception:
 				pass
 
-for site in cell:
-	for entry in cell[site]:
-		print(site, "-", entry)
-
 # There are 3 cases that have to be dealth with seperately: 1 site, 3 sites, and 2 or 3+ sites 
 # (technically 2 sites have to be dealt with seperately but are the same as having a cell in a corner so can be dealt with later)
 if points.__len__() == 3 and cell.keys().__len__() != 0:
 	kys = list(cell.keys())
-	print("line589",kys)
+
 	current = cell[kys[0]][0]
 
 	vert = toKey(current['at'])
@@ -611,8 +614,7 @@ if points.__len__() == 3 and cell.keys().__len__() != 0:
 	edgePair = [current["at"], bound]
 	sort2ByY(edgePair)
 	scanSort2ByX(edgePair)
-	#finalCell[kys[0]]["vertices"].append(edgePair)
-	#finalCell[kys[1]]["vertices"].append(edgePair)
+
 	finalCell[toKey(sites[0])]["vertices"].append(edgePair)
 	finalCell[toKey(sites[1])]["vertices"].append(edgePair)
 
@@ -630,19 +632,15 @@ else:
 
 		if cell.__len__() == 0: # If there is nothing cell, which would cause issues if the case of only 1 point being caught earlier wasn't caught
 			test = True
-			print("a")
 		elif cell[siteKey].__len__() == 0: # This happens if there is a point but it is not associated with any intersection points, which does not happen often
 			test = True
-			print("b")
 		else:
 			# In most cases there are 1 or 2 sites outside the boundries, but in [[39, 161], [26, 161], [5, 161], [33, 165], [48, 177], [11, 187], [8, 191], [68, 194]]
 			#	there are 3 somehow for [8, 191]
 			test = True
-			print("c", site)
 			for entry in cell[siteKey]:
 				if withinBounds(entry["at"], defaultBounds):
 					test = False
-					print("d")
 					break
 
 		if test == True:
@@ -688,7 +686,6 @@ else:
 			scanSort2ByX(boundPair)
 
 			nearestKey = toKey(nearest)
-			print("line668", site, nearest)
 			# This first check is not redundant as in some cases there can be duplicate information
 			if boundPair not in finalCell[siteKey]["vertices"]:
 				finalCell[siteKey]["vertices"].append(boundPair)
@@ -764,9 +761,6 @@ for site1Key in cell:
 		searchForPair(site1, site1Key, site2, site2Key)
 
 		searchForPair(site1, site1Key, site3, site3Key)
-
-for tmp in vertices:
-	print(tmp, "-", vertices[tmp]["to"])
 
 #for vert1 in vertices: # I don't know if this is more efficient than sorting the vertices by x within the loop that they are created
 #	scanSortByXSwap(vertices[vert1]["with"], vertices[vert1]["to"])
@@ -916,7 +910,6 @@ for vert in vertices:
 	if vertices[vert]["to"].__len__() == 2:
 		
 		vertPtT = tAtXandY(site1, vertPt[0], vertPt[1])
-		#print("b", vertPt, vertPtT)
 
 		pickedSites = [[site1, site2], [site1, site3], [site2, site3]]
 		sort2ByY(pickedSites[0])
@@ -924,12 +917,9 @@ for vert in vertices:
 		sort2ByY(pickedSites[2])
 		
 		scanSortByX(pickedSites)
-		#print("line897", vertices[vert]["with"])
-		#print(pickedSites)
 		pickedSites.remove(vertices[vert]["with"][0])
 		pickedSites.remove(vertices[vert]["with"][1])
 		pickedSites = pickedSites[0]
-		#print("line906pickedSites",pickedSites)
 
 		sortByY(pickedSites)
 		notInPair = []
@@ -941,25 +931,25 @@ for vert in vertices:
 		elif site3 != pickedSites[0] and site3 != pickedSites[1]:
 			notInPair = site3
 
-		# testMpt1 = midPoint(pickedSites[0], notInPair)
-		# testMpt2 = midPoint(pickedSites[1], notInPair)
-		# testMpt3 = midPoint(testMpt1, testMpt2)
-		# plt.plot(testMpt3[0], testMpt3[1], "yo")
-		# print("line921", testMpt3, [(site1[0] + site2[0] + site3[0])/3, (site1[1] + site2[1] + site3[1])/3])
-		# plt.plot((site1[0] + site2[0] + site3[0])/3, (site1[1] + site2[1] + site3[1])/3, "mo")
-
 		midPt1 = midPoint(pickedSites[0], notInPair)
 		midPt2 = midPoint(pickedSites[1], notInPair)
 		referencePt = midPoint(midPt1, midPt2)
 
+		if pickedSites[0][0] == pickedSites[1][0] or pickedSites[0][1] == pickedSites[1][1]:
+			plt.plot(referencePt[0], referencePt[1], "yo")
+			plt.plot([site1[0], referencePt[0], site2[0], referencePt[0], site3[0]], [site1[1], referencePt[1], site2[1], referencePt[1], site3[1]], "y")
+		
 		throughPt = []
 		# [[39, 161], [26, 161], [5, 161], [33, 165], [48, 177], [11, 187], [8, 191], [68, 194]] shows that using the 3 midpoints is necessary
 		#referencePt = testMpt3#[(site1[0] + site2[0] + site3[0])/3, (site1[1] + site2[1] + site3[1])/3]
 
+		# The fact that these changes in x are just in incremments of 0.5 probably won't cause any issues because even if the step overshoots
+		#	the reference point, that test will still be closer to the reference point than the other one, having the same result as if it hadn't
+		#	overshot it
+		# This doesn't work with [[10, 163], [16, 151], [41, 144], [4, 137], [4, 125], [9, 108]]
 		if pickedSites[0][0] == pickedSites[1][0]: # The bisector is horizontal
 			leftX = vertPt[0] - 0.5
 			rightX = vertPt[0] + 0.5
-			#print(referencePt[0] - leftX, referencePt[0] - rightX)
 			if abs(referencePt[0] - leftX) > abs(referencePt[0] - rightX): # using either 3 midpoints or the average of the 3 sites seems to work # using average of 3 sites does not always work
 				throughPt = [leftX, vertPt[1]]
 			else:
@@ -972,42 +962,31 @@ for vert in vertices:
 			else:
 				throughPt = [vertPt[0], topY]
 		else:
-			# if dists[0] != 0.0:
-				dists = [vertPtT - site1[1], vertPtT - site2[1], vertPtT - site3[1]]#[vertPtT - pickedSites[0][1], vertPtT - pickedSites[1][1], vertPtT - notInPair[1]] # [vertPtT - site1[1], vertPtT - site2[1], vertPtT - site3[1]]
-				dists.sort()
-				deltaT = dists[0] / 2
 
-				# for some reason when pickedSites = [[167, 95], [188, 191]], both beforeTx and afterTx are less than vertPt[0]
-				#	This is because there are two locations where the two parabolas intersect, so there are 4 possible points.
-				#	Using getXAtTimeRef instead of getXAtTime ensures that the x picked is the one closest to the target intersection point
-				#	getXAtTime works in most cases because the second option for an intersection point is usaully really far away from the other one
-				#		and the midpoint, but that is not the case for the above scenario
+			dists = [vertPtT - site1[1], vertPtT - site2[1], vertPtT - site3[1]]#[vertPtT - pickedSites[0][1], vertPtT - pickedSites[1][1], vertPtT - notInPair[1]] # [vertPtT - site1[1], vertPtT - site2[1], vertPtT - site3[1]]
+			dists.sort()
+			deltaT = dists[0] / 2
 
-				# The x-values of the points are the intersection of the two parabolas pickedSites[0] and pickedSites[1] before and after the vertice
-				beforeTx = getXAtTimeRef(pickedSites[0], pickedSites[1], vertPtT - deltaT, vertPt[0])
-				afterTx = getXAtTimeRef(pickedSites[0], pickedSites[1], vertPtT + deltaT, vertPt[0])
+			# for some reason when pickedSites = [[167, 95], [188, 191]], both beforeTx and afterTx are less than vertPt[0]
+			#	This is because there are two locations where the two parabolas intersect, so there are 4 possible points.
+			#	Using getXAtTimeRef instead of getXAtTime ensures that the x picked is the one closest to the target intersection point
+			#	getXAtTime works in most cases because the second option for an intersection point is usaully really far away from the other one
+			#		and the midpoint, but that is not the case for the above scenario
 
-				beforeTy1 = getYAtTimeAndX(pickedSites[0], vertPtT - deltaT, beforeTx)
-				beforeTy2 = getYAtTimeAndX(notInPair, vertPtT - deltaT, beforeTx)
-				afterTy1 = getYAtTimeAndX(pickedSites[0], vertPtT + deltaT, afterTx)
-				afterTy2 = getYAtTimeAndX(notInPair, vertPtT + deltaT, afterTx)
+			# The x-values of the points are the intersection of the two parabolas pickedSites[0] and pickedSites[1] before and after the vertice
+			beforeTx = getXAtTimeRef(pickedSites[0], pickedSites[1], vertPtT - deltaT, vertPt[0])
+			afterTx = getXAtTimeRef(pickedSites[0], pickedSites[1], vertPtT + deltaT, vertPt[0])
 
-				if beforeTy1 > beforeTy2:
-					throughPt = [beforeTx, beforeTy1]
-				elif afterTy1 > afterTy2:
-					throughPt = [afterTx, afterTy1]
-				#elif deltaT == 0.0: # This works in place of checking for dists[0] != 0.0 above
-				#	afterTx = getXAtTimeRef(pickedSites[0], pickedSites[1], vertPtT + 0.5, vertPt[0])
-				#	afterTy1 = getYAtTimeAndX(pickedSites[0], vertPtT + 0.5, afterTx)
-				#	throughPt = [afterTx, afterTy1]
-			# else: # Doing this should be slightly more efficient than the previous option since it doesn't unecessarily calculate beforeTx, beforeTy1, and beforeTy2
-			# 	print("c") # This check is no longer necessary since if there is a difference of 0, there must be a vertical line, which is handled above
-			# 	afterTx = getXAtTimeRef(pickedSites[0], pickedSites[1], vertPtT + 0.5, vertPt[0])
-			# 	afterTy1 = getYAtTimeAndX(pickedSites[0], vertPtT + 0.5, afterTx)
-			# 	throughPt = [afterTx, afterTy1]
-		#print()
+			beforeTy1 = getYAtTimeAndX(pickedSites[0], vertPtT - deltaT, beforeTx)
+			beforeTy2 = getYAtTimeAndX(notInPair, vertPtT - deltaT, beforeTx)
+			afterTy1 = getYAtTimeAndX(pickedSites[0], vertPtT + deltaT, afterTx)
+			afterTy2 = getYAtTimeAndX(notInPair, vertPtT + deltaT, afterTx)
 
-		#if throughPt != []:
+			if beforeTy1 > beforeTy2:
+				throughPt = [beforeTx, beforeTy1]
+			elif afterTy1 > afterTy2:
+				throughPt = [afterTx, afterTy1]
+
 
 		# The points aren't added to the 'vertices' dictionary since it is not used after this part of this function, so there is point to
 		nearestBound = nearestboundary(vertPt, throughPt)
@@ -1050,15 +1029,15 @@ def makeEdges(onboundary, curSite):
 		sortByY(withCorners)
 
 	else:
-		print("site inside")
-		print(curSite, onboundary, vert1Theta, vert2Theta)
-		print(minTheta, maxTheta)
 		# If there is a site within the angle between the two boundary vertices, use the area between the upper angle and the lower angle (opposite of between lower angle and upper)
 		for i in range(0, corners.__len__()):
 			cornerTheta = normalTheta(corners[i], curSite)
 			
 			if cornerTheta < minTheta or cornerTheta > maxTheta:
-				tempAngle = cornerTheta - vert1Theta # Rotates the corner angle so that the upper boundary angle becomes 0 degrees
+				# Why is this vert1Theta instead of maxTheta? The whole point of minTheta and maxTheta was that vert1Theta was not always the greater of the two
+				#	The only cases where vert1Theta would not be the greater angle is if onBoundary[0] was on the upper right boundary and onBoundary[1] was on the top boundary
+				#	or onBoundary[0] was on the bottom boundary and onBoundary[1] was on the lower right boundary
+				tempAngle = cornerTheta - maxTheta#vert1Theta # Rotates the corner angle so that the upper boundary angle becomes 0 degrees
 				if tempAngle < 0:
 					tempAngle += 2 * math.pi
 
@@ -1069,7 +1048,9 @@ def makeEdges(onboundary, curSite):
 			withCorners[1] = [onboundary[1], ((2 * math.pi) - vert1Theta) + vert2Theta] # Changes the lower boundary angle to be the new upper bound
 		else:
 			withCorners[0] = [onboundary[1], 0]
-			withCorners[1] = [onboundary[0], ((2 * math.pi) - vert1Theta) + vert2Theta]
+			withCorners[1] = [onboundary[0], ((2 * math.pi) - vert1Theta) + vert2Theta] # (minTheta - maxTheta) + (2 * math.pi) would also work instead
+		#print(((2 * math.pi) - vert1Theta) + vert2Theta)
+		#print((minTheta - maxTheta) + (2 * math.pi))
 
 		sortByY(withCorners)
 
@@ -1123,6 +1104,7 @@ for cell2 in finalCell:
 					single.append(edge[0])
 
 			if single.__len__() > 0:
+				sort2ByY(single)
 				makeEdges(single, curSite)
 
 # If there is only one point, then the whole area is one cell
@@ -1149,10 +1131,10 @@ for site in cell:
 		#plt.plot([entry["point2"][0], entry["at"][0], entry["point3"][0], entry["at"][0], entry["point1"][0]], [entry["point2"][1], entry["at"][1], entry["point3"][1], entry["at"][1], entry["point1"][1]], "g") 
 		plt.plot([entry["sites"][1][0], entry["at"][0], entry["sites"][2][0], entry["at"][0], entry["sites"][0][0]], [entry["sites"][1][1], entry["at"][1], entry["sites"][2][1], entry["at"][1], entry["sites"][0][1]], "g") 
 
-for vert3key in vertices:
-	vert3 = vertices[vert3key]
+# for vert3key in vertices:
+# 	vert3 = vertices[vert3key]
 	
-	plt.plot([vert3["sites"][0][0], vert3["at"][0], vert3["sites"][1][0], vert3["at"][0], vert3["sites"][2][0]], [vert3["sites"][0][1], vert3["at"][1], vert3["sites"][1][1], vert3["at"][1], vert3["sites"][2][1]], "y")
+# 	plt.plot([vert3["sites"][0][0], vert3["at"][0], vert3["sites"][1][0], vert3["at"][0], vert3["sites"][2][0]], [vert3["sites"][0][1], vert3["at"][1], vert3["sites"][1][1], vert3["at"][1], vert3["sites"][2][1]], "y")
 
 for cell in finalCell:
 
@@ -1203,9 +1185,4 @@ for cell in finalCell:
 # print("convex hull vertices", unique)
 
 plt.show()
-
-
-
-
-
 
