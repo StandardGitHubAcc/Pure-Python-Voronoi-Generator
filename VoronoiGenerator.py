@@ -13,8 +13,8 @@ corners = [ [defaultBounds[0][0], defaultBounds[1][1]], [defaultBounds[0][0], de
 
 
 points = []
-for i in range(0, 101):
-	  points.append([random.randint(0, defaultBounds[0][1]), random.randint(0, defaultBounds[1][0])])
+for i in range(1, 100):
+	  points.append([random.randint(0, defaultBounds[0][1]), random.randint(0, defaultBounds[1][0])])  
 
 #points = [[50, 50], [25, 25], [75, 75], [98, 70]]
 #points = [[50, 50], [25, 20], [75, 75], [98, 70]]
@@ -38,7 +38,7 @@ for i in range(0, 101):
 
 #points = [[106, 6], [88, 11], [9, 18], [2, 105], [20, 105], [115, 140], [52, 168]] #causes division by zero in getTimeAtX
 #points = [[13, 23], [181, 40], [129, 55], [93, 100], [59, 127], [12, 160], [156, 163]] #---edge finding issue
-#points = [[76, 30], [196, 40], [165, 47], [104, 66], [128, 120], [88, 159], [166, 180]] #easy to see graph. In a previous, more broken version of the program, another line and intersection point near the one on the far right existed, which is necessary to correctly complete the graph
+points = [[76, 30], [196, 40], [165, 47], [104, 66], [128, 120], [88, 159], [166, 180]] #easy to see graph. In a previous, more broken version of the program, another line and intersection point near the one on the far right existed, which is necessary to correctly complete the graph
 # ^there is an issue with the plot for the line above
 
 #points = [[194, 2], [94, 30], [11, 91], [88, 92], [57, 143], [43, 190], [6, 198]]
@@ -58,14 +58,14 @@ for i in range(0, 101):
 
 #points = [[144, 2], [143, 11], [71, 34], [68, 133], [104, 139], [108, 182], [135, 187]] #breaks finding second line
 #points = [[21, 25], [45, 31], [162, 44], [132, 75], [109, 97], [7, 157], [31, 185]]
-#[[27, 59], [150, 90], [79, 90], [101, 124], [94, 136], [178, 186], [157, 200]]
+#[[27, 59], [150, 90], [79, 90], [101, 124], [94, 136], [178, 186], [157, 200]]      
 
 #points = [[175, 23], [78, 24], [160, 108], [161, 141], [157, 159], [59, 188], [66, 188]]
 #points = [[63, 50], [35, 72], [31, 79], [107, 125], [22, 153], [187, 172], [5, 175]]
 
 #points = [[153, 24], [74, 52], [197, 54], [169, 69], [88, 143], [57, 169], [18, 188]]
 
-#points = [[5, 19], [5, 43], [140, 56], [93, 87], [37, 117], [117, 179], [188, 199]] # causes division by 0 in nearestBoundary
+#points = [[5, 19], [5, 43], [140, 56], [93, 87], [37, 117], [117, 179], [188, 199]] # causes division by 0 in nearestBoundry
 
 #[[90, 22], [164, 23], [9, 118], [91, 120], [200, 179], [29, 195], [138, 199]] # neat
 
@@ -74,8 +74,8 @@ for i in range(0, 101):
 #points = [[159, 14], [49, 18], [63, 32], [87, 48], [191, 60], [131, 99], [150, 183]] # breaks stuff, not sure what exactly
 #points = [[59, 65], [194, 108], [134, 152], [147, 155], [75, 166], [64, 172], [180, 195]] # breaks stuff, not sure what exactly
 
-#points = [[25, 25], [175, 175], [25, 175], [175, 25], [100, 100]] # several horizontal and vertical lines
-#points = [[50, 50], [75, 75], [195, 195]]
+#points = [[25, 25], [175, 175], [25, 175], [175, 25], [100, 100]]
+#points = [[50, 50], [75, 75], [195, 195]]	  
 
 #points = [[43, 20], [10, 32], [91, 55], [136, 72], [123, 79], [52, 99], [0, 174]]
 #points = [[200, 41], [81, 57], [167, 95], [142, 136], [109, 163], [42, 174], [188, 191]]
@@ -112,25 +112,12 @@ for i in range(0, 101):
 
 #points = [[25, 25], [50, 50], [75, 75], [100, 100]]
 
-#points = [[25, 25], [26,50], [27, 75], [28, 100]]
-#points = [[25, 25], [26,50], [27, 75]]
-#points = [[25, 25], [26,50], [27, 76]]
-
-#points = [[80, 100], [110, 100], [75, 60]]
-#points = [[50, 100], [100, 100], [75, 125]]
-
-#points = [[25, 50], [50, 25], [37.5, 37.5]]
-#points = [[25, 50], [50, 25], [37.5, 60]]
-
 #------------- 100 points
 #points = [[64, 3], [56, 4], [20, 8], [8, 9], [59, 12], [88, 14], [27, 20], [3, 22], [26, 23], [99, 29], [29, 32], [56, 37], [29, 38], [50, 38], [22, 39], [56, 40], [11, 52], [92, 52], [90, 58], [79, 69], [97, 70], [32, 71], [46, 71], [7, 73], [18, 74], [89, 79], [58, 80], [51, 84], [17, 88], [13, 94], [24, 99], [94, 101], [43, 101], [45, 106], [50, 111], [17, 112], [41, 114], [89, 115], [80, 118], [33, 123], [74, 123], [88, 131], [19, 133], [29, 137], [20, 138], [40, 139], [60, 140], [49, 144], [1, 157], [67, 160], [95, 164], [50, 165], [38, 166], [58, 170], [52, 174], [34, 177], [12, 179], [25, 184], [91, 185], [62, 185], [80, 189], [56, 192], [28, 196], [19, 196], [84, 203], [52, 204], [66, 206], [23, 206], [34, 207], [41, 215], [100, 217], [46, 218], [40, 220], [62, 220], [17, 222], [77, 228], [69, 228], [15, 229], [45, 237], [73, 239], [19, 240], [81, 243], [63, 244], [13, 258], [1, 259], [43, 261], [42, 264], [44, 268], [78, 268], [11, 269], [12, 273], [50, 274], [68, 278], [37, 278], [75, 281], [92, 295], [23, 299], [22, 299], [91, 300]]
 
 #points = [[140, 4], [45, 4], [106, 5], [51, 7], [197, 9], [71, 9], [85, 12], [151, 16], [74, 16], [185, 22], [139, 24], [158, 33], [81, 34], [135, 37], [97, 37], [145, 39], [19, 42], [91, 42], [62, 42], [60, 43], [4, 46], [172, 49], [72, 53], [26, 54], [137, 56], [150, 56], [41, 61], [53, 64], [150, 64], [167, 65], [11, 65], [127, 67], [184, 68], [151, 68], [54, 69], [143, 71], [103, 75], [45, 79], [3, 83], [7, 84], [29, 86], [153, 86], [101, 91], [165, 96], [199, 96], [79, 97], [147, 101], [6, 102], [30, 103], [190, 104], [13, 105], [138, 109], [159, 109], [84, 109], [177, 110], [170, 111], [85, 116], [140, 119], [4, 121], [184, 124], [107, 125], [16, 127], [154, 131], [200, 132], [46, 133], [122, 134], [73, 142], [34, 145], [52, 147], [108, 148], [169, 151], [62, 159], [65, 159], [84, 159], [149, 160], [132, 160], [39, 161], [26, 161], [5, 161], [186, 163], [33, 165], [181, 165], [157, 165], [200, 167], [85, 171], [142, 171], [180, 171], [185, 175], [52, 176], [48, 177], [57, 177], [122, 182], [157, 187], [11, 187], [102, 190], [176, 191], [8, 191], [68, 194], [99, 196]]
 #points = [[62, 159], [65, 159], [84, 159], [149, 160], [132, 160], [39, 161], [26, 161], [5, 161], [186, 163], [33, 165], [181, 165], [157, 165], [200, 167], [85, 171], [142, 171], [180, 171], [185, 175], [52, 176], [48, 177], [57, 177], [122, 182], [157, 187], [11, 187], [102, 190], [176, 191], [8, 191], [68, 194], [99, 196]]
-#points = [[39, 161], [26, 161], [5, 161], [33, 165], [48, 177], [11, 187], [8, 191], [68, 194]] # breaks finding 3rd vertice on boundry
-
-#points = [[116, 0], [187, 1], [130, 1], [68, 2], [18, 4], [135, 5], [64, 6], [159, 8], [0, 11], [187, 11], [123, 14], [7, 19], [138, 20], [72, 23], [30, 24], [8, 26], [193, 27], [21, 29], [33, 31], [108, 36], [87, 37], [129, 38], [66, 39], [11, 40], [63, 41], [129, 43], [186, 45], [32, 47], [159, 47], [139, 47], [119, 48], [48, 49], [37, 56], [73, 58], [8, 59], [138, 59], [58, 61], [198, 65], [48, 67], [87, 67], [4, 70], [76, 72], [146, 72], [56, 74], [169, 75], [37, 75], [139, 78], [180, 78], [143, 82], [59, 82], [150, 86], [8, 87], [194, 88], [191, 88], [167, 90], [191, 91], [93, 91], [137, 91], [102, 101], [46, 102], [121, 103], [17, 105], [72, 107], [65, 107], [130, 107], [9, 108], [110, 110], [82, 113], [177, 115], [73, 118], [103, 120], [73, 122], [4, 125], [174, 127], [157, 135], [128, 135], [125, 135], [4, 137], [136, 138], [44, 141], [113, 142], [41, 144], [16, 151], [93, 152], [47, 154], [159, 156], [10, 163], [116, 166], [51, 166], [110, 167], [178, 171], [88, 172], [29, 172], [80, 172], [62, 173], [55, 180], [60, 181], [74, 186], [92, 187], [38, 190], [58, 197]]
-#points = [[10, 163], [16, 151], [41, 144], [4, 137], [4, 125], [9, 108]] # breaks finding 3rd vertice on boundary
+#points = [[39, 161], [26, 161], [5, 161], [33, 165], [48, 177], [11, 187], [8, 191], [68, 194]]
 
 #-------------with box that is 100 wide and 300 tall
 #points = [[75, 14], [85, 22], [86, 26], [94, 32], [92, 45], [32, 71], [0, 127], [50, 132], [10, 134], [28, 134], [21, 134], [95, 147], [38, 152], [63, 162], [70, 168], [7, 175], [4, 176], [65, 179], [12, 187], [87, 190], [23, 197], [7, 206], [91, 209], [100, 234], [73, 236], [33, 267], [10, 273], [20, 278], [96, 298]]
@@ -142,16 +129,15 @@ for i in range(0, 101):
 #points = [[7, 34], [87, 254], [91, 265]]
 
 #points = [[45, 70], [61, 100], [13, 162], [84, 208], [99, 233], [73, 270], [6, 281]]
-#points = [[15, 38], [22, 55], [25, 158], [75, 197], [0, 225], [68, 248], [83, 249]] # handling sites with 0 or 1 intersection points
+#points = [[15, 38], [22, 55], [25, 158], [75, 197], [0, 225], [68, 248], [83, 249]]
 
 #points = [[72, 20], [10, 69], [85, 72], [80, 78], [26, 88], [63, 100], [83, 104], [96, 117], [84, 126], [93, 131], [91, 136], [67, 144], [54, 147], [41, 149], [94, 179], [56, 182], [23, 197], [75, 213], [18, 217], [36, 252], [60, 256], [41, 259], [38, 266], [36, 267], [55, 269], [85, 270], [44, 286], [22, 289], [75, 299]]
 
 #points = [[67, 13], [55, 26], [0, 31], [78, 33], [50, 41], [47, 52], [99, 54], [16, 55], [38, 88], [24, 94], [14, 114], [0, 122], [5, 123], [14, 129], [85, 134], [84, 137], [33, 137], [28, 141], [24, 167], [89, 199], [54, 202], [67, 208], [90, 217], [8, 221], [98, 235], [52, 252], [15, 255], [38, 258], [50, 297]]
 
-#points = [[128, 141], [33, 137], [84, 137], [85, 134], [24, 167], [54, 202]] # causes issues somewhere
-#^ no issues if the bounds are set to [[0, 200], [200, 0]] but causes issue if bounds are [[0, 100], [300, 0]]
+#points = [[128, 141], [33, 137], [84, 137], [85, 134], [24, 167], [54, 202]]
 
-#points = [[104, 95], [167, 95], [142, 136]] # causes division by zero in getXAtTimeRef
+#points = [[104, 95], [167, 95], [142, 136]]
 
 #points = [[104, 95], [167, 95], [20, 95]]
 #points = [[104, 95], [167, 95], [20, 95], [180, 95]]
@@ -183,13 +169,13 @@ def distanceTargetSort(target, array):
  
 	for i in range(n):
 		for j in range(0, n - i - 1):
-
+			 
 			# Range of the array is from 0 to n-i-1
 			# Swap the elements if the element found 
 			#is greater than the adjacent element
 			dist1 = distance(target[0], target[1], array[j][0], array[j][1])
 			dist2 = distance(target[0], target[1], array[j+1][0], array[j+1][1])
-
+			
 			if dist1 > dist2:
 				array[j], array[j + 1] = array[j + 1], array[j]
 
@@ -198,11 +184,11 @@ def sortByY(array):
  
 	for i in range(n):
 		for j in range(0, n - i - 1):
-
+			 
 			# Range of the array is from 0 to n-i-1
 			# Swap the elements if the element found 
 			#is greater than the adjacent element
-
+			
 			if array[j][1] > array[j + 1][1]:
 				array[j], array[j + 1] = array[j + 1], array[j]
 
@@ -211,7 +197,7 @@ def sortByX(array):
  
 	for i in range(n):
 		for j in range(0, n - i - 1):
-
+			
 			if array[j][0] > array[j + 1][0]:
 				array[j], array[j + 1] = array[j + 1], array[j]
 
@@ -231,7 +217,6 @@ def find3IntersectX(pt1, pt2, pt3): # finds x-value of intersection of 3 parabol
 		# [7, 34] [87, 254] [91, 265]
 		# using [[7, 34], [87, 254], [91, 265], [86, 16]] will show that it does cause issues
 		# Divides by 0 if (a-e)*(b-d) = (a-c)*(b-f) or if all 3 points have either the same x or y value
-		# Divides by 0 if the difference between the y-values of all 3 points are the same
 		print(f"division by zero in find3IntersectX with {pt1} {pt2} {pt3}")
 
 		return None
@@ -240,7 +225,7 @@ def find3IntersectX(pt1, pt2, pt3): # finds x-value of intersection of 3 parabol
 def otherXOnBisectorAtT(pt1, pt2, pt3, t): # pt1 and pt2 form the bisector and pt3 makes the parabola that it intersects with
 	try:
 		a, b, c, d, e, f = pt1[0], pt1[1], pt2[0], pt2[1], pt3[0], pt3[1]
-
+		
 		m = d-b
 		n = 2 * ( ( (a-c) * (t-f) ) + (e * (b-d)) )
 		o = -1 * ( ( (b-d) * ( (e**2) + (f**2) - (t**2) ) ) - ( (t-f) * ( (d**2) - (b**2) - (a**2) + (c**2) ) ) )
@@ -263,13 +248,13 @@ def getXAtTime(pt1, pt2, t): # finds x-value of intersection of two parabolas at
 		m = d-b
 		n = 2 * ( ( (a-c) * (t-b) ) + (a * (b-d)) )
 		o = -1 * ( ( (b-d) * ( (a**2) + (b**2) - (t**2) ) ) - ( (t-b) * ( (d**2) - (b**2) - (a**2) + (c**2) ) ) )
-
+		
 		mid = midPoint(pt1, pt2)
 		x1 = ( (-1 * n) + ( ( (n**2) - (4 * m * o) )**0.5 ) ) / (2 * m)
 		x2 = ( (-1 * n) - ( ( (n**2) - (4 * m * o) )**0.5 ) ) / (2 * m)
 		dist1 = abs(mid[0] - x1)
 		dist2 = abs(mid[0] - x2)
-
+		
 		if x1.imag != 0.0 or x2.imag != 0.0:
 			return None
 		if dist1 < dist2:
@@ -289,7 +274,7 @@ def getXAtTimeRef(pt1, pt2, t, refX):
 		m = d-b
 		n = 2 * ( ( (a-c) * (t-b) ) + (a * (b-d)) )
 		o = -1 * ( ( (b-d) * ( (a**2) + (b**2) - (t**2) ) ) - ( (t-b) * ( (d**2) - (b**2) - (a**2) + (c**2) ) ) )
-
+		
 		x1 = ( (-1 * n) + ( ( (n**2) - (4 * m * o) )**0.5 ) ) / (2 * m)
 		x2 = ( (-1 * n) - ( ( (n**2) - (4 * m * o) )**0.5 ) ) / (2 * m)
 
@@ -298,7 +283,7 @@ def getXAtTimeRef(pt1, pt2, t, refX):
 
 		dist1 = abs(refX - x1)
 		dist2 = abs(refX - x2)
-
+		
 		if dist1 < dist2:
 			return float("%.10f" % x1)
 		else:
@@ -368,7 +353,7 @@ def normalTheta(pt, origin): #gets the exterior/larger angle (basically)
 	a, b, c, d = pt[0], pt[1], origin[0], origin[1]
 	x = a-c
 	y = b-d
-
+	
 	theta = 0
 	if x != 0:
 		theta = math.atan(y/x)
@@ -423,13 +408,13 @@ def nearestBoundary(startPt, throughPt):
 			return [defaultBounds[0][1], startPt[1]]
 		else: # If throughPt[0] < startPt[0]
 			return [defaultBounds[0][0], startPt[1]]
-
+		
 	elif startPt[0] == throughPt[0]: # Vertical line
 		if throughPt[1] > startPt[1]:
 			return [startPt[0], defaultBounds[1][0]]
 		else: # If throughPt[1] < startPt[1]
 			return [startPt[0], defaultBounds[1][1]]
-
+		
 	else:
 		m = slope(startPt, throughPt)
 
@@ -503,7 +488,7 @@ def sort2ByY(pair):
 def scanSortByX(array):
 	
 	for i in range(0, array.__len__()):
-
+		
 		if array[i][0][1] == array[i][1][1] and array[i][0][0] > array[i][1][0]:
 			array[i][0], array[i][1] = array[i][1], array[i][0]
 
@@ -515,18 +500,10 @@ def scanSortByXSwap(focus, other):
 	
 	for i in range(0, focus.__len__()):		
 		if focus[i][0][1] == focus[i][1][1] and focus[i][0][0] > focus[i][1][0]:
-
+			
 			focus[i][0], focus[i][1] = focus[i][1], focus[i][0]
 			other[i], other[i+1] = other[i+1], other[i]
 
-def scanSortByXv2(array):
-	n = len(array)
- 
-	for i in range(n):
-		for j in range(0, n - i - 1):
-
-			if array[j][1] == array[j + 1][1] and array[j][0] > array[j + 1][0]:
-				array[j], array[j + 1] = array[j + 1], array[j]
 
 sortByY(points)
 print(points)
@@ -541,11 +518,6 @@ print(tmp) # this tmp is never used after this, it just used to print the points
 print()
 
 # Finds intersection points of sites, including some that are invalid
-# Could be opimized by having the first loop go through all points, second go through all points starting at the index of the first loop, and third loop go through all points starting at index of second loop
-#	But that would probably require restructuring finding edges
-# Could also probably be opimized by keeping track of the triple sites used and not repeating the calculations for them,
-#	the ones that are parallel would be especially easy to keep track of but would also provide the least benefit
-usedSiteTrios = []
 for site1 in points:
 	for site2 in points:
 		if site1 != site2:
@@ -554,43 +526,40 @@ for site1 in points:
 					site1Key = toKey(site1)
 					sites = [site1, site2, site3]
 					sortByY(sites)
-					scanSortByXv2(sites)
 
-					if sites not in usedSiteTrios:
+					x = find3IntersectX(sites[0], sites[1], sites[2])
 
-						x = find3IntersectX(sites[0], sites[1], sites[2])
+					if x != None: # x is None if the lines are parallel, which will be handled later
+						
+						y = yAtX(sites[0], sites[2], x)
+						t = tAtXandY(sites[0], x, y)
 
-						if x != None: # x is None if the lines are parallel, which will be handled later
+						# bufferBounds just increases the bounds of the selected area by a certain amount so that
+						#	intersection points can happen within it and are not outright rejected, but need
+						#	to be accounted for seperately and fixed
+						bufferWidth = (defaultBounds[0][0] + defaultBounds[0][1])/4 # the midpoint divided by 2
+						bufferHeight = (defaultBounds[1][1] + defaultBounds[1][0])/4
+						bufferBounds = [[defaultBounds[0][0] - bufferWidth, defaultBounds[0][1] + bufferHeight],
+									   [defaultBounds[1][0] + bufferHeight, defaultBounds[1][1] - bufferHeight]]
+					
+						# This is >= instead of > since if the 3rd site is exactly at the x-value of the
+						#	intersection point and the y-values of the other two sites are equal,
+						#	then a t-value equal to the y-value of the higest site is valid
+						if t >= site1[1] and t >= site2[1] and t >= site3[1] and withinBounds([x, y], bufferBounds):
 
-							y = yAtX(sites[0], sites[2], x)
-							t = tAtXandY(sites[0], x, y)
+							sites.remove(site1)
+							scanSort2ByX(sites)
 
-							# bufferBounds just increases the bounds of the selected area by a certain amount so that intersection points can happen within it and are not outright rejected
-							#	but need to be accounted for seperately and fixed
-							# The size of bufferWidth and bufferHeight are kind of arbitrary, I just went with 1/4 of the their respective dimension
-							bufferWidth = (defaultBounds[0][0] + defaultBounds[0][1])/4 # the midpoint divided by 2
-							bufferHeight = (defaultBounds[1][1] + defaultBounds[1][0])/4
-							bufferBounds = [[defaultBounds[0][0] - bufferWidth, defaultBounds[0][1] + bufferHeight], [defaultBounds[1][0] + bufferHeight, defaultBounds[1][1] - bufferHeight]]
+							x = float("%.10f" % x)
+							y = float("%.10f" % y)
+							t = float("%.10f" % t)
 
-							# This is >= instead of > since if the 3rd site is exactly at the x-value of the intersection point and the y-values of the other two sites are equal,
-							#	then a t-value equal to the y-value of the higest site is valid
-							if t >= site1[1] and t >= site2[1] and t >= site3[1] and withinBounds([x, y], bufferBounds):
-
-								sites.remove(site1)
-								scanSort2ByX(sites)
-
-								x = float("%.10f" % x)
-								y = float("%.10f" % y)
-								t = float("%.10f" % t)
-
-								if site1Key in cell:
-									# Prevents duplicate information
-									if {"sites":[site1, sites[0], sites[1]], "time":t, "at":[x, y]} not in cell[site1Key]:
-										cell[site1Key].append({"sites":[site1, sites[0], sites[1]], "time":t, "at":[x, y]})
-								else:
-									cell.update({site1Key : [{"sites":[site1, sites[0], sites[1]], "time":t, "at":[x, y]}]})
-						else:
-							usedSiteTrios.append(sites)
+							if site1Key in cell:
+								# Prevents duplicate information
+								if {"sites":[site1, sites[0], sites[1]], "time":t, "at":[x, y]} not in cell[site1Key]:
+									cell[site1Key].append({"sites":[site1, sites[0], sites[1]], "time":t, "at":[x, y]})
+							else:
+								cell.update({site1Key : [{"sites":[site1, sites[0], sites[1]], "time":t, "at":[x, y]}]})
 
 print("Deleting invalid cell vertices...")
 for others in points:
@@ -598,10 +567,13 @@ for others in points:
 	for site1 in cell:
 		removeVerts = []
 		for entry in cell[site1]:
-			if others not in entry["sites"] and others[1] < entry["time"]: # If the other point is not one of the sites and is below the intersection point's time
+			# If the other point is not one of the sites and is below the intersection point's time
+			if others not in entry["sites"] and others[1] < entry["time"]:
 				otherPointY = getYAtTimeAndX(others, entry["time"], entry["at"][0])
-
-				if otherPointY > entry["at"][1]: # It is not possible to have 4th site below a correct intersection point and have a higher parabola y-value than that point at the same time
+				
+				# It is not possible to have 4th site below a correct intersection point
+				#	and have a higher parabola y-value than that point at the same time
+				if otherPointY > entry["at"][1]:
 					removeVerts.append(entry)
 
 		for rmv in removeVerts:
@@ -644,13 +616,11 @@ else:
 		siteKey = toKey(site)
 		test = False
 
-		if cell.__len__() == 0: # If there is nothing in the cell, which would cause issues if the case of only 1 point being caught earlier wasn't caught
+		if cell.__len__() == 0:
 			test = True
-		elif cell[siteKey].__len__() == 0: # This happens if there is a point but it is not associated with any intersection points, which does not happen often
+		elif cell[siteKey].__len__() == 0:
 			test = True
 		else:
-			# In most cases there are 1 or 2 sites outside the boundries, but in [[39, 161], [26, 161], [5, 161], [33, 165], [48, 177], [11, 187], [8, 191], [68, 194]]
-			#	there are 3 somehow for [8, 191]
 			test = True
 			for entry in cell[siteKey]:
 				if withinBounds(entry["at"], defaultBounds):
@@ -658,7 +628,7 @@ else:
 					break
 
 		if test == True:
-			
+
 			nearest = []
 			boundPair = []
 			bound1 = []
@@ -678,12 +648,8 @@ else:
 					nearest = points2[0]
 
 			midPt = midPoint(site, nearest)
-			#diff = distancePt(site, midPt)/2
 			diff = 0.5
 
-			# Could optimize this by setting bound1 and bound2 to the correct diagram boundaries when the bisector is vertical or horizontal
-			#	and only sorting by y and x if the bisectors were not vertical or horizontal
-			#	Could also then just calculate the parts of the midpoint needed directly, which is not much of an optimization, if one at all
 			if site[1] == nearest[1]: # If the y-values are the same, check vertically for the bounds
 				bound1 = nearestBoundary(midPt, [midPt[0], midPt[1] + diff])
 				bound2 = nearestBoundary(midPt, [midPt[0], midPt[1] - diff])
@@ -701,7 +667,7 @@ else:
 			boundPair = [bound1, bound2]
 			sort2ByY(boundPair)
 			scanSort2ByX(boundPair)
-			#print("line701",site, nearest)
+
 			nearestKey = toKey(nearest)
 			# This first check is not redundant as in some cases there can be duplicate information
 			if boundPair not in finalCell[siteKey]["vertices"]:
@@ -709,6 +675,7 @@ else:
 
 			if boundPair not in finalCell[nearestKey]["vertices"]:
 				finalCell[nearestKey]["vertices"].append(boundPair)
+
 
 # Finds pairs of vertices that can be used to make cell edges
 usedSitePairs = []
@@ -721,7 +688,7 @@ def searchForPair(site1, site1Key, site2, site2Key):
 	if checkPair not in usedSitePairs:
 		for entry2 in cell[site2Key]:
 
-			entry2Pts = entry2["sites"].copy() # Since all lists in Python are passed by reference, this is required as to not mess up entry2["sites"]
+			entry2Pts = entry2["sites"].copy()
 			
 			if site1 in entry2Pts and entry1["at"] != entry2["at"]:
 				edgePair = [entry1["at"], entry2["at"]]
@@ -729,7 +696,6 @@ def searchForPair(site1, site1Key, site2, site2Key):
 				scanSort2ByX(edgePair)
 
 				if edgePair not in finalCell[site1Key]["vertices"]:
-					# For some reason this loop gets to this check many fewer times when run with the pair [site1, site2] than with [site1, site3]
 					finalCell[site1Key]["vertices"].append(edgePair)
 
 					if edgePair not in finalCell[site2Key]["vertices"]:
@@ -744,10 +710,9 @@ def searchForPair(site1, site1Key, site2, site2Key):
 					if vert1 not in vertices:
 						tempSites = entryPts
 						sortByY(tempSites)
-						#scanScortByX(tempSites) # tempSites doesn't need to be sorted by X since the order of the sites isn't used for anything
 						vertices.update({vert1 : {"sites":tempSites, "at":entry1['at'], "with":[], "to":[]}})
 
-						vertices[vert1]["with"].append(sitePair) # Could just turn this into 'if entry2["at"] not in vertices[vert1]["to"]:', just did this because vert1 is guaranteed to not be in vertices if it wasn't in it before
+						vertices[vert1]["with"].append(sitePair)
 						vertices[vert1]["to"].append(entry2["at"])
 					elif entry2["at"] not in vertices[vert1]["to"]:
 						vertices[vert1]["with"].append(sitePair)
@@ -757,7 +722,6 @@ def searchForPair(site1, site1Key, site2, site2Key):
 					if vert2 not in vertices:
 						tempsites = entry2Pts
 						sortByY(tempsites)
-						#scanScortByX(tempSites)
 						vertices.update({vert2 : {"sites":tempsites, "at":entry2['at'], "with":[], "to":[]}})
 
 					vertices[vert2]["with"].append(sitePair)
@@ -779,31 +743,28 @@ for site1Key in cell:
 
 		searchForPair(site1, site1Key, site3, site3Key)
 
-#for vert1 in vertices: # I don't know if this is more efficient than sorting the vertices by x within the loop that they are created
-#	scanSortByXSwap(vertices[vert1]["with"], vertices[vert1]["to"])
-
 # Splits vertices that are outside of bounds into two vertices that are at the boundries
 removeVerts = []
 for vert1 in vertices:
 	vertPt = vertices[vert1]["at"]
-	
+
 	if not withinBounds(vertPt, defaultBounds):
 		for other in vertices[vert1]["to"]:
 			if toKey(other) in vertices: # If it is not in 'vertices', then 'other' is a boundary vertice
-
+				
 				otherVert = vertices[toKey(other)]
 				i = otherVert["to"].index(vertPt)
 				otherWith = otherVert["with"][i]
-
+				
 				originalPair = [otherVert["at"], otherVert["to"][i]]
 				sort2ByY(originalPair)
 				scanSort2ByX(originalPair)
-
+				
 				if withinBounds(otherVert["at"], defaultBounds):
 
 					bound = nearestBoundary(otherVert["at"], vertPt)
-
-					otherVert["to"][i] = bound # otherVert["to"].index(vertPt) = bound
+					
+					otherVert["to"][i] = bound
 
 					newPair = [otherVert["at"], bound]
 					sort2ByY(newPair)
@@ -816,7 +777,6 @@ for vert1 in vertices:
 					finalCell[toKey(otherWith[1])]["vertices"][j] = newPair
 
 				else: # This happens if there are two intersection points outside of bounds and one is connected to the other
-					#print(vertPt, otherVert["at"], "not within bounds")
 					cell1 = finalCell[toKey(otherWith[0])]["vertices"]
 					cell2 = finalCell[toKey(otherWith[1])]["vertices"]
 
@@ -830,19 +790,7 @@ for vert1 in vertices:
 for rmv in removeVerts:
 	del vertices[rmv]
 
-# This works, but it might be better to try to remove the edges where both vertices are outside of bounds in the previous loop
-# for siteKey in finalCell:
-# 	removeVerts = []
-# 	for vertice in finalCell[siteKey]["vertices"]:
-# 		if not withinBounds(vertice[0], defaultBounds) or not withinBounds(vertice[1], defaultBounds):
-# 			removeVerts.append(vertice)
-
-# 	for rmv in removeVerts:
-# 		finalCell[siteKey]["vertices"].remove(rmv)
-
 # Creates a vertex in cases where there there is only one intersection vertex and no other vertices are registered
-#	This happens with [[7, 34], [87, 254], [91, 265], [86, 16]] but not [[50, 50], [25, 25], [75, 75], [98, 70]] because it has an intersection within the buffer zone
-#	Also happens with [[25, 25], [12, 173], [22, 199], [23, 199]]
 if vertices.__len__() == 0:
 	print("vertices has 0 elements")
 
@@ -852,17 +800,17 @@ if vertices.__len__() == 0:
 
 		if i >= kys.__len__():
 			break
-
+		
 		if cell[kys[i]].__len__() != 0:
 			current = cell[kys[i]][0]
-
+			
 			pt1, pt2, pt3 = current["sites"]
 
 			vert = toKey(current["at"])
-
+			
 			tempSites = [pt1, pt2, pt3]
 			sortByY(tempSites)
-
+			
 			vertices.update({vert : {"sites":tempSites, "at":current["at"], "with":[], "to":[]}})
 
 			tempSites = [tempSites[0], tempSites[1]]
@@ -874,7 +822,7 @@ if vertices.__len__() == 0:
 
 			vertices[vert]["with"].append([tempSites[0], tempSites[1]])
 			vertices[vert]["to"].append(bound)
-
+			
 			tempEdge = [current['at'], bound]
 			sort2ByY(tempEdge)
 			scanSort2ByX(tempEdge)
@@ -887,18 +835,15 @@ if vertices.__len__() == 0:
 
 # Modifies convex hull so that it has edges extending to the boundries of the specified area
 for vert in vertices: 
-	#tempVertPt = str(vert).removeprefix("[").removesuffix("]").split("_")
-	#vertPt = [float(tempVertPt[0]), float(tempVertPt[1])]
 	vertPt = vertices[vert]["at"]
 	site1 = vertices[vert]["sites"][0]
 	site2 = vertices[vert]["sites"][1]
 	site3 = vertices[vert]["sites"][2]
-	
+
 	if vertices[vert]["to"].__len__() == 1:
-		
 		pickedSites = [[site1, site2], [site1, site3], [site2, site3]]
 		pickedSites.remove(vertices[vert]["with"][0])
-
+		
 		dist1 = distancePt(pickedSites[0][0], pickedSites[0][1])
 		dist2 = distancePt(pickedSites[1][0], pickedSites[1][1])
 
@@ -909,21 +854,23 @@ for vert in vertices:
 
 		throughPt = midPoint(pickedSites[0], pickedSites[1])
 
-		nearestBound = nearestBoundary(vertPt, throughPt)
-		boundaryPair = [vertPt, nearestBound]
+		if throughPt != []:
 
-		sort2ByY(boundaryPair)
-		scanSort2ByX(boundaryPair)
+			nearestBound = nearestBoundary(vertPt, throughPt)
+			boundaryPair = [vertPt, nearestBound]
+			
+			sort2ByY(boundaryPair)
+			scanSort2ByX(boundaryPair)
 
-		sort2ByY(pickedSites)
-		scanSort2ByX(pickedSites)
+			sort2ByY(pickedSites)
+			scanSort2ByX(pickedSites)
 
-		vertices[vert]["with"].append(pickedSites)
-		vertices[vert]["to"].append(nearestBound)
+			vertices[vert]["with"].append(pickedSites)
+			vertices[vert]["to"].append(nearestBound)
 
-		finalCell[toKey(pickedSites[0])]["vertices"].append(boundaryPair)
-		finalCell[toKey(pickedSites[1])]["vertices"].append(boundaryPair)
-	
+			finalCell[toKey(pickedSites[0])]["vertices"].append(boundaryPair)
+			finalCell[toKey(pickedSites[1])]["vertices"].append(boundaryPair)
+
 	if vertices[vert]["to"].__len__() == 2:
 		
 		vertPtT = tAtXandY(site1, vertPt[0], vertPt[1])
@@ -948,22 +895,8 @@ for vert in vertices:
 		elif site3 != pickedSites[0] and site3 != pickedSites[1]:
 			notInPair = site3
 
-		#midPt1 = midPoint(pickedSites[0], notInPair)
-		#midPt2 = midPoint(pickedSites[1], notInPair)
-		#testMpt3 = midPoint(midPt1, midPt2)
-		
 		throughPt = []
-		
-		#referencePt = testMpt3#[(site1[0] + site2[0] + site3[0])/3, (site1[1] + site2[1] + site3[1])/3]
 
-		# The fact that these changes in x are just in incremments of 0.5 probably won't cause any issues because even if the step overshoots
-		#	the reference point, that test will still be closer to the reference point than the other one, having the same result as if it hadn't
-		#	overshot it
-		# [[39, 161], [26, 161], [5, 161], [33, 165], [48, 177], [11, 187], [8, 191], [68, 194]] shows that using the 3 midpoints is necessary
-		# Using 3 midpoints doesn't work with [[10, 163], [16, 151], [41, 144], [4, 137], [4, 125], [9, 108]]
-		# In any case, if the line is horzontal or vertical, it will always be away from the site not in the pair (or else it would go through that site),
-		#	so the site notInPair is used instead of the previous attempts
-		
 		if pickedSites[0][0] == pickedSites[1][0]: # The bisector is horizontal
 			leftX = vertPt[0] - 0.5
 			rightX = vertPt[0] + 0.5
@@ -982,13 +915,8 @@ for vert in vertices:
 
 			dists = [vertPtT - site1[1], vertPtT - site2[1], vertPtT - site3[1]]#[vertPtT - pickedSites[0][1], vertPtT - pickedSites[1][1], vertPtT - notInPair[1]] # [vertPtT - site1[1], vertPtT - site2[1], vertPtT - site3[1]]
 			dists.sort()
+			
 			deltaT = dists[0] / 2
-
-			# for some reason when pickedSites = [[167, 95], [188, 191]], both beforeTx and afterTx are less than vertPt[0]
-			#	This is because there are two locations where the two parabolas intersect, so there are 4 possible points.
-			#	Using getXAtTimeRef instead of getXAtTime ensures that the x picked is the one closest to the target intersection point
-			#	getXAtTime works in most cases because the second option for an intersection point is usaully really far away from the other one
-			#		and the midpoint, but that is not the case for the above scenario
 
 			# The x-values of the points are the intersection of the two parabolas pickedSites[0] and pickedSites[1] before and after the vertice
 			beforeTx = getXAtTimeRef(pickedSites[0], pickedSites[1], vertPtT - deltaT, vertPt[0])
@@ -1003,6 +931,9 @@ for vert in vertices:
 				throughPt = [beforeTx, beforeTy1]
 			elif afterTy1 > afterTy2:
 				throughPt = [afterTx, afterTy1]
+			# If all 3 points are exactly the same distance from each other, so the edges for all 3 must go through each pair's midpoint
+			elif dists[0] == 0.0 and dists[1] == dists[2]:
+				throughPt = midPoint(pickedSites[0], pickedSites[1])
 
 		# The points aren't added to the 'vertices' dictionary since it is not used after this part of this function, so there is point to
 		nearestBound = nearestBoundary(vertPt, throughPt)
@@ -1014,16 +945,16 @@ for vert in vertices:
 		finalCell[toKey(pickedSites[0])]["vertices"].append(edgePair)
 		finalCell[toKey(pickedSites[1])]["vertices"].append(edgePair)
 
-
-def makeEdges(onboundary, curSite):
+# Finds edges that are on the boundary of the target area
+def makeEdges(onBoundry, curSite):
 	siteInside = False
 	
-	vert1Theta = normalTheta(onboundary[0], curSite)
-	vert2Theta = normalTheta(onboundary[1], curSite)
+	vert1Theta = normalTheta(onBoundry[0], curSite)
+	vert2Theta = normalTheta(onBoundry[1], curSite)
 
 	minTheta = min(vert1Theta, vert2Theta)
 	maxTheta = max(vert1Theta, vert2Theta)
-
+				
 	# Checks if there is a site within the sector formed by the two boundary vertices
 	for pt in points:
 		if pt != curSite:
@@ -1032,7 +963,7 @@ def makeEdges(onboundary, curSite):
 				siteInside = True
 				break
 
-	withCorners = [[onboundary[0], vert1Theta], [onboundary[1], vert2Theta]]
+	withCorners = [[onBoundry[0], vert1Theta], [onBoundry[1], vert2Theta]]
 
 	if siteInside == False: # If there is not a site between the angles of the two boundary vertices
 
@@ -1045,61 +976,59 @@ def makeEdges(onboundary, curSite):
 		sortByY(withCorners)
 
 	else:
+
 		# If there is a site within the angle between the two boundary vertices, use the area between the upper angle and the lower angle (opposite of between lower angle and upper)
 		for i in range(0, corners.__len__()):
 			cornerTheta = normalTheta(corners[i], curSite)
 			
 			if cornerTheta < minTheta or cornerTheta > maxTheta:
-				# Why was this vert1Theta instead of maxTheta? The whole point of minTheta and maxTheta was that vert1Theta was not always the greater of the two
-				#	The only cases where vert1Theta would not be the greater angle is if onBoundary[0] was on the upper right boundary and onBoundary[1] was on the top boundary
-				#	or onBoundary[0] was on the bottom boundary and onBoundary[1] was on the lower right boundary
-				# Despite the above mentioned issue, it never seemd to cause any issues. Changed it anyways.
-				tempAngle = cornerTheta - maxTheta#vert1Theta # Rotates the corner angle so that the upper boundary angle becomes 0 degrees
+				tempAngle = cornerTheta - maxTheta # Rotates the corner angle so that the upper boundry angle becomes 0 degrees
 				if tempAngle < 0:
 					tempAngle += 2 * math.pi
-
+							
 				withCorners.append([corners[i], tempAngle])
 
 		if vert1Theta == maxTheta:
-			withCorners[0] = [onboundary[0], 0] # Makes the upper boundary angle 0 degrees
-			withCorners[1] = [onboundary[1], ((2 * math.pi) - vert1Theta) + vert2Theta] # Changes the lower boundary angle to be the new upper bound
+			withCorners[0] = [onBoundry[0], 0] # Makes the upper boundary angle 0 degrees
+			withCorners[1] = [onBoundry[1], ((2 * math.pi) - vert1Theta) + vert2Theta] # Changes the lower boundary angle to be the new upper bound
 		else:
-			withCorners[0] = [onboundary[1], 0]
-			withCorners[1] = [onboundary[0], ((2 * math.pi) - vert1Theta) + vert2Theta] # (minTheta - maxTheta) + (2 * math.pi) would also work instead
+			withCorners[0] = [onBoundry[1], 0]
+			withCorners[1] = [onBoundry[0], ((2 * math.pi) - vert1Theta) + vert2Theta]
 
 		sortByY(withCorners)
 
 	for i in range(0, withCorners.__len__()-1):
 		finalCell[cell2]["vertices"].append([withCorners[i][0], withCorners[i+1][0]])
 
-# Finds edges that are on the boundary of the target area
 for cell2 in finalCell:
 	
-	onboundary = []
+	onBoundry = []
 	for vert in finalCell[cell2]["vertices"]:
 		boundSize = [defaultBounds[0][0], defaultBounds[0][1], defaultBounds[1][0], defaultBounds[1][1]] # Flattened version of defaultBounds array
-		if (vert[0][0] in boundSize or vert[0][1] in boundSize) and vert[0] not in onboundary:
-			onboundary.append(vert[0])
-		if (vert[1][0] in boundSize or vert[1][1] in boundSize) and vert[1] not in onboundary:
-			onboundary.append(vert[1])
-
-	if onboundary != []:
+		if (vert[0][0] in boundSize or vert[0][1] in boundSize) and vert[0] not in onBoundry:
+			onBoundry.append(vert[0])
+		if (vert[1][0] in boundSize or vert[1][1] in boundSize) and vert[1] not in onBoundry:
+			onBoundry.append(vert[1])
+				
+	if onBoundry != []:
 		curSite = finalCell[cell2]["site"]
 
-		sortByY(onboundary)
-
-		if onboundary.__len__() == 2:
-			if onboundary[0][0] == onboundary[1][0] or onboundary[0][1] == onboundary[1][1]: # If the two vertices are on the same edge, they can just be added to finalCell without any extra work
-				finalCell[cell2]["vertices"].append([onboundary[0], onboundary[1]])
+		sortByY(onBoundry)
+      
+		if onBoundry.__len__() == 2:
+			#if onBoundry[0][0] == onBoundry[1][0] or onBoundry[0][1] == onBoundry[1][1]: # If the two vertices are on the same edge, they can just be added to finalCell without any extra work
+			# This ensures that the vertices are on the same boundary, so it will not be true if they have the same y or same x but are on different boundaries
+			if (onBoundry[0][0] == onBoundry[1][0] and (onBoundry[0][0] == defaultBounds[0][0] or onBoundry[0][0] == defaultBounds[0][1])) or (onBoundry[0][1] == onBoundry[1][1] and (onBoundry[0][1] == defaultBounds[1][0] or onBoundry[0][1] == defaultBounds[1][1])):
+				finalCell[cell2]["vertices"].append([onBoundry[0], onBoundry[1]])
 			else: # if the two vertices are not on the same edge
-				makeEdges(onboundary, curSite)
+				makeEdges(onBoundry, curSite)
 
 		else: # if it greater than 2, it would ALMOST have to be a multiple of 2, with verts on different edges
-			# I'm not handling the case where the intersection point is on the boundary since that is extremely unlikely to happen naturally
-			#if onboundary.__len__() % 2 == 0: # might be redundant, not sure if it is possible for a site to have more than 2 boundary edges
+			# I'm not handling the case where the intersection point is on the boundry since that is extremely unlikely to happen naturally
+			#if onBoundry.__len__() % 2 == 0: # might be redundant, not sure if it is possible for a site to have more than 2 boundary edges
 			#		left, right, top, bottom
 			sides = [[], [], [], []]
-			for point in onboundary:
+			for point in onBoundry:
 				if point[0] == defaultBounds[0][0]:
 					sides[0].append(point)
 				elif point[0] == defaultBounds[0][1]:
@@ -1117,26 +1046,25 @@ for cell2 in finalCell:
 
 				elif edge.__len__() == 1:
 					single.append(edge[0])
-
+			
 			if single.__len__() > 0:
-				sort2ByY(single)
 				makeEdges(single, curSite)
 
 # If there is only one point, then the whole area is one cell
 if points.__len__() == 1:
-
+	
 	A = [corners[0], corners[2]]
 	B = [corners[2], corners[3]]
 	C = [corners[3], corners[1]]
 	D = [corners[0], corners[1]]
-
+	
 	finalCell[toKey(points[0])]["vertices"].extend([A, B, C, D])
 
 # ---------------- End of voronoi calculations ----------------
 
 for pt in points:
 	plt.plot(pt[0], pt[1], "ro")
-	#plt.plot(pt[0], pt[1], color=(1,0,0), marker="o") # works
+	#plt.plot(pt[0], pt[1], color=(1,0,0), marker="o") # works as well
 
 for site in cell:
 	for entry in cell[site]:
@@ -1158,8 +1086,8 @@ for cell in finalCell:
 	for pairs in finalCell[cell]["vertices"]:
 
 		plt.plot([pairs[0][0], pairs[1][0]], [pairs[0][1], pairs[1][1]], "b")
-		plt.plot([pairs[0][0], pairs[1][0]], [pairs[0][1], pairs[1][1]], "bo")
-
+		#plt.plot([pairs[0][0], pairs[1][0]], [pairs[0][1], pairs[1][1]], "bo")
+		
 		if pairs[0] not in used:
 			used.append(pairs[0])
 		if pairs[1] not in used:
@@ -1170,11 +1098,11 @@ for cell in finalCell:
 	curSite = finalCell[cell]["site"]
 	for i in range(0, temp.__len__()):
 		temp2.append([temp[i], normalTheta(temp[i],curSite)])
-
+		
 	sortByY(temp2)
-	#print("---", cell, "-", temp2)
+
 	vertsX = []
-	vertsY = []
+	vertsY = []	
 
 	for point in temp2:
 		vertsX.append(point[0][0])
@@ -1182,7 +1110,7 @@ for cell in finalCell:
 
 	def clamp(n, lower, upper):
 		return max(lower, min(n, upper))
-
+	
 	#plt.fill(vertsX, vertsY, color=(random.random(), random.random(), random.random(), 0.5))
 	plt.fill(vertsX, vertsY, color=(clamp(random.random(), 0.1, 0.8), clamp(random.random(), 0.1, 0.8), clamp(random.random(), 0.1, 0.8), 0.5))
 
@@ -1200,4 +1128,3 @@ for cell in finalCell:
 # print("convex hull vertices", unique)
 
 plt.show()
-
