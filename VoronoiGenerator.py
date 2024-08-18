@@ -4,8 +4,8 @@ import math
 from math import *
 
 #                 width     height
-defaultBounds = [[0, 200], [200, 0]]
-#defaultBounds = [[0, 100], [300, 0]]
+#defaultBounds = [[0, 200], [200, 0]]
+defaultBounds = [[0, 100], [300, 0]]
 
 #		bottomleft, topleft, bottomright, topright
 #corners = [[0, 0], [0, 200], [200, 0], [200, 200]]
@@ -113,7 +113,7 @@ points = [[76, 30], [196, 40], [165, 47], [104, 66], [128, 120], [88, 159], [166
 #points = [[25, 25], [50, 50], [75, 75], [100, 100]]
 
 #------------- 100 points
-#points = [[64, 3], [56, 4], [20, 8], [8, 9], [59, 12], [88, 14], [27, 20], [3, 22], [26, 23], [99, 29], [29, 32], [56, 37], [29, 38], [50, 38], [22, 39], [56, 40], [11, 52], [92, 52], [90, 58], [79, 69], [97, 70], [32, 71], [46, 71], [7, 73], [18, 74], [89, 79], [58, 80], [51, 84], [17, 88], [13, 94], [24, 99], [94, 101], [43, 101], [45, 106], [50, 111], [17, 112], [41, 114], [89, 115], [80, 118], [33, 123], [74, 123], [88, 131], [19, 133], [29, 137], [20, 138], [40, 139], [60, 140], [49, 144], [1, 157], [67, 160], [95, 164], [50, 165], [38, 166], [58, 170], [52, 174], [34, 177], [12, 179], [25, 184], [91, 185], [62, 185], [80, 189], [56, 192], [28, 196], [19, 196], [84, 203], [52, 204], [66, 206], [23, 206], [34, 207], [41, 215], [100, 217], [46, 218], [40, 220], [62, 220], [17, 222], [77, 228], [69, 228], [15, 229], [45, 237], [73, 239], [19, 240], [81, 243], [63, 244], [13, 258], [1, 259], [43, 261], [42, 264], [44, 268], [78, 268], [11, 269], [12, 273], [50, 274], [68, 278], [37, 278], [75, 281], [92, 295], [23, 299], [22, 299], [91, 300]]
+points = [[64, 3], [56, 4], [20, 8], [8, 9], [59, 12], [88, 14], [27, 20], [3, 22], [26, 23], [99, 29], [29, 32], [56, 37], [29, 38], [50, 38], [22, 39], [56, 40], [11, 52], [92, 52], [90, 58], [79, 69], [97, 70], [32, 71], [46, 71], [7, 73], [18, 74], [89, 79], [58, 80], [51, 84], [17, 88], [13, 94], [24, 99], [94, 101], [43, 101], [45, 106], [50, 111], [17, 112], [41, 114], [89, 115], [80, 118], [33, 123], [74, 123], [88, 131], [19, 133], [29, 137], [20, 138], [40, 139], [60, 140], [49, 144], [1, 157], [67, 160], [95, 164], [50, 165], [38, 166], [58, 170], [52, 174], [34, 177], [12, 179], [25, 184], [91, 185], [62, 185], [80, 189], [56, 192], [28, 196], [19, 196], [84, 203], [52, 204], [66, 206], [23, 206], [34, 207], [41, 215], [100, 217], [46, 218], [40, 220], [62, 220], [17, 222], [77, 228], [69, 228], [15, 229], [45, 237], [73, 239], [19, 240], [81, 243], [63, 244], [13, 258], [1, 259], [43, 261], [42, 264], [44, 268], [78, 268], [11, 269], [12, 273], [50, 274], [68, 278], [37, 278], [75, 281], [92, 295], [23, 299], [22, 299], [91, 300]]
 
 #points = [[140, 4], [45, 4], [106, 5], [51, 7], [197, 9], [71, 9], [85, 12], [151, 16], [74, 16], [185, 22], [139, 24], [158, 33], [81, 34], [135, 37], [97, 37], [145, 39], [19, 42], [91, 42], [62, 42], [60, 43], [4, 46], [172, 49], [72, 53], [26, 54], [137, 56], [150, 56], [41, 61], [53, 64], [150, 64], [167, 65], [11, 65], [127, 67], [184, 68], [151, 68], [54, 69], [143, 71], [103, 75], [45, 79], [3, 83], [7, 84], [29, 86], [153, 86], [101, 91], [165, 96], [199, 96], [79, 97], [147, 101], [6, 102], [30, 103], [190, 104], [13, 105], [138, 109], [159, 109], [84, 109], [177, 110], [170, 111], [85, 116], [140, 119], [4, 121], [184, 124], [107, 125], [16, 127], [154, 131], [200, 132], [46, 133], [122, 134], [73, 142], [34, 145], [52, 147], [108, 148], [169, 151], [62, 159], [65, 159], [84, 159], [149, 160], [132, 160], [39, 161], [26, 161], [5, 161], [186, 163], [33, 165], [181, 165], [157, 165], [200, 167], [85, 171], [142, 171], [180, 171], [185, 175], [52, 176], [48, 177], [57, 177], [122, 182], [157, 187], [11, 187], [102, 190], [176, 191], [8, 191], [68, 194], [99, 196]]
 #points = [[62, 159], [65, 159], [84, 159], [149, 160], [132, 160], [39, 161], [26, 161], [5, 161], [186, 163], [33, 165], [181, 165], [157, 165], [200, 167], [85, 171], [142, 171], [180, 171], [185, 175], [52, 176], [48, 177], [57, 177], [122, 182], [157, 187], [11, 187], [102, 190], [176, 191], [8, 191], [68, 194], [99, 196]]
@@ -142,6 +142,8 @@ points = [[76, 30], [196, 40], [165, 47], [104, 66], [128, 120], [88, 159], [166
 #points = [[104, 95], [167, 95], [20, 95]]
 #points = [[104, 95], [167, 95], [20, 95], [180, 95]]
 #points = [[40, 10], [40, 20], [40, 30], [40, 75]]
+
+#points = [[37, 37], [63, 37], [50, 63]]
 
 plt.figure(figsize=(7, 7))
 plt.ylim(defaultBounds[1][1], defaultBounds[1][0])
@@ -519,6 +521,7 @@ print()
 
 # Finds intersection points of sites, including some that are invalid
 for site1 in points:
+	
 	for site2 in points:
 		if site1 != site2:
 			for site3 in points:
@@ -854,22 +857,22 @@ for vert in vertices:
 
 		throughPt = midPoint(pickedSites[0], pickedSites[1])
 
-		if throughPt != []:
+		#if throughPt != []:
 
-			nearestBound = nearestBoundary(vertPt, throughPt)
-			boundaryPair = [vertPt, nearestBound]
+		nearestBound = nearestBoundary(vertPt, throughPt)
+		boundaryPair = [vertPt, nearestBound]
 			
-			sort2ByY(boundaryPair)
-			scanSort2ByX(boundaryPair)
+		sort2ByY(boundaryPair)
+		scanSort2ByX(boundaryPair)
 
-			sort2ByY(pickedSites)
-			scanSort2ByX(pickedSites)
+		sort2ByY(pickedSites)
+		scanSort2ByX(pickedSites)
 
-			vertices[vert]["with"].append(pickedSites)
-			vertices[vert]["to"].append(nearestBound)
+		vertices[vert]["with"].append(pickedSites)
+		vertices[vert]["to"].append(nearestBound)
 
-			finalCell[toKey(pickedSites[0])]["vertices"].append(boundaryPair)
-			finalCell[toKey(pickedSites[1])]["vertices"].append(boundaryPair)
+		finalCell[toKey(pickedSites[0])]["vertices"].append(boundaryPair)
+		finalCell[toKey(pickedSites[1])]["vertices"].append(boundaryPair)
 
 	if vertices[vert]["to"].__len__() == 2:
 		
@@ -915,25 +918,27 @@ for vert in vertices:
 
 			dists = [vertPtT - site1[1], vertPtT - site2[1], vertPtT - site3[1]]#[vertPtT - pickedSites[0][1], vertPtT - pickedSites[1][1], vertPtT - notInPair[1]] # [vertPtT - site1[1], vertPtT - site2[1], vertPtT - site3[1]]
 			dists.sort()
-			
-			deltaT = dists[0] / 2
 
-			# The x-values of the points are the intersection of the two parabolas pickedSites[0] and pickedSites[1] before and after the vertice
-			beforeTx = getXAtTimeRef(pickedSites[0], pickedSites[1], vertPtT - deltaT, vertPt[0])
-			afterTx = getXAtTimeRef(pickedSites[0], pickedSites[1], vertPtT + deltaT, vertPt[0])
-
-			beforeTy1 = getYAtTimeAndX(pickedSites[0], vertPtT - deltaT, beforeTx)
-			beforeTy2 = getYAtTimeAndX(notInPair, vertPtT - deltaT, beforeTx)
-			afterTy1 = getYAtTimeAndX(pickedSites[0], vertPtT + deltaT, afterTx)
-			afterTy2 = getYAtTimeAndX(notInPair, vertPtT + deltaT, afterTx)
-
-			if beforeTy1 > beforeTy2:
-				throughPt = [beforeTx, beforeTy1]
-			elif afterTy1 > afterTy2:
-				throughPt = [afterTx, afterTy1]
-			# If all 3 points are exactly the same distance from each other, so the edges for all 3 must go through each pair's midpoint
-			elif dists[0] == 0.0 and dists[1] == dists[2]:
+			if dists[0] == 0.0 and dists[1] == dists[2]:
+				# If all 3 points are exactly the same distance from each other, so the edges for all 3 must go through each pair's midpoint
 				throughPt = midPoint(pickedSites[0], pickedSites[1])
+
+			else:
+				deltaT = dists[0] / 2
+
+				# The x-values of the points are the intersection of the two parabolas pickedSites[0] and pickedSites[1] before and after the vertice
+				beforeTx = getXAtTimeRef(pickedSites[0], pickedSites[1], vertPtT - deltaT, vertPt[0])
+				afterTx = getXAtTimeRef(pickedSites[0], pickedSites[1], vertPtT + deltaT, vertPt[0])
+
+				beforeTy1 = getYAtTimeAndX(pickedSites[0], vertPtT - deltaT, beforeTx)
+				beforeTy2 = getYAtTimeAndX(notInPair, vertPtT - deltaT, beforeTx)
+				afterTy1 = getYAtTimeAndX(pickedSites[0], vertPtT + deltaT, afterTx)
+				afterTy2 = getYAtTimeAndX(notInPair, vertPtT + deltaT, afterTx)
+
+				if beforeTy1 > beforeTy2:
+					throughPt = [beforeTx, beforeTy1]
+				elif afterTy1 > afterTy2:
+					throughPt = [afterTx, afterTy1]
 
 		# The points aren't added to the 'vertices' dictionary since it is not used after this part of this function, so there is point to
 		nearestBound = nearestBoundary(vertPt, throughPt)
@@ -951,10 +956,12 @@ def makeEdges(onBoundry, curSite):
 	
 	vert1Theta = normalTheta(onBoundry[0], curSite)
 	vert2Theta = normalTheta(onBoundry[1], curSite)
+	# If the above line throws an error, is usually because the wrong bounds are being used for the set of sites; user error not program error
+	# The error will come from the call near line 1058 because 'single' will only have 1 or 3 items in it when it should have exactly 2 or 4
 
 	minTheta = min(vert1Theta, vert2Theta)
 	maxTheta = max(vert1Theta, vert2Theta)
-				
+
 	# Checks if there is a site within the sector formed by the two boundary vertices
 	for pt in points:
 		if pt != curSite:
@@ -1128,3 +1135,4 @@ for cell in finalCell:
 # print("convex hull vertices", unique)
 
 plt.show()
+
