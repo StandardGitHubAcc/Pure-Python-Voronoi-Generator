@@ -3,9 +3,11 @@ import random
 import math
 from math import *
 
+
+
 #                 width     height
-#defaultBounds = [[0, 200], [200, 0]]
-defaultBounds = [[0, 100], [300, 0]]
+defaultBounds = [[0, 200], [200, 0]]
+#defaultBounds = [[0, 100], [300, 0]]
 
 #		bottomleft, topleft, bottomright, topright
 #corners = [[0, 0], [0, 200], [200, 0], [200, 200]]
@@ -38,7 +40,7 @@ for i in range(1, 100):
 
 #points = [[106, 6], [88, 11], [9, 18], [2, 105], [20, 105], [115, 140], [52, 168]] #causes division by zero in getTimeAtX
 #points = [[13, 23], [181, 40], [129, 55], [93, 100], [59, 127], [12, 160], [156, 163]] #---edge finding issue
-# points = [[76, 30], [196, 40], [165, 47], [104, 66], [128, 120], [88, 159], [166, 180]] #easy to see graph. In a previous, more broken version of the program, another line and intersection point near the one on the far right existed, which is necessary to correctly complete the graph
+points = [[76, 30], [196, 40], [165, 47], [104, 66], [128, 120], [88, 159], [166, 180]] #easy to see graph. In a previous, more broken version of the program, another line and intersection point near the one on the far right existed, which is necessary to correctly complete the graph
 # ^there is an issue with the plot for the line above
 
 #points = [[194, 2], [94, 30], [11, 91], [88, 92], [57, 143], [43, 190], [6, 198]]
@@ -83,6 +85,7 @@ for i in range(1, 100):
 #points = [[20, 25], [55, 100], [70, 160], [95, 190]]
 #points = [[20, 25], [55, 100], [95, 190]]
 #points = [[20, 25], [40, 100], [70, 160], [95, 190]] # no intersections within the target area
+# ^ vertices is 0 but doesn't cause any issues
 
 #points = [[73, 8], [62, 92], [37, 95], [80, 139], [154, 147], [84, 177], [85, 177]] # broke finding boundary edges with outside angles
 
@@ -100,9 +103,8 @@ for i in range(1, 100):
 
 #points = [[20, 4], [169, 5], [31, 16], [13, 21], [27, 22], [101, 31], [111, 32], [136, 50], [126, 59], [192, 67], [172, 68], [69, 83], [45, 97], [150, 116], [91, 117], [40, 120], [49, 130], [116, 138], [4, 144], [156, 149], [88, 150], [10, 150], [58, 151], [16, 153], [163, 161], [157, 186], [190, 193], [54, 195], [194, 200]]
 
-#vertices is 0
+#vertices is 0 - causes an error
 #points = [[22, 299], [23, 299], [12, 273], [25, 25]]
-#points = [[22, 199], [23, 199], [12, 173], [25, 25]]
 #points = [[20, 199], [25, 199], [12, 173], [25, 25]]
 
 #points = [[69, 228], [77, 228], [73, 239], [63, 244], [62, 220], [84, 203], [81, 243]]
@@ -112,13 +114,16 @@ for i in range(1, 100):
 
 #points = [[25, 25], [50, 50], [75, 75], [100, 100]]
 
+#points = [[25, 25], [25, 75], [75, 25], [75, 75]]
+# ^ issue - all 4 points are the same distance and something gets messed up, but it somehow doesn't error and there are vertices found (just misses one edge)
+
 #------------- 100 points
 #points = [[140, 4], [45, 4], [106, 5], [51, 7], [197, 9], [71, 9], [85, 12], [151, 16], [74, 16], [185, 22], [139, 24], [158, 33], [81, 34], [135, 37], [97, 37], [145, 39], [19, 42], [91, 42], [62, 42], [60, 43], [4, 46], [172, 49], [72, 53], [26, 54], [137, 56], [150, 56], [41, 61], [53, 64], [150, 64], [167, 65], [11, 65], [127, 67], [184, 68], [151, 68], [54, 69], [143, 71], [103, 75], [45, 79], [3, 83], [7, 84], [29, 86], [153, 86], [101, 91], [165, 96], [199, 96], [79, 97], [147, 101], [6, 102], [30, 103], [190, 104], [13, 105], [138, 109], [159, 109], [84, 109], [177, 110], [170, 111], [85, 116], [140, 119], [4, 121], [184, 124], [107, 125], [16, 127], [154, 131], [200, 132], [46, 133], [122, 134], [73, 142], [34, 145], [52, 147], [108, 148], [169, 151], [62, 159], [65, 159], [84, 159], [149, 160], [132, 160], [39, 161], [26, 161], [5, 161], [186, 163], [33, 165], [181, 165], [157, 165], [200, 167], [85, 171], [142, 171], [180, 171], [185, 175], [52, 176], [48, 177], [57, 177], [122, 182], [157, 187], [11, 187], [102, 190], [176, 191], [8, 191], [68, 194], [99, 196]]
 #points = [[62, 159], [65, 159], [84, 159], [149, 160], [132, 160], [39, 161], [26, 161], [5, 161], [186, 163], [33, 165], [181, 165], [157, 165], [200, 167], [85, 171], [142, 171], [180, 171], [185, 175], [52, 176], [48, 177], [57, 177], [122, 182], [157, 187], [11, 187], [102, 190], [176, 191], [8, 191], [68, 194], [99, 196]]
 #points = [[39, 161], [26, 161], [5, 161], [33, 165], [48, 177], [11, 187], [8, 191], [68, 194]]
 
 #-------------with box that is 100 wide and 300 tall
-points = [[64, 3], [56, 4], [20, 8], [8, 9], [59, 12], [88, 14], [27, 20], [3, 22], [26, 23], [99, 29], [29, 32], [56, 37], [29, 38], [50, 38], [22, 39], [56, 40], [11, 52], [92, 52], [90, 58], [79, 69], [97, 70], [32, 71], [46, 71], [7, 73], [18, 74], [89, 79], [58, 80], [51, 84], [17, 88], [13, 94], [24, 99], [94, 101], [43, 101], [45, 106], [50, 111], [17, 112], [41, 114], [89, 115], [80, 118], [33, 123], [74, 123], [88, 131], [19, 133], [29, 137], [20, 138], [40, 139], [60, 140], [49, 144], [1, 157], [67, 160], [95, 164], [50, 165], [38, 166], [58, 170], [52, 174], [34, 177], [12, 179], [25, 184], [91, 185], [62, 185], [80, 189], [56, 192], [28, 196], [19, 196], [84, 203], [52, 204], [66, 206], [23, 206], [34, 207], [41, 215], [100, 217], [46, 218], [40, 220], [62, 220], [17, 222], [77, 228], [69, 228], [15, 229], [45, 237], [73, 239], [19, 240], [81, 243], [63, 244], [13, 258], [1, 259], [43, 261], [42, 264], [44, 268], [78, 268], [11, 269], [12, 273], [50, 274], [68, 278], [37, 278], [75, 281], [92, 295], [23, 299], [22, 299], [91, 300]]
+#points = [[64, 3], [56, 4], [20, 8], [8, 9], [59, 12], [88, 14], [27, 20], [3, 22], [26, 23], [99, 29], [29, 32], [56, 37], [29, 38], [50, 38], [22, 39], [56, 40], [11, 52], [92, 52], [90, 58], [79, 69], [97, 70], [32, 71], [46, 71], [7, 73], [18, 74], [89, 79], [58, 80], [51, 84], [17, 88], [13, 94], [24, 99], [94, 101], [43, 101], [45, 106], [50, 111], [17, 112], [41, 114], [89, 115], [80, 118], [33, 123], [74, 123], [88, 131], [19, 133], [29, 137], [20, 138], [40, 139], [60, 140], [49, 144], [1, 157], [67, 160], [95, 164], [50, 165], [38, 166], [58, 170], [52, 174], [34, 177], [12, 179], [25, 184], [91, 185], [62, 185], [80, 189], [56, 192], [28, 196], [19, 196], [84, 203], [52, 204], [66, 206], [23, 206], [34, 207], [41, 215], [100, 217], [46, 218], [40, 220], [62, 220], [17, 222], [77, 228], [69, 228], [15, 229], [45, 237], [73, 239], [19, 240], [81, 243], [63, 244], [13, 258], [1, 259], [43, 261], [42, 264], [44, 268], [78, 268], [11, 269], [12, 273], [50, 274], [68, 278], [37, 278], [75, 281], [92, 295], [23, 299], [22, 299], [91, 300]]
 
 #points = [[75, 14], [85, 22], [86, 26], [94, 32], [92, 45], [32, 71], [0, 127], [50, 132], [10, 134], [28, 134], [21, 134], [95, 147], [38, 152], [63, 162], [70, 168], [7, 175], [4, 176], [65, 179], [12, 187], [87, 190], [23, 197], [7, 206], [91, 209], [100, 234], [73, 236], [33, 267], [10, 273], [20, 278], [96, 298]]
 #points = [[86, 16], [33, 30], [49, 32], [27, 36], [98, 40], [23, 47], [11, 49], [69, 59], [67, 66], [81, 75], [75, 78], [6, 81], [1, 108], [4, 133], [100, 151], [30, 165], [86, 189], [30, 226], [54, 244], [15, 253], [41, 255], [52, 267], [11, 269], [27, 271], [13, 272], [49, 293], [84, 294], [2, 298], [46, 300]]
@@ -142,6 +147,10 @@ points = [[64, 3], [56, 4], [20, 8], [8, 9], [59, 12], [88, 14], [27, 20], [3, 2
 #points = [[104, 95], [167, 95], [20, 95]]
 #points = [[104, 95], [167, 95], [20, 95], [180, 95]]
 #points = [[40, 10], [40, 20], [40, 30], [40, 75]]
+
+
+#points = [[104, 66], [128, 120], [88, 159]] # example of bisector not going through midpoint of farthest pair of points
+# more obvious example: [[59, 55], [30, 88], [1, 93]]
 
 plt.figure(figsize=(7, 7))
 plt.ylim(defaultBounds[1][1], defaultBounds[1][0])
@@ -532,11 +541,13 @@ for site1 in points:
 					if x != None: # x is None if the lines are parallel, which will be handled later
 						
 						y = yAtX(sites[0], sites[2], x)
-						t = tAtXandY(sites[0], x, y)
+						t = tAtXandY(sites[0], x, y) # Might want to add a check to see if t is positive, just to save a little bit of resources
 
 						# bufferBounds just increases the bounds of the selected area by a certain amount so that
 						#	intersection points can happen within it and are not outright rejected, but need
 						#	to be accounted for seperately and fixed
+						# why am I doing these calculations here? The numbers never change so should be outside of the loop.
+						#	There is absolutely no need for these to be re-calculated every time
 						bufferWidth = (defaultBounds[0][0] + defaultBounds[0][1])/4 # the midpoint divided by 2
 						bufferHeight = (defaultBounds[1][1] + defaultBounds[1][0])/4
 						bufferBounds = [[defaultBounds[0][0] - bufferWidth, defaultBounds[0][1] + bufferHeight],
@@ -560,28 +571,41 @@ for site1 in points:
 									cell[site1Key].append({"sites":[site1, sites[0], sites[1]], "time":t, "at":[x, y]})
 							else:
 								cell.update({site1Key : [{"sites":[site1, sites[0], sites[1]], "time":t, "at":[x, y]}]})
-
+# import time
+# start_time = time.time()
+print(cell)
 print("Deleting invalid cell vertices...")
 for others in points:
 	
 	for site1 in cell:
 		removeVerts = []
 		for entry in cell[site1]:
-			# If the other point is not one of the sites and is below the intersection point's time
-			if others not in entry["sites"] and others[1] < entry["time"]:
-				otherPointY = getYAtTimeAndX(others, entry["time"], entry["at"][0])
-				
-				# It is not possible to have 4th site below a correct intersection point
-				#	and have a higher parabola y-value than that point at the same time
-				if otherPointY > entry["at"][1]:
+			# Both this and the below checks work, but this one is somehow signficantly slower
+			#	~71 seconds vs ~52.5 seconds
+			if others not in entry["sites"]:
+				dist1 = distancePt(entry["sites"][0], entry["at"])
+				dist2 = distancePt(entry["at"], others)
+				if dist2 < dist1:
 					removeVerts.append(entry)
+
+			# # If the other point is not one of the sites and is below the intersection point's time
+			# if others not in entry["sites"] and others[1] < entry["time"]:
+			# 	otherPointY = getYAtTimeAndX(others, entry["time"], entry["at"][0])
+				
+			# 	# It is not possible to have 4th site below a correct intersection point
+			# 	#	and have a higher parabola y-value than that point at the same time
+			# 	if otherPointY > entry["at"][1]:
+			# 		removeVerts.append(entry)
 
 		for rmv in removeVerts:
 			try:
 				del cell[site1][cell[site1].index(rmv)]
 			except Exception:
 				pass
-
+# end_time = time.time()
+# elapsed_time = end_time - start_time
+# print(f"Script executed in {elapsed_time:.2f} seconds")
+#print(cell)
 # There are 3 cases that have to be dealth with seperately: 1 site, 3 sites, and 2 or 3+ sites 
 # (technically 2 sites have to be dealt with seperately but are the same as having a cell in a corner so can be dealt with later)
 if points.__len__() == 3 and cell.keys().__len__() != 0:
@@ -841,6 +865,7 @@ for vert in vertices:
 	site3 = vertices[vert]["sites"][2]
 
 	if vertices[vert]["to"].__len__() == 1:
+		print(vertices[vert]["with"])
 		pickedSites = [[site1, site2], [site1, site3], [site2, site3]]
 		pickedSites.remove(vertices[vert]["with"][0])
 		
@@ -852,6 +877,8 @@ for vert in vertices:
 		else:
 			pickedSites = pickedSites[1]
 
+		# Why does this work? Wouldn't the already-existing edge be with the closest-together pair, 
+		#	so the new edge isn't guaranteed to go through the midpoint of a different pair?
 		throughPt = midPoint(pickedSites[0], pickedSites[1])
 
 		if throughPt != []:
@@ -894,8 +921,10 @@ for vert in vertices:
 			notInPair = site2
 		elif site3 != pickedSites[0] and site3 != pickedSites[1]:
 			notInPair = site3
-
+		print(pickedSites[0], pickedSites[1], notInPair)
 		throughPt = []
+		# pickedSites is a pair of two sites that haven't been used to make an edge with this vertex yet
+		# pickedSites[0] is the site with the higher y-value, out of the two
 
 		if pickedSites[0][0] == pickedSites[1][0]: # The bisector is horizontal
 			leftX = vertPt[0] - 0.5
@@ -915,20 +944,26 @@ for vert in vertices:
 
 			dists = [vertPtT - site1[1], vertPtT - site2[1], vertPtT - site3[1]]#[vertPtT - pickedSites[0][1], vertPtT - pickedSites[1][1], vertPtT - notInPair[1]] # [vertPtT - site1[1], vertPtT - site2[1], vertPtT - site3[1]]
 			dists.sort()
-			deltaT = dists[0] / 2
+			deltaT = dists[0] / 2 # dists[0] / 2 is kinda arbitrary, just always needs to be less than dists[0]
 
 			# The x-values of the points are the intersection of the two parabolas pickedSites[0] and pickedSites[1] before and after the vertice
 			beforeTx = getXAtTimeRef(pickedSites[0], pickedSites[1], vertPtT - deltaT, vertPt[0])
 			afterTx = getXAtTimeRef(pickedSites[0], pickedSites[1], vertPtT + deltaT, vertPt[0])
 
-			beforeTy1 = getYAtTimeAndX(pickedSites[0], vertPtT - deltaT, beforeTx)
+			beforeTy1 = getYAtTimeAndX(pickedSites[0], vertPtT - deltaT, beforeTx) # I don't remember if it matters which site you use
 			beforeTy2 = getYAtTimeAndX(notInPair, vertPtT - deltaT, beforeTx)
 			afterTy1 = getYAtTimeAndX(pickedSites[0], vertPtT + deltaT, afterTx)
 			afterTy2 = getYAtTimeAndX(notInPair, vertPtT + deltaT, afterTx)
 
+			#print("beforeUsed",[beforeTx,beforeTy1],"vert",vertPt,"afterUsed",[afterTx,afterTy1])
+			#print("beforeNot",[beforeTx,beforeTy2], "vert",vertPt,"afterNot",[afterTx,afterTy2])
+
+			# idk why this works or why it never throws an error
 			if beforeTy1 > beforeTy2:
+				#print("a")
 				throughPt = [beforeTx, beforeTy1]
 			elif afterTy1 > afterTy2:
+				#print("b")
 				throughPt = [afterTx, afterTy1]
 
 		# The points aren't added to the 'vertices' dictionary since it is not used after this part of this function, so there is no point to
@@ -1121,7 +1156,9 @@ for cell in finalCell:
 # print()
 # print("convex hull vertices", unique)
 
+
 plt.show()
+
 
 
 
