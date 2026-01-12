@@ -15,7 +15,7 @@ corners = [ [defaultBounds[0][0], defaultBounds[1][1]], [defaultBounds[0][0], de
 
 
 points = []
-for i in range(1, 100):
+for i in range(1, 10):
 	  points.append([random.randint(0, defaultBounds[0][1]), random.randint(0, defaultBounds[1][0])])  
 
 #points = [[50, 50], [25, 25], [75, 75], [98, 70]]
@@ -40,7 +40,7 @@ for i in range(1, 100):
 
 #points = [[106, 6], [88, 11], [9, 18], [2, 105], [20, 105], [115, 140], [52, 168]] #causes division by zero in getTimeAtX
 #points = [[13, 23], [181, 40], [129, 55], [93, 100], [59, 127], [12, 160], [156, 163]] #---edge finding issue
-points = [[76, 30], [196, 40], [165, 47], [104, 66], [128, 120], [88, 159], [166, 180]] #easy to see graph. In a previous, more broken version of the program, another line and intersection point near the one on the far right existed, which is necessary to correctly complete the graph
+#points = [[76, 30], [196, 40], [165, 47], [104, 66], [128, 120], [88, 159], [166, 180]] #easy to see graph. In a previous, more broken version of the program, another line and intersection point near the one on the far right existed, which is necessary to correctly complete the graph
 # ^there is an issue with the plot for the line above
 
 #points = [[194, 2], [94, 30], [11, 91], [88, 92], [57, 143], [43, 190], [6, 198]]
@@ -117,6 +117,10 @@ points = [[76, 30], [196, 40], [165, 47], [104, 66], [128, 120], [88, 159], [166
 #points = [[25, 25], [25, 75], [75, 25], [75, 75]]
 # ^ issue - all 4 points are the same distance and something gets messed up, but it somehow doesn't error and there are vertices found (just misses one edge)
 
+
+#points = [[118, 6], [16, 21], [97, 23], [68, 33], [85, 77], [186, 105], [3, 138], [131, 177], [87, 180]]
+
+
 #------------- 100 points
 #points = [[140, 4], [45, 4], [106, 5], [51, 7], [197, 9], [71, 9], [85, 12], [151, 16], [74, 16], [185, 22], [139, 24], [158, 33], [81, 34], [135, 37], [97, 37], [145, 39], [19, 42], [91, 42], [62, 42], [60, 43], [4, 46], [172, 49], [72, 53], [26, 54], [137, 56], [150, 56], [41, 61], [53, 64], [150, 64], [167, 65], [11, 65], [127, 67], [184, 68], [151, 68], [54, 69], [143, 71], [103, 75], [45, 79], [3, 83], [7, 84], [29, 86], [153, 86], [101, 91], [165, 96], [199, 96], [79, 97], [147, 101], [6, 102], [30, 103], [190, 104], [13, 105], [138, 109], [159, 109], [84, 109], [177, 110], [170, 111], [85, 116], [140, 119], [4, 121], [184, 124], [107, 125], [16, 127], [154, 131], [200, 132], [46, 133], [122, 134], [73, 142], [34, 145], [52, 147], [108, 148], [169, 151], [62, 159], [65, 159], [84, 159], [149, 160], [132, 160], [39, 161], [26, 161], [5, 161], [186, 163], [33, 165], [181, 165], [157, 165], [200, 167], [85, 171], [142, 171], [180, 171], [185, 175], [52, 176], [48, 177], [57, 177], [122, 182], [157, 187], [11, 187], [102, 190], [176, 191], [8, 191], [68, 194], [99, 196]]
 #points = [[62, 159], [65, 159], [84, 159], [149, 160], [132, 160], [39, 161], [26, 161], [5, 161], [186, 163], [33, 165], [181, 165], [157, 165], [200, 167], [85, 171], [142, 171], [180, 171], [185, 175], [52, 176], [48, 177], [57, 177], [122, 182], [157, 187], [11, 187], [102, 190], [176, 191], [8, 191], [68, 194], [99, 196]]
@@ -149,8 +153,14 @@ points = [[76, 30], [196, 40], [165, 47], [104, 66], [128, 120], [88, 159], [166
 #points = [[40, 10], [40, 20], [40, 30], [40, 75]]
 
 
-#points = [[104, 66], [128, 120], [88, 159]] # example of bisector not going through midpoint of farthest pair of points
+# example of bisector not going through midpoint of farthest pair of points
+#points = [[104, 66], [128, 120], [88, 159]] 
 # more obvious example: [[59, 55], [30, 88], [1, 93]]
+#points = [[59+30, 55], [30+30, 88], [1+30, 93]]
+
+# example of edge of second-closest pair of sites not going through their midpoint
+points = [[76, 30], [104, 66], [128, 120], [88, 159]]
+
 
 plt.figure(figsize=(7, 7))
 plt.ylim(defaultBounds[1][1], defaultBounds[1][0])
@@ -364,14 +374,14 @@ def normalTheta(pt, origin): #gets the exterior/larger angle (basically)
 	y = b-d
 	
 	theta = 0
-	if x != 0:
-		theta = math.atan(y/x)
-	elif b > d:
+	if x != 0: # pt is not directly above or below new origin
+		theta = math.atan(y/x) # -pi/2 < atan < pi/2
+	elif b > d: # pt is directly above new origin
 		theta = math.pi / 2
-	elif b < d:
+	elif b < d: # pt is directly below new origin
 		theta = (3 * math.pi)/2
 
-	if y == 0 and x < 0:
+	if y == 0 and x < 0: # atan only returns values in the +x side, so if x < 0 and atan = 0, then the actual angle is +pi radians (+180 deg)
 		theta = math.pi
 
 	if x < 0 and y < 0:
@@ -517,6 +527,8 @@ def scanSortByXSwap(focus, other):
 sortByY(points)
 print(points)
 
+# finalCell is {siteKey: {site, vertices[] } } <- each siteKey contains its vertices
+# cell is {siteKey: {sites[], time, intersect}} <- each siteKey contains list of the other sites, time, and location of the 3-intersects that it is a part of
 
 tmp = []
 for point in points:
@@ -525,6 +537,18 @@ for point in points:
 
 print(tmp) # this tmp is never used after this, it just used to print the points in a different format here
 print()
+
+# bufferBounds just increases the bounds of the selected area by a certain amount so that
+#	intersection points can happen within it and are not outright rejected, but need
+#	to be accounted for seperately and fixed
+# why am I doing these calculations here? The numbers never change so should be outside of the loop.
+#	There is absolutely no need for these to be re-calculated every time
+# Now moved outside of the loop
+#	These are never used in any other places except for this loop right below
+bufferWidth = (defaultBounds[0][0] + defaultBounds[0][1])/4 # the midpoint divided by 2
+bufferHeight = (defaultBounds[1][1] + defaultBounds[1][0])/4
+bufferBounds = [[defaultBounds[0][0] - bufferWidth, defaultBounds[0][1] + bufferHeight],
+				[defaultBounds[1][0] + bufferHeight, defaultBounds[1][1] - bufferHeight]]
 
 # Finds intersection points of sites, including some that are invalid
 for site1 in points:
@@ -542,16 +566,6 @@ for site1 in points:
 						
 						y = yAtX(sites[0], sites[2], x)
 						t = tAtXandY(sites[0], x, y) # Might want to add a check to see if t is positive, just to save a little bit of resources
-
-						# bufferBounds just increases the bounds of the selected area by a certain amount so that
-						#	intersection points can happen within it and are not outright rejected, but need
-						#	to be accounted for seperately and fixed
-						# why am I doing these calculations here? The numbers never change so should be outside of the loop.
-						#	There is absolutely no need for these to be re-calculated every time
-						bufferWidth = (defaultBounds[0][0] + defaultBounds[0][1])/4 # the midpoint divided by 2
-						bufferHeight = (defaultBounds[1][1] + defaultBounds[1][0])/4
-						bufferBounds = [[defaultBounds[0][0] - bufferWidth, defaultBounds[0][1] + bufferHeight],
-									   [defaultBounds[1][0] + bufferHeight, defaultBounds[1][1] - bufferHeight]]
 					
 						# This is >= instead of > since if the 3rd site is exactly at the x-value of the
 						#	intersection point and the y-values of the other two sites are equal,
@@ -571,9 +585,9 @@ for site1 in points:
 									cell[site1Key].append({"sites":[site1, sites[0], sites[1]], "time":t, "at":[x, y]})
 							else:
 								cell.update({site1Key : [{"sites":[site1, sites[0], sites[1]], "time":t, "at":[x, y]}]})
-# import time
-# start_time = time.time()
-print(cell)
+#import time
+#start_time = time.time()
+#print(cell)
 print("Deleting invalid cell vertices...")
 for others in points:
 	
@@ -582,29 +596,35 @@ for others in points:
 		for entry in cell[site1]:
 			# Both this and the below checks work, but this one is somehow signficantly slower
 			#	~71 seconds vs ~52.5 seconds
-			if others not in entry["sites"]:
-				dist1 = distancePt(entry["sites"][0], entry["at"])
-				dist2 = distancePt(entry["at"], others)
-				if dist2 < dist1:
-					removeVerts.append(entry)
+			# The main differnce between the two is that one calls a funtion twice while the other calls a function once
+			#	But the one that calls a function once calls a significantly more complicated function
 
-			# # If the other point is not one of the sites and is below the intersection point's time
-			# if others not in entry["sites"] and others[1] < entry["time"]:
-			# 	otherPointY = getYAtTimeAndX(others, entry["time"], entry["at"][0])
-				
-			# 	# It is not possible to have 4th site below a correct intersection point
-			# 	#	and have a higher parabola y-value than that point at the same time
-			# 	if otherPointY > entry["at"][1]:
+			# 81.89 sec, 76.12, 73.58, 72.23, 74.79
+			# if others not in entry["sites"]:
+			# 	dist1 = distancePt(entry["sites"][0], entry["at"])
+			# 	dist2 = distancePt(entry["at"], others)
+			# 	if dist2 < dist1:
 			# 		removeVerts.append(entry)
+
+			# 58.83 sec, 56.17
+			# If the other point is not one of the sites and is below the intersection point's time
+			if others not in entry["sites"] and others[1] < entry["time"]:
+				otherPointY = getYAtTimeAndX(others, entry["time"], entry["at"][0])
+				
+				# It is not possible to have 4th site below a correct intersection point
+				#	and have a higher parabola y-value than that point at the same time
+				if otherPointY > entry["at"][1]:
+					removeVerts.append(entry)
 
 		for rmv in removeVerts:
 			try:
 				del cell[site1][cell[site1].index(rmv)]
 			except Exception:
 				pass
-# end_time = time.time()
-# elapsed_time = end_time - start_time
-# print(f"Script executed in {elapsed_time:.2f} seconds")
+#end_time = time.time()
+#elapsed_time = end_time - start_time
+#print(f"Script executed in {elapsed_time:.2f} seconds")
+#quit()
 #print(cell)
 # There are 3 cases that have to be dealth with seperately: 1 site, 3 sites, and 2 or 3+ sites 
 # (technically 2 sites have to be dealt with seperately but are the same as having a cell in a corner so can be dealt with later)
@@ -966,6 +986,9 @@ for vert in vertices:
 				#print("b")
 				throughPt = [afterTx, afterTy1]
 
+			# ^ I wonder why I don't just find a 2-intersection point (with the unused pair) at +t from the 3-intersection, and test if that is valid
+			#		If it is not valid, then the edge must go in the other direction (in theory?)
+
 		# The points aren't added to the 'vertices' dictionary since it is not used after this part of this function, so there is no point to
 		nearestBound = nearestBoundary(vertPt, throughPt)
 
@@ -1091,6 +1114,7 @@ if points.__len__() == 1:
 
 # ---------------- End of voronoi calculations ----------------
 
+
 for pt in points:
 	plt.plot(pt[0], pt[1], "ro")
 	#plt.plot(pt[0], pt[1], color=(1,0,0), marker="o") # works
@@ -1098,15 +1122,34 @@ for pt in points:
 for site in cell:
 	for entry in cell[site]:
 		pass
+		# mid1 = midPoint(entry["sites"][0], entry["sites"][1])
+		# plt.plot([mid1[0]], [mid1[1]], "yo")
+		# plt.plot([entry["sites"][0][0], entry["sites"][1][0]], [entry["sites"][0][1], entry["sites"][1][1]], "y")
+
 		#plt.plot(entry["at"][0], entry["at"][1], "go")
 
 		#plt.plot([entry["point2"][0], entry["at"][0], entry["point3"][0], entry["at"][0], entry["point1"][0]], [entry["point2"][1], entry["at"][1], entry["point3"][1], entry["at"][1], entry["point1"][1]], "g") 
 		#plt.plot([entry["sites"][1][0], entry["at"][0], entry["sites"][2][0], entry["at"][0], entry["sites"][0][0]], [entry["sites"][1][1], entry["at"][1], entry["sites"][2][1], entry["at"][1], entry["sites"][0][1]], "g") 
 
-# for vert3key in vertices:
-# 	vert3 = vertices[vert3key]
+for vert3key in vertices:
+	vert3 = vertices[vert3key]
 	
-# 	plt.plot([vert3["sites"][0][0], vert3["at"][0], vert3["sites"][1][0], vert3["at"][0], vert3["sites"][2][0]], [vert3["sites"][0][1], vert3["at"][1], vert3["sites"][1][1], vert3["at"][1], vert3["sites"][2][1]], "y")
+	plt.plot([vert3["sites"][0][0], vert3["at"][0], vert3["sites"][1][0], vert3["at"][0], vert3["sites"][2][0]], [vert3["sites"][0][1], vert3["at"][1], vert3["sites"][1][1], vert3["at"][1], vert3["sites"][2][1]], "b")
+
+	site1 = vert3["sites"][0]
+	site2 = vert3["sites"][1]
+	site3 = vert3["sites"][2]
+
+	mid1 = midPoint(site1, site2)
+	mid2 = midPoint(site1, site3)
+	mid3 = midPoint(site2, site3)
+
+	plt.plot([mid1[0]], [mid1[1]], "yo")
+	plt.plot([site1[0], site2[0]], [site1[1], site2[1]], "y")
+	plt.plot([mid2[0]], [mid2[1]], "yo")
+	plt.plot([site1[0], site3[0]], [site1[1], site3[1]], "y")
+	plt.plot([mid3[0]], [mid3[1]], "yo")
+	plt.plot([site2[0], site3[0]], [site2[1], site3[1]], "y")
 
 for cell in finalCell:
 
@@ -1158,6 +1201,7 @@ for cell in finalCell:
 
 
 plt.show()
+
 
 
 
