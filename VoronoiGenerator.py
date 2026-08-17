@@ -168,6 +168,7 @@ plt.xlim(defaultBounds[0][0], defaultBounds[0][1])
 plt.title("pixel_plot")
 
 
+# ---------------- Start of voronoi calculations ----------------
 
 cell = {}
 vertices = {}
@@ -649,7 +650,7 @@ if points.__len__() == 3 and cell.keys().__len__() != 0:
 	finalCell[toKey(sites[1])]["vertices"].append(edgePair)
 
 
- # Trying to handle 1 site here will cause the boundary edge finding section to duplicate two sides, 
+# Trying to handle 1 site here will cause the boundary edge finding section to duplicate two sides, 
 #	and not handling this here breaks nothing, so it is handled after everything else	
 elif points.__len__() == 1:
 	pass
