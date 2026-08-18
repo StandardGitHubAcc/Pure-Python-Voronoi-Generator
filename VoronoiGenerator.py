@@ -242,21 +242,21 @@ def find3IntersectX(pt1, pt2, pt3): # finds x-value of intersection of 3 parabol
 		return None
 
 # This is never used
-def otherXOnBisectorAtT(pt1, pt2, pt3, t): # pt1 and pt2 form the bisector and pt3 makes the parabola that it intersects with
-	try:
-		a, b, c, d, e, f = pt1[0], pt1[1], pt2[0], pt2[1], pt3[0], pt3[1]
+# def otherXOnBisectorAtT(pt1, pt2, pt3, t): # pt1 and pt2 form the bisector and pt3 makes the parabola that it intersects with
+# 	try:
+# 		a, b, c, d, e, f = pt1[0], pt1[1], pt2[0], pt2[1], pt3[0], pt3[1]
 		
-		m = d-b
-		n = 2 * ( ( (a-c) * (t-f) ) + (e * (b-d)) )
-		o = -1 * ( ( (b-d) * ( (e**2) + (f**2) - (t**2) ) ) - ( (t-f) * ( (d**2) - (b**2) - (a**2) + (c**2) ) ) )
+# 		m = d-b
+# 		n = 2 * ( ( (a-c) * (t-f) ) + (e * (b-d)) )
+# 		o = -1 * ( ( (b-d) * ( (e**2) + (f**2) - (t**2) ) ) - ( (t-f) * ( (d**2) - (b**2) - (a**2) + (c**2) ) ) )
 
-		x = ( (-1 * n) - ( ( (n**2) - (4 * m * o) )**0.5 ) ) / (2 * m)#( (-1 * n) + ( ( (n**2) - (4 * m * o) )**0.5 ) ) / (2 * m) 
-		return float("%.10f" % x)
-	except ZeroDivisionError:
-		# Divides by 0 if m = 0, so if the first two points have the same y-value
-		# So the correct x-value would be the midpoint between the two since the bisector is a vertical line, causing the y-values to be different with t, but not x
-		print(f"division by zero in otherXOnBisectorAtT with {pt1} {pt2} {pt3} t={t}")
-		return (a + c) / 2
+# 		x = ( (-1 * n) - ( ( (n**2) - (4 * m * o) )**0.5 ) ) / (2 * m)#( (-1 * n) + ( ( (n**2) - (4 * m * o) )**0.5 ) ) / (2 * m) 
+# 		return float("%.10f" % x)
+# 	except ZeroDivisionError:
+# 		# Divides by 0 if m = 0, so if the first two points have the same y-value
+# 		# So the correct x-value would be the midpoint between the two since the bisector is a vertical line, causing the y-values to be different with t, but not x
+# 		print(f"division by zero in otherXOnBisectorAtT with {pt1} {pt2} {pt3} t={t}")
+# 		return (a + c) / 2
 
 def getXAtTime(pt1, pt2, t): # finds x-value of intersection of two parabolas at given time, imaginary if it doesn't exist
 	# The base equation is sensitive to order but this function should be resistant to order
